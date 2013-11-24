@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EA26A863-F126-4809-8B32-09829D21B4CE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mappy</RootNamespace>
+    <AssemblyName>Mappy</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <StartupObject>Mappy.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controllers\MapPresenter.cs" />
+    <Compile Include="Data\BindingMapTile.cs" />
+    <Compile Include="Data\Feature.cs" />
+    <Compile Include="Data\IBindingMapTile.cs" />
+    <Compile Include="Data\IMapTile.cs" />
+    <Compile Include="Data\MapAttributes.cs" />
+    <Compile Include="Data\MapTile.cs" />
+    <Compile Include="Data\Positioned.cs" />
+    <Compile Include="Data\Section.cs" />
+    <Compile Include="Data\StartPositionChangedEventArgs.cs" />
+    <Compile Include="Models\CoreModel.cs" />
+    <Compile Include="Models\MapAttributesResult.cs" />
+    <Compile Include="Operations\AddFeatureOperation.cs" />
+    <Compile Include="Operations\ChangeAttributesOperation.cs" />
+    <Compile Include="Operations\ChangeStartPositionOperation.cs" />
+    <Compile Include="Operations\MoveFeatureOperation.cs" />
+    <Compile Include="Operations\RemoveFeatureOperation.cs" />
+    <Compile Include="Operations\RemoveStartPositionOperation.cs" />
+    <Compile Include="UI\Controls\FeatureView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\FeatureView.Designer.cs">
+      <DependentUpon>FeatureView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\ImageLayerCollection.cs" />
+    <Compile Include="UI\Controls\ImageLayerView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\ImageLayerView.Designer.cs">
+      <DependentUpon>ImageLayerView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\SectionView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\SectionView.Designer.cs">
+      <DependentUpon>SectionView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\StartPositionDragData.cs" />
+    <Compile Include="UI\Controls\StartPositionsView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\StartPositionsView.Designer.cs">
+      <DependentUpon>StartPositionsView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Drawables\DrawableBitmap.cs" />
+    <Compile Include="UI\Drawables\DrawableTile.cs" />
+    <Compile Include="UI\Drawables\IDrawable.cs" />
+    <Compile Include="UI\Forms\AboutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\AboutForm.Designer.cs">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Forms\MapAttributesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\MapAttributesForm.Designer.cs">
+      <DependentUpon>MapAttributesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Forms\NewMapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\NewMapForm.Designer.cs">
+      <DependentUpon>NewMapForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BindingMapModel.cs" />
+    <Compile Include="Operations\AddFloatingTileOperation.cs" />
+    <Compile Include="Operations\ClearTilesOperation.cs" />
+    <Compile Include="Operations\CompositeOperation.cs" />
+    <Compile Include="Grids\BindingGrid.cs" />
+    <Compile Include="Grids\BindingSparseGrid.cs" />
+    <Compile Include="Grids\IBindingGrid.cs" />
+    <Compile Include="Grids\IBindingSparseGrid.cs" />
+    <Compile Include="Models\IBindingMapModel.cs" />
+    <Compile Include="Models\IMapModel.cs" />
+    <Compile Include="Operations\IReplayableOperation.cs" />
+    <Compile Include="LoadingUtils.cs" />
+    <Compile Include="Operations\MergeOperation.cs" />
+    <Compile Include="Controllers\MinimapController.cs" />
+    <Compile Include="GridUtil.cs" />
+    <Compile Include="Operations\MoveTileOperation.cs" />
+    <Compile Include="Operations\OperationFactory.cs" />
+    <Compile Include="Operations\RemoveTileOperation.cs" />
+    <Compile Include="UI\Painters\GridPainter.cs" />
+    <Compile Include="Util\Notifier.cs" />
+    <Compile Include="Util\Util.cs" />
+    <Compile Include="Views\IMainView.cs" />
+    <Compile Include="Views\IMinimapView.cs" />
+    <Compile Include="Controllers\MainPresenter.cs" />
+    <Compile Include="UI\Painters\ContourHeightPainter.cs" />
+    <Compile Include="Models\MapModel.cs" />
+    <Compile Include="UI\Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Grids\Grid.cs" />
+    <Compile Include="Grids\IGrid.cs" />
+    <Compile Include="Grids\ISparseGrid.cs" />
+    <Compile Include="UI\Painters\MapPainter.cs" />
+    <Compile Include="UI\Controls\MapPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\MapPanel.Designer.cs">
+      <DependentUpon>MapPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Forms\MapSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\MapSelectionForm.Designer.cs">
+      <DependentUpon>MapSelectionForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Controls\MinimapControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\MinimapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\MinimapForm.Designer.cs">
+      <DependentUpon>MinimapForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Painters\IPainter.cs" />
+    <Compile Include="UI\Forms\PreferencesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\PreferencesForm.Designer.cs">
+      <DependentUpon>PreferencesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Grids\SparseGrid.cs" />
+    <Compile Include="Operations\OperationManager.cs" />
+    <EmbeddedResource Include="UI\Controls\FeatureView.resx">
+      <DependentUpon>FeatureView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\StartPositionsView.resx">
+      <DependentUpon>StartPositionsView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\AboutForm.resx">
+      <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\MapPanel.resx">
+      <DependentUpon>MapPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\MapAttributesForm.resx">
+      <DependentUpon>MapAttributesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\MapSelectionForm.resx">
+      <DependentUpon>MapSelectionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\MinimapForm.resx">
+      <DependentUpon>MinimapForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\NewMapForm.resx">
+      <DependentUpon>NewMapForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\PreferencesForm.resx">
+      <DependentUpon>PreferencesForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\SectionView.resx">
+      <DependentUpon>SectionView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="Properties\DataSources\Mappy.Models.MapAttributesResult.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Geometry\Geometry.csproj">
+      <Project>{896df25e-8ee5-4dbd-85d2-249045dc9631}</Project>
+      <Name>Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TAUtil\TAUtil.csproj">
+      <Project>{71AE8770-7794-4CF8-88F1-1D7429F24EB4}</Project>
+      <Name>TAUtil</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ta.pal" />
+    <None Include="nofeature.png" />
+    <None Include="number_1.png" />
+    <None Include="number_10.png" />
+    <None Include="number_2.png" />
+    <None Include="number_3.png" />
+    <None Include="number_4.png" />
+    <None Include="number_5.png" />
+    <None Include="number_6.png" />
+    <None Include="number_7.png" />
+    <None Include="number_8.png" />
+    <None Include="number_9.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AboutText.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

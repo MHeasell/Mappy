@@ -1,0 +1,15 @@
+﻿Mappy v0.3
+
+Author: Armoured Fish
+Email: armouredfish@gmail.com
+
+Mappy is a map editor for Total Annihilation.
+This is software is highly alpha and experimental. The usual disclaimer applies: this software is provided free of charge on an as-is basis, and I (Armoured Fish) take absolutely no responsibility for any damage this software might cause.
+
+Thanks to JoeD for HPIUtil, which Mappy uses to read HPI files.
+
+Thanks to Kinboat for Annihilator, the original fan-made editor that is still the tool of choice for many modders, whose source code was valuable in the development of this program.
+
+Thanks to JoeD, Saruman, Bobban, Bizmut, Kinboat and Manu for the GAF file format documentation.
+Thanks to Kinboat for the SCT file format documentation.
+Thanks to me22, Saruman and Bobban for the TNT file format documentation.
