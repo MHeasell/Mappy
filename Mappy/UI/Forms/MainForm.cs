@@ -168,7 +168,7 @@
         public string AskUserToOpenFile()
         {
             OpenFileDialog d = new OpenFileDialog();
-            d.Filter = "HAPI archives|*.hpi|TNT files|*.tnt|SCT files|*.sct|All files|*.*";
+            d.Filter = "HAPI archives|*.hpi|TNT files|*.tnt|All files|*.*";
             if (d.ShowDialog(this) == DialogResult.OK)
             {
                 return d.FileName;
