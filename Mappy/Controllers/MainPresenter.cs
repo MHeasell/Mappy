@@ -267,7 +267,8 @@
             switch (maps.Count)
             {
                 case 0:
-                    throw new ArgumentException("No maps found in " + filename);
+                    this.view.ShowError("No maps found in " + filename);
+                    return false;
                 case 1:
                     mapName = maps.First();
                     readOnly = false;
