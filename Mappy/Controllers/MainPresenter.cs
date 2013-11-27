@@ -224,6 +224,10 @@
             switch (ext)
             {
                 case ".hpi":
+                case ".ufo":
+                case ".ccx":
+                case ".gpf":
+                case ".gp3":
                     return this.OpenFromHapi(filename);
                 case ".tnt":
                     this.model.OpenTnt(filename);
