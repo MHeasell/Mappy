@@ -236,7 +236,8 @@
                     this.model.OpenSct(filename);
                     return true;
                 default:
-                    throw new ArgumentException("Unrecognised file extension: " + ext);
+                    this.view.ShowError(string.Format("Mappy doesn't know how to open {0} files", ext));
+                    return false;
             }
         }
 

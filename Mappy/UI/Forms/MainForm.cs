@@ -259,6 +259,11 @@
             return null;
         }
 
+        public void ShowError(string message)
+        {
+            MessageBox.Show(this, message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private void Form1Load(object sender, EventArgs e)
         {
             this.minimapForm = new MinimapForm();

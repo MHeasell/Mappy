@@ -55,5 +55,7 @@
         MapAttributesResult AskUserForMapAttributes(MapAttributesResult r);
 
         void Close();
+
+        void ShowError(string message);
     }
 }
