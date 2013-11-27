@@ -220,7 +220,8 @@
 
         private bool OpenMap(string filename)
         {
-            string ext = Path.GetExtension(filename);
+            string ext = Path.GetExtension(filename) ?? string.Empty;
+            ext = ext.ToLower();
             switch (ext)
             {
                 case ".hpi":
