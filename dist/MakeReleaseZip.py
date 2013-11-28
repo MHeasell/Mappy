@@ -9,17 +9,22 @@ import shutil
 
 release_mode = False
 
+slndir = ".."
+projdir = join(slndir, "Mappy")
 if (release_mode):
-    bindir = "../Mappy/bin/Release"
+    bindir = join(projdir, "bin/Release")
 else:
-    bindir = "../Mappy/bin/Debug"
+    bindir = join(projdir, "bin/Debug")
 
 dist_files = [
         join(bindir, "Geometry.dll"),
         join(bindir, "Geometry.pdb"),
+        join(bindir, "HPIUtil.dll"),
+        join(slndir, "LICENSE"),
         join(bindir, "Mappy.exe"),
         join(bindir, "Mappy.exe.config"),
         join(bindir, "Mappy.pdb"),
+        join(slndir, "README.md"),
         join(bindir, "TAUtil.dll"),
         join(bindir, "TAUtil.pdb"),
     ]
