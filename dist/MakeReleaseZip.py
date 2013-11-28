@@ -6,8 +6,15 @@ import os.path
 from os.path import join
 import sys
 import shutil
+import argparse
 
-release_mode = False
+parser = argparse.ArgumentParser(description="Release packaging script")
+parser.add_argument("--release", dest="release", action="store_const",
+        const=True, default=False,
+        help="package from release directory")
+args = parser.parse_args()
+
+release_mode = args.release
 
 slndir = ".."
 projdir = join(slndir, "Mappy")
@@ -34,6 +41,8 @@ project_name = "mappy"
 tag = check_output(["git", "describe", "--dirty=-d"]).strip()
 
 dist_name = project_name + "-" + tag
+if not release_mode:
+    dist_name += "-DEBUG"
 
 zip_name = dist_name + ".zip"
 
