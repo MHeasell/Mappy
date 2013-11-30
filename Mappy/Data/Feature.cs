@@ -43,6 +43,15 @@ namespace Mappy.Data
             {
                 for (int x = 0; x <= this.Footprint.Height; x++)
                 {
+                    int accX = xPos + x;
+                    int accY = yPos + y;
+
+                    // avoid crashing if we try to draw a feature too close to the map edge
+                    if (accX < 0 || accY < 0 || accX >= heightmap.Width || accY >= heightmap.Height)
+                    {
+                        continue;
+                    }
+
                     accum += heightmap.Get(xPos + x, yPos + y);
                 }
             }
