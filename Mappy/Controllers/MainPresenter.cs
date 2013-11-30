@@ -296,7 +296,7 @@
                     break;
             }
 
-            if (string.IsNullOrEmpty(mapName))
+            if (mapName == null)
             {
                 return false;
             }
