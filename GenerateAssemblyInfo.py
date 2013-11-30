@@ -27,8 +27,11 @@ revision = "0"
 hashref = None
 if (extra_text != None):
     parts = extra_text.split("-", 1)
-    revision = parts[0]
-    hashref = parts[1]
+    if len(parts) > 1:
+        revision = parts[0]
+        hashref = parts[1]
+    else:
+        hashref = parts[0]
 
 # build the output version string
 version = string.join([major, minor, hotfix, revision], ".")
