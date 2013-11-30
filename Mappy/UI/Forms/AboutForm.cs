@@ -9,6 +9,10 @@
             this.InitializeComponent();
 
             this.richTextBox1.Text = Mappy.Properties.Resources.AboutText;
+            this.label1.Text = string.Format(
+                "{0} v{1}",
+                Application.ProductName,
+                Application.ProductVersion);
         }
     }
 }

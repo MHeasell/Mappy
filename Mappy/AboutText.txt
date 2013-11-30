@@ -1,6 +1,4 @@
-﻿Mappy v0.3
-
-Author: Armoured Fish
+﻿Author: Armoured Fish
 Email: armouredfish@gmail.com
 
 Mappy is a map editor for Total Annihilation.
