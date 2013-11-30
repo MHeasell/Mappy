@@ -193,7 +193,7 @@
         public string AskUserToSaveFile()
         {
             SaveFileDialog d = new SaveFileDialog();
-            d.Filter = "HPI files|*.hpi|TNT files|*.tnt|All files|*.*";
+            d.Filter = "HPI files|*.hpi;*.ufo;*.ccx;*.gpf;*.gp3|TNT files|*.tnt|All files|*.*";
             d.AddExtension = true;
             DialogResult result = d.ShowDialog(this);
             if (result == DialogResult.OK)

@@ -212,6 +212,10 @@
                         this.model.Save(filename);
                         return true;
                     case ".hpi":
+                    case ".ufo":
+                    case ".ccx":
+                    case ".gpf":
+                    case ".gp3":
                         this.model.SaveHpi(filename);
                         return true;
                     default:
