@@ -14,6 +14,13 @@
         [STAThread]
         public static void Main()
         {
+            if (Properties.Settings.Default.UpgradeSettings)
+            {
+                Properties.Settings.Default.Upgrade();
+                Properties.Settings.Default.UpgradeSettings = false;
+                Properties.Settings.Default.Save();
+            }
+
             Application.ThreadException += Program.OnGuiUnhandedException;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
