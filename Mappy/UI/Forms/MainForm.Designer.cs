@@ -73,7 +73,7 @@
             this.featureview1 = new Mappy.UI.Controls.FeatureView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
-            this.mapPanel1 = new Mappy.UI.Controls.MapPanel();
+            this.imageLayerView1 = new Mappy.UI.Controls.ImageLayerView();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -455,28 +455,28 @@
             this.startPositionsView1.Size = new System.Drawing.Size(188, 506);
             this.startPositionsView1.TabIndex = 0;
             // 
-            // mapPanel1
+            // imageLayerView1
             // 
-            this.mapPanel1.AllowDrop = true;
-            this.mapPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.mapPanel1.AutoScroll = true;
-            this.mapPanel1.BackColor = System.Drawing.Color.CornflowerBlue;
-            this.mapPanel1.Location = new System.Drawing.Point(208, 24);
-            this.mapPanel1.Name = "mapPanel1";
-            this.mapPanel1.Size = new System.Drawing.Size(576, 538);
-            this.mapPanel1.TabIndex = 2;
-            this.mapPanel1.SizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
-            this.mapPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.MapPanel1Paint);
+            this.imageLayerView1.AllowDrop = true;
+            this.imageLayerView1.CanvasSize = new System.Drawing.Size(0, 0);
+            this.imageLayerView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageLayerView1.GridColor = System.Drawing.Color.Black;
+            this.imageLayerView1.GridSize = new System.Drawing.Size(16, 16);
+            this.imageLayerView1.GridVisible = false;
+            this.imageLayerView1.Location = new System.Drawing.Point(202, 24);
+            this.imageLayerView1.Name = "imageLayerView1";
+            this.imageLayerView1.SelectedItem = null;
+            this.imageLayerView1.Size = new System.Drawing.Size(582, 538);
+            this.imageLayerView1.TabIndex = 5;
+            this.imageLayerView1.Text = "imageLayerView1";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 562);
+            this.Controls.Add(this.imageLayerView1);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.mapPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
@@ -505,7 +505,6 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem heightmapToolStripMenuItem;
-        private MapPanel mapPanel1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
@@ -540,6 +539,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
         private System.Windows.Forms.TabPage tabPage3;
         private StartPositionsView startPositionsView1;
+        private ImageLayerView imageLayerView1;
     }
 }
 

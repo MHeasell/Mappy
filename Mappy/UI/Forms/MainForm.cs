@@ -27,11 +27,11 @@
             // paint events don't seem to fire from mapPanel1 when it is scrolled,
             // so we also listen for paint events from the child mapcontrol
             // to tell us when it was scrolled
-            this.mapPanel1.MapControl.Paint += this.MapPanel1Paint;
+            this.imageLayerView1.Paint += this.MapPanel1Paint;
 
             CoreModel model = new CoreModel();
 
-            new MapPresenter(this.mapPanel1.MapControl, model);
+            new MapPresenter(this.imageLayerView1, model);
             new MainPresenter(this, model);
         }
 
@@ -93,10 +93,10 @@
         {
             get
             {
-                Point loc = this.mapPanel1.AutoScrollPosition;
+                Point loc = this.imageLayerView1.AutoScrollPosition;
                 loc.X *= -1;
                 loc.Y *= -1;
-                return new Rectangle(loc, this.mapPanel1.ClientSize);
+                return new Rectangle(loc, this.imageLayerView1.ClientSize);
             }
         }
 
@@ -179,9 +179,9 @@
 
         public void SetViewportCenter(Point p)
         {
-            p.X -= this.mapPanel1.ClientSize.Width / 2;
-            p.Y -= this.mapPanel1.ClientSize.Height / 2;
-            this.mapPanel1.AutoScrollPosition = p;
+            p.X -= this.imageLayerView1.ClientSize.Width / 2;
+            p.Y -= this.imageLayerView1.ClientSize.Height / 2;
+            this.imageLayerView1.AutoScrollPosition = p;
         }
 
         public void CapturePreferences()
@@ -293,7 +293,7 @@
 
         private void MapPanel1Paint(object sender, PaintEventArgs e)
         {
-            Point p = this.mapPanel1.AutoScrollPosition;
+            Point p = this.imageLayerView1.AutoScrollPosition;
             if (p != this.oldAutoScrollPos)
             {
                 this.oldAutoScrollPos = p;

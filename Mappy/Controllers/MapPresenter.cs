@@ -102,6 +102,7 @@
             }
 
             Point pos = this.view.PointToClient(new Point(e.X, e.Y));
+            pos = this.view.ToVirtualPoint(pos);
 
             if (e.Data.GetDataPresent(typeof(StartPositionDragData)))
             {
@@ -183,11 +184,11 @@
 
             if (this.model.Map == null)
             {
-                this.view.Size = new Size(64, 64);
+                this.view.CanvasSize = new Size(64, 64);
                 return;
             }
 
-            this.view.Size = new Size(
+            this.view.CanvasSize = new Size(
                 this.model.Map.Tile.TileGrid.Width * 32,
                 this.model.Map.Tile.TileGrid.Height * 32);
 
@@ -483,14 +484,14 @@
         private void ViewMouseDown(object sender, MouseEventArgs e)
         {
             this.view.Focus();
-
             this.mouseDown = true;
-            this.lastMousePos = e.Location;
+            this.lastMousePos = this.view.ToVirtualPoint(e.Location);
             this.delta = new Point();
         }
 
         private void ViewMouseMove(object sender, MouseEventArgs e)
         {
+            Point virtualLocation = this.view.ToVirtualPoint(e.Location);
             try
             {
                 if (!this.mouseDown)
@@ -507,21 +508,21 @@
 
                 if (f != null)
                 {
-                    this.DragFeatureTo(f.Coordinates, e.Location);
+                    this.DragFeatureTo(f.Coordinates, virtualLocation);
                 }
                 else
                 {
                     Positioned<IMapTile> t = this.view.SelectedItem.Tag as Positioned<IMapTile>;
                     if (t != null)
                     {
-                        this.DragSectionTo(t, e.Location);
+                        this.DragSectionTo(t, virtualLocation);
                     }
                     else
                     {
                         StartPositionTag s = this.view.SelectedItem.Tag as StartPositionTag;
                         if (s != null)
                         {
-                            this.model.TranslateStartPositionTo(s.Index, e.X, e.Y);
+                            this.model.TranslateStartPositionTo(s.Index, virtualLocation.X, virtualLocation.Y);
                             this.view.SelectedItem = this.startPositionMapping[s.Index];
                         }
                     }
@@ -529,7 +530,7 @@
             }
             finally
             {
-                this.lastMousePos = e.Location;
+                this.lastMousePos = virtualLocation;
             }
         }
 

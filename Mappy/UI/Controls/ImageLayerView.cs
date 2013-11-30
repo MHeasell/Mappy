@@ -7,11 +7,17 @@
     using System.Windows.Forms;
     using Painters;
 
-    public partial class ImageLayerView : Control
+    public partial class ImageLayerView : ScrollableControl
     {
         private readonly ImageLayerCollection items;
 
         private ImageLayerCollection.Item selectedItem;
+
+        private Size canvasSize;
+
+        private Color canvasColor = Color.CornflowerBlue;
+
+        private Brush canvasBrush;
 
         private bool gridVisible;
         private Color gridColor = Color.Black;
@@ -20,6 +26,9 @@
         public ImageLayerView()
         {
             this.InitializeComponent();
+
+            this.canvasBrush = new SolidBrush(this.canvasColor);
+
             this.DoubleBuffered = true;
             this.items = new ImageLayerCollection(this.Width, this.Height);
             this.Items.CollectionChanged += this.ItemsChanged;
@@ -28,6 +37,10 @@
         public event EventHandler SelectedItemChanging;
 
         public event EventHandler SelectedItemChanged;
+
+        public event EventHandler CanvasSizeChanged;
+
+        public event EventHandler CanvasColorChanged;
 
         public bool GridVisible
         {
@@ -94,24 +107,109 @@
             }
         }
 
+        public Size CanvasSize
+        {
+            get
+            {
+                return this.canvasSize;
+            }
+
+            set
+            {
+                if (value != this.canvasSize)
+                {
+                    this.canvasSize = value;
+                    this.OnCanvasSizeChanged();
+                }
+            }
+        }
+
+        public Color CanvasColor
+        {
+            get
+            {
+                return this.canvasColor;
+            }
+
+            set
+            {
+                if (value != this.canvasColor)
+                {
+                    this.canvasColor = value;
+                    this.OnCanvasColorChanged();
+                }
+            }
+        }
+
+        public Point ToVirtualPoint(Point clientPoint)
+        {
+            return new Point(
+                clientPoint.X - this.AutoScrollPosition.X,
+                clientPoint.Y - this.AutoScrollPosition.Y);
+        }
+
+        public Rectangle ToClientRect(Rectangle rect)
+        {
+            Rectangle outRect = rect;
+            outRect.Offset(this.AutoScrollPosition.X, this.AutoScrollPosition.Y);
+            return outRect;
+        }
+
+        public Rectangle ToVirtualRect(Rectangle clientRect)
+        {
+            Rectangle outRect = clientRect;
+            outRect.Offset(-this.AutoScrollPosition.X, -this.AutoScrollPosition.Y);
+            return outRect;
+        }
+
+        protected virtual void OnCanvasSizeChanged()
+        {
+            this.Items.Resize(this.CanvasSize.Width, this.CanvasSize.Height);
+
+            this.AutoScrollMinSize = this.CanvasSize;
+            this.Invalidate();
+
+            EventHandler h = this.CanvasSizeChanged;
+            if (h != null)
+            {
+                h(this, EventArgs.Empty);
+            }
+        }
+
         protected override void OnPaint(PaintEventArgs pe)
         {
             base.OnPaint(pe);
 
-            foreach (var i in this.Items.EnumerateIntersecting(pe.ClipRectangle))
+            // paint canvas background
+            Rectangle canvasArea = this.ToClientRect(new Rectangle(Point.Empty, this.CanvasSize));
+            canvasArea.Intersect(pe.ClipRectangle);
+            pe.Graphics.FillRectangle(this.canvasBrush, canvasArea);
+
+            // translate to virtual coordinates
+            pe.Graphics.TranslateTransform(
+                this.AutoScrollPosition.X,
+                this.AutoScrollPosition.Y);
+
+            // virtual clip rect
+            Rectangle virtualClip = this.ToVirtualRect(pe.ClipRectangle);
+
+            // draw items
+            foreach (var i in this.Items.EnumerateIntersecting(virtualClip))
             {
-                i.Draw(pe.Graphics, pe.ClipRectangle);
+                i.Draw(pe.Graphics, virtualClip);
             }
 
+            // draw grid
             if (this.GridVisible)
             {
                 using (Pen pen = new Pen(this.GridColor))
                 {
                     GridPainter p = new GridPainter(this.GridSize.Width, pen);
-                    p.Paint(pe.Graphics, pe.ClipRectangle);
+                    p.Paint(pe.Graphics, virtualClip);
                 }
             }
 
+            // draw selection rectangle
             if (this.SelectedItem != null)
             {
                 pe.Graphics.DrawRectangle(
@@ -123,18 +221,11 @@
             }
         }
 
-        protected override void OnSizeChanged(EventArgs e)
-        {
-            this.Items.Resize(this.Width, this.Height);
-
-            base.OnSizeChanged(e);
-        }
-
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
 
-            this.SelectedItem = this.Items.HitTest(e.Location);
+            this.SelectedItem = this.Items.HitTest(this.ToVirtualPoint(e.Location));
         }
 
         protected override void OnLostFocus(EventArgs e)
@@ -172,9 +263,22 @@
             }
         }
 
+        protected virtual void OnCanvasColorChanged()
+        {
+            this.canvasBrush.Dispose();
+            this.canvasBrush = new SolidBrush(this.CanvasColor);
+            this.Invalidate();
+
+            EventHandler h = this.CanvasColorChanged;
+            if (h != null)
+            {
+                h(this, EventArgs.Empty);
+            }
+        }
+
         private void InvalidateSelectionRect()
         {
-            Rectangle r = this.SelectedItem.Bounds;
+            Rectangle r = this.ToClientRect(this.SelectedItem.Bounds);
             this.Invalidate(new Rectangle(r.Left, r.Top, r.Width, 1));
             this.Invalidate(new Rectangle(r.Left, r.Top, 1, r.Height));
             this.Invalidate(new Rectangle(r.Right, r.Top, 1, r.Height));
@@ -190,7 +294,7 @@
                     {
                         ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
                         item.PropertyChanged += this.ItemPropertyChanged;
-                        this.Invalidate(item.Bounds);
+                        this.Invalidate(this.ToClientRect(item.Bounds));
                     }
 
                     break;
@@ -200,7 +304,7 @@
                     {
                         ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
                         item.PropertyChanged -= this.ItemPropertyChanged;
-                        this.Invalidate(item.Bounds);
+                        this.Invalidate(this.ToClientRect(item.Bounds));
                     }
 
                     break;
@@ -210,14 +314,14 @@
                     {
                         ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
                         item.PropertyChanged -= this.ItemPropertyChanged;
-                        this.Invalidate(item.Bounds);
+                        this.Invalidate(this.ToClientRect(item.Bounds));
                     }
 
                     foreach (var i in e.NewItems)
                     {
                         ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
                         item.PropertyChanged += this.ItemPropertyChanged;
-                        this.Invalidate(item.Bounds);
+                        this.Invalidate(this.ToClientRect(item.Bounds));
                     }
 
                     break;
@@ -233,7 +337,7 @@
                 this.SelectedItem = null;
             }
 
-            this.Invalidate(i.Bounds);
+            this.Invalidate(this.ToClientRect(i.Bounds));
         }
     }
 }
