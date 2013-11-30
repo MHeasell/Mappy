@@ -393,7 +393,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(202, 538);
+            this.tabControl1.Size = new System.Drawing.Size(215, 538);
             this.tabControl1.TabIndex = 4;
             // 
             // tabPage1
@@ -402,7 +402,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(194, 512);
+            this.tabPage1.Size = new System.Drawing.Size(207, 512);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Sections";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -413,7 +413,7 @@
             this.sectionView1.Location = new System.Drawing.Point(3, 3);
             this.sectionView1.Name = "sectionView1";
             this.sectionView1.Sections = null;
-            this.sectionView1.Size = new System.Drawing.Size(188, 506);
+            this.sectionView1.Size = new System.Drawing.Size(201, 506);
             this.sectionView1.TabIndex = 3;
             // 
             // tabPage2
@@ -458,15 +458,16 @@
             // imageLayerView1
             // 
             this.imageLayerView1.AllowDrop = true;
+            this.imageLayerView1.CanvasColor = System.Drawing.Color.CornflowerBlue;
             this.imageLayerView1.CanvasSize = new System.Drawing.Size(0, 0);
             this.imageLayerView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.imageLayerView1.GridColor = System.Drawing.Color.Black;
             this.imageLayerView1.GridSize = new System.Drawing.Size(16, 16);
             this.imageLayerView1.GridVisible = false;
-            this.imageLayerView1.Location = new System.Drawing.Point(202, 24);
+            this.imageLayerView1.Location = new System.Drawing.Point(215, 24);
             this.imageLayerView1.Name = "imageLayerView1";
             this.imageLayerView1.SelectedItem = null;
-            this.imageLayerView1.Size = new System.Drawing.Size(582, 538);
+            this.imageLayerView1.Size = new System.Drawing.Size(569, 538);
             this.imageLayerView1.TabIndex = 5;
             this.imageLayerView1.Text = "imageLayerView1";
             // 
