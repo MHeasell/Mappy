@@ -25,6 +25,8 @@
             this.Items.CollectionChanged += this.ItemsChanged;
         }
 
+        public event EventHandler SelectedItemChanging;
+
         public event EventHandler SelectedItemChanged;
 
         public bool GridVisible
@@ -85,6 +87,7 @@
             {
                 if (value != this.selectedItem)
                 {
+                    this.OnSelectedItemChanging();
                     this.selectedItem = value;
                     this.OnSelectedItemChanged();
                 }
@@ -141,15 +144,41 @@
             this.SelectedItem = null;
         }
 
+        protected virtual void OnSelectedItemChanging()
+        {
+            if (this.SelectedItem != null)
+            {
+                this.InvalidateSelectionRect();
+            }
+
+            EventHandler h = this.SelectedItemChanging;
+            if (h != null)
+            {
+                h(this, EventArgs.Empty);
+            }
+        }
+
         protected virtual void OnSelectedItemChanged()
         {
-            this.Invalidate();
+            if (this.SelectedItem != null)
+            {
+                this.InvalidateSelectionRect();
+            }
 
             EventHandler h = this.SelectedItemChanged;
             if (h != null)
             {
                 h(this, EventArgs.Empty);
             }
+        }
+
+        private void InvalidateSelectionRect()
+        {
+            Rectangle r = this.SelectedItem.Bounds;
+            this.Invalidate(new Rectangle(r.Left, r.Top, r.Width, 1));
+            this.Invalidate(new Rectangle(r.Left, r.Top, 1, r.Height));
+            this.Invalidate(new Rectangle(r.Right, r.Top, 1, r.Height));
+            this.Invalidate(new Rectangle(r.Left, r.Bottom, r.Width + 1, 1));
         }
 
         private void ItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -159,7 +188,9 @@
                 case NotifyCollectionChangedAction.Add:
                     foreach (var i in e.NewItems)
                     {
-                        ((ImageLayerCollection.Item)i).PropertyChanged += this.ItemPropertyChanged;
+                        ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
+                        item.PropertyChanged += this.ItemPropertyChanged;
+                        this.Invalidate(item.Bounds);
                     }
 
                     break;
@@ -167,7 +198,9 @@
                 case NotifyCollectionChangedAction.Remove:
                     foreach (var i in e.OldItems)
                     {
-                        ((ImageLayerCollection.Item)i).PropertyChanged -= this.ItemPropertyChanged;
+                        ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
+                        item.PropertyChanged -= this.ItemPropertyChanged;
+                        this.Invalidate(item.Bounds);
                     }
 
                     break;
@@ -175,18 +208,20 @@
                 case NotifyCollectionChangedAction.Replace:
                     foreach (var i in e.OldItems)
                     {
-                        ((ImageLayerCollection.Item)i).PropertyChanged -= this.ItemPropertyChanged;
+                        ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
+                        item.PropertyChanged -= this.ItemPropertyChanged;
+                        this.Invalidate(item.Bounds);
                     }
 
                     foreach (var i in e.NewItems)
                     {
-                        ((ImageLayerCollection.Item)i).PropertyChanged += this.ItemPropertyChanged;
+                        ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
+                        item.PropertyChanged += this.ItemPropertyChanged;
+                        this.Invalidate(item.Bounds);
                     }
 
                     break;
             }
-
-            this.Invalidate();
         }
 
         private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -198,7 +233,7 @@
                 this.SelectedItem = null;
             }
 
-            this.Invalidate();
+            this.Invalidate(i.Bounds);
         }
     }
 }
