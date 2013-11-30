@@ -67,8 +67,7 @@
                 return this.SaveAs();
             }
 
-            this.SaveHelper(this.model.FilePath);
-            return true;
+            return this.SaveHelper(this.model.FilePath);
         }
 
         public bool SaveAs()
@@ -80,8 +79,7 @@
                 return false;
             }
 
-            this.SaveHelper(path);
-            return true;
+            return this.SaveHelper(path);
         }
 
         public void SavePressed(object sender, EventArgs e)
@@ -202,19 +200,29 @@
             }
         }
 
-        private void SaveHelper(string filename)
+        private bool SaveHelper(string filename)
         {
             string extension = Path.GetExtension(filename);
-            switch (extension)
+
+            try
             {
-                case ".tnt":
-                    this.model.Save(filename);
-                    break;
-                case ".hpi":
-                    this.model.SaveHpi(filename);
-                    break;
-                default:
-                    throw new ArgumentException("unknown extension: " + extension);
+                switch (extension)
+                {
+                    case ".tnt":
+                        this.model.Save(filename);
+                        return true;
+                    case ".hpi":
+                        this.model.SaveHpi(filename);
+                        return true;
+                    default:
+                        this.view.ShowError("Unrecognized file extension: " + extension);
+                        return false;
+                }
+            }
+            catch (IOException e)
+            {
+                this.view.ShowError("Error saving map: " + e.Message);
+                return false;
             }
         }
 
