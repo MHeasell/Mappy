@@ -80,8 +80,12 @@
         {
             if (this.handle != IntPtr.Zero)
             {
-                NativeMethods.HPIPackArchive(this.handle, this.compression);
+                int success = NativeMethods.HPIPackArchive(this.handle, this.compression);
                 this.handle = IntPtr.Zero;
+                if (success == 0)
+                {
+                    throw new IOException("failed to pack archive");
+                }
             }
         }
     }

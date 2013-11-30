@@ -217,30 +217,34 @@
 
         public void OpenSct(string filename)
         {
+            MapTile t;
             using (Stream s = File.OpenRead(filename))
             {
                 SctFile sct = new SctFile(s);
-                MapTile t = MapTile.ReadFromSct(sct, this.Palette);
-
-                this.baseMap = new MapModel(t);
+                t = MapTile.ReadFromSct(sct, this.Palette);
             }
 
+            this.baseMap = new MapModel(t);
             this.Map = new BindingMapModel(this.baseMap);
         }
 
         public void OpenTnt(string filename)
         {
+            MapModel m;
             using (Stream s = File.OpenRead(filename))
             {
-                this.baseMap = MapModel.Load(new TntFile(s), this.Palette, this.featureRecords);
+                m = MapModel.Load(new TntFile(s), this.Palette, this.featureRecords);
             }
 
-            this.Map = new BindingMapModel(this.baseMap);
+            this.baseMap = m;
+            this.Map = new BindingMapModel(m);
             this.FilePath = filename;
         }
 
         public void OpenHapi(string hpipath, string mappath, bool readOnly = false)
         {
+            MapModel m;
+
             using (HpiReader hpi = new HpiReader(hpipath))
             {
                 string otaPath = Path.ChangeExtension(mappath, ".ota");
@@ -254,17 +258,18 @@
 
                 using (Stream s = hpi.ReadFile(mappath))
                 {
-                    this.baseMap = MapModel.Load(
+                    m = MapModel.Load(
                         new TntFile(s),
                         n,
                         this.Palette,
                         this.featureRecords);
                 }
-
-                this.Map = new BindingMapModel(this.baseMap);
-                this.FilePath = hpipath;
-                this.IsFileReadOnly = readOnly;
             }
+
+            this.baseMap = m;
+            this.Map = new BindingMapModel(m);
+            this.FilePath = hpipath;
+            this.IsFileReadOnly = readOnly;
         }
 
         public void PlaceSection(int tileId, int x, int y)

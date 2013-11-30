@@ -222,23 +222,32 @@
         {
             string ext = Path.GetExtension(filename) ?? string.Empty;
             ext = ext.ToLower();
-            switch (ext)
+
+            try
             {
-                case ".hpi":
-                case ".ufo":
-                case ".ccx":
-                case ".gpf":
-                case ".gp3":
-                    return this.OpenFromHapi(filename);
-                case ".tnt":
-                    this.model.OpenTnt(filename);
-                    return true;
-                case ".sct":
-                    this.model.OpenSct(filename);
-                    return true;
-                default:
-                    this.view.ShowError(string.Format("Mappy doesn't know how to open {0} files", ext));
-                    return false;
+                switch (ext)
+                {
+                    case ".hpi":
+                    case ".ufo":
+                    case ".ccx":
+                    case ".gpf":
+                    case ".gp3":
+                        return this.OpenFromHapi(filename);
+                    case ".tnt":
+                        this.model.OpenTnt(filename);
+                        return true;
+                    case ".sct":
+                        this.model.OpenSct(filename);
+                        return true;
+                    default:
+                        this.view.ShowError(string.Format("Mappy doesn't know how to open {0} files", ext));
+                        return false;
+                }
+            }
+            catch (IOException e)
+            {
+                this.view.ShowError(string.Format("Error opening map: " + e.Message));
+                return false;
             }
         }
 
