@@ -23,6 +23,12 @@ namespace Mappy.Util
         public static Point? ScreenToHeightIndex(IGrid<int> heightmap, Point p)
         {
             int col = p.X / 16;
+
+            if (col < 0 || col >= heightmap.Height)
+            {
+                return null;
+            }
+
             Ray3D ray = new Ray3D(new Vector3D(p.X, p.Y + 128, 255.0), new Vector3D(0.0, -0.5, -1.0));
 
             for (int row = heightmap.Height - 1; row >= 0; row--)
