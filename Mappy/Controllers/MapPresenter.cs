@@ -184,7 +184,7 @@
 
             if (this.model.Map == null)
             {
-                this.view.CanvasSize = new Size(64, 64);
+                this.view.CanvasSize = Size.Empty;
                 return;
             }
 
