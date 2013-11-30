@@ -1,21 +1,19 @@
 namespace Mappy.UI.Controls
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.Drawing;
     using System.Linq;
     using Drawables;
-    using Models;
     using Util;
 
     public class ImageLayerCollection : INotifyCollectionChanged
     {
-        private readonly ObservableCollection<Item> items = new ObservableCollection<Item>();
+        private QuadTree<Item> items;
 
-        public ImageLayerCollection()
+        public ImageLayerCollection(int width, int height)
         {
-            this.items.CollectionChanged += this.CollectionChanged;
+            this.items = new QuadTree<Item>(new Rectangle(0, 0, width, height));
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -46,18 +44,21 @@ namespace Mappy.UI.Controls
 
         public IEnumerable<Item> EnumerateIntersecting(Rectangle rect)
         {
-            var l = this.items.Where(x =>
-                x.Visible
-                    && rect.IntersectsWith(x.GetRect())).ToList();
+            var l = this.items.FindInArea(rect).Where(x => x.Visible).ToList();
             l.Sort(new ZComparer());
             return l;
         }
 
         public Item HitTest(Point p)
         {
-            var l = this.items.Where(x => !x.Locked && x.Visible).ToList();
+            var l = this.items.FindAtPoint(p).Where(x => !x.Locked && x.Visible).ToList();
             l.Sort(new ZComparer());
-            return l.LastOrDefault(x => x.GetRect().Contains(p));
+            return l.LastOrDefault();
+        }
+
+        public void Resize(int newWidth, int newHeight)
+        {
+            this.items = new QuadTree<Item>(new Rectangle(0, 0, newWidth, newHeight), this.items);
         }
 
         protected virtual void OnAdd(Item item)
@@ -87,7 +88,7 @@ namespace Mappy.UI.Controls
             }
         }
 
-        public class Item : Notifier
+        public class Item : Notifier, QuadTree<Item>.IQuadTreeItem
         {
             private readonly int x;
             private readonly int y;
@@ -123,6 +124,11 @@ namespace Mappy.UI.Controls
             public IDrawable Drawable
             {
                 get { return this.drawable; }
+            }
+
+            public Rectangle Bounds
+            {
+                get { return new Rectangle(this.X, this.Y, this.Drawable.Width, this.Drawable.Height); }
             }
 
             public bool Locked

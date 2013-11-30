@@ -9,7 +9,7 @@
 
     public partial class ImageLayerView : Control
     {
-        private readonly ImageLayerCollection items = new ImageLayerCollection();
+        private readonly ImageLayerCollection items;
 
         private ImageLayerCollection.Item selectedItem;
 
@@ -21,6 +21,7 @@
         {
             this.InitializeComponent();
             this.DoubleBuffered = true;
+            this.items = new ImageLayerCollection(this.Width, this.Height);
             this.Items.CollectionChanged += this.ItemsChanged;
         }
 
@@ -117,6 +118,13 @@
                     this.SelectedItem.Drawable.Width,
                     this.SelectedItem.Drawable.Height);
             }
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            this.Items.Resize(this.Width, this.Height);
+
+            base.OnSizeChanged(e);
         }
 
         protected override void OnMouseDown(MouseEventArgs e)

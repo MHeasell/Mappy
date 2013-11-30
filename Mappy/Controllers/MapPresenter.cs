@@ -187,6 +187,10 @@
                 return;
             }
 
+            this.view.Size = new Size(
+                this.model.Map.Tile.TileGrid.Width * 32,
+                this.model.Map.Tile.TileGrid.Height * 32);
+
             this.baseTile = new DrawableTile(this.model.Map.Tile);
             this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
             ImageLayerCollection.Item baseItem = new ImageLayerCollection.Item(
@@ -214,10 +218,6 @@
             {
                 this.UpdateStartPosition(i);
             }
-
-            this.view.Size = new Size(
-                this.model.Map.Tile.TileGrid.Width * 32,
-                this.model.Map.Tile.TileGrid.Height * 32);
         }
 
         private void InsertTile(Positioned<IMapTile> t, int index)
