@@ -57,7 +57,7 @@ for path in dist_files:
     shutil.copy(path, dist_dir)
 
 # zip it up
-zip_file = zipfile.ZipFile(zip_name, "w")
+zip_file = zipfile.ZipFile(zip_name, "w", zipfile.ZIP_DEFLATED)
 for (dirpath, dirnames, filenames) in os.walk(dist_dir):
     for f in filenames:
         zip_file.write(join(dirpath, f))
