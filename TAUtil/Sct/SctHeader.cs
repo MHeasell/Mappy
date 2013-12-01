@@ -5,7 +5,7 @@
     public struct SctHeader
     {
         /// <summary>
-        /// SCT version. Set to 3.
+        /// SCT version. Usually set to  2 or 3.
         /// </summary>
         public uint Version;
 
