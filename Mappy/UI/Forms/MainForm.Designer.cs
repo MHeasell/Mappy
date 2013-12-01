@@ -470,6 +470,7 @@
             this.imageLayerView1.Size = new System.Drawing.Size(569, 538);
             this.imageLayerView1.TabIndex = 5;
             this.imageLayerView1.Text = "imageLayerView1";
+            this.imageLayerView1.SizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
             // 
             // MainForm
             // 
