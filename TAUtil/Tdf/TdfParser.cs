@@ -83,6 +83,9 @@
 
         private KeyValuePair<string, string> ParseBlockLine(string line)
         {
+            // Chomp ending semicolon.
+            // Some files are missing semicolons at the end of a statement,
+            // so we assume that statements are terminated by newlines.
             int i = line.IndexOf(';');
             if (i != -1)
             {
