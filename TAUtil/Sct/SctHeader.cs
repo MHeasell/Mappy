@@ -52,7 +52,15 @@
         public static void Read(Stream file, ref SctHeader header)
         {
             BinaryReader b = new BinaryReader(file);
-            header.Version = b.ReadUInt32();
+
+            uint version = b.ReadUInt32();
+            if (version != 2 && version != 3)
+            {
+                throw new ParseException("Input does not appear to be a valid SCT file");
+            }
+
+            header.Version = version;
+
             header.PtrMiniMap = b.ReadUInt32();
             header.Tiles = b.ReadUInt32();
             header.PtrTiles = b.ReadUInt32();

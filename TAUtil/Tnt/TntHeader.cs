@@ -125,7 +125,15 @@
         public static void Read(Stream file, ref TntHeader header)
         {
             BinaryReader b = new BinaryReader(file);
-            header.IdVersion = b.ReadUInt32();
+
+            uint version = b.ReadUInt32();
+            if (version != TntHeader.TntMagicNumber)
+            {
+                throw new ParseException("Input does not appear to be a valid TNT file");
+            }
+
+            header.IdVersion = version;
+
             header.Width = b.ReadUInt32();
             header.Height = b.ReadUInt32();
             header.PtrMapData = b.ReadUInt32();

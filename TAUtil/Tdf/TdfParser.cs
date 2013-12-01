@@ -7,6 +7,8 @@
     {
         private readonly TextReader reader;
 
+        private int lineCount;
+
         public TdfParser(TextReader reader)
         {
             this.reader = reader;
@@ -30,6 +32,7 @@
         private string ReadNextLine()
         {
             string line = this.reader.ReadLine();
+            this.lineCount++;
 
             if (line == null)
             {
@@ -56,7 +59,7 @@
             string openBracket = this.ReadNextLine();
             if (!openBracket.Equals("{"))
             {
-                throw new IOException("failed to parse tdf");
+                this.RaiseError("{", openBracket);
             }
 
             string line;
@@ -78,6 +81,11 @@
 
         private string ParseBlockName(string nameLine)
         {
+            if (!nameLine.StartsWith("[") || !nameLine.EndsWith("]"))
+            {
+                this.RaiseError("[<name>]", nameLine);
+            }
+
             return nameLine.Substring(1, nameLine.Length - 2);
         }
 
@@ -93,7 +101,23 @@
             }
 
             string[] parts = line.Split(new[] { '=' }, 2);
+
+            if (parts.Length < 2)
+            {
+                this.RaiseError("<key>=<value>", line);
+            }
+
             return new KeyValuePair<string, string>(parts[0].Trim(), parts[1].Trim());
+        }
+
+        private void RaiseError(string message)
+        {
+            throw new ParseException(string.Format("line {0}: {1}", this.lineCount, message));
+        }
+
+        private void RaiseError(string expected, string actual)
+        {
+            this.RaiseError(string.Format("Expected {0}, got {1}", expected, actual));
         }
     }
 }
