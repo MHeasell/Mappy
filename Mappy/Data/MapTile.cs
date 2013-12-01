@@ -3,7 +3,6 @@ namespace Mappy.Data
     using System.Diagnostics;
     using System.Drawing;
     using Grids;
-    using Models;
 
     using TAUtil.Sct;
 

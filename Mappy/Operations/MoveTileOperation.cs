@@ -1,10 +1,8 @@
 ﻿namespace Mappy.Operations
 {
     using System;
-    using System.Diagnostics;
     using System.Drawing;
     using Data;
-    using Mappy.Models;
 
     public class MoveTileOperation : IReplayableOperation
     {

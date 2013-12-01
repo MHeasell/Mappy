@@ -6,8 +6,6 @@
     using System.IO;
     using Data;
 
-    using Models;
-
     using TAUtil.Gaf;
     using TAUtil.Hpi;
     using TAUtil.Sct;

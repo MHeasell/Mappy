@@ -3,7 +3,6 @@ namespace Mappy.Operations
     using System;
     using Data;
     using Grids;
-    using Models;
 
     public class MoveFeatureOperation : IReplayableOperation
     {

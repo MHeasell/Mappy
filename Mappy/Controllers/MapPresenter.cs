@@ -10,7 +10,6 @@
     using Models;
     using UI.Controls;
     using UI.Drawables;
-    using UI.Painters;
     using Util;
 
     public class MapPresenter

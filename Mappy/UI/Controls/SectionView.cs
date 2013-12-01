@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Windows.Forms;
     using Data;
-    using Mappy.Models;
 
     public partial class SectionView : UserControl
     {

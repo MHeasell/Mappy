@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using Data;
-    using Mappy.Models;
 
     public class RemoveTileOperation : IReplayableOperation
     {
