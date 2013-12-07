@@ -101,7 +101,7 @@
 
             Dictionary<string, GafFrame> bitmaps = new Dictionary<string, GafFrame>();
 
-            if (Properties.Settings.Default.SearchDirectories == null)
+            if (MappySettings.Settings.SearchPaths == null)
             {
                 return bitmaps;
             }
@@ -123,14 +123,14 @@
         private static IEnumerable<string> EnumerateSearchHpis()
         {
             string[] exts = new string[] { "hpi", "ufo", "ccx", "gpf", "gp3" };
-            if (Properties.Settings.Default.SearchDirectories == null)
+            if (MappySettings.Settings.SearchPaths == null)
             {
                 yield break;
             }
 
             foreach (string ext in exts)
             {
-                foreach (string dir in Properties.Settings.Default.SearchDirectories)
+                foreach (string dir in MappySettings.Settings.SearchPaths)
                 {
                     foreach (string file in Directory.EnumerateFiles(dir, "*." + ext))
                     {

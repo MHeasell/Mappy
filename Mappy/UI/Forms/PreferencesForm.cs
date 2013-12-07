@@ -12,9 +12,9 @@
 
         private void PreferencesFormLoad(object sender, EventArgs e)
         {
-            if (Properties.Settings.Default.SearchDirectories != null)
+            if (MappySettings.Settings.SearchPaths != null)
             {
-                foreach (string dir in Properties.Settings.Default.SearchDirectories)
+                foreach (string dir in MappySettings.Settings.SearchPaths)
                 {
                     ListViewItem i = new ListViewItem(dir);
                     this.listView1.Items.Add(i);
@@ -90,8 +90,8 @@
                 s.Add(i.Text);
             }
 
-            Properties.Settings.Default.SearchDirectories = s;
-            Properties.Settings.Default.Save();
+            MappySettings.Settings.SearchPaths = s;
+            MappySettings.SaveSettings();
         }
     }
 }

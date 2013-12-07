@@ -32,7 +32,7 @@
 
         private bool gridVisible;
         private Size gridSize = new Size(16, 16);
-        private Color gridColor = Properties.Settings.Default.GridColor;
+        private Color gridColor = MappySettings.Settings.GridColor;
 
         private MapModel baseMap;
 
@@ -149,8 +149,8 @@
 
             set
             {
-                Properties.Settings.Default.GridColor = value;
-                Properties.Settings.Default.Save();
+                MappySettings.Settings.GridColor = value;
+                MappySettings.SaveSettings();
                 this.SetField(ref this.gridColor, value, "GridColor");
             }
         }

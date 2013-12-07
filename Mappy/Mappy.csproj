@@ -60,6 +60,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration.cs" />
     <Compile Include="Controllers\MapPresenter.cs" />
     <Compile Include="Data\BindingMapTile.cs" />
     <Compile Include="Data\Feature.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Data\Positioned.cs" />
     <Compile Include="Data\Section.cs" />
     <Compile Include="Data\StartPositionChangedEventArgs.cs" />
+    <Compile Include="MappySettings.cs" />
     <Compile Include="Models\CoreModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
     <Compile Include="Operations\AddFeatureOperation.cs" />
@@ -240,15 +242,6 @@
     <None Include="app.config" />
     <None Include="Properties\AssemblyInfo.cs.tmpl" />
     <None Include="Properties\DataSources\Mappy.Models.MapAttributesResult.datasource" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Geometry\Geometry.csproj">
