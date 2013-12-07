@@ -56,6 +56,9 @@ os.mkdir(dist_dir)
 for path in dist_files:
     shutil.copy(path, dist_dir)
 
+# rename the readme
+os.rename(join(dist_dir, "README.md"), join(dist_dir, "README.txt"))
+
 # zip it up
 zip_file = zipfile.ZipFile(zip_name, "w", zipfile.ZIP_DEFLATED)
 for (dirpath, dirnames, filenames) in os.walk(dist_dir):
