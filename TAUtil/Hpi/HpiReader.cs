@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
 
     public sealed class HpiReader : IDisposable
@@ -34,45 +35,69 @@
             GC.SuppressFinalize(this);
         }
 
-        /// <returns>An enumeration of all files in the HPI file,
-        /// relative to the HPI root</returns>
-        public IEnumerable<string> GetFiles()
-        {
-            return new FileEnumerator(this);
-        }
-
         /// <param name="directory">The directory to enumerate</param>
         /// <returns>An enumeration of all files in the given dir, full path relative to HPI root</returns>
-        public IEnumerable<string> GetFilesRecursive(string directory)
+        public IEnumerable<HpiEntry> GetFilesRecursive(string directory)
         {
-            IEnumerable<string> en = new FileEnumerator(this, FileEnumerator.Mode.File, directory);
-            foreach (string f in en)
-            {
-                yield return Path.Combine(directory, f);
-            }
+            IEnumerable<HpiEntry> en = this.GetFilesAndDirectories(directory);
 
-            IEnumerable<string> dirEn = new FileEnumerator(this, FileEnumerator.Mode.Directory, directory);
-            foreach (string d in dirEn)
+            foreach (HpiEntry e in en)
             {
-                IEnumerable<string> recEn = this.GetFilesRecursive(Path.Combine(directory, d));
-                foreach (string f in recEn)
+                if (e.Type == HpiEntry.FileType.File)
                 {
-                    yield return f;
+                    yield return new HpiEntry(Path.Combine(directory, e.Name), e.Type, e.Size);
+                }
+                else
+                {
+                    var recEn = this.GetFilesRecursive(Path.Combine(directory, e.Name));
+                    foreach (HpiEntry f in recEn)
+                    {
+                        yield return f;
+                    }
                 }
             }
+        }
+
+        /// <returns>An enumeration of all files in the HPI file,
+        /// relative to the HPI root</returns>
+        public IEnumerable<HpiEntry> GetFiles()
+        {
+            return this.GetFiles(string.Empty);
         }
 
         /// <param name="directory">The directory to enumerate, relative to the HPI root</param>
         /// <returns>An enumeration of all the files in the given directory inside the HPI file,
         /// relative to that directory</returns>
-        public IEnumerable<string> GetFiles(string directory)
+        public IEnumerable<HpiEntry> GetFiles(string directory)
         {
-            return new FileEnumerator(this, FileEnumerator.Mode.File, directory);
+            return this.GetFilesAndDirectories(directory).Where(x => x.Type == HpiEntry.FileType.File);
         }
 
-        public IEnumerable<string> GetDirectories(string directory)
+        public IEnumerable<HpiEntry> GetDirectories(string directory)
         {
-            return new FileEnumerator(this, FileEnumerator.Mode.Directory, directory);
+            return this.GetFilesAndDirectories(directory).Where(x => x.Type == HpiEntry.FileType.Directory);
+        }
+
+        public IEnumerable<HpiEntry> GetFilesAndDirectories(string directory)
+        {
+            int next = 0;
+            for (;;)
+            {
+                StringBuilder s = new StringBuilder();
+                int type;
+                int size;
+                next = NativeMethods.HPIDir(this.handle, next, directory, s, out type, out size);
+
+                if (next == 0)
+                {
+                    break;
+                }
+
+                yield return new HpiEntry(
+                    s.ToString(),
+                    type == 0 ? HpiEntry.FileType.File : HpiEntry.FileType.Directory,
+                    size);
+            }
         }
 
         public Stream ReadFile(string filename)
@@ -115,69 +140,6 @@
             {
                 NativeMethods.HPIClose(this.handle);
                 this.handle = IntPtr.Zero;
-            }
-        }
-
-        private class FileEnumerator : IEnumerable<string>
-        {
-            private readonly HpiReader archive;
-            private readonly string directory;
-            private readonly Mode mode;
-
-            public FileEnumerator(HpiReader archive,  Mode mode, string directory)
-            {
-                this.archive = archive;
-                this.directory = directory;
-                this.mode = mode;
-            }
-
-            public FileEnumerator(HpiReader archive, Mode mode) : this(archive, mode, null)
-            {
-            }
-
-            public FileEnumerator(HpiReader archive)
-                : this(archive, Mode.File)
-            {
-            }
-
-            public enum Mode
-            { 
-                File,
-                Directory
-            }
-
-            public IEnumerator<string> GetEnumerator()
-            {
-                int next = 0;
-                for (;;)
-                {
-                    StringBuilder s = new StringBuilder();
-                    int type;
-                    int size;
-                    if (this.directory == null)
-                    {
-                        next = NativeMethods.HPIGetFiles(this.archive.handle, next, s, out type, out size);
-                    }
-                    else
-                    {
-                        next = NativeMethods.HPIDir(this.archive.handle, next, this.directory, s, out type, out size);
-                    }
-
-                    if (next == 0)
-                    {
-                        break;
-                    }
-
-                    if ((this.mode == Mode.File && type == 0) || (this.mode == Mode.Directory && type == 1))
-                    {
-                        yield return s.ToString();
-                    }
-                }
-            }
-
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return this.GetEnumerator();
             }
         }
     }

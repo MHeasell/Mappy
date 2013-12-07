@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
+
     using Data;
 
     using TAUtil.Gaf;
@@ -66,7 +68,7 @@
         {
             using (HpiReader h = new HpiReader(filename))
             {
-                foreach (string sect in h.GetFilesRecursive("sections"))
+                foreach (string sect in h.GetFilesRecursive("sections").Select(x => x.Name))
                 {
                     using (Stream s = h.ReadFile(sect))
                     {
@@ -175,7 +177,7 @@
             Dictionary<string, GafFrame> bitmaps = new Dictionary<string, GafFrame>();
 
             // for each anim file in the HPI
-            foreach (string anim in hapi.GetFilesRecursive("anims"))
+            foreach (string anim in hapi.GetFilesRecursive("anims").Select(x => x.Name))
             {
                 // if we require anims from this file
                 IList<TdfNode> val;
@@ -228,7 +230,7 @@
         private static Dictionary<string, TdfNode> LoadFeaturesFromHapi(HpiReader hapi)
         {
             Dictionary<string, TdfNode> features = new Dictionary<string, TdfNode>();
-            foreach (string feature in hapi.GetFilesRecursive("features"))
+            foreach (string feature in hapi.GetFilesRecursive("features").Select(x => x.Name))
             {
                 if (feature.EndsWith(".tdf", StringComparison.OrdinalIgnoreCase))
                 {

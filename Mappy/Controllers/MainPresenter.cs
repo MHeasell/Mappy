@@ -271,7 +271,7 @@
 
         private IEnumerable<string> GetMapNames(HpiReader hpi)
         {
-            foreach (string mapFile in hpi.GetFiles("maps"))
+            foreach (string mapFile in hpi.GetFiles("maps").Select(x => x.Name))
             {
                 if (mapFile.EndsWith(".tnt", StringComparison.OrdinalIgnoreCase))
                 {

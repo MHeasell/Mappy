@@ -50,6 +50,7 @@
     <Compile Include="Gaf\Structures\GafFrameData.cs" />
     <Compile Include="Gaf\Structures\GafFrameEntry.cs" />
     <Compile Include="Gaf\Structures\GafHeader.cs" />
+    <Compile Include="Hpi\HpiEntry.cs" />
     <Compile Include="Hpi\HpiReader.cs" />
     <Compile Include="Hpi\HpiStream.cs" />
     <Compile Include="Hpi\NativeMethods.cs" />
