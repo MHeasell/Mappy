@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Drawing.Imaging;
     using System.IO;
 
     public class TntWriter
@@ -40,23 +41,36 @@
 
         public void WriteTiles(IEnumerable<Bitmap> tiles, Color[] palette)
         {
+            var d = new Dictionary<Color, int>();
+            for (int i = 0; i < palette.Length; i++ )
+            {
+                d[palette[i]] = i;
+            }
+
             foreach (Bitmap tile in tiles)
             {
-                this.WriteTile(tile, palette);
+                this.WriteTile(tile, d);
             }
         }
 
-        public void WriteTile(Bitmap tile, Color[] palette)
+        public void WriteTile(Bitmap tile, IDictionary<Color, int> palette)
         {
-            for (int y = 0; y < tile.Height; y++)
+            Rectangle r = new Rectangle(0, 0, tile.Width, tile.Height);
+            BitmapData data = tile.LockBits(r, ImageLockMode.ReadOnly, tile.PixelFormat);
+
+            unsafe
             {
-                for (int x = 0; x < tile.Width; x++)
+                int* pointer = (int*)data.Scan0;
+                int count = tile.Width * tile.Height;
+                for (int i = 0; i < count; i++)
                 {
-                    Color c = tile.GetPixel(x, y);
-                    int i = Array.IndexOf(palette, c);
-                    this.BaseStream.WriteByte((byte)i);
+                    Color c = Color.FromArgb(pointer[i]);
+                    int colorIndex = palette[c];
+                    this.BaseStream.WriteByte((byte)colorIndex);
                 }
             }
+
+            tile.UnlockBits(data);
         }
 
         public void WriteAttrs(IEnumerable<TileAttr> attrs)
@@ -104,11 +118,16 @@
 
         public void WriteMapData(IEnumerable<Bitmap> data, Bitmap[] mapping)
         {
+            var d = new Dictionary<Bitmap, int>();
+            for (int i = 0; i < mapping.Length; i++)
+            {
+                d[mapping[i]] = i;
+            }
+
             BinaryWriter w = new BinaryWriter(this.BaseStream);
             foreach (Bitmap b in data)
             {
-                int i = Array.IndexOf(mapping, b);
-                w.Write((short)i);
+                w.Write((short)d[b]);
             }
         }
     }
