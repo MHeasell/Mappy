@@ -152,8 +152,8 @@
                 for (;;)
                 {
                     StringBuilder s = new StringBuilder();
-                    long type;
-                    long size;
+                    int type;
+                    int size;
                     if (this.directory == null)
                     {
                         next = NativeMethods.HPIGetFiles(this.archive.handle, next, s, out type, out size);

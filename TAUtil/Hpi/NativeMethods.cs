@@ -31,8 +31,8 @@
             IntPtr hpi,
             int next,
             [Out, MarshalAs(UnmanagedType.LPStr)] StringBuilder name,
-            out long type,
-            out long size);
+            out int type,
+            out int size);
 
         [DllImport("HPIUtil.dll", BestFitMapping = false)]
         public static extern int HPIDir(
@@ -40,8 +40,8 @@
             int next,
             [MarshalAs(UnmanagedType.LPStr)] string dirName,
             [Out, MarshalAs(UnmanagedType.LPStr)] StringBuilder name,
-            out long type,
-            out long size);
+            out int type,
+            out int size);
 
         [DllImport("HPIUtil.dll", BestFitMapping = false)]
         public static extern IntPtr HPICreate(
