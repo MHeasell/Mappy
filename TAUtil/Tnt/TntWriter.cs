@@ -42,7 +42,7 @@
         public void WriteTiles(IEnumerable<Bitmap> tiles, Color[] palette)
         {
             var d = new Dictionary<Color, int>();
-            for (int i = 0; i < palette.Length; i++ )
+            for (int i = 0; i < palette.Length; i++)
             {
                 d[palette[i]] = i;
             }
