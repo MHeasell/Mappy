@@ -1,6 +1,7 @@
 ﻿namespace Mappy
 {
     using System;
+    using System.IO;
     using System.Windows.Forms;
     using UI.Forms;
 
@@ -12,6 +13,8 @@
         [STAThread]
         public static void Main()
         {
+            RemoveOldVersionSettings();
+
             Application.ThreadException += Program.OnGuiUnhandedException;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -30,6 +33,24 @@
         private static void OnGuiUnhandedException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             HandleUnhandledException(e.Exception);
+        }
+
+        private static void RemoveOldVersionSettings()
+        {
+            string appDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            string oldDir = Path.Combine(appDir, @"Armoured_Fish");
+
+            try
+            {
+                if (Directory.Exists(oldDir))
+                {
+                    Directory.Delete(oldDir, true);
+                }
+            }
+            catch (IOException)
+            {
+                // we don't care if this fails
+            }
         }
     }
 }
