@@ -15,9 +15,8 @@
         public uint PtrFrameData;
         public uint Unknown3;
 
-        public static void Read(Stream f, ref GafFrameData e)
+        public static void Read(BinaryReader b, ref GafFrameData e)
         {
-            BinaryReader b = new BinaryReader(f);
             e.Width = b.ReadUInt16();
             e.Height = b.ReadUInt16();
             e.XPos = b.ReadUInt16();

@@ -14,16 +14,14 @@
         /// </summary>
         public uint Unknown1;
 
-        public static void Read(Stream f, ref GafFrameEntry e)
+        public static void Read(BinaryReader b, ref GafFrameEntry e)
         {
-            BinaryReader b = new BinaryReader(f);
             e.PtrFrameTable = b.ReadUInt32();
             e.Unknown1 = b.ReadUInt32();
         }
 
-        public void Write(Stream f)
+        public void Write(BinaryWriter b)
         {
-            BinaryWriter b = new BinaryWriter(f);
             b.Write(this.PtrFrameTable);
             b.Write(this.Unknown1);
         }

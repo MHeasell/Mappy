@@ -6,13 +6,11 @@
 
     public class GafFile
     {
-        public static GafEntry[] Read(Stream s, Color[] palette)
+        public static GafEntry[] Read(BinaryReader b, Color[] palette)
         {
             // read in header
             Structures.GafHeader header = new Structures.GafHeader();
-            Structures.GafHeader.Read(s, ref header);
-
-            BinaryReader b = new BinaryReader(s);
+            Structures.GafHeader.Read(b, ref header);
 
             // read in pointers to entries
             int[] pointers = new int[header.Entries];
@@ -25,24 +23,24 @@
             GafEntry[] entries = new GafEntry[header.Entries];
             for (int i = 0; i < header.Entries; i++)
             {
-                s.Seek(pointers[i], SeekOrigin.Begin);
-                entries[i] = GafFile.ReadGafEntry(s, palette);
+                b.BaseStream.Seek(pointers[i], SeekOrigin.Begin);
+                entries[i] = GafFile.ReadGafEntry(b, palette);
             }
 
             return entries;
         }
 
-        private static GafEntry ReadGafEntry(Stream s, Color[] palette)
+        private static GafEntry ReadGafEntry(BinaryReader b, Color[] palette)
         {
             // read the entry header
             Structures.GafEntry entry = new Structures.GafEntry();
-            Structures.GafEntry.Read(s, ref entry);
+            Structures.GafEntry.Read(b, ref entry);
 
             // read in all the frame entry pointers
             Structures.GafFrameEntry[] frameEntries = new Structures.GafFrameEntry[entry.Frames];
             for (int i = 0; i < entry.Frames; i++)
             {
-                Structures.GafFrameEntry.Read(s, ref frameEntries[i]);
+                Structures.GafFrameEntry.Read(b, ref frameEntries[i]);
             }
 
             // read in the corresponding frames
@@ -50,8 +48,8 @@
 
             for (int i = 0; i < entry.Frames; i++)
             {
-                s.Seek(frameEntries[i].PtrFrameTable, SeekOrigin.Begin);
-                frames[i] = GafFile.LoadFrame(s, palette);
+                b.BaseStream.Seek(frameEntries[i].PtrFrameTable, SeekOrigin.Begin);
+                frames[i] = GafFile.LoadFrame(b, palette);
             }
 
             // fill in and return our output structure
@@ -61,17 +59,17 @@
             return outEntry;
         }
 
-        private static GafFrame LoadFrame(Stream s, Color[] palette)
+        private static GafFrame LoadFrame(BinaryReader b, Color[] palette)
         {
             // read in the frame data table
             Structures.GafFrameData d = new Structures.GafFrameData();
-            Structures.GafFrameData.Read(s, ref d);
+            Structures.GafFrameData.Read(b, ref d);
 
             GafFrame frame = new GafFrame();
             frame.Offset = new Point(d.XPos, d.YPos);
 
             // read the actual frame image
-            s.Seek(d.PtrFrameData, SeekOrigin.Begin);
+            b.BaseStream.Seek(d.PtrFrameData, SeekOrigin.Begin);
 
             if (d.FramePointers > 0)
             {
@@ -82,20 +80,19 @@
             {
                 if (d.Compressed)
                 {
-                    frame.Data = GafFile.ReadCompressedImage(s, d.Width, d.Height, palette);
+                    frame.Data = GafFile.ReadCompressedImage(b, d.Width, d.Height, palette);
                 }
                 else
                 {
-                    frame.Data = GafFile.ReadUncompressedImage(s, d.Width, d.Height, palette);
+                    frame.Data = GafFile.ReadUncompressedImage(b, d.Width, d.Height, palette);
                 }
             }
 
             return frame;
         }
 
-        private static Bitmap ReadUncompressedImage(Stream s, int width, int height, Color[] palette)
+        private static Bitmap ReadUncompressedImage(BinaryReader b, int width, int height, Color[] palette)
         {
-            BinaryReader b = new BinaryReader(s);
             Bitmap bitmap = new Bitmap(width, height);
             Rectangle rect = new Rectangle(0, 0, width, height);
             BitmapData bitmapData = bitmap.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
@@ -123,9 +120,8 @@
             return bitmap;
         }
 
-        private static Bitmap ReadCompressedImage(Stream s, int width, int height, Color[] palette)
+        private static Bitmap ReadCompressedImage(BinaryReader b, int width, int height, Color[] palette)
         {
-            BinaryReader b = new BinaryReader(s);
             Bitmap bitmap = new Bitmap(width, height);
             Rectangle rect = new Rectangle(0, 0, width, height);
             BitmapData data = bitmap.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
