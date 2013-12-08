@@ -85,7 +85,7 @@
             return LoadHelper(f, p, featureBank, attrs);
         }
 
-        public void WriteTnt(Stream s, Color[] palette)
+        public void WriteTnt(TntWriter writer, Color[] palette)
         {
             TntHeader h = new TntHeader();
             h.IdVersion = TntHeader.TntMagicNumber;
@@ -101,10 +101,10 @@
             Feature[] featureMapping = this.GetUsedFeatures().ToArray();
             h.TileAnims = (uint)featureMapping.Length; // FIXME: conversion
 
+            Stream s = writer.BaseStream;
+
             // skip past the header to start writing
             s.Seek(TntHeader.HeaderLength, SeekOrigin.Begin);
-
-            TntWriter writer = new TntWriter(s);
 
             // write all the data
             h.PtrMapData = (uint)s.Position;

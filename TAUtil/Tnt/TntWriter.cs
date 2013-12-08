@@ -6,11 +6,16 @@
     using System.Drawing.Imaging;
     using System.IO;
 
-    public class TntWriter
+    public class TntWriter : IDisposable
     {
         public TntWriter(Stream s)
         {
             this.BaseStream = s;
+        }
+
+        ~TntWriter()
+        {
+            this.Dispose(false);
         }
 
         public Stream BaseStream { get; private set; }
@@ -128,6 +133,19 @@
             foreach (Bitmap b in data)
             {
                 w.Write((short)d[b]);
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.BaseStream.Dispose();
             }
         }
     }

@@ -202,7 +202,7 @@
             IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.Map);
             flatten.Execute();
 
-            using (Stream s = File.OpenWrite(filename))
+            using (TntWriter s = new TntWriter(File.OpenWrite(filename)))
             {
                 this.baseMap.WriteTnt(s, this.Palette);
             }
@@ -461,7 +461,7 @@
 
             try
             {
-                using (Stream s = File.OpenWrite(tmpTntName))
+                using (TntWriter s = new TntWriter(File.OpenWrite(tmpTntName)))
                 {
                     this.baseMap.WriteTnt(s, this.Palette);
                 }
