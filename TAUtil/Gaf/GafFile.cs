@@ -68,6 +68,15 @@
             GafFrame frame = new GafFrame();
             frame.Offset = new Point(d.XPos, d.YPos);
 
+            // Some GAFs (e.g. GZMetalEnergyCrystals.gaf in tamec 2004)
+            // have frames with zero width and height.
+            // Don't try and load these.
+            if (d.Width < 1 || d.Height < 1)
+            {
+                frame.Data = new Bitmap(1, 1);
+                return frame;
+            }
+
             // read the actual frame image
             b.BaseStream.Seek(d.PtrFrameData, SeekOrigin.Begin);
 
