@@ -42,9 +42,8 @@
             return System.Text.Encoding.ASCII.GetString(data, 0, i);
         }
 
-        public static byte[,] LoadMapTile(Stream f)
+        public static byte[,] LoadMapTile(BinaryReader b)
         {
-            BinaryReader b = new BinaryReader(f);
             byte[,] t = new byte[TileSize, TileSize];
 
             for (int y = 0; y < TileSize; y++)
@@ -58,21 +57,13 @@
             return t;
         }
 
-        public static byte[] LoadMapTile1D(Stream f)
+        public static byte[] LoadMapTile1D(BinaryReader b)
         {
-            BinaryReader b = new BinaryReader(f);
             return b.ReadBytes(TileSize * TileSize);
         }
 
-        public static Bitmap LoadMapTileBitmap(Stream f, Color[] p)
+        public static Bitmap LoadBitmap(BinaryReader b, Color[] p, int width, int height)
         {
-            return LoadBitmap(f, p, TileSize, TileSize);
-        }
-
-        public static Bitmap LoadBitmap(Stream f, Color[] p, int width, int height)
-        {
-            BinaryReader b = new BinaryReader(f);
-
             Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
             Rectangle rect = new Rectangle(new Point(0, 0), bitmap.Size);
             BitmapData data = bitmap.LockBits(rect, ImageLockMode.WriteOnly, bitmap.PixelFormat);

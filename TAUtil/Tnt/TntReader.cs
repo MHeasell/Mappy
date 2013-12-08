@@ -11,14 +11,14 @@
         public const int TileSize = 32;
         public const byte MinimapVoidByte = 0x64;
 
-        private readonly Stream stream;
+        private readonly BinaryReader reader;
 
         private TntHeader header;
 
         public TntReader(Stream s)
         {
-            TntHeader.Read(s, ref this.header);
-            this.stream = s;
+            this.reader = new BinaryReader(s);
+            TntHeader.Read(this.reader, ref this.header);
         }
 
         ~TntReader()
@@ -69,42 +69,41 @@
 
         public IEnumerable<byte[,]> EnumerateTilesBytes()
         {
-            this.stream.Seek(this.header.PtrTileGfx, SeekOrigin.Begin);
+            this.reader.BaseStream.Seek(this.header.PtrTileGfx, SeekOrigin.Begin);
             for (int i = 0; i < this.header.Tiles; i++)
             {
-                yield return Util.LoadMapTile(this.stream);
+                yield return Util.LoadMapTile(this.reader);
             }
         }
 
         public IEnumerable<Bitmap> EnumerateTilesBitmaps(Color[] palette)
         {
-            this.stream.Seek(this.header.PtrTileGfx, SeekOrigin.Begin);
+            this.reader.BaseStream.Seek(this.header.PtrTileGfx, SeekOrigin.Begin);
             for (int i = 0; i < this.header.Tiles; i++)
             {
-                byte[] tile = Util.LoadMapTile1D(this.stream);
+                byte[] tile = Util.LoadMapTile1D(this.reader);
                 yield return Util.GetBitmap(tile, palette);
             }
         }
 
         public IEnumerable<int> EnumerateData()
         {
-            this.stream.Seek(this.header.PtrMapData, SeekOrigin.Begin);
-            BinaryReader b = new BinaryReader(this.stream);
+            this.reader.BaseStream.Seek(this.header.PtrMapData, SeekOrigin.Begin);
 
             int elems = this.DataWidth * this.DataHeight;
             for (int i = 0; i < elems; i++)
             {
-                yield return b.ReadUInt16();
+                yield return this.reader.ReadUInt16();
             }
         }
 
         public IEnumerable<TileAttr> EnumerateAttrs()
         {
-            this.stream.Seek(this.header.PtrMapAttr, SeekOrigin.Begin);
+            this.reader.BaseStream.Seek(this.header.PtrMapAttr, SeekOrigin.Begin);
             int elems = this.Width * this.Height;
             for (int i = 0; i < elems; i++)
             {
-                yield return TileAttr.Read(this.stream);
+                yield return TileAttr.Read(this.reader);
             }
         }
 
@@ -190,11 +189,10 @@
 
         public Bitmap GetMinimap(Color[] p)
         {
-            this.stream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
-            BinaryReader rb = new BinaryReader(this.stream);
+            this.reader.BaseStream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
 
-            int readWidth = rb.ReadInt32();
-            int readHeight = rb.ReadInt32();
+            int readWidth = this.reader.ReadInt32();
+            int readHeight = this.reader.ReadInt32();
 
             byte[,] map = new byte[readHeight, readWidth];
 
@@ -202,7 +200,7 @@
             {
                 for (int x = 0; x < readWidth; x++)
                 {
-                    map[y, x] = rb.ReadByte();
+                    map[y, x] = this.reader.ReadByte();
                 }
             }
 
@@ -211,12 +209,11 @@
 
         public IEnumerable<string> EnumerateFeatureNames()
         {
-            this.stream.Seek(this.header.PtrTileAnims, SeekOrigin.Begin);
-            BinaryReader b = new BinaryReader(this.stream);
+            this.reader.BaseStream.Seek(this.header.PtrTileAnims, SeekOrigin.Begin);
             for (int i = 0; i < this.header.TileAnims; i++)
             {
-                b.ReadUInt32();
-                byte[] chars = b.ReadBytes(128);
+                this.reader.ReadUInt32();
+                byte[] chars = this.reader.ReadBytes(128);
                 string s = Util.ConvertChars(chars);
                 yield return s;
             }
@@ -244,7 +241,7 @@
         {
             if (disposing)
             {
-                this.stream.Close();
+                this.reader.Dispose();
             }
         }
 

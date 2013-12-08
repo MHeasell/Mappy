@@ -124,8 +124,11 @@
 
         public static void Read(Stream file, ref TntHeader header)
         {
-            BinaryReader b = new BinaryReader(file);
+            Read(new BinaryReader(file), ref header);
+        }
 
+        public static void Read(BinaryReader b, ref TntHeader header)
+        {
             uint version = b.ReadUInt32();
             if (version != TntHeader.TntMagicNumber)
             {

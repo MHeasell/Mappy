@@ -29,23 +29,26 @@
         /// </summary>
         public byte Pad1;
 
-        public static TileAttr Read(Stream file)
+        public static TileAttr Read(BinaryReader b)
         {
             TileAttr attr;
-            BinaryReader b = new BinaryReader(file);
             attr.Height = b.ReadByte();
             attr.Feature = b.ReadUInt16();
             attr.Pad1 = b.ReadByte();
             return attr;
         }
 
-        /// <param name="file"></param>
-        /// <param name="version">The SCT format version. Valid versions are 2 and 3.</param>
-        /// <returns></returns>
         public static TileAttr ReadFromSct(Stream file, int version)
         {
+            return ReadFromSct(new BinaryReader(file), version);
+        }
+
+        /// <param name="reader"></param>
+        /// <param name="version">The SCT format version. Valid versions are 2 and 3.</param>
+        /// <returns></returns>
+        public static TileAttr ReadFromSct(BinaryReader reader, int version)
+        {
             TileAttr a;
-            BinaryReader reader = new BinaryReader(file);
             a.Height = reader.ReadByte();
             reader.ReadInt16(); // padding
             reader.ReadByte(); // more padding

@@ -49,10 +49,8 @@
             }
         }
 
-        public static void Read(Stream file, ref SctHeader header)
+        public static void Read(BinaryReader b, ref SctHeader header)
         {
-            BinaryReader b = new BinaryReader(file);
-
             uint version = b.ReadUInt32();
             if (version != 2 && version != 3)
             {

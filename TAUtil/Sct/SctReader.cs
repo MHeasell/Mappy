@@ -9,14 +9,14 @@
 
     public class SctReader : IDisposable
     {
-        private readonly Stream stream;
+        private readonly BinaryReader reader;
 
         private SctHeader header;
 
         public SctReader(Stream s)
         {
-            SctHeader.Read(s, ref this.header);
-            this.stream = s;
+            this.reader = new BinaryReader(s);
+            SctHeader.Read(this.reader, ref this.header);
         }
 
         public int Width
@@ -33,10 +33,10 @@
         {
             get
             {
-                this.stream.Seek(this.header.PtrTiles, SeekOrigin.Begin);
+                this.reader.BaseStream.Seek(this.header.PtrTiles, SeekOrigin.Begin);
                 for (int i = 0; i < this.header.Tiles; i++)
                 {
-                    byte[] tile = Util.LoadMapTile1D(this.stream);
+                    byte[] tile = Util.LoadMapTile1D(this.reader);
                     yield return tile;
                 }
             }
@@ -46,12 +46,11 @@
         {
             get
             {
-                BinaryReader b = new BinaryReader(this.stream);
-                this.stream.Seek(this.header.PtrData, SeekOrigin.Begin);
+                this.reader.BaseStream.Seek(this.header.PtrData, SeekOrigin.Begin);
                 int elems = this.Width * this.Height;
                 for (int i = 0; i < elems; i++)
                 {
-                    yield return b.ReadUInt16();
+                    yield return this.reader.ReadUInt16();
                 }
             }
         }
@@ -60,21 +59,21 @@
         {
             get
             {
-                this.stream.Seek(this.header.PtrHeightData, SeekOrigin.Begin);
+                this.reader.BaseStream.Seek(this.header.PtrHeightData, SeekOrigin.Begin);
                 int elems = (this.Width * 2) * (this.Height * 2);
                 for (int i = 0; i < elems; i++)
                 {
-                    yield return TileAttr.ReadFromSct(this.stream, (int)this.header.Version);
+                    yield return TileAttr.ReadFromSct(this.reader, (int)this.header.Version);
                 }
             }
         }
 
         public IEnumerable<Bitmap> EnumerateTilesBitmaps(Color[] palette)
         {
-            this.stream.Seek(this.header.PtrTiles, SeekOrigin.Begin);
+            this.reader.BaseStream.Seek(this.header.PtrTiles, SeekOrigin.Begin);
             for (int i = 0; i < this.header.Tiles; i++)
             {
-                byte[] tile = Util.LoadMapTile1D(this.stream);
+                byte[] tile = Util.LoadMapTile1D(this.reader);
                 yield return Util.GetBitmap(tile, palette);
             }
         }
@@ -154,13 +153,12 @@
         public byte[,] GetMinimap()
         {
             byte[,] map = new byte[128, 128];
-            this.stream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
-            BinaryReader rb = new BinaryReader(this.stream);
+            this.reader.BaseStream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
             for (int y = 0; y < 128; y++)
             {
                 for (int x = 0; x < 128; x++)
                 {
-                    map[y, x] = rb.ReadByte();
+                    map[y, x] = this.reader.ReadByte();
                 }
             }
 
@@ -169,8 +167,8 @@
 
         public Bitmap GetMinimapBitmap(Color[] palette)
         {
-            this.stream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
-            return Util.LoadBitmap(this.stream, palette, 128, 128);
+            this.reader.BaseStream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
+            return Util.LoadBitmap(this.reader, palette, 128, 128);
         }
 
         public void Dispose()
@@ -182,7 +180,7 @@
         {
             if (disposing)
             {
-                this.stream.Dispose();
+                this.reader.Dispose();
             }
         }
     }
