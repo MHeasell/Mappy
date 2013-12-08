@@ -5,7 +5,7 @@
     using System.Drawing.Imaging;
     using System.IO;
 
-    public class TntFile
+    public class TntReader
     {
         public const int TileSize = 32;
         public const byte MinimapVoidByte = 0x64;
@@ -14,7 +14,7 @@
 
         private TntHeader header;
 
-        public TntFile(Stream s)
+        public TntReader(Stream s)
         {
             TntHeader.Read(s, ref this.header);
             this.stream = s;
@@ -200,7 +200,7 @@
                 }
             }
 
-            return TntFile.TrimMinimap(map, p);
+            return TntReader.TrimMinimap(map, p);
         }
 
         public IEnumerable<string> EnumerateFeatureNames()
@@ -231,7 +231,7 @@
 
         private static Bitmap TrimMinimap(byte[,] minimap, Color[] palette)
         {
-            Size realSize = TntFile.GetMinimapActualSize(minimap);
+            Size realSize = TntReader.GetMinimapActualSize(minimap);
 
             Bitmap newMinimap = new Bitmap(realSize.Width, realSize.Height, PixelFormat.Format32bppArgb);
             Rectangle rect = new Rectangle(0, 0, realSize.Width, realSize.Height);
@@ -266,7 +266,7 @@
 
             for (int i = 0; i < minimap.GetLength(0); i++)
             {
-                if (minimap[i, 0] == TntFile.MinimapVoidByte)
+                if (minimap[i, 0] == TntReader.MinimapVoidByte)
                 {
                     break;
                 }
@@ -276,7 +276,7 @@
 
             for (int i = 0; i < minimap.GetLength(1); i++)
             {
-                if (minimap[0, i] == TntFile.MinimapVoidByte)
+                if (minimap[0, i] == TntReader.MinimapVoidByte)
                 {
                     break;
                 }

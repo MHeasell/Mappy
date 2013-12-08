@@ -233,7 +233,7 @@
             MapModel m;
             using (Stream s = File.OpenRead(filename))
             {
-                m = MapModel.Load(new TntFile(s), this.Palette, this.featureRecords);
+                m = MapModel.Load(new TntReader(s), this.Palette, this.featureRecords);
             }
 
             this.baseMap = m;
@@ -259,7 +259,7 @@
                 using (Stream s = hpi.ReadFile(mappath))
                 {
                     m = MapModel.Load(
-                        new TntFile(s),
+                        new TntReader(s),
                         n,
                         this.Palette,
                         this.featureRecords);

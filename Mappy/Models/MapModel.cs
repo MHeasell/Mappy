@@ -72,12 +72,12 @@
 
         public Bitmap Minimap { get; set; }
 
-        public static MapModel Load(TntFile f, Color[] p, IDictionary<string, Feature> featureBank)
+        public static MapModel Load(TntReader f, Color[] p, IDictionary<string, Feature> featureBank)
         {
             return LoadHelper(f, p, featureBank, new MapAttributes());
         }
 
-        public static MapModel Load(TntFile f, TdfNode n, Color[] p, IDictionary<string, Feature> featureBank)
+        public static MapModel Load(TntReader f, TdfNode n, Color[] p, IDictionary<string, Feature> featureBank)
         {
             // load attrs
             MapAttributes attrs = MapAttributes.Load(n);
@@ -162,7 +162,7 @@
             return b;
         }
 
-        private static MapModel LoadHelper(TntFile f, Color[] p, IDictionary<string, Feature> featureBank, MapAttributes attrs)
+        private static MapModel LoadHelper(TntReader f, Color[] p, IDictionary<string, Feature> featureBank, MapAttributes attrs)
         {
             // create the model
             MapModel model = new MapModel(f.DataWidth, f.DataHeight, attrs);

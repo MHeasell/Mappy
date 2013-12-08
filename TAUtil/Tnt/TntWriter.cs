@@ -28,7 +28,7 @@
                 {
                     if (x >= minimap.Width || y >= minimap.Height)
                     {
-                        w.Write(TntFile.MinimapVoidByte);
+                        w.Write(TntReader.MinimapVoidByte);
                         continue;
                     }
 

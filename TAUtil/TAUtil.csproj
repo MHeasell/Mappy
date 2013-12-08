@@ -63,7 +63,7 @@
     <Compile Include="Tdf\TdfNode.cs" />
     <Compile Include="Tdf\TdfParser.cs" />
     <Compile Include="Tnt\TileAttr.cs" />
-    <Compile Include="Tnt\TntFile.cs" />
+    <Compile Include="Tnt\TntReader.cs" />
     <Compile Include="Tnt\TntHeader.cs" />
     <Compile Include="Tnt\TntWriter.cs" />
     <Compile Include="Util.cs" />
