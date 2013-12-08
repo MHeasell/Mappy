@@ -8,7 +8,7 @@
         public ushort Height;
         public ushort XPos;
         public ushort YPos;
-        public char Unknown1;
+        public byte Unknown1;
         public bool Compressed;
         public ushort FramePointers;
         public uint Unknown2;
@@ -22,7 +22,7 @@
             e.Height = b.ReadUInt16();
             e.XPos = b.ReadUInt16();
             e.YPos = b.ReadUInt16();
-            e.Unknown1 = b.ReadChar();
+            e.Unknown1 = b.ReadByte();
             e.Compressed = b.ReadBoolean();
             e.FramePointers = b.ReadUInt16();
             e.Unknown2 = b.ReadUInt32();
