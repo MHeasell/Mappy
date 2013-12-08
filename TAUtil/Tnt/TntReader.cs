@@ -1,11 +1,12 @@
 ﻿namespace TAUtil.Tnt
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
 
-    public class TntReader
+    public class TntReader : IDisposable
     {
         public const int TileSize = 32;
         public const byte MinimapVoidByte = 0x64;
@@ -18,6 +19,11 @@
         {
             TntHeader.Read(s, ref this.header);
             this.stream = s;
+        }
+
+        ~TntReader()
+        {
+            this.Dispose(false);
         }
 
         public int Width
@@ -227,6 +233,19 @@
             }
 
             return arr;
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.stream.Close();
+            }
         }
 
         private static Bitmap TrimMinimap(byte[,] minimap, Color[] palette)

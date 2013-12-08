@@ -231,9 +231,9 @@
         public void OpenTnt(string filename)
         {
             MapModel m;
-            using (Stream s = File.OpenRead(filename))
+            using (TntReader s = new TntReader(File.OpenRead(filename)))
             {
-                m = MapModel.Load(new TntReader(s), this.Palette, this.featureRecords);
+                m = MapModel.Load(s, this.Palette, this.featureRecords);
             }
 
             this.baseMap = m;
@@ -256,10 +256,10 @@
                     n = TdfNode.LoadTdf(sr);
                 }
 
-                using (Stream s = hpi.ReadFile(mappath))
+                using (TntReader s = new TntReader(hpi.ReadFile(mappath)))
                 {
                     m = MapModel.Load(
-                        new TntReader(s),
+                        s,
                         n,
                         this.Palette,
                         this.featureRecords);
