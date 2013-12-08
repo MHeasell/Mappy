@@ -21,6 +21,14 @@ When you first run Mappy, no map tilesets or features will be available. First, 
 
 The rest is up to you. Create a new map or load an existing one, drag and drop tiles and features from the sidebar, and edit your map's settings.
 
+Settings
+--------
+
+Mappy stores its settings in %LocalAppData%/ArmouredFish/Mappy/settings.xml. If, for some reason, you want to delete these, here's how to clear them:
+1. Press Windows Key + R.
+2. In the Run dialog, type %LocalAppData% and press Enter.
+3. In the explorer window that pops up, delete the folder called ArmouredFish.
+
 Known Issues
 ------------
 
