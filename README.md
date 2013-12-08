@@ -12,6 +12,11 @@ Here are some of the current advantages:
 
 ![Screenshot](screenshot.png?raw=true)
 
+Warning
+-------
+
+Beware that Mappy is currently highly alpha. For general purpose use, Annihilator is still the best choice. Mappy is still missing a number of basic features and may still crash in certain situations. However, Mappy is looking for interested users to try it out and report back any problems they encounter.
+
 How to Use Mappy
 ----------------
 
