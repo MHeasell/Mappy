@@ -42,21 +42,19 @@ namespace Mappy.Data
 
         private void LoadTile()
         {
-            string tmpdir = System.Environment.GetEnvironmentVariable("TEMP");
-            string outpath = Path.Combine(tmpdir, this.cachedTilePath);
+            string outpath = Path.GetTempFileName();
 
-            if (!File.Exists(outpath))
+            using (HpiReader h = new HpiReader(this.hapiPath))
             {
-                using (HpiReader h = new HpiReader(this.hapiPath))
-                {
-                    h.ExtractFile(this.cachedTilePath, outpath);
-                }
+                h.ExtractFile(this.cachedTilePath, outpath);
             }
 
             using (SctReader s = new SctReader(File.OpenRead(outpath)))
             {
                 this.cachedTile = MapTile.ReadFromSct(s, this.palette);
             }
+
+            File.Delete(outpath);
         }
     }
 }
