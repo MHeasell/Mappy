@@ -53,9 +53,9 @@ namespace Mappy.Data
                 }
             }
 
-            using (Stream s = File.OpenRead(outpath))
+            using (SctReader s = new SctReader(File.OpenRead(outpath)))
             {
-                this.cachedTile = MapTile.ReadFromSct(new SctReader(s), this.palette);
+                this.cachedTile = MapTile.ReadFromSct(s, this.palette);
             }
         }
     }

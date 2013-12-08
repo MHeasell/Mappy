@@ -1,12 +1,13 @@
 ﻿namespace TAUtil.Sct
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
 
     using TAUtil.Tnt;
 
-    public class SctReader
+    public class SctReader : IDisposable
     {
         private readonly Stream stream;
 
@@ -170,6 +171,19 @@
         {
             this.stream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
             return Util.LoadBitmap(this.stream, palette, 128, 128);
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.stream.Dispose();
+            }
         }
     }
 }

@@ -218,10 +218,9 @@
         public void OpenSct(string filename)
         {
             MapTile t;
-            using (Stream s = File.OpenRead(filename))
+            using (SctReader s = new SctReader(File.OpenRead(filename)))
             {
-                SctReader sct = new SctReader(s);
-                t = MapTile.ReadFromSct(sct, this.Palette);
+                t = MapTile.ReadFromSct(s, this.Palette);
             }
 
             this.baseMap = new MapModel(t);
