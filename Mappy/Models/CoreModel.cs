@@ -220,7 +220,7 @@
             MapTile t;
             using (Stream s = File.OpenRead(filename))
             {
-                SctFile sct = new SctFile(s);
+                SctReader sct = new SctReader(s);
                 t = MapTile.ReadFromSct(sct, this.Palette);
             }
 

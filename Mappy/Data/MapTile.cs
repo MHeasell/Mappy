@@ -45,7 +45,7 @@ namespace Mappy.Data
 
         public IGrid<int> HeightGrid { get; private set; }
 
-        public static MapTile ReadFromSct(SctFile f, Color[] palette)
+        public static MapTile ReadFromSct(SctReader f, Color[] palette)
         {
             MapTile tile = new MapTile(f.Width, f.Height);
 

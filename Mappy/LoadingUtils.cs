@@ -72,11 +72,11 @@
                 {
                     using (Stream s = h.ReadFile(sect))
                     {
-                        SctFile sctFile = new SctFile(s);
+                        SctReader sctReader = new SctReader(s);
 
                         Section section = new Section(filename, sect, palette);
                         section.Name = Path.GetFileNameWithoutExtension(sect);
-                        section.Minimap = sctFile.GetMinimapBitmap(palette);
+                        section.Minimap = sctReader.GetMinimapBitmap(palette);
 
                         string[] directories = Path.GetDirectoryName(sect).Split(Path.DirectorySeparatorChar);
 

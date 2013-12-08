@@ -6,13 +6,13 @@
 
     using TAUtil.Tnt;
 
-    public class SctFile
+    public class SctReader
     {
         private readonly Stream stream;
 
         private SctHeader header;
 
-        public SctFile(Stream s)
+        public SctReader(Stream s)
         {
             SctHeader.Read(s, ref this.header);
             this.stream = s;

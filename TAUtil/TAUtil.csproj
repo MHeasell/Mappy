@@ -56,7 +56,7 @@
     <Compile Include="Hpi\NativeMethods.cs" />
     <Compile Include="Hpi\HpiWriter.cs" />
     <Compile Include="ParseException.cs" />
-    <Compile Include="Sct\SctFile.cs" />
+    <Compile Include="Sct\SctReader.cs" />
     <Compile Include="Sct\SctHeader.cs" />
     <Compile Include="Palette.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
