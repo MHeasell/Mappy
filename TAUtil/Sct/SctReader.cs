@@ -19,6 +19,11 @@
             SctHeader.Read(this.reader, ref this.header);
         }
 
+        ~SctReader()
+        {
+            this.Dispose(false);
+        }
+
         public int Width
         {
             get { return (int)this.header.Width; }
