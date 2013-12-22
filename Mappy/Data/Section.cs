@@ -3,6 +3,8 @@ namespace Mappy.Data
     using System.Drawing;
     using System.IO;
 
+    using Mappy.IO;
+
     using TAUtil.Hpi;
     using TAUtil.Sct;
 
@@ -51,7 +53,7 @@ namespace Mappy.Data
 
             using (SctReader s = new SctReader(File.OpenRead(outpath)))
             {
-                this.cachedTile = MapTile.ReadFromSct(s, this.palette);
+                this.cachedTile = TileIO.ReadFromSct(s, this.palette);
             }
 
             File.Delete(outpath);

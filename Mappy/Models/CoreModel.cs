@@ -6,6 +6,8 @@
     using System.IO;
     using Data;
 
+    using Mappy.IO;
+
     using Operations;
 
     using TAUtil.Hpi;
@@ -204,7 +206,7 @@
 
             using (TntWriter s = new TntWriter(File.OpenWrite(filename)))
             {
-                this.baseMap.WriteTnt(s, this.Palette);
+                MapIO.WriteTnt(this.baseMap, s, this.Palette);
             }
 
             flatten.Undo();
@@ -220,7 +222,7 @@
             MapTile t;
             using (SctReader s = new SctReader(File.OpenRead(filename)))
             {
-                t = MapTile.ReadFromSct(s, this.Palette);
+                t = TileIO.ReadFromSct(s, this.Palette);
             }
 
             this.baseMap = new MapModel(t);
@@ -232,7 +234,7 @@
             MapModel m;
             using (TntReader s = new TntReader(File.OpenRead(filename)))
             {
-                m = MapModel.Load(s, this.Palette, this.featureRecords);
+                m = MapIO.Load(s, this.Palette, this.featureRecords);
             }
 
             this.baseMap = m;
@@ -257,7 +259,7 @@
 
                 using (TntReader s = new TntReader(hpi.ReadFile(mappath)))
                 {
-                    m = MapModel.Load(
+                    m = MapIO.Load(
                         s,
                         n,
                         this.Palette,
@@ -463,7 +465,7 @@
             {
                 using (TntWriter s = new TntWriter(File.OpenWrite(tmpTntName)))
                 {
-                    this.baseMap.WriteTnt(s, this.Palette);
+                    MapIO.WriteTnt(this.baseMap, s, this.Palette);
                 }
 
                 using (Stream s = File.OpenWrite(tmpOtaName))
