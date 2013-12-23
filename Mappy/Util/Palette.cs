@@ -1,4 +1,4 @@
-﻿namespace TAUtil
+﻿namespace Mappy.Util
 {
     using System;
     using System.Drawing;

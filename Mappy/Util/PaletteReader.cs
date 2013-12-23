@@ -1,8 +1,10 @@
-﻿namespace TAUtil
+﻿namespace Mappy.Util
 {
     using System;
     using System.Drawing;
     using System.IO;
+
+    using TAUtil;
 
     public class PaletteReader : IDisposable
     {

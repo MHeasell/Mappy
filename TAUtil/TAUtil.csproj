@@ -55,11 +55,9 @@
     <Compile Include="Hpi\HpiStream.cs" />
     <Compile Include="Hpi\NativeMethods.cs" />
     <Compile Include="Hpi\HpiWriter.cs" />
-    <Compile Include="PaletteReader.cs" />
     <Compile Include="ParseException.cs" />
     <Compile Include="Sct\SctReader.cs" />
     <Compile Include="Sct\SctHeader.cs" />
-    <Compile Include="Palette.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tdf\TdfNode.cs" />
     <Compile Include="Tdf\TdfParser.cs" />

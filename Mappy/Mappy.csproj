@@ -152,6 +152,8 @@
     <Compile Include="Operations\RemoveTileOperation.cs" />
     <Compile Include="UI\Painters\GridPainter.cs" />
     <Compile Include="Util\Notifier.cs" />
+    <Compile Include="Util\Palette.cs" />
+    <Compile Include="Util\PaletteReader.cs" />
     <Compile Include="Util\QuadTree.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Views\IMainView.cs" />

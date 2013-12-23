@@ -42,7 +42,7 @@
         {
             using (Stream s = new MemoryStream(Mappy.Properties.Resources.TAPalette))
             {
-                this.Palette = TAUtil.Palette.LoadArr(s);
+                this.Palette = Mappy.Util.Palette.LoadArr(s);
             }
 
             this.featureRecords = LoadingUtils.LoadFeatures(this.Palette);
