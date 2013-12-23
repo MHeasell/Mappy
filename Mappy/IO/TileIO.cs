@@ -3,18 +3,19 @@ namespace Mappy.IO
     using System.Drawing;
 
     using Mappy.Data;
+    using Mappy.Models;
     using Mappy.Util;
 
     using TAUtil.Sct;
 
     public static class TileIO
     {
-        public static MapTile ReadFromSct(SctReader f, Color[] palette)
+        public static MapTile ReadFromSct(SctReader f)
         {
             MapTile tile = new MapTile(f.Width, f.Height);
 
             f.SeekToTiles();
-            Bitmap[] tiles = ReadTiles(f, palette);
+            Bitmap[] tiles = ReadTiles(f);
 
             f.SeekToData();
             for (int y = 0; y < f.Height; y++)
@@ -37,13 +38,13 @@ namespace Mappy.IO
             return tile;
         }
 
-        private static Bitmap[] ReadTiles(SctReader reader, Color[] palette)
+        private static Bitmap[] ReadTiles(SctReader reader)
         {
             Bitmap[] bitmaps = new Bitmap[reader.TileCount];
 
             for (int i = 0; i < reader.TileCount; i++)
             {
-                bitmaps[i] = Util.AddTileToDatabase(reader.ReadTile(), palette);
+                bitmaps[i] = Globals.TileManager.GetOrCreateBitmap(reader.ReadTile());
             }
 
             return bitmaps;

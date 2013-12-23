@@ -71,8 +71,10 @@
     <Compile Include="Data\Positioned.cs" />
     <Compile Include="Data\Section.cs" />
     <Compile Include="Data\StartPositionChangedEventArgs.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="IO\MapIO.cs" />
     <Compile Include="IO\TileIO.cs" />
+    <Compile Include="IO\TileManager.cs" />
     <Compile Include="MappySettings.cs" />
     <Compile Include="Models\CoreModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />

@@ -170,13 +170,13 @@
             }
         }
 
-        private static Bitmap[] ReadTiles(TntReader reader, Color[] palette)
+        private static Bitmap[] ReadTiles(TntReader reader)
         {
             Bitmap[] bitmaps = new Bitmap[reader.TileCount];
 
             for (int i = 0; i < reader.TileCount; i++)
             {
-                bitmaps[i] = Util.AddTileToDatabase(reader.ReadTile(), palette);
+                bitmaps[i] = Globals.TileManager.GetOrCreateBitmap(reader.ReadTile());
             }
 
             return bitmaps;
@@ -193,7 +193,7 @@
 
             // retrieve tiles
             f.SeekToTiles();
-            Bitmap[] tiles = ReadTiles(f, p);
+            Bitmap[] tiles = ReadTiles(f);
 
             // populate model tile data
             f.SeekToData();

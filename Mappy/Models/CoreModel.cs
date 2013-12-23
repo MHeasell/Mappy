@@ -42,10 +42,7 @@
 
         public CoreModel()
         {
-            using (Stream s = new MemoryStream(Mappy.Properties.Resources.TAPalette))
-            {
-                this.Palette = Mappy.Util.Palette.LoadArr(s);
-            }
+            this.Palette = Globals.Palette;
 
             this.featureRecords = LoadingUtils.LoadFeatures(this.Palette);
             this.sections = LoadingUtils.LoadSections(this.Palette);
@@ -222,7 +219,7 @@
             MapTile t;
             using (SctReader s = new SctReader(File.OpenRead(filename)))
             {
-                t = TileIO.ReadFromSct(s, this.Palette);
+                t = TileIO.ReadFromSct(s);
             }
 
             this.baseMap = new MapModel(t);

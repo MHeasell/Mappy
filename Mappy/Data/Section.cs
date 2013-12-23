@@ -13,13 +13,11 @@ namespace Mappy.Data
         private MapTile cachedTile;
         private string hapiPath;
         private string cachedTilePath;
-        private Color[] palette;
 
-        public Section(string hapiPath, string path, Color[] palette)
+        public Section(string hapiPath, string path)
         {
             this.hapiPath = hapiPath;
             this.cachedTilePath = path;
-            this.palette = palette;
         }
 
         public int Id { get; set; }
@@ -53,7 +51,7 @@ namespace Mappy.Data
 
             using (SctReader s = new SctReader(File.OpenRead(outpath)))
             {
-                this.cachedTile = TileIO.ReadFromSct(s, this.palette);
+                this.cachedTile = TileIO.ReadFromSct(s);
             }
 
             File.Delete(outpath);

@@ -74,7 +74,7 @@
                     {
                         SctReader sctReader = new SctReader(s);
 
-                        Section section = new Section(filename, sect, palette);
+                        Section section = new Section(filename, sect);
                         section.Name = Path.GetFileNameWithoutExtension(sect);
                         section.Minimap = Util.Util.ReadToBitmap(
                             sctReader.ReadMinimap(),

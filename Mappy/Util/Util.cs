@@ -15,10 +15,6 @@ namespace Mappy.Util
 
     public static class Util
     {
-        private static readonly IDictionary<string, Bitmap> ImageMap = new Dictionary<string, Bitmap>();
-
-        private static readonly SHA1 Sha = SHA1.Create();
-
         public static HashSet<Bitmap> GetUsedTiles(IMapTile tile)
         {
             HashSet<Bitmap> set = new HashSet<Bitmap>();
@@ -121,19 +117,6 @@ namespace Mappy.Util
             bitmap.UnlockBits(data);
 
             return bitmap;
-        }
-
-        public static Bitmap AddTileToDatabase(byte[] tileData, Color[] palette)
-        {
-            string hash = Encoding.ASCII.GetString(Sha.ComputeHash(tileData));
-            Bitmap bmp;
-            if (!ImageMap.TryGetValue(hash, out bmp))
-            {
-                bmp = ReadToBitmap(tileData, palette, TntReader.TileWidth, TntReader.TileHeight);
-                ImageMap[hash] = bmp;
-            }
-
-            return bmp;
         }
     }
 }
