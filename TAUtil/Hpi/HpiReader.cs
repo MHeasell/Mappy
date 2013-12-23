@@ -12,6 +12,7 @@
 
         public HpiReader(string filename)
         {
+            this.FileName = filename;
             this.handle = NativeMethods.HPIOpen(filename);
             if (this.handle == IntPtr.Zero)
             {
@@ -23,6 +24,8 @@
         {
             this.Dispose(false);
         }
+
+        public string FileName { get; private set; }
 
         public void Close()
         {
