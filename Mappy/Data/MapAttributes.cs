@@ -181,7 +181,7 @@
             m.Planet = r.Entries["planet"];
             m.TidalStrength = Convert.ToInt32(r.Entries["tidalstrength"]);
             m.SolarStrength = Convert.ToInt32(r.Entries["solarstrength"]);
-            m.LavaWorld = EvalBoolString(r.Entries["lavaworld"]);
+            m.LavaWorld = TdfConvert.ToBool(r.Entries["lavaworld"]);
             m.MinWindSpeed = Convert.ToInt32(r.Entries["minwindspeed"]);
             m.MaxWindSpeed = Convert.ToInt32(r.Entries["maxwindspeed"]);
             m.Gravity = Convert.ToInt32(r.Entries["gravity"]);
@@ -247,7 +247,7 @@
             r.Entries["mapping"] = "0";
             r.Entries["tidalstrength"] = Convert.ToString(this.TidalStrength);
             r.Entries["solarstrength"] = Convert.ToString(this.SolarStrength);
-            r.Entries["lavaworld"] = EvalToString(this.lavaWorld);
+            r.Entries["lavaworld"] = TdfConvert.ToString(this.lavaWorld);
             r.Entries["killmul"] = "0";
             r.Entries["timemul"] = "0";
             r.Entries["minwindspeed"] = Convert.ToString(this.MinWindSpeed);
@@ -305,16 +305,6 @@
             {
                 h(this, e);
             }
-        }
-
-        private static string EvalToString(bool b)
-        {
-            return b ? "1" : "0";
-        }
-
-        private static bool EvalBoolString(string s)
-        {
-            return !(string.IsNullOrEmpty(s) || s == "0");
         }
     }
 }
