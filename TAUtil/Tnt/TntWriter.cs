@@ -27,7 +27,7 @@
                 throw new ArgumentException("dimensions are invalid");
             }
 
-            if (width > 252 || height > 252)
+            if (width > TntConstants.MaxMinimapWidth || height > TntConstants.MaxMinimapHeight)
             {
                 throw new ArgumentException("dimensions exceed maximum minimap bounds");
             }
@@ -37,12 +37,12 @@
                 throw new ArgumentException("data length does not match given dimensions");
             }
 
-            this.writer.Write(252); // width
-            this.writer.Write(252); // height
+            this.writer.Write(TntConstants.MaxMinimapWidth);
+            this.writer.Write(TntConstants.MaxMinimapHeight);
 
-            for (int y = 0; y < 252; y++)
+            for (int y = 0; y < TntConstants.MaxMinimapHeight; y++)
             {
-                for (int x = 0; x < 252; x++)
+                for (int x = 0; x < TntConstants.MaxMinimapWidth; x++)
                 {
                     if (x >= width || y >= height)
                     {
@@ -57,7 +57,7 @@
 
         public void WriteTile(byte[] data)
         {
-            if (data.Length != 32 * 32)
+            if (data.Length != MapConstants.TileDataLength)
             {
                 throw new ArgumentException("data is not tile sized");
             }
@@ -84,7 +84,7 @@
 
         public void WriteAnim(string name, int index)
         {
-            if (name.Length >= 127)
+            if (name.Length >= TntConstants.AnimNameLength - 1)
             {
                 throw new ArgumentException("name is too long");
             }
@@ -94,7 +94,7 @@
                 throw new ArgumentException("index must not be negative");
             }
 
-            byte[] c = new byte[128];
+            byte[] c = new byte[TntConstants.AnimNameLength];
             System.Text.Encoding.ASCII.GetBytes(name, 0, name.Length, c, 0);
             this.writer.Write(index);
             this.writer.Write(c);

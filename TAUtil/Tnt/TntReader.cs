@@ -132,7 +132,7 @@
         public string ReadAnim()
         {
             this.reader.ReadUInt32();
-            byte[] chars = this.reader.ReadBytes(128);
+            byte[] chars = this.reader.ReadBytes(TntConstants.AnimNameLength);
             string s = Util.ConvertChars(chars);
             return s;
         }
