@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MapConstants.cs" />
     <Compile Include="Gaf\GafEntry.cs" />
     <Compile Include="Gaf\Structures\GafEntry.cs" />
     <Compile Include="Gaf\GafFile.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Tdf\TdfNode.cs" />
     <Compile Include="Tdf\TdfParser.cs" />
     <Compile Include="Tnt\TileAttr.cs" />
+    <Compile Include="Tnt\TntConstants.cs" />
     <Compile Include="Tnt\TntReader.cs" />
     <Compile Include="Tnt\TntHeader.cs" />
     <Compile Include="Tnt\TntWriter.cs" />

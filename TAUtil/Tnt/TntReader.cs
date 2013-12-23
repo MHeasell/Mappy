@@ -5,12 +5,6 @@
 
     public class TntReader : IDisposable
     {
-        public const int TileWidth = 32;
-
-        public const int TileHeight = 32;
-
-        public const byte MinimapVoidByte = 0x64;
-
         private readonly BinaryReader reader;
 
         private TntHeader header;
@@ -120,7 +114,6 @@
             this.reader.BaseStream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
         }
 
-
         public void SeekToAttrs()
         {
             this.reader.BaseStream.Seek(this.header.PtrMapAttr, SeekOrigin.Begin);
@@ -151,7 +144,7 @@
 
         public byte[] ReadTile()
         {
-            return this.reader.ReadBytes(TntReader.TileWidth * TntReader.TileHeight);
+            return this.reader.ReadBytes(MapConstants.TileDataLength);
         }
 
         public MinimapInfo ReadMinimap()
@@ -186,7 +179,7 @@
 
             for (int y = 0; y < minimap.Height; y++)
             {
-                if (minimap.Data[y * minimap.Width] == TntReader.MinimapVoidByte)
+                if (minimap.Data[y * minimap.Width] == TntConstants.MinimapVoidByte)
                 {
                     break;
                 }
@@ -196,7 +189,7 @@
 
             for (int x = 0; x < minimap.Width; x++)
             {
-                if (minimap.Data[x] == TntReader.MinimapVoidByte)
+                if (minimap.Data[x] == TntConstants.MinimapVoidByte)
                 {
                     break;
                 }

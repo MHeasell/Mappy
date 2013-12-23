@@ -46,7 +46,7 @@
                 {
                     if (x >= width || y >= height)
                     {
-                        this.writer.Write(TntReader.MinimapVoidByte);
+                        this.writer.Write(TntConstants.MinimapVoidByte);
                         continue;
                     }
 
