@@ -1,14 +1,20 @@
 ﻿namespace TAUtil.Sct
 {
     using System;
-    using System.Collections.Generic;
-    using System.Drawing;
     using System.IO;
 
     using TAUtil.Tnt;
 
     public class SctReader : IDisposable
     {
+        public const int MinimapWidth = 128;
+
+        public const int MinimapHeight = 128;
+
+        public const int TileWidth = 32;
+
+        public const int TileHeight = 32;
+
         private readonly BinaryReader reader;
 
         private SctHeader header;
@@ -34,146 +40,74 @@
             get { return (int)this.header.Height; }
         }
 
-        public IEnumerable<byte[]> Tiles
+        public int WidthInAttrs
         {
             get
             {
-                this.reader.BaseStream.Seek(this.header.PtrTiles, SeekOrigin.Begin);
-                for (int i = 0; i < this.header.Tiles; i++)
-                {
-                    byte[] tile = Util.LoadMapTile1D(this.reader);
-                    yield return tile;
-                }
+                return (int)this.header.Width * 2;
             }
         }
 
-        public IEnumerable<int> Data
+        public int HeightInAttrs
         {
             get
             {
-                this.reader.BaseStream.Seek(this.header.PtrData, SeekOrigin.Begin);
-                int elems = this.Width * this.Height;
-                for (int i = 0; i < elems; i++)
-                {
-                    yield return this.reader.ReadUInt16();
-                }
+                return (int)this.header.Height * 2;
             }
         }
 
-        public IEnumerable<TileAttr> Attrs
+        public int TileCount
         {
             get
             {
-                this.reader.BaseStream.Seek(this.header.PtrHeightData, SeekOrigin.Begin);
-                int elems = (this.Width * 2) * (this.Height * 2);
-                for (int i = 0; i < elems; i++)
-                {
-                    yield return TileAttr.ReadFromSct(this.reader, (int)this.header.Version);
-                }
+                return (int)this.header.Tiles;
             }
         }
 
-        public IEnumerable<Bitmap> EnumerateTilesBitmaps(Color[] palette)
+        public void SeekToTiles()
         {
             this.reader.BaseStream.Seek(this.header.PtrTiles, SeekOrigin.Begin);
-            for (int i = 0; i < this.header.Tiles; i++)
-            {
-                byte[] tile = Util.LoadMapTile1D(this.reader);
-                yield return Util.GetBitmap(tile, palette);
-            }
         }
 
-        public IEnumerable<Bitmap> EnumerateTileDataBitmaps(Color[] palette)
+        public void SeekToData()
         {
-            Bitmap[] tiles = this.GetTilesBitmaps(palette);
-
-            foreach (int i in this.Data)
-            {
-                yield return tiles[i];
-            }
+            this.reader.BaseStream.Seek(this.header.PtrData, SeekOrigin.Begin);
         }
 
-        public byte[][] GetTiles()
-        {
-            byte[][] tiles = new byte[this.header.Tiles][];
-            int i = 0;
-            foreach (byte[] t in this.Tiles)
-            {
-                tiles[i] = t;
-                i++;
-            }
-
-            return tiles;
-        }
-
-        public Bitmap[] GetTilesBitmaps(Color[] palette)
-        {
-            Bitmap[] tiles = new Bitmap[this.header.Tiles];
-            int i = 0;
-            foreach (Bitmap t in this.EnumerateTilesBitmaps(palette))
-            {
-                tiles[i] = t;
-                i++;
-            }
-
-            return tiles;
-        }
-
-        public byte[,][] GetTileData()
-        {
-            byte[][] tiles = this.GetTiles();
-
-            IEnumerator<int> data = this.Data.GetEnumerator();
-
-            byte[,][] map = new byte[this.Height, this.Width][];
-
-            for (int y = 0; y < this.Height; y++)
-            {
-                for (int x = 0; x < this.Width; x++)
-                {
-                    data.MoveNext();
-                    map[y, x] = tiles[data.Current];
-                }
-            }
-
-            return map;
-        }
-
-        public TileAttr[,] GetAttrs()
-        {
-            TileAttr[,] a = new TileAttr[this.Height * 2, this.Width * 2];
-            IEnumerator<TileAttr> attrs = this.Attrs.GetEnumerator();
-            for (int y = 0; y < (this.Height * 2); y++)
-            {
-                for (int x = 0; x < (this.Width * 2); x++)
-                {
-                    attrs.MoveNext();
-                    a[y, x] = attrs.Current;
-                }
-            }
-
-            return a;
-        }
-
-        public byte[,] GetMinimap()
-        {
-            byte[,] map = new byte[128, 128];
-            this.reader.BaseStream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
-            for (int y = 0; y < 128; y++)
-            {
-                for (int x = 0; x < 128; x++)
-                {
-                    map[y, x] = this.reader.ReadByte();
-                }
-            }
-
-            return map;
-        }
-
-        public Bitmap GetMinimapBitmap(Color[] palette)
+        public void SeekToMinimap()
         {
             this.reader.BaseStream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
-            return Util.LoadBitmap(this.reader, palette, 128, 128);
+        }
+
+        public void SeekToAttrs()
+        {
+            this.reader.BaseStream.Seek(this.header.PtrHeightData, SeekOrigin.Begin);
+        }
+
+        public byte[] ReadMinimap()
+        {
+            this.reader.BaseStream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
+            return this.reader.ReadBytes(MinimapWidth * MinimapHeight);
+        }
+
+        public byte[] ReadTile()
+        {
+            return this.reader.ReadBytes(SctReader.TileWidth * SctReader.TileHeight);
+        }
+
+        public byte ReadPixel()
+        {
+            return this.reader.ReadByte();
+        }
+
+        public short ReadDataCell()
+        {
+            return this.reader.ReadInt16();
+        }
+
+        public TileAttr ReadAttr()
+        {
+            return TileAttr.ReadFromSct(this.reader, (int)this.header.Version);
         }
 
         public void Dispose()

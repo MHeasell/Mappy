@@ -1,16 +1,16 @@
 ﻿namespace TAUtil.Tnt
 {
     using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Drawing.Imaging;
     using System.IO;
 
     public class TntWriter : IDisposable
     {
+        private readonly BinaryWriter writer;
+
         public TntWriter(Stream s)
         {
             this.BaseStream = s;
+            this.writer = new BinaryWriter(s);
         }
 
         ~TntWriter()
@@ -20,120 +20,90 @@
 
         public Stream BaseStream { get; private set; }
 
-        public void WriteMinimap(Bitmap minimap, Color[] palette)
+        public void WriteMinimap(int width, int height, byte[] data)
         {
-            BinaryWriter w = new BinaryWriter(this.BaseStream);
+            if (width <= 0 || height <= 0)
+            {
+                throw new ArgumentException("dimensions are invalid");
+            }
 
-            w.Write(252); // width
-            w.Write(252); // height
+            if (width > 252 || height > 252)
+            {
+                throw new ArgumentException("dimensions exceed maximum minimap bounds");
+            }
+
+            if (data.Length != width * height)
+            {
+                throw new ArgumentException("data length does not match given dimensions");
+            }
+
+            this.writer.Write(252); // width
+            this.writer.Write(252); // height
 
             for (int y = 0; y < 252; y++)
             {
                 for (int x = 0; x < 252; x++)
                 {
-                    if (x >= minimap.Width || y >= minimap.Height)
+                    if (x >= width || y >= height)
                     {
-                        w.Write(TntReader.MinimapVoidByte);
+                        this.writer.Write(TntReader.MinimapVoidByte);
                         continue;
                     }
 
-                    Color c = minimap.GetPixel(x, y);
-                    int i = Array.IndexOf(palette, c);
-                    this.BaseStream.WriteByte((byte)i);
+                    this.writer.Write(data[(y * width) + x]);
                 }
             }
         }
 
-        public void WriteTiles(IEnumerable<Bitmap> tiles, Color[] palette)
+        public void WriteTile(byte[] data)
         {
-            var d = new Dictionary<Color, int>();
-            for (int i = 0; i < palette.Length; i++)
+            if (data.Length != 32 * 32)
             {
-                d[palette[i]] = i;
+                throw new ArgumentException("data is not tile sized");
             }
 
-            foreach (Bitmap tile in tiles)
-            {
-                this.WriteTile(tile, d);
-            }
+            this.writer.Write(data);
         }
 
-        public void WriteTile(Bitmap tile, IDictionary<Color, int> palette)
+        public void WritePixel(byte pixel)
         {
-            Rectangle r = new Rectangle(0, 0, tile.Width, tile.Height);
-            BitmapData data = tile.LockBits(r, ImageLockMode.ReadOnly, tile.PixelFormat);
-
-            unsafe
-            {
-                int* pointer = (int*)data.Scan0;
-                int count = tile.Width * tile.Height;
-                for (int i = 0; i < count; i++)
-                {
-                    Color c = Color.FromArgb(pointer[i]);
-                    int colorIndex = palette[c];
-                    this.BaseStream.WriteByte((byte)colorIndex);
-                }
-            }
-
-            tile.UnlockBits(data);
+            this.writer.Write(pixel);
         }
 
-        public void WriteAttrs(IEnumerable<TileAttr> attrs)
+        public void WriteAttr(TileAttr attr)
         {
-            foreach (TileAttr attr in attrs)
-            {
-                attr.Write(this.BaseStream);
-            }
+            attr.Write(this.writer);
         }
 
-        public void WriteAnimNames(IEnumerable<string> names)
-        {
-            int i = 0;
-            foreach (string name in names)
-            {
-                this.WriteAnimName(name, i++);
-            }
-        }
-
-        public void WriteAnimName(string name)
+        public void WriteAnim(string name)
         {
             // TA seems to ignore index field,
             // so setting it to 0 is okay.
-            this.WriteAnimName(name, 0);
+            this.WriteAnim(name, 0);
         }
 
-        public void WriteAnimName(string name, int index)
+        public void WriteAnim(string name, int index)
         {
-            BinaryWriter b = new BinaryWriter(this.BaseStream);
+            if (name.Length >= 127)
+            {
+                throw new ArgumentException("name is too long");
+            }
+
+            if (index < 0)
+            {
+                throw new ArgumentException("index must not be negative");
+            }
+
             byte[] c = new byte[128];
             System.Text.Encoding.ASCII.GetBytes(name, 0, name.Length, c, 0);
-            c[name.Length] = 0; // make sure null terminator is set
-            b.Write(index);
-            b.Write(c);
+            this.writer.Write(index);
+            this.writer.Write(c);
         }
 
-        public void WriteMapData(IEnumerable<int> data)
+        public void WriteDataCell(short data)
         {
             BinaryWriter b = new BinaryWriter(this.BaseStream);
-            foreach (int i in data)
-            {
-                b.Write((short)i);
-            }
-        }
-
-        public void WriteMapData(IEnumerable<Bitmap> data, Bitmap[] mapping)
-        {
-            var d = new Dictionary<Bitmap, int>();
-            for (int i = 0; i < mapping.Length; i++)
-            {
-                d[mapping[i]] = i;
-            }
-
-            BinaryWriter w = new BinaryWriter(this.BaseStream);
-            foreach (Bitmap b in data)
-            {
-                w.Write((short)d[b]);
-            }
+            b.Write(data);
         }
 
         public void Dispose()

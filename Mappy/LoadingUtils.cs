@@ -76,7 +76,11 @@
 
                         Section section = new Section(filename, sect, palette);
                         section.Name = Path.GetFileNameWithoutExtension(sect);
-                        section.Minimap = sctReader.GetMinimapBitmap(palette);
+                        section.Minimap = Util.Util.ReadToBitmap(
+                            sctReader.ReadMinimap(),
+                            palette,
+                            SctReader.MinimapWidth,
+                            SctReader.MinimapHeight);
 
                         string[] directories = Path.GetDirectoryName(sect).Split(Path.DirectorySeparatorChar);
 

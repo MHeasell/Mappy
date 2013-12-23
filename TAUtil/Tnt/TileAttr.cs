@@ -64,9 +64,8 @@
             return a;
         }
 
-        public void Write(Stream file)
+        public void Write(BinaryWriter b)
         {
-            BinaryWriter b = new BinaryWriter(file);
             b.Write(this.Height);
             b.Write(this.Feature);
             b.Write(this.Pad1);

@@ -3,12 +3,22 @@ namespace Mappy.Util
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.Security.Cryptography;
+    using System.Text;
+
     using Data;
     using Geometry;
     using Grids;
 
+    using TAUtil.Tnt;
+
     public static class Util
     {
+        private static readonly IDictionary<string, Bitmap> ImageMap = new Dictionary<string, Bitmap>();
+
+        private static readonly SHA1 Sha = SHA1.Create();
+
         public static HashSet<Bitmap> GetUsedTiles(IMapTile tile)
         {
             HashSet<Bitmap> set = new HashSet<Bitmap>();
@@ -85,6 +95,45 @@ namespace Mappy.Util
                 default:
                     throw new ArgumentException("invalid index: " + index);
             }
+        }
+
+        public static Bitmap ReadToBitmap(
+            byte[] bytes,
+            Color[] palette,
+            int width,
+            int height)
+        {
+            Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+            Rectangle rect = new Rectangle(new Point(0, 0), bitmap.Size);
+            BitmapData data = bitmap.LockBits(rect, ImageLockMode.WriteOnly, bitmap.PixelFormat);
+
+            int length = width * height;
+
+            unsafe
+            {
+                int* pointer = (int*)data.Scan0;
+                for (int i = 0; i < length; i++)
+                {
+                    pointer[i] = palette[bytes[i]].ToArgb();
+                }
+            }
+
+            bitmap.UnlockBits(data);
+
+            return bitmap;
+        }
+
+        public static Bitmap AddTileToDatabase(byte[] tileData, Color[] palette)
+        {
+            string hash = Encoding.ASCII.GetString(Sha.ComputeHash(tileData));
+            Bitmap bmp;
+            if (!ImageMap.TryGetValue(hash, out bmp))
+            {
+                bmp = ReadToBitmap(tileData, palette, TntReader.TileWidth, TntReader.TileHeight);
+                ImageMap[hash] = bmp;
+            }
+
+            return bmp;
         }
     }
 }
