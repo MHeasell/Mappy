@@ -6,7 +6,7 @@
 
     public class Grid<T> : IGrid<T>
     {
-        private T[,] arr;
+        private readonly T[,] arr;
 
         public Grid(int width, int height)
         {

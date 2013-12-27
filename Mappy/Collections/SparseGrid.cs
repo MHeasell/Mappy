@@ -6,7 +6,7 @@
 
     public class SparseGrid<T> : ISparseGrid<T>
     {
-        private IDictionary<Point, T> values;
+        private readonly IDictionary<Point, T> values;
 
         public SparseGrid(int width, int height)
         {

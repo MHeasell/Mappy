@@ -280,21 +280,23 @@ namespace Mappy.Collections
             int midX = this.bounds.X + (this.bounds.Width / 2);
             int midY = this.bounds.Y + (this.bounds.Height / 2);
 
+            int region;
+
             // decide left or right
             if (r.Right - 1 < midX)
             {
                 // decide top or bottom
                 if (r.Bottom - 1 < midY)
                 {
-                    return TopLeftIndex;
+                    region = TopLeftIndex;
                 }
                 else if (r.Top >= midY)
                 {
-                    return BottomLeftIndex;
+                    region = BottomLeftIndex;
                 }
                 else
                 {
-                    return -1;
+                    region = -1;
                 }
             }
             else if (r.Left >= midX)
@@ -302,21 +304,23 @@ namespace Mappy.Collections
                 // decide top or bottom
                 if (r.Bottom - 1 < midY)
                 {
-                    return TopRightIndex;
+                    region = TopRightIndex;
                 }
                 else if (r.Top >= midY)
                 {
-                    return BottomRightIndex;
+                    region = BottomRightIndex;
                 }
                 else
                 {
-                    return -1;
+                    region = -1;
                 }
             }
             else
             {
-                return -1;
+                region = -1;
             }
+
+            return region;
         }
 
         private int DetermineRegion(Point p)
@@ -324,17 +328,21 @@ namespace Mappy.Collections
             int midX = this.bounds.X + (this.bounds.Width / 2);
             int midY = this.bounds.Y + (this.bounds.Height / 2);
 
+            int region;
+
             // decide left or right
             if (p.X < midX)
             {
                 // decide top or bottom
-                return p.Y < midY ? TopLeftIndex : BottomLeftIndex;
+                region = p.Y < midY ? TopLeftIndex : BottomLeftIndex;
             }
             else
             {
                 // decide top or bottom
-                return p.Y < midY ? TopRightIndex : BottomRightIndex;
+                region = p.Y < midY ? TopRightIndex : BottomRightIndex;
             }
+
+            return region;
         }
     }
 }
