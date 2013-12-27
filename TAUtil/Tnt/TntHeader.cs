@@ -154,9 +154,8 @@
             header.Pad4 = b.ReadUInt32();
         }
 
-        public void Write(Stream file)
+        public void Write(BinaryWriter b)
         {
-            BinaryWriter b = new BinaryWriter(file);
             b.Write(this.IdVersion);
             b.Write(this.Width);
             b.Write(this.Height);

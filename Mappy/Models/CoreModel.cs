@@ -10,6 +10,7 @@
 
     using Operations;
 
+    using TAUtil.Gaf;
     using TAUtil.Hpi;
     using TAUtil.Sct;
     using TAUtil.Tdf;
@@ -19,10 +20,16 @@
 
     public class CoreModel : Notifier
     {
+        private static readonly GafFrame DefaultFrame;
+
         private readonly OperationManager undoManager = new OperationManager();
 
         private readonly IDictionary<string, Feature> featureRecords;
         private readonly IList<Section> sections;
+
+        private readonly SectionFactory sectionFactory;
+
+        private readonly MapModelFactory mapModelFactory;
 
         private IBindingMapModel map;
         private bool isDirty;
@@ -40,12 +47,21 @@
 
         private bool previousTranslationOpen;
 
+        static CoreModel()
+        {
+            DefaultFrame.Offset = new Point(0, 0);
+            DefaultFrame.Data = Mappy.Properties.Resources.nofeature;
+        }
+
         public CoreModel()
         {
             this.Palette = Globals.Palette;
 
             this.featureRecords = LoadingUtils.LoadFeatures(this.Palette);
             this.sections = LoadingUtils.LoadSections(this.Palette);
+
+            this.sectionFactory = new SectionFactory(this.Palette);
+            this.mapModelFactory = new MapModelFactory(this.Palette, this.featureRecords, DefaultFrame);
 
             // hook up undoManager
             this.undoManager.CanUndoChanged += this.CanUndoChanged;
@@ -201,9 +217,9 @@
             IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.Map);
             flatten.Execute();
 
-            using (TntWriter s = new TntWriter(File.OpenWrite(filename)))
+            using (var s = new TntWriter(File.OpenWrite(filename)))
             {
-                MapIO.WriteTnt(this.baseMap, s, this.Palette);
+                s.WriteTnt(new MapModelTntAdapter(this.Map, Util.ReverseMapping(this.Palette)));
             }
 
             flatten.Undo();
@@ -217,9 +233,9 @@
         public void OpenSct(string filename)
         {
             MapTile t;
-            using (SctReader s = new SctReader(File.OpenRead(filename)))
+            using (var s = new SctReader(File.OpenRead(filename)))
             {
-                t = TileIO.ReadFromSct(s);
+                t = this.sectionFactory.TileFromSct(s);
             }
 
             this.baseMap = new MapModel(t);
@@ -229,9 +245,9 @@
         public void OpenTnt(string filename)
         {
             MapModel m;
-            using (TntReader s = new TntReader(File.OpenRead(filename)))
+            using (var s = new TntReader(File.OpenRead(filename)))
             {
-                m = MapIO.Load(s, this.Palette, this.featureRecords);
+                m = this.mapModelFactory.FromTnt(s);
             }
 
             this.baseMap = m;
@@ -254,13 +270,9 @@
                     n = TdfNode.LoadTdf(sr);
                 }
 
-                using (TntReader s = new TntReader(hpi.ReadFile(mappath)))
+                using (var s = new TntReader(hpi.ReadFile(mappath)))
                 {
-                    m = MapIO.Load(
-                        s,
-                        n,
-                        this.Palette,
-                        this.featureRecords);
+                    m = this.mapModelFactory.FromTntAndOta(s, MapAttributes.Load(n));
                 }
             }
 
@@ -460,9 +472,9 @@
 
             try
             {
-                using (TntWriter s = new TntWriter(File.OpenWrite(tmpTntName)))
+                using (var s = new TntWriter(File.OpenWrite(tmpTntName)))
                 {
-                    MapIO.WriteTnt(this.baseMap, s, this.Palette);
+                    s.WriteTnt(new MapModelTntAdapter(this.Map, Util.ReverseMapping(this.Palette)));
                 }
 
                 using (Stream s = File.OpenWrite(tmpOtaName))

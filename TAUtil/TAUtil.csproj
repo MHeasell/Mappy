@@ -57,11 +57,14 @@
     <Compile Include="Hpi\NativeMethods.cs" />
     <Compile Include="Hpi\HpiWriter.cs" />
     <Compile Include="ParseException.cs" />
+    <Compile Include="Sct\ISctSource.cs" />
     <Compile Include="Sct\SctReader.cs" />
     <Compile Include="Sct\SctHeader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tdf\TdfNode.cs" />
     <Compile Include="Tdf\TdfParser.cs" />
+    <Compile Include="Tnt\ITntSource.cs" />
+    <Compile Include="Tnt\MinimapInfo.cs" />
     <Compile Include="Tnt\TileAttr.cs" />
     <Compile Include="Tnt\TntConstants.cs" />
     <Compile Include="Tnt\TntReader.cs" />

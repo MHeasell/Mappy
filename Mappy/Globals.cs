@@ -9,7 +9,7 @@ namespace Mappy
     {
         public static readonly Color[] Palette;
 
-        public static readonly TileManager TileManager;
+        public static readonly BitmapCache TileCache;
 
         static Globals()
         {
@@ -18,7 +18,7 @@ namespace Mappy
                 Palette = Mappy.Util.Palette.LoadArr(s);
             }
 
-            TileManager = new TileManager(Palette);
+            TileCache = new BitmapCache();
         }
     }
 }

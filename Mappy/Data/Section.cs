@@ -49,9 +49,10 @@ namespace Mappy.Data
                 h.ExtractFile(this.cachedTilePath, outpath);
             }
 
-            using (SctReader s = new SctReader(File.OpenRead(outpath)))
+            using (var s = new SctReader(File.OpenRead(outpath)))
             {
-                this.cachedTile = TileIO.ReadFromSct(s);
+                SectionFactory factory = new SectionFactory(Globals.Palette);
+                this.cachedTile = factory.TileFromSct(s);
             }
 
             File.Delete(outpath);

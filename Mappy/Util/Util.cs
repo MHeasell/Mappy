@@ -94,30 +94,15 @@ namespace Mappy.Util
             }
         }
 
-        public static Bitmap ReadToBitmap(
-            byte[] bytes,
-            Color[] palette,
-            int width,
-            int height)
+        public static IDictionary<T, int> ReverseMapping<T>(T[] array)
         {
-            Bitmap bitmap = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            Rectangle rect = new Rectangle(new Point(0, 0), bitmap.Size);
-            BitmapData data = bitmap.LockBits(rect, ImageLockMode.WriteOnly, bitmap.PixelFormat);
-
-            int length = width * height;
-
-            unsafe
+            Dictionary<T, int> mapping = new Dictionary<T, int>();
+            for (int i = 0; i < array.Length; i++)
             {
-                int* pointer = (int*)data.Scan0;
-                for (int i = 0; i < length; i++)
-                {
-                    pointer[i] = palette[bytes[i]].ToArgb();
-                }
+                mapping[array[i]] = i;
             }
 
-            bitmap.UnlockBits(data);
-
-            return bitmap;
+            return mapping;
         }
     }
 }

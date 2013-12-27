@@ -7,6 +7,7 @@
         public const ushort FeatureNone = 0xFFFF;
         public const ushort FeatureVoid = 0xFFFC;
         public const ushort FeatureUnknown = 0xFFFE;
+        public const int AttrLength = 4;
 
         public byte Height;
 

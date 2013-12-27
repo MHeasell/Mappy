@@ -8,6 +8,8 @@
 
     using Data;
 
+    using Mappy.IO;
+
     using TAUtil.Gaf;
     using TAUtil.Hpi;
     using TAUtil.Sct;
@@ -66,21 +68,17 @@
 
         private static IEnumerable<Section> LoadSectionsFromHapi(string filename, Color[] palette)
         {
+            var factory = new SectionFactory(palette);
+
             using (HpiReader h = new HpiReader(filename))
             {
                 foreach (string sect in h.GetFilesRecursive("sections").Select(x => x.Name))
                 {
-                    using (Stream s = h.ReadFile(sect))
+                    using (var s = new SctReader(h.ReadFile(sect)))
                     {
-                        SctReader sctReader = new SctReader(s);
-
                         Section section = new Section(filename, sect);
                         section.Name = Path.GetFileNameWithoutExtension(sect);
-                        section.Minimap = Util.Util.ReadToBitmap(
-                            sctReader.ReadMinimap(),
-                            palette,
-                            SctReader.MinimapWidth,
-                            SctReader.MinimapHeight);
+                        section.Minimap = factory.MinimapFromSct(s);
 
                         string[] directories = Path.GetDirectoryName(sect).Split(Path.DirectorySeparatorChar);
 

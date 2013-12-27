@@ -81,9 +81,12 @@
     <Compile Include="Data\Section.cs" />
     <Compile Include="Data\StartPositionChangedEventArgs.cs" />
     <Compile Include="Globals.cs" />
-    <Compile Include="IO\MapIO.cs" />
-    <Compile Include="IO\TileIO.cs" />
-    <Compile Include="IO\TileManager.cs" />
+    <Compile Include="IO\BitmapDeserializer.cs" />
+    <Compile Include="IO\BitmapCache.cs" />
+    <Compile Include="IO\BitmapSerializer.cs" />
+    <Compile Include="IO\MapModelFactory.cs" />
+    <Compile Include="IO\MapModelTntAdapter.cs" />
+    <Compile Include="IO\SectionFactory.cs" />
     <Compile Include="MappySettings.cs" />
     <Compile Include="Models\CoreModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
@@ -277,6 +280,7 @@
   <ItemGroup>
     <None Include="Assets\AboutText.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>python $(SolutionDir)GenerateAssemblyInfo.py $(ProjectDir)</PreBuildEvent>

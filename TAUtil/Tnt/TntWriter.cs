@@ -8,9 +8,13 @@
         private readonly BinaryWriter writer;
 
         public TntWriter(Stream s)
+            : this(new BinaryWriter(s))
         {
-            this.BaseStream = s;
-            this.writer = new BinaryWriter(s);
+        }
+
+        public TntWriter(BinaryWriter writer)
+        {
+            this.writer = writer;
         }
 
         ~TntWriter()
@@ -18,92 +22,38 @@
             this.Dispose(false);
         }
 
-        public Stream BaseStream { get; private set; }
-
-        public void WriteMinimap(int width, int height, byte[] data)
+        public void WriteTnt(ITntSource adapter)
         {
-            if (width <= 0 || height <= 0)
-            {
-                throw new ArgumentException("dimensions are invalid");
-            }
+            TntHeader h = new TntHeader();
+            h.IdVersion = TntHeader.TntMagicNumber;
 
-            if (width > TntConstants.MaxMinimapWidth || height > TntConstants.MaxMinimapHeight)
-            {
-                throw new ArgumentException("dimensions exceed maximum minimap bounds");
-            }
+            h.Width = (uint)(adapter.DataWidth * 2);
+            h.Height = (uint)(adapter.DataHeight * 2);
+            h.SeaLevel = (uint)adapter.SeaLevel;
 
-            if (data.Length != width * height)
-            {
-                throw new ArgumentException("data length does not match given dimensions");
-            }
+            h.TileAnims = (uint)adapter.AnimCount;
+            h.Tiles = (uint)adapter.TileCount;
 
-            this.writer.Write(TntConstants.MaxMinimapWidth);
-            this.writer.Write(TntConstants.MaxMinimapHeight);
+            int ptrAccumulator = TntHeader.HeaderLength;
+            h.PtrMapData = (uint)ptrAccumulator;
+            ptrAccumulator += sizeof(short) * adapter.DataWidth * adapter.DataHeight;
+            h.PtrMapAttr = (uint)ptrAccumulator;
+            ptrAccumulator += TileAttr.AttrLength * adapter.DataWidth * 2 * adapter.DataHeight * 2;
+            h.PtrTileGfx = (uint)ptrAccumulator;
+            ptrAccumulator += MapConstants.TileDataLength * adapter.TileCount;
+            h.PtrTileAnims = (uint)ptrAccumulator;
+            ptrAccumulator += (sizeof(int) + TntConstants.AnimNameLength) * adapter.AnimCount;
+            h.PtrMiniMap = (uint)ptrAccumulator;
 
-            for (int y = 0; y < TntConstants.MaxMinimapHeight; y++)
-            {
-                for (int x = 0; x < TntConstants.MaxMinimapWidth; x++)
-                {
-                    if (x >= width || y >= height)
-                    {
-                        this.writer.Write(TntConstants.MinimapVoidByte);
-                        continue;
-                    }
+            h.Write(this.writer);
 
-                    this.writer.Write(data[(y * width) + x]);
-                }
-            }
-        }
+            this.WriteData(adapter);
+            this.WriteAttrs(adapter);
+            this.WriteTiles(adapter);
+            this.WriteAnims(adapter);
+            this.WriteMinimap(adapter);
 
-        public void WriteTile(byte[] data)
-        {
-            if (data.Length != MapConstants.TileDataLength)
-            {
-                throw new ArgumentException("data is not tile sized");
-            }
-
-            this.writer.Write(data);
-        }
-
-        public void WritePixel(byte pixel)
-        {
-            this.writer.Write(pixel);
-        }
-
-        public void WriteAttr(TileAttr attr)
-        {
-            attr.Write(this.writer);
-        }
-
-        public void WriteAnim(string name)
-        {
-            // TA seems to ignore index field,
-            // so setting it to 0 is okay.
-            this.WriteAnim(name, 0);
-        }
-
-        public void WriteAnim(string name, int index)
-        {
-            if (name.Length >= TntConstants.AnimNameLength - 1)
-            {
-                throw new ArgumentException("name is too long");
-            }
-
-            if (index < 0)
-            {
-                throw new ArgumentException("index must not be negative");
-            }
-
-            byte[] c = new byte[TntConstants.AnimNameLength];
-            System.Text.Encoding.ASCII.GetBytes(name, 0, name.Length, c, 0);
-            this.writer.Write(index);
-            this.writer.Write(c);
-        }
-
-        public void WriteDataCell(short data)
-        {
-            BinaryWriter b = new BinaryWriter(this.BaseStream);
-            b.Write(data);
+            h.Unknown1 = 1; // if this is set to 0, the minimap doesn't show
         }
 
         public void Dispose()
@@ -115,8 +65,71 @@
         {
             if (disposing)
             {
-                this.BaseStream.Dispose();
+                this.writer.Dispose();
             }
+        }
+
+        private void WriteMinimap(ITntSource source)
+        {
+            MinimapInfo info = source.GetMinimap();
+
+            this.writer.Write(TntConstants.MaxMinimapWidth);
+            this.writer.Write(TntConstants.MaxMinimapHeight);
+
+            for (int y = 0; y < TntConstants.MaxMinimapHeight; y++)
+            {
+                for (int x = 0; x < TntConstants.MaxMinimapWidth; x++)
+                {
+                    if (y >= info.Height || x >= info.Width)
+                    {
+                        this.writer.Write(TntConstants.MinimapVoidByte);
+                        continue;
+                    }
+
+                    this.writer.Write(info.Data[(y * info.Width) + x]);
+                }
+            }
+        }
+
+        private void WriteAnims(ITntSource source)
+        {
+            int count = 0;
+            foreach (string anim in source.EnumerateAnims())
+            {
+                this.WriteAnim(anim, count++);
+            }
+        }
+
+        private void WriteTiles(ITntSource source)
+        {
+            foreach (byte[] tile in source.EnumerateTiles())
+            {
+                this.writer.Write(tile);
+            }
+        }
+
+        private void WriteAttrs(ITntSource source)
+        {
+            foreach (TileAttr t in source.EnumerateAttrs())
+            {
+                t.Write(this.writer);
+            }
+        }
+
+        private void WriteData(ITntSource source)
+        {
+            foreach (int i in source.EnumerateData())
+            {
+                this.writer.Write((short)i);
+            }
+        }
+
+        private void WriteAnim(string name, int index)
+        {
+            byte[] c = new byte[TntConstants.AnimNameLength];
+            System.Text.Encoding.ASCII.GetBytes(name, 0, name.Length, c, 0);
+            this.writer.Write(index);
+            this.writer.Write(c);
         }
     }
 }

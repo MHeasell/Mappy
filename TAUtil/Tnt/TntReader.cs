@@ -1,9 +1,10 @@
 ﻿namespace TAUtil.Tnt
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
 
-    public class TntReader : IDisposable
+    public class TntReader : IDisposable, ITntSource
     {
         private readonly BinaryReader reader;
 
@@ -77,86 +78,65 @@
             }
         }
 
-        public static MinimapInfo TrimMinimapBytes(MinimapInfo minimap)
-        {
-            var realSize = TntReader.GetMinimapActualSize(minimap);
-
-            MinimapInfo newMinimap = new MinimapInfo(realSize.Item1, realSize.Item2);
-
-            for (int y = 0; y < newMinimap.Height; y++)
-            {
-                for (int x = 0; x < newMinimap.Width; x++)
-                {
-                    newMinimap.Data[(y * newMinimap.Width) + x] = minimap.Data[(y * minimap.Width) + x];
-                }
-            }
-
-            return newMinimap;
-        }
-
-        public void SeekToTiles()
-        {
-            this.reader.BaseStream.Seek(this.header.PtrTileGfx, SeekOrigin.Begin);
-        }
-
-        public void SeekToAnims()
-        {
-            this.reader.BaseStream.Seek(this.header.PtrTileAnims, SeekOrigin.Begin);
-        }
-
-        public void SeekToData()
-        {
-            this.reader.BaseStream.Seek(this.header.PtrMapData, SeekOrigin.Begin);
-        }
-
-        public void SeekToMinimap()
-        {
-            this.reader.BaseStream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
-        }
-
-        public void SeekToAttrs()
+        public IEnumerable<TileAttr> EnumerateAttrs()
         {
             this.reader.BaseStream.Seek(this.header.PtrMapAttr, SeekOrigin.Begin);
+            for (int y = 0; y < this.header.Height; y++)
+            {
+                for (int x = 0; x < this.header.Width; x++)
+                {
+                    yield return TileAttr.Read(this.reader);
+                }
+            }
         }
 
-        public byte ReadPixel()
+        public IEnumerable<int> EnumerateData()
         {
-            return this.reader.ReadByte();
+            this.reader.BaseStream.Seek(this.header.PtrMapData, SeekOrigin.Begin);
+            int length = this.DataWidth * this.DataHeight;
+            for (int i = 0; i < length; i++)
+            {
+                yield return this.reader.ReadInt16();
+            }
         }
 
-        public short ReadDataCell()
+        public IEnumerable<byte[]> EnumerateTiles()
         {
-            return this.reader.ReadInt16();
+            this.reader.BaseStream.Seek(this.header.PtrTileGfx, SeekOrigin.Begin);
+            for (int i = 0; i < this.TileCount; i++)
+            {
+                yield return this.reader.ReadBytes(MapConstants.TileDataLength);
+            }
         }
 
-        public string ReadAnim()
+        public IEnumerable<string> EnumerateAnims()
         {
-            this.reader.ReadUInt32();
-            byte[] chars = this.reader.ReadBytes(TntConstants.AnimNameLength);
-            string s = Util.ConvertChars(chars);
-            return s;
+            this.reader.BaseStream.Seek(this.header.PtrTileAnims, SeekOrigin.Begin);
+            for (int i = 0; i < this.AnimCount; i++)
+            {
+                this.reader.ReadUInt32(); // skip feature index
+                byte[] chars = this.reader.ReadBytes(TntConstants.AnimNameLength);
+                string s = TAUtil.Util.ConvertChars(chars);
+                yield return s;
+            }
         }
 
-        public TileAttr ReadAttr()
+        public MinimapInfo GetMinimap()
         {
-            return TileAttr.Read(this.reader);
-        }
+            this.reader.BaseStream.Seek(this.header.PtrMiniMap, SeekOrigin.Begin);
+            int width = this.reader.ReadInt32();
+            int height = this.reader.ReadInt32();
+            byte[] data = this.reader.ReadBytes(width * height);
+            Util.Size trimmedSize = Util.GetMinimapActualSize(data, width, height);
+            data = Util.TrimMinimapBytes(
+                data,
+                width,
+                height,
+                trimmedSize.Width,
+                trimmedSize.Height);
+            MinimapInfo minimap = new MinimapInfo(trimmedSize.Width, trimmedSize.Height, data);
 
-        public byte[] ReadTile()
-        {
-            return this.reader.ReadBytes(MapConstants.TileDataLength);
-        }
-
-        public MinimapInfo ReadMinimap()
-        {
-            int readWidth = this.reader.ReadInt32();
-            int readHeight = this.reader.ReadInt32();
-
-            MinimapInfo map = new MinimapInfo(readWidth, readHeight);
-
-            this.reader.Read(map.Data, 0, readWidth * readHeight);
-
-            return TrimMinimapBytes(map);
+            return minimap;
         }
 
         public void Dispose()
@@ -170,56 +150,6 @@
             {
                 this.reader.Dispose();
             }
-        }
-
-        private static Tuple<int, int> GetMinimapActualSize(MinimapInfo minimap)
-        {
-            int realHeight = 0;
-            int realWidth = 0;
-
-            for (int y = 0; y < minimap.Height; y++)
-            {
-                if (minimap.Data[y * minimap.Width] == TntConstants.MinimapVoidByte)
-                {
-                    break;
-                }
-
-                realHeight++;
-            }
-
-            for (int x = 0; x < minimap.Width; x++)
-            {
-                if (minimap.Data[x] == TntConstants.MinimapVoidByte)
-                {
-                    break;
-                }
-
-                realWidth++;
-            }
-
-            return Tuple.Create(realWidth, realHeight);
-        }
-
-        public struct MinimapInfo
-        {
-            public MinimapInfo(int width, int height, byte[] data)
-                : this()
-            {
-                this.Width = width;
-                this.Height = height;
-                this.Data = data;
-            }
-
-            public MinimapInfo(int width, int height)
-                : this(width, height, new byte[width * height])
-            {
-            }
-
-            public int Width { get; private set; }
-
-            public int Height { get; private set; }
-
-            public byte[] Data { get; private set; }
         }
     }
 }
