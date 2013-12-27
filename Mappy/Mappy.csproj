@@ -81,6 +81,7 @@
     <Compile Include="Data\Section.cs" />
     <Compile Include="Data\StartPositionChangedEventArgs.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="IO\AbstractBitmapDeserializer.cs" />
     <Compile Include="IO\KeyedBitmapDeserializer.cs" />
     <Compile Include="IO\BitmapDeserializer.cs" />
     <Compile Include="IO\BitmapCache.cs" />
