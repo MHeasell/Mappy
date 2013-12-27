@@ -1,10 +1,17 @@
 ﻿namespace TAUtil.Gaf
 {
-    using System.Drawing;
-
     public struct GafFrame
     {
-        public Point Offset;
-        public Bitmap Data;
+        public int OffsetX;
+
+        public int OffsetY;
+
+        public int Width;
+
+        public int Height;
+
+        public byte TransparencyIndex;
+
+        public byte[] Data;
     }
 }

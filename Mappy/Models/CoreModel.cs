@@ -20,8 +20,6 @@
 
     public class CoreModel : Notifier
     {
-        private static readonly GafFrame DefaultFrame;
-
         private readonly OperationManager undoManager = new OperationManager();
 
         private readonly IDictionary<string, Feature> featureRecords;
@@ -47,12 +45,6 @@
 
         private bool previousTranslationOpen;
 
-        static CoreModel()
-        {
-            DefaultFrame.Offset = new Point(0, 0);
-            DefaultFrame.Data = Mappy.Properties.Resources.nofeature;
-        }
-
         public CoreModel()
         {
             this.Palette = Globals.Palette;
@@ -61,7 +53,10 @@
             this.sections = LoadingUtils.LoadSections(this.Palette);
 
             this.sectionFactory = new SectionFactory(this.Palette);
-            this.mapModelFactory = new MapModelFactory(this.Palette, this.featureRecords, DefaultFrame);
+            this.mapModelFactory = new MapModelFactory(
+                this.Palette,
+                this.featureRecords,
+                Mappy.Properties.Resources.nofeature);
 
             // hook up undoManager
             this.undoManager.CanUndoChanged += this.CanUndoChanged;

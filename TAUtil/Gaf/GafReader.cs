@@ -1,23 +1,19 @@
 ﻿namespace TAUtil.Gaf
 {
     using System;
-    using System.Drawing;
-    using System.Drawing.Imaging;
     using System.IO;
 
     public class GafReader : IDisposable
     {
-        private readonly Color[] palette;
         private readonly BinaryReader reader;
 
-        public GafReader(Stream s, Color[] palette)
-            : this(new BinaryReader(s), palette)
+        public GafReader(Stream s)
+            : this(new BinaryReader(s))
         {
         }
 
-        public GafReader(BinaryReader reader, Color[] palette)
+        public GafReader(BinaryReader reader)
         {
-            this.palette = palette;
             this.reader = reader;
         }
 
@@ -99,16 +95,13 @@
             Structures.GafFrameData.Read(this.reader, ref d);
 
             GafFrame frame = new GafFrame();
-            frame.Offset = new Point(d.XPos, d.YPos);
+            frame.OffsetX = d.XPos;
+            frame.OffsetY = d.YPos;
 
-            // Some GAFs (e.g. GZMetalEnergyCrystals.gaf in tamec 2004)
-            // have frames with zero width and height.
-            // Don't try and load these.
-            if (d.Width < 1 || d.Height < 1)
-            {
-                frame.Data = new Bitmap(1, 1);
-                return frame;
-            }
+            frame.Width = d.Width;
+            frame.Height = d.Height;
+
+            frame.TransparencyIndex = d.TransparencyIndex;
 
             // read the actual frame image
             this.reader.BaseStream.Seek(d.PtrFrameData, SeekOrigin.Begin);
@@ -116,13 +109,16 @@
             if (d.FramePointers > 0)
             {
                 // TODO: implement support for subframes
-                frame.Data = new Bitmap(50, 50);
+                frame.Width = 0;
+                frame.Height = 0;
+                frame.Data = new byte[0];
             }
             else
             {
                 if (d.Compressed)
                 {
-                    frame.Data = this.ReadCompressedImage(d.Width, d.Height);
+                    var frameReader = new CompressedFrameReader(this.reader, d.TransparencyIndex);
+                    frame.Data = frameReader.ReadCompressedImage(d.Width, d.Height);
                 }
                 else
                 {
@@ -133,99 +129,9 @@
             return frame;
         }
 
-        private Bitmap ReadUncompressedImage(int width, int height)
+        private byte[] ReadUncompressedImage(int width, int height)
         {
-            Bitmap bitmap = new Bitmap(width, height);
-            Rectangle rect = new Rectangle(0, 0, width, height);
-            BitmapData bitmapData = bitmap.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-
-            unsafe
-            {
-                int* pointer = (int*)bitmapData.Scan0;
-                int count = width * height;
-                for (int i = 0; i < count; ++i)
-                {
-                    byte read = this.reader.ReadByte();
-                    if (read == 9)
-                    {
-                        pointer[i] = Color.Transparent.ToArgb();
-                    }
-                    else
-                    {
-                        pointer[i] = this.palette[read].ToArgb();
-                    }
-                }
-            }
-
-            bitmap.UnlockBits(bitmapData);
-
-            return bitmap;
-        }
-
-        private Bitmap ReadCompressedImage(int width, int height)
-        {
-            Bitmap bitmap = new Bitmap(width, height);
-            Rectangle rect = new Rectangle(0, 0, width, height);
-            BitmapData data = bitmap.LockBits(rect, ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-
-            unsafe
-            {
-                int* pointer = (int*)data.Scan0;
-
-                for (int y = 0; y < height; y++)
-                {
-                    int bytes = this.reader.ReadUInt16();
-                    int count = 0;
-                    int x = 0;
-
-                    // while there are still bytes left in the line to read
-                    while (count < bytes)
-                    {
-                        // read the mask
-                        byte mask = this.reader.ReadByte();
-                        count++;
-
-                        if ((mask & 0x01) == 0x01)
-                        {
-                            // skip n pixels (transparency)
-                            x += mask >> 1;
-                        }
-                        else if ((mask & 0x02) == 0x02)
-                        {
-                            // repeat this byte n times
-                            byte next = this.reader.ReadByte();
-                            count++;
-
-                            int repeat = (mask >> 2) + 1;
-                            for (int i = 0; i < repeat; i++)
-                            {
-                                int pos = (y * width) + x;
-                                pointer[pos] = this.palette[next].ToArgb();
-
-                                x++;
-                            }
-                        }
-                        else
-                        {
-                            // copy next n bytes
-                            int repeat = (mask >> 2) + 1;
-                            for (int i = 0; i < repeat; i++)
-                            {
-                                byte val = this.reader.ReadByte();
-                                count++;
-
-                                int pos = (y * width) + x;
-                                pointer[pos] = this.palette[val].ToArgb();
-
-                                x++;
-                            }
-                        }
-                    }
-                }
-            }
-
-            bitmap.UnlockBits(data);
-            return bitmap;
+            return this.reader.ReadBytes(width * height);
         }
     }
 }

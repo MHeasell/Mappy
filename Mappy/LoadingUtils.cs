@@ -48,6 +48,8 @@
 
         private static Dictionary<string, Feature> LoadFeatureObjects(IDictionary<string, TdfNode> tdfs, IDictionary<string, GafFrame> frames)
         {
+            var deserializer = new KeyedBitmapDeserializer(Globals.Palette);
+
             Dictionary<string, Feature> features = new Dictionary<string, Feature>();
             foreach (var e in tdfs)
             {
@@ -56,7 +58,17 @@
                 {
                     int footX = Convert.ToInt32(e.Value.Entries["footprintx"]);
                     int footY = Convert.ToInt32(e.Value.Entries["footprintz"]);
-                    Feature f = new Feature(e.Key, frame.Data, frame.Offset, new Size(footX, footY));
+                    Bitmap image;
+                    if (frame.Width == 0 || frame.Height == 0)
+                    {
+                        image = new Bitmap(50, 50);
+                    }
+                    else
+                    {
+                        deserializer.TransparencyKey = frame.TransparencyIndex;
+                        image = deserializer.Deserialize(frame.Data, frame.Width, frame.Height);
+                    }
+                    Feature f = new Feature(e.Key, image, new Point(frame.OffsetX, frame.OffsetY), new Size(footX, footY));
                     f.World = e.Value.Entries["world"];
                     f.Category = e.Value.Entries["category"];
                     features[e.Key] = f;
@@ -112,7 +124,7 @@
             {
                 using (HpiReader h = new HpiReader(file))
                 {
-                    foreach (var e in LoadFeatureBitmapsFromHapi(h, filenameFeatureMap, palette))
+                    foreach (var e in LoadFeatureBitmapsFromHapi(h, filenameFeatureMap))
                     {
                         bitmaps[e.Key] = e.Value;
                     }
@@ -180,7 +192,7 @@
             return filenameFeatureMap;
         }
 
-        private static IDictionary<string, GafFrame> LoadFeatureBitmapsFromHapi(HpiReader hapi, IDictionary<string, IList<TdfNode>> filenameFeatureMap, Color[] palette)
+        private static IDictionary<string, GafFrame> LoadFeatureBitmapsFromHapi(HpiReader hapi, IDictionary<string, IList<TdfNode>> filenameFeatureMap)
         {
             Dictionary<string, GafFrame> bitmaps = new Dictionary<string, GafFrame>();
 
@@ -193,7 +205,7 @@
                 {
                     // extract and read the file
                     GafEntry[] gaf;
-                    using (var b = new GafReader(hapi.ReadFile(anim), palette))
+                    using (var b = new GafReader(hapi.ReadFile(anim)))
                     {
                         gaf = b.Read();
                     }

@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gaf\CompressedFrameReader.cs" />
     <Compile Include="MapConstants.cs" />
     <Compile Include="Gaf\GafEntry.cs" />
     <Compile Include="Gaf\Structures\GafEntry.cs" />

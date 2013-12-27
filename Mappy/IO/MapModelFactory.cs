@@ -8,7 +8,6 @@
     using Mappy.Models;
 
     using TAUtil;
-    using TAUtil.Gaf;
     using TAUtil.Tnt;
 
     public class MapModelFactory
@@ -17,16 +16,16 @@
 
         private readonly IDictionary<string, Feature> featureBank;
 
-        private readonly GafFrame defaultFrame;
+        private readonly Bitmap defaultFeatureImage;
 
         public MapModelFactory(
             Color[] palette,
             IDictionary<string, Feature> bank,
-            GafFrame defaultFrame)
+            Bitmap defaultFeatureImage)
         {
             this.bitmapDeserializer = new BitmapDeserializer(palette);
             this.featureBank = bank;
-            this.defaultFrame = defaultFrame;
+            this.defaultFeatureImage = defaultFeatureImage;
         }
 
         public MapModel FromTntAndOta(ITntSource tnt, MapAttributes ota)
@@ -108,8 +107,8 @@
             {
                 f = new Feature(
                     name,
-                    this.defaultFrame.Data,
-                    this.defaultFrame.Offset,
+                    this.defaultFeatureImage,
+                    new Point(0, 0),
                     new Size(1, 1));
             }
 
