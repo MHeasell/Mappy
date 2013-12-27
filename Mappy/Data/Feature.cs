@@ -2,7 +2,8 @@ namespace Mappy.Data
 {
     using System;
     using System.Drawing;
-    using Grids;
+
+    using Mappy.Collections;
 
     public class Feature
     {

@@ -3,7 +3,8 @@
     using System;
     using System.ComponentModel;
     using Data;
-    using Grids;
+
+    using Mappy.Collections;
 
     public interface IBindingMapModel : IMapModel
     {

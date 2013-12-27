@@ -3,7 +3,8 @@
     using System.Collections.Generic;
     using System.Drawing;
     using Data;
-    using Grids;
+
+    using Mappy.Collections;
 
     public interface IMapModel
     {

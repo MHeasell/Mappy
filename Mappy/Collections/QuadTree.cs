@@ -1,4 +1,4 @@
-namespace Mappy.Util
+namespace Mappy.Collections
 {
     using System;
     using System.Collections.Generic;

@@ -60,6 +60,15 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\BindingGrid.cs" />
+    <Compile Include="Collections\BindingSparseGrid.cs" />
+    <Compile Include="Collections\Grid.cs" />
+    <Compile Include="Collections\IBindingGrid.cs" />
+    <Compile Include="Collections\IBindingSparseGrid.cs" />
+    <Compile Include="Collections\IGrid.cs" />
+    <Compile Include="Collections\ISparseGrid.cs" />
+    <Compile Include="Collections\QuadTree.cs" />
+    <Compile Include="Collections\SparseGrid.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Controllers\MapPresenter.cs" />
     <Compile Include="Data\BindingMapTile.cs" />
@@ -141,10 +150,6 @@
     <Compile Include="Operations\AddFloatingTileOperation.cs" />
     <Compile Include="Operations\ClearTilesOperation.cs" />
     <Compile Include="Operations\CompositeOperation.cs" />
-    <Compile Include="Grids\BindingGrid.cs" />
-    <Compile Include="Grids\BindingSparseGrid.cs" />
-    <Compile Include="Grids\IBindingGrid.cs" />
-    <Compile Include="Grids\IBindingSparseGrid.cs" />
     <Compile Include="Models\IBindingMapModel.cs" />
     <Compile Include="Models\IMapModel.cs" />
     <Compile Include="Operations\IReplayableOperation.cs" />
@@ -159,7 +164,6 @@
     <Compile Include="Util\Notifier.cs" />
     <Compile Include="Util\Palette.cs" />
     <Compile Include="Util\PaletteReader.cs" />
-    <Compile Include="Util\QuadTree.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Views\IMainView.cs" />
     <Compile Include="Views\IMinimapView.cs" />
@@ -172,9 +176,6 @@
     <Compile Include="UI\Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Grids\Grid.cs" />
-    <Compile Include="Grids\IGrid.cs" />
-    <Compile Include="Grids\ISparseGrid.cs" />
     <Compile Include="UI\Painters\MapPainter.cs" />
     <Compile Include="UI\Controls\MapPanel.cs">
       <SubType>UserControl</SubType>
@@ -206,7 +207,6 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Grids\SparseGrid.cs" />
     <Compile Include="Operations\OperationManager.cs" />
     <EmbeddedResource Include="UI\Controls\FeatureView.resx">
       <DependentUpon>FeatureView.cs</DependentUpon>

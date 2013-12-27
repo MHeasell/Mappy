@@ -5,6 +5,9 @@ namespace Mappy.UI.Controls
     using System.Drawing;
     using System.Linq;
     using Drawables;
+
+    using Mappy.Collections;
+
     using Util;
 
     public class ImageLayerCollection : INotifyCollectionChanged

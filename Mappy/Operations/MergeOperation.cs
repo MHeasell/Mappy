@@ -1,6 +1,6 @@
 ﻿namespace Mappy.Operations
 {
-    using Mappy.Grids;
+    using Mappy.Collections;
 
     public class MergeOperation<T> : IReplayableOperation
     {

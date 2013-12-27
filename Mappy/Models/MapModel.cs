@@ -4,7 +4,8 @@
     using System.Drawing;
     using System.Linq;
     using Data;
-    using Grids;
+
+    using Mappy.Collections;
 
     public class MapModel : IMapModel
     {

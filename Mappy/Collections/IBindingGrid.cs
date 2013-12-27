@@ -1,4 +1,4 @@
-﻿namespace Mappy.Grids
+﻿namespace Mappy.Collections
 {
     using System;
     using System.Drawing;

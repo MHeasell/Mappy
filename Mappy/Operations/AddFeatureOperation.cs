@@ -1,7 +1,8 @@
 namespace Mappy.Operations
 {
     using Data;
-    using Grids;
+
+    using Mappy.Collections;
 
     public class AddFeatureOperation : IReplayableOperation
     {

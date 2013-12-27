@@ -5,7 +5,8 @@
     using System.ComponentModel;
     using System.Drawing;
     using Data;
-    using Grids;
+
+    using Mappy.Collections;
 
     public class BindingMapModel : IBindingMapModel
     {

@@ -1,7 +1,8 @@
 namespace Mappy.Data
 {
     using System.Drawing;
-    using Grids;
+
+    using Mappy.Collections;
 
     public interface IMapTile
     {

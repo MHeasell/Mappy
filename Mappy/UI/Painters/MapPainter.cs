@@ -2,7 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Drawing;
-    using Mappy.Grids;
+
+    using Mappy.Collections;
 
     public class MapPainter : IPainter
     {

@@ -6,7 +6,8 @@
     using System.Linq;
 
     using Geometry;
-    using Mappy.Grids;
+
+    using Mappy.Collections;
 
     public class ContourHeightPainter : IPainter
     {
