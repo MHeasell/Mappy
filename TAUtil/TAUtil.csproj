@@ -46,7 +46,7 @@
     <Compile Include="MapConstants.cs" />
     <Compile Include="Gaf\GafEntry.cs" />
     <Compile Include="Gaf\Structures\GafEntry.cs" />
-    <Compile Include="Gaf\GafFile.cs" />
+    <Compile Include="Gaf\GafReader.cs" />
     <Compile Include="Gaf\GafFrame.cs" />
     <Compile Include="Gaf\Structures\GafFrameData.cs" />
     <Compile Include="Gaf\Structures\GafFrameEntry.cs" />

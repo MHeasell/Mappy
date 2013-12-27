@@ -5,23 +5,23 @@
     using System.Drawing.Imaging;
     using System.IO;
 
-    public class GafFile : IDisposable
+    public class GafReader : IDisposable
     {
         private readonly Color[] palette;
         private readonly BinaryReader reader;
 
-        public GafFile(Stream s, Color[] palette)
+        public GafReader(Stream s, Color[] palette)
             : this(new BinaryReader(s), palette)
         {
         }
 
-        public GafFile(BinaryReader reader, Color[] palette)
+        public GafReader(BinaryReader reader, Color[] palette)
         {
             this.palette = palette;
             this.reader = reader;
         }
 
-        ~GafFile()
+        ~GafReader()
         {
             this.Dispose(false);
         }

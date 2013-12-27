@@ -193,7 +193,7 @@
                 {
                     // extract and read the file
                     GafEntry[] gaf;
-                    using (var b = new GafFile(hapi.ReadFile(anim), palette))
+                    using (var b = new GafReader(hapi.ReadFile(anim), palette))
                     {
                         gaf = b.Read();
                     }
