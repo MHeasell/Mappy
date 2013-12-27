@@ -134,6 +134,12 @@
             {
                 foreach (string dir in MappySettings.Settings.SearchPaths)
                 {
+                    if (!Directory.Exists(dir))
+                    {
+                        // silently ignore missing directories
+                        continue;
+                    }
+
                     foreach (string file in Directory.EnumerateFiles(dir, "*." + ext))
                     {
                         yield return file;
