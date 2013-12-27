@@ -193,9 +193,9 @@
                 {
                     // extract and read the file
                     GafEntry[] gaf;
-                    using (BinaryReader b = new BinaryReader(hapi.ReadFile(anim)))
+                    using (var b = new GafFile(hapi.ReadFile(anim), palette))
                     {
-                        gaf = GafFile.Read(b, palette);
+                        gaf = b.Read();
                     }
 
                     // retrieve all required entries
