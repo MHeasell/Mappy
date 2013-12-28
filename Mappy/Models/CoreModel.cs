@@ -7,6 +7,7 @@
     using Data;
 
     using Mappy.IO;
+    using Mappy.Palette;
 
     using Operations;
 
@@ -47,6 +48,7 @@
         public CoreModel()
         {
             this.Palette = Globals.Palette;
+            this.ReversePalette = Globals.ReversePalette;
 
             this.featureRecords = LoadingUtils.LoadFeatures(this.Palette);
             this.sections = LoadingUtils.LoadSections(this.Palette);
@@ -164,7 +166,9 @@
             }
         }
 
-        public Color[] Palette { get; private set; }
+        public IPalette Palette { get; private set; }
+
+        public IReversePalette ReversePalette { get; private set; }
 
         public void ToggleHeightmap()
         {
@@ -213,7 +217,7 @@
 
             using (var s = new TntWriter(File.OpenWrite(filename)))
             {
-                s.WriteTnt(new MapModelTntAdapter(this.Map, Util.ReverseMapping(this.Palette)));
+                s.WriteTnt(new MapModelTntAdapter(this.Map, this.ReversePalette));
             }
 
             flatten.Undo();
@@ -468,7 +472,7 @@
             {
                 using (var s = new TntWriter(File.OpenWrite(tmpTntName)))
                 {
-                    s.WriteTnt(new MapModelTntAdapter(this.Map, Util.ReverseMapping(this.Palette)));
+                    s.WriteTnt(new MapModelTntAdapter(this.Map, this.ReversePalette));
                 }
 
                 using (Stream s = File.OpenWrite(tmpOtaName))

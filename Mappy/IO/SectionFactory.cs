@@ -5,6 +5,7 @@
     using System.Linq;
 
     using Mappy.Data;
+    using Mappy.Palette;
 
     using TAUtil;
     using TAUtil.Sct;
@@ -13,7 +14,7 @@
     {
         private readonly BitmapDeserializer bitmapDeserializer;
 
-        public SectionFactory(Color[] palette)
+        public SectionFactory(IPalette palette)
         {
             this.bitmapDeserializer = new BitmapDeserializer(palette);
         }

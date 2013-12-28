@@ -9,6 +9,7 @@
     using Data;
 
     using Mappy.IO;
+    using Mappy.Palette;
 
     using TAUtil.Gaf;
     using TAUtil.Hpi;
@@ -22,15 +23,15 @@
         /// </summary>
         /// <param name="palette"></param>
         /// <returns></returns>
-        public static IDictionary<string, Feature> LoadFeatures(Color[] palette)
+        public static IDictionary<string, Feature> LoadFeatures(IPalette palette)
         {
             IDictionary<string, TdfNode> tdfs = LoadingUtils.LoadFeatureTdfs();
             IDictionary<string, GafFrame> frames = LoadingUtils.LoadFeatureBitmaps(tdfs);
 
-            return LoadingUtils.LoadFeatureObjects(tdfs, frames);
+            return LoadingUtils.LoadFeatureObjects(tdfs, frames, palette);
         }
 
-        public static IList<Section> LoadSections(Color[] palette)
+        public static IList<Section> LoadSections(IPalette palette)
         {
             IList<Section> sections = new List<Section>();
             int i = 0;
@@ -46,9 +47,10 @@
             return sections;
         }
 
-        private static Dictionary<string, Feature> LoadFeatureObjects(IDictionary<string, TdfNode> tdfs, IDictionary<string, GafFrame> frames)
+        private static Dictionary<string, Feature> LoadFeatureObjects(IDictionary<string, TdfNode> tdfs, IDictionary<string, GafFrame> frames, IPalette palette)
         {
-            var deserializer = new KeyedBitmapDeserializer(Globals.Palette);
+            var maskedPalette = new TransparencyMaskedPalette(palette);
+            var deserializer = new BitmapDeserializer(maskedPalette);
 
             Dictionary<string, Feature> features = new Dictionary<string, Feature>();
             foreach (var e in tdfs)
@@ -65,7 +67,7 @@
                     }
                     else
                     {
-                        deserializer.TransparencyKey = frame.TransparencyIndex;
+                        maskedPalette.TransparencyIndex = frame.TransparencyIndex;
                         image = deserializer.Deserialize(frame.Data, frame.Width, frame.Height);
                     }
                     Feature f = new Feature(e.Key, image, new Point(frame.OffsetX, frame.OffsetY), new Size(footX, footY));
@@ -78,7 +80,7 @@
             return features;
         }
 
-        private static IEnumerable<Section> LoadSectionsFromHapi(string filename, Color[] palette)
+        private static IEnumerable<Section> LoadSectionsFromHapi(string filename, IPalette palette)
         {
             var factory = new SectionFactory(palette);
 

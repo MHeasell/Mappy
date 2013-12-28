@@ -7,6 +7,7 @@
 
     using Mappy.Data;
     using Mappy.Models;
+    using Mappy.Palette;
     using Mappy.Util;
 
     using TAUtil.Tnt;
@@ -25,7 +26,7 @@
 
         private readonly BitmapSerializer bitmapSerializer;
 
-        public MapModelTntAdapter(IMapModel model, IDictionary<Color, int> reversePalette)
+        public MapModelTntAdapter(IMapModel model, IReversePalette reversePalette)
         {
             this.model = model;
             this.tiles = Util.GetUsedTiles(model.Tile).ToArray();

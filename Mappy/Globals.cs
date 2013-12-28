@@ -4,10 +4,13 @@ namespace Mappy
     using System.IO;
 
     using Mappy.IO;
+    using Mappy.Palette;
 
     public static class Globals
     {
-        public static readonly Color[] Palette;
+        public static readonly IPalette Palette;
+
+        public static readonly IReversePalette ReversePalette;
 
         public static readonly BitmapCache TileCache;
 
@@ -15,7 +18,9 @@ namespace Mappy
         {
             using (Stream s = new MemoryStream(Mappy.Properties.Resources.TAPalette))
             {
-                Palette = Mappy.Util.Palette.LoadArr(s);
+                Color[] arr = Mappy.Util.Palette.LoadArr(s);
+                Palette = new ArrayPalette(arr);
+                ReversePalette = new DictionaryReversePalette(Mappy.Util.Util.ReverseMapping(arr));
             }
 
             TileCache = new BitmapCache();

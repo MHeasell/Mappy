@@ -6,6 +6,7 @@
 
     using Mappy.Data;
     using Mappy.Models;
+    using Mappy.Palette;
 
     using TAUtil;
     using TAUtil.Tnt;
@@ -19,7 +20,7 @@
         private readonly Bitmap defaultFeatureImage;
 
         public MapModelFactory(
-            Color[] palette,
+            IPalette palette,
             IDictionary<string, Feature> bank,
             Bitmap defaultFeatureImage)
         {

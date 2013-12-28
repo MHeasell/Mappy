@@ -1,15 +1,16 @@
 namespace Mappy.IO
 {
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
 
+    using Mappy.Palette;
+
     public class BitmapSerializer
     {
-        private readonly IDictionary<Color, int> reversePalette;
+        private readonly IReversePalette reversePalette;
 
-        public BitmapSerializer(IDictionary<Color, int> reversePalette)
+        public BitmapSerializer(IReversePalette reversePalette)
         {
             this.reversePalette = reversePalette;
         }
