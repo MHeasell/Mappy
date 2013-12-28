@@ -1,6 +1,5 @@
 namespace Mappy
 {
-    using System.Drawing;
     using System.IO;
 
     using Mappy.IO;
@@ -18,9 +17,9 @@ namespace Mappy
         {
             using (Stream s = new MemoryStream(Mappy.Properties.Resources.TAPalette))
             {
-                Color[] arr = Mappy.Util.Palette.LoadArr(s);
-                Palette = new ArrayPalette(arr);
-                ReversePalette = new DictionaryReversePalette(Mappy.Util.Util.ReverseMapping(arr));
+                var palette = PaletteFactory.FromPal(s);
+                Palette = palette.ForwardPalette;
+                ReversePalette = palette.ReversePalette;
             }
 
             TileCache = new BitmapCache();

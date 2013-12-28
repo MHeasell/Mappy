@@ -1,4 +1,4 @@
-﻿namespace Mappy.Util
+﻿namespace Mappy.IO
 {
     using System;
     using System.Drawing;
