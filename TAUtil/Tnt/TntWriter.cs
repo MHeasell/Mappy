@@ -17,11 +17,6 @@
             this.writer = writer;
         }
 
-        ~TntWriter()
-        {
-            this.Dispose(false);
-        }
-
         public void WriteTnt(ITntSource adapter)
         {
             TntHeader h = new TntHeader();
@@ -59,6 +54,7 @@
         public void Dispose()
         {
             this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)

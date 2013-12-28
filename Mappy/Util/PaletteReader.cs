@@ -32,11 +32,6 @@
             this.ColorsCount = int.Parse(entries);
         }
 
-        ~PaletteReader()
-        {
-            this.Dispose(false);
-        }
-
         public int ColorsCount { get; private set; }
 
         public Color ReadColor()
@@ -57,6 +52,7 @@
         public void Dispose()
         {
             this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)

@@ -16,11 +16,6 @@
             TntHeader.Read(this.reader, ref this.header);
         }
 
-        ~TntReader()
-        {
-            this.Dispose(false);
-        }
-
         public int Width
         {
             get
@@ -142,6 +137,7 @@
         public void Dispose()
         {
             this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)

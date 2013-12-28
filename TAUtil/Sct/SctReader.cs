@@ -22,11 +22,6 @@
             SctHeader.Read(this.reader, ref this.header);
         }
 
-        ~SctReader()
-        {
-            this.Dispose(false);
-        }
-
         public int DataWidth
         {
             get { return (int)this.header.Width; }
@@ -103,6 +98,7 @@
         public void Dispose()
         {
             this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
