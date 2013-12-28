@@ -32,7 +32,8 @@
             this.reverseTiles = Util.ReverseMapping(this.tiles);
             this.features = model.Features.Values.Distinct().ToArray();
             this.reverseFeatures = Util.ReverseMapping(this.features);
-            this.bitmapSerializer = new BitmapSerializer(reversePalette);        }
+            this.bitmapSerializer = new BitmapSerializer(reversePalette);
+        }
 
         public int DataWidth
         {
