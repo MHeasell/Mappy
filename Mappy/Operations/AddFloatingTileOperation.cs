@@ -5,8 +5,8 @@
 
     public class AddFloatingTileOperation : IReplayableOperation
     {
-        private IMapModel map;
-        private Positioned<IMapTile> tile;
+        private readonly IMapModel map;
+        private readonly Positioned<IMapTile> tile;
 
         public AddFloatingTileOperation(IMapModel map, Positioned<IMapTile> tile)
         {

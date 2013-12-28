@@ -5,13 +5,13 @@
 
     public class OperationManager
     {
-        private Stack<IReplayableOperation> undoStack = new Stack<IReplayableOperation>();
-        private Stack<IReplayableOperation> redoStack = new Stack<IReplayableOperation>();
+        private readonly Stack<IReplayableOperation> undoStack = new Stack<IReplayableOperation>();
+        private readonly Stack<IReplayableOperation> redoStack = new Stack<IReplayableOperation>();
 
-        private bool canUndo = false;
-        private bool canRedo = false;
+        private bool canUndo;
+        private bool canRedo;
 
-        private int markCounter = 0;
+        private int markCounter;
         private bool isMarked = true;
 
         public event EventHandler CanUndoChanged;

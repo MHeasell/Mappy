@@ -6,7 +6,7 @@
 
     public class BindingGrid<T> : IBindingGrid<T>
     {
-        private IGrid<T> grid;
+        private readonly IGrid<T> grid;
 
         public BindingGrid(IGrid<T> grid)
         {

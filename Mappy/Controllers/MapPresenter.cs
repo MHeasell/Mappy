@@ -406,7 +406,7 @@
                     p.Value.Y - 58,
                     int.MaxValue,
                     img);
-                i.Tag = new StartPositionTag() { Index = index };
+                i.Tag = new StartPositionTag { Index = index };
                 this.startPositionMapping[index] = i;
                 this.view.Items.Add(i);
             }

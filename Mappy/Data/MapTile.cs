@@ -5,8 +5,6 @@ namespace Mappy.Data
 
     using Mappy.Collections;
 
-    using TAUtil.Sct;
-
     public class MapTile : IMapTile
     {
         public const int TileWidth = 32;

@@ -3,10 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
 
     public class BindingSparseGrid<T> : BindingGrid<T>, IBindingSparseGrid<T>
     {
-        private ISparseGrid<T> grid;
+        private readonly ISparseGrid<T> grid;
 
         public BindingSparseGrid(ISparseGrid<T> grid)
             : base(grid)
@@ -64,7 +65,7 @@
             EventHandler<SparseGridEventArgs> h = this.EntriesChanged;
             if (h != null)
             {
-                h(this, new SparseGridEventArgs { Action = type, Coordinates = new Point[] { new Point(x, y) } });
+                h(this, new SparseGridEventArgs { Action = type, Coordinates = new[] { new Point(x, y) } });
             }
         }
 
@@ -104,10 +105,7 @@
 
         private static IEnumerable<Point> ProcessEntries(IEnumerable<Entry<T>> entries, int x, int y)
         {
-            foreach (Entry<T> p in entries)
-            {
-                yield return new Point(p.X + x, p.Y + y);
-            }
+            return entries.Select(p => new Point(p.X + x, p.Y + y));
         }
     }
 }

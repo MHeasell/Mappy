@@ -10,7 +10,6 @@
 
     using Operations;
 
-    using TAUtil.Gaf;
     using TAUtil.Hpi;
     using TAUtil.Sct;
     using TAUtil.Tdf;

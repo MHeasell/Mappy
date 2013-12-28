@@ -114,9 +114,6 @@
     <Compile Include="UI\Controls\ImageLayerView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\Controls\ImageLayerView.Designer.cs">
-      <DependentUpon>ImageLayerView.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Controls\SectionView.cs">
       <SubType>UserControl</SubType>
     </Compile>

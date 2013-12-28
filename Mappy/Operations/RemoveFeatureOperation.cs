@@ -6,9 +6,10 @@ namespace Mappy.Operations
 
     public class RemoveFeatureOperation : IReplayableOperation
     {
-        private int x;
-        private int y;
-        private ISparseGrid<Feature> features;
+        private readonly int x;
+        private readonly int y;
+        private readonly ISparseGrid<Feature> features;
+
         private Feature removedFeature;
 
         public RemoveFeatureOperation(ISparseGrid<Feature> features, int x, int y)

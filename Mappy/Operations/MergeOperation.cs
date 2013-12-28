@@ -4,19 +4,19 @@
 
     public class MergeOperation<T> : IReplayableOperation
     {
-        private IGrid<T> baseGrid;
-        private IGrid<T> mergeGrid;
+        private readonly IGrid<T> baseGrid;
+        private readonly IGrid<T> mergeGrid;
+
+        private readonly int sourceX;
+        private readonly int sourceY;
+
+        private readonly int destX;
+        private readonly int destY;
+
+        private readonly int width;
+        private readonly int height;
 
         private IGrid<T> oldContents;
-
-        private int sourceX;
-        private int sourceY;
-
-        private int destX;
-        private int destY;
-
-        private int width;
-        private int height;
 
         public MergeOperation(IGrid<T> baseGrid, IGrid<T> mergeGrid, int sourceX, int sourceY, int destX, int destY, int width, int height)
         {

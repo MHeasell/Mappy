@@ -70,7 +70,7 @@
                 string msg = "A fatal error has occurred which could not be logged. Reason: "
                     + e.Message + "\n\n"
                     + "Technical details follow:\n\n"
-                    + ex.ToString();
+                    + ex;
 
                 MessageBox.Show(
                     null,

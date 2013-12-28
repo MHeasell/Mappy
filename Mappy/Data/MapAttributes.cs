@@ -10,6 +10,8 @@
 
     public class MapAttributes : Notifier
     {
+        private readonly Point?[] startPositions = new Point?[10];
+
         private string name;
         private string description;
         private string planet;
@@ -37,8 +39,6 @@
         private int meteorDensity;
         private int meteorDuration;
         private int meteorInterval;
-
-        private Point?[] startPositions = new Point?[10];
 
         public event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
 

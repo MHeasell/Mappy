@@ -3,16 +3,11 @@ namespace Mappy.Util
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.Drawing.Imaging;
-    using System.Security.Cryptography;
-    using System.Text;
 
     using Data;
     using Geometry;
 
     using Mappy.Collections;
-
-    using TAUtil.Tnt;
 
     public static class Util
     {

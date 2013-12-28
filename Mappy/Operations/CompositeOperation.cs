@@ -5,10 +5,10 @@
 
     public class CompositeOperation : IReplayableOperation
     {
-        private IEnumerable<IReplayableOperation> ops;
+        private readonly IEnumerable<IReplayableOperation> ops;
 
         public CompositeOperation(IReplayableOperation op1, IReplayableOperation op2)
-            : this(new IReplayableOperation[] { op1, op2 })
+            : this(new[] { op1, op2 })
         {
         }
 

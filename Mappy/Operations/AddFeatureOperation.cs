@@ -6,13 +6,13 @@ namespace Mappy.Operations
 
     public class AddFeatureOperation : IReplayableOperation
     {
-        private ISparseGrid<Feature> features;
-        private Feature item;
+        private readonly ISparseGrid<Feature> features;
+        private readonly Feature item;
+        private readonly int x;
+        private readonly int y;
+
         private Feature oldItem;
         private bool hasOldItem;
-
-        private int x;
-        private int y;
 
         public AddFeatureOperation(ISparseGrid<Feature> features, Feature feature, int x, int y)
         {

@@ -6,7 +6,7 @@
 
     public class ClearTilesOperation : IReplayableOperation
     {
-        private IMapModel model;
+        private readonly IMapModel model;
 
         private IList<Positioned<IMapTile>> oldTiles;
 

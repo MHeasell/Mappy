@@ -25,7 +25,7 @@
         public static IDictionary<string, Feature> LoadFeatures(Color[] palette)
         {
             IDictionary<string, TdfNode> tdfs = LoadingUtils.LoadFeatureTdfs();
-            IDictionary<string, GafFrame> frames = LoadingUtils.LoadFeatureBitmaps(tdfs, palette);
+            IDictionary<string, GafFrame> frames = LoadingUtils.LoadFeatureBitmaps(tdfs);
 
             return LoadingUtils.LoadFeatureObjects(tdfs, frames);
         }
@@ -107,9 +107,8 @@
         /// Loads the corresponding image for each feature in the given database
         /// </summary>
         /// <param name="features"></param>
-        /// <param name="palette"></param>
         /// <returns>A mapping of feature name to image</returns>
-        private static IDictionary<string, GafFrame> LoadFeatureBitmaps(IDictionary<string, TdfNode> features, Color[] palette)
+        private static IDictionary<string, GafFrame> LoadFeatureBitmaps(IDictionary<string, TdfNode> features)
         {
             IDictionary<string, IList<TdfNode>> filenameFeatureMap = LoadingUtils.GroupByAnimFilename(features);
 
@@ -136,7 +135,7 @@
 
         private static IEnumerable<string> EnumerateSearchHpis()
         {
-            string[] exts = new string[] { "hpi", "ufo", "ccx", "gpf", "gp3" };
+            string[] exts = { "hpi", "ufo", "ccx", "gpf", "gp3" };
             if (MappySettings.Settings.SearchPaths == null)
             {
                 yield break;

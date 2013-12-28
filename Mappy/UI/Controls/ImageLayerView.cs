@@ -7,7 +7,7 @@
     using System.Windows.Forms;
     using Painters;
 
-    public partial class ImageLayerView : ScrollableControl
+    public class ImageLayerView : ScrollableControl
     {
         private readonly ImageLayerCollection items;
 
@@ -25,8 +25,6 @@
 
         public ImageLayerView()
         {
-            this.InitializeComponent();
-
             this.canvasBrush = new SolidBrush(this.canvasColor);
 
             this.DoubleBuffered = true;
@@ -274,6 +272,16 @@
             {
                 h(this, EventArgs.Empty);
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.canvasBrush.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         private void InvalidateSelectionRect()

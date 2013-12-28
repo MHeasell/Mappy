@@ -5,8 +5,9 @@
 
     public class RemoveTileOperation : IReplayableOperation
     {
-        private IList<Positioned<IMapTile>> tiles;
-        private int index;
+        private readonly IList<Positioned<IMapTile>> tiles;
+        private readonly int index;
+
         private Positioned<IMapTile> removedTile;
 
         public RemoveTileOperation(IList<Positioned<IMapTile>> tiles, int index)

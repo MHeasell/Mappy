@@ -73,8 +73,8 @@
 
         private void PaintHeightContours(Graphics g, Point p)
         {
-            float startHeight = 0.8f;
-            float interval = 4.0f;
+            const float StartHeight = 0.8f;
+            const float Interval = 4.0f;
 
             // find the height range
             int[] heights =
@@ -88,17 +88,17 @@
             float maxHeight = (float)heights.Max();
 
             // offset by the base height
-            minHeight -= startHeight;
-            maxHeight -= startHeight;
+            minHeight -= StartHeight;
+            maxHeight -= StartHeight;
 
             // find the range of heights that span us
-            int baseVal = (int)Math.Ceiling(minHeight / interval);
-            int endVal = (int)Math.Floor(maxHeight / interval);
+            int baseVal = (int)Math.Ceiling(minHeight / Interval);
+            int endVal = (int)Math.Floor(maxHeight / Interval);
 
             // draw them
             for (int i = baseVal; i <= endVal; i++)
             {
-                this.PaintHeight(g, p, startHeight + (i * interval));
+                this.PaintHeight(g, p, StartHeight + (i * Interval));
             }
         }
 
