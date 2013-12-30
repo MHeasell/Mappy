@@ -7,7 +7,6 @@
     using Data;
 
     using Mappy.IO;
-    using Mappy.Palette;
 
     using Operations;
 
@@ -29,6 +28,8 @@
 
         private readonly MapModelFactory mapModelFactory;
 
+        private readonly MapSaver mapSaver;
+
         private IBindingMapModel map;
         private bool isDirty;
         private string openFilePath;
@@ -47,17 +48,16 @@
 
         public CoreModel()
         {
-            this.Palette = Globals.Palette;
-            this.ReversePalette = Globals.ReversePalette;
+            this.featureRecords = LoadingUtils.LoadFeatures(Globals.Palette);
+            this.sections = LoadingUtils.LoadSections(Globals.Palette);
 
-            this.featureRecords = LoadingUtils.LoadFeatures(this.Palette);
-            this.sections = LoadingUtils.LoadSections(this.Palette);
-
-            this.sectionFactory = new SectionFactory(this.Palette);
+            this.sectionFactory = new SectionFactory(Globals.Palette);
             this.mapModelFactory = new MapModelFactory(
-                this.Palette,
+                Globals.Palette,
                 this.featureRecords,
                 Mappy.Properties.Resources.nofeature);
+
+            this.mapSaver = new MapSaver(Globals.ReversePalette);
 
             // hook up undoManager
             this.undoManager.CanUndoChanged += this.CanUndoChanged;
@@ -166,10 +166,6 @@
             }
         }
 
-        public IPalette Palette { get; private set; }
-
-        public IReversePalette ReversePalette { get; private set; }
-
         public void ToggleHeightmap()
         {
             this.HeightmapVisible = !this.HeightmapVisible;
@@ -199,7 +195,7 @@
             IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.Map);
             flatten.Execute();
 
-            this.SaveHpiHelper(filename);
+            this.mapSaver.SaveHpi(this.Map, filename);
 
             flatten.Undo();
 
@@ -215,10 +211,7 @@
             IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.Map);
             flatten.Execute();
 
-            using (var s = new TntWriter(File.OpenWrite(filename)))
-            {
-                s.WriteTnt(new MapModelTntAdapter(this.Map, this.ReversePalette));
-            }
+            this.mapSaver.SaveTnt(this.Map, filename);
 
             flatten.Undo();
 
@@ -461,45 +454,6 @@
         private void IsMarkedChanged(object sender, EventArgs e)
         {
             this.IsDirty = !this.undoManager.IsMarked;
-        }
-
-        private void SaveHpiHelper(string filename)
-        {
-            string tmpTntName = Path.GetTempFileName();
-            string tmpOtaName = Path.GetTempFileName();
-
-            try
-            {
-                using (var s = new TntWriter(File.OpenWrite(tmpTntName)))
-                {
-                    s.WriteTnt(new MapModelTntAdapter(this.Map, this.ReversePalette));
-                }
-
-                using (Stream s = File.OpenWrite(tmpOtaName))
-                {
-                    this.baseMap.Attributes.WriteOta(s);
-                }
-
-                string fname = "maps\\" + this.Map.Attributes.Name;
-
-                using (HpiWriter wr = new HpiWriter(filename, HpiWriter.CompressionMethod.ZLib))
-                {
-                    wr.AddFile(fname + ".tnt", tmpTntName);
-                    wr.AddFile(fname + ".ota", tmpOtaName);
-                }
-            }
-            finally
-            {
-                if (File.Exists(tmpTntName))
-                {
-                    File.Delete(tmpTntName);
-                }
-
-                if (File.Exists(tmpOtaName))
-                {
-                    File.Delete(tmpOtaName);
-                }
-            }
         }
     }
 }

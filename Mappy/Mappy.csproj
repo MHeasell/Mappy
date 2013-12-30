@@ -86,6 +86,7 @@
     <Compile Include="IO\BitmapSerializer.cs" />
     <Compile Include="IO\MapModelFactory.cs" />
     <Compile Include="IO\MapModelTntAdapter.cs" />
+    <Compile Include="IO\MapSaver.cs" />
     <Compile Include="IO\PaletteFactory.cs" />
     <Compile Include="IO\PaletteReader.cs" />
     <Compile Include="IO\SectionFactory.cs" />
