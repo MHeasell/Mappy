@@ -482,7 +482,7 @@
 
                 string fname = "maps\\" + this.Map.Attributes.Name;
 
-                using (HpiWriter wr = new HpiWriter(filename))
+                using (HpiWriter wr = new HpiWriter(filename, HpiWriter.CompressionMethod.ZLib))
                 {
                     wr.AddFile(fname + ".tnt", tmpTntName);
                     wr.AddFile(fname + ".ota", tmpOtaName);
