@@ -31,13 +31,13 @@
 
             int ptrAccumulator = TntHeader.HeaderLength;
             h.PtrMapData = (uint)ptrAccumulator;
-            ptrAccumulator += sizeof(short) * adapter.DataWidth * adapter.DataHeight;
+            ptrAccumulator += sizeof(ushort) * adapter.DataWidth * adapter.DataHeight;
             h.PtrMapAttr = (uint)ptrAccumulator;
             ptrAccumulator += TileAttr.AttrLength * adapter.DataWidth * 2 * adapter.DataHeight * 2;
             h.PtrTileGfx = (uint)ptrAccumulator;
             ptrAccumulator += MapConstants.TileDataLength * adapter.TileCount;
             h.PtrTileAnims = (uint)ptrAccumulator;
-            ptrAccumulator += (sizeof(int) + TntConstants.AnimNameLength) * adapter.AnimCount;
+            ptrAccumulator += (sizeof(uint) + TntConstants.AnimNameLength) * adapter.AnimCount;
             h.PtrMiniMap = (uint)ptrAccumulator;
 
             h.Write(this.writer);
@@ -116,7 +116,7 @@
         {
             foreach (int i in source.EnumerateData())
             {
-                this.writer.Write((short)i);
+                this.writer.Write((ushort)i);
             }
         }
 
