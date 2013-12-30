@@ -91,7 +91,7 @@
             int length = this.DataWidth * this.DataHeight;
             for (int i = 0; i < length; i++)
             {
-                yield return this.reader.ReadInt16();
+                yield return this.reader.ReadUInt16();
             }
         }
 
