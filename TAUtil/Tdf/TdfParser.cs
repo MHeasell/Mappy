@@ -1,5 +1,6 @@
 ﻿namespace TAUtil.Tdf
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
 
@@ -39,7 +40,7 @@
                 return null;
             }
 
-            int commentIndex = line.IndexOf("//");
+            int commentIndex = line.IndexOf("//", StringComparison.Ordinal);
             if (commentIndex != -1)
             {
                 line = line.Remove(commentIndex);
@@ -57,15 +58,15 @@
         private void ReadBlockBody(TdfNode node)
         {
             string openBracket = this.ReadNextLine();
-            if (!openBracket.Equals("{"))
+            if (!string.Equals(openBracket, "{", StringComparison.Ordinal))
             {
                 this.RaiseError("{", openBracket);
             }
 
             string line;
-            while (!(line = this.ReadNextLine()).Equals("}"))
+            while (!string.Equals(line = this.ReadNextLine(), "}", StringComparison.Ordinal))
             {
-                if (line.StartsWith("["))
+                if (line.StartsWith("[", StringComparison.Ordinal))
                 {
                     TdfNode subBlock = new TdfNode(this.ParseBlockName(line));
                     this.ReadBlockBody(subBlock);
@@ -81,7 +82,8 @@
 
         private string ParseBlockName(string nameLine)
         {
-            if (!nameLine.StartsWith("[") || !nameLine.EndsWith("]"))
+            if (!nameLine.StartsWith("[", StringComparison.Ordinal)
+                || !nameLine.EndsWith("]", StringComparison.Ordinal))
             {
                 this.RaiseError("[<name>]", nameLine);
             }
