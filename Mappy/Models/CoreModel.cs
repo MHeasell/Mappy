@@ -236,7 +236,7 @@
         public void OpenTnt(string filename)
         {
             MapModel m;
-            using (var s = new TntReader(File.OpenRead(filename)))
+            using (var s = new TntReader(filename))
             {
                 m = this.mapModelFactory.FromTnt(s);
             }

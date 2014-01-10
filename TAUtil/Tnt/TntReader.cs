@@ -10,9 +10,19 @@
 
         private TntHeader header;
 
-        public TntReader(Stream s)
+        public TntReader(string filename)
+            : this(File.OpenRead(filename))
         {
-            this.reader = new BinaryReader(s);
+        }
+
+        public TntReader(Stream s)
+            : this(new BinaryReader(s))
+        {
+        }
+
+        public TntReader(BinaryReader r)
+        {
+            this.reader = r;
             TntHeader.Read(this.reader, ref this.header);
         }
 
