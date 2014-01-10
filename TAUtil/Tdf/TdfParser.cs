@@ -32,25 +32,26 @@
 
         private string ReadNextLine()
         {
-            string line = this.reader.ReadLine();
-            this.lineCount++;
-
-            if (line == null)
+            string line;
+            do
             {
-                return null;
-            }
+                line = this.reader.ReadLine();
+                this.lineCount++;
 
-            int commentIndex = line.IndexOf("//", StringComparison.Ordinal);
-            if (commentIndex != -1)
-            {
-                line = line.Remove(commentIndex);
-            }
+                if (line == null)
+                {
+                    return null;
+                }
 
-            line = line.Trim();
-            if (line.Equals(string.Empty))
-            {
-                return this.ReadNextLine();
+                int commentIndex = line.IndexOf("//", StringComparison.Ordinal);
+                if (commentIndex != -1)
+                {
+                    line = line.Remove(commentIndex);
+                }
+
+                line = line.Trim();
             }
+            while (string.Equals(line, string.Empty, StringComparison.Ordinal));
 
             return line;
         }
