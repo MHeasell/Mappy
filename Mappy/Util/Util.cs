@@ -8,6 +8,7 @@ namespace Mappy.Util
     using Geometry;
 
     using Mappy.Collections;
+    using Mappy.Properties;
 
     public static class Util
     {
@@ -65,25 +66,25 @@ namespace Mappy.Util
             switch (index)
             {
                 case 1:
-                    return Mappy.Properties.Resources.number_1;
+                    return Resources.number_1;
                 case 2:
-                    return Mappy.Properties.Resources.number_2;
+                    return Resources.number_2;
                 case 3:
-                    return Mappy.Properties.Resources.number_3;
+                    return Resources.number_3;
                 case 4:
-                    return Mappy.Properties.Resources.number_4;
+                    return Resources.number_4;
                 case 5:
-                    return Mappy.Properties.Resources.number_5;
+                    return Resources.number_5;
                 case 6:
-                    return Mappy.Properties.Resources.number_6;
+                    return Resources.number_6;
                 case 7:
-                    return Mappy.Properties.Resources.number_7;
+                    return Resources.number_7;
                 case 8:
-                    return Mappy.Properties.Resources.number_8;
+                    return Resources.number_8;
                 case 9:
-                    return Mappy.Properties.Resources.number_9;
+                    return Resources.number_9;
                 case 10:
-                    return Mappy.Properties.Resources.number_10;
+                    return Resources.number_10;
                 default:
                     throw new ArgumentException("invalid index: " + index);
             }
