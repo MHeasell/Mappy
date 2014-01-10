@@ -42,8 +42,6 @@
         private Size gridSize = new Size(16, 16);
         private Color gridColor = MappySettings.Settings.GridColor;
 
-        private MapModel baseMap;
-
         private bool previousTranslationOpen;
 
         public CoreModel()
@@ -183,8 +181,7 @@
 
         public void New(int width, int height)
         {
-            this.baseMap = new MapModel(width, height);
-            this.Map = new BindingMapModel(this.baseMap);
+            this.Map = new BindingMapModel(new MapModel(width, height));
             this.FilePath = null;
             this.IsFileReadOnly = false;
         }
@@ -229,8 +226,7 @@
                 t = this.sectionFactory.TileFromSct(s);
             }
 
-            this.baseMap = new MapModel(t);
-            this.Map = new BindingMapModel(this.baseMap);
+            this.Map = new BindingMapModel(new MapModel(t));
         }
 
         public void OpenTnt(string filename)
@@ -241,7 +237,6 @@
                 m = this.mapModelFactory.FromTnt(s);
             }
 
-            this.baseMap = m;
             this.Map = new BindingMapModel(m);
             this.FilePath = filename;
         }
@@ -267,7 +262,6 @@
                 }
             }
 
-            this.baseMap = m;
             this.Map = new BindingMapModel(m);
             this.FilePath = hpipath;
             this.IsFileReadOnly = readOnly;
@@ -379,7 +373,7 @@
 
         public void RefreshMinimap()
         {
-            this.Map.Minimap = MapModel.GenerateMinimap(this.baseMap);
+            this.Map.Minimap = MapModel.GenerateMinimap(this.Map);
         }
 
         public void RemoveSection(int index)
