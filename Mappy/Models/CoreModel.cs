@@ -224,7 +224,7 @@
         public void OpenSct(string filename)
         {
             MapTile t;
-            using (var s = new SctReader(File.OpenRead(filename)))
+            using (var s = new SctReader(filename))
             {
                 t = this.sectionFactory.TileFromSct(s);
             }

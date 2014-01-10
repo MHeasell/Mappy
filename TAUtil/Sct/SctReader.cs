@@ -16,9 +16,19 @@
 
         private SctHeader header;
 
-        public SctReader(Stream s)
+        public SctReader(string filename)
+            : this(File.OpenRead(filename))
         {
-            this.reader = new BinaryReader(s);
+        }
+
+        public SctReader(Stream s)
+            : this(new BinaryReader(s))
+        {
+        }
+
+        public SctReader(BinaryReader r)
+        {
+            this.reader = r;
             SctHeader.Read(this.reader, ref this.header);
         }
 
