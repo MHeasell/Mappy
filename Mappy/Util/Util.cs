@@ -3,11 +3,13 @@ namespace Mappy.Util
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
 
     using Data;
     using Geometry;
 
     using Mappy.Collections;
+    using Mappy.Models;
     using Mappy.Properties;
 
     public static class Util
@@ -99,6 +101,59 @@ namespace Mappy.Util
             }
 
             return mapping;
+        }
+
+        public static Bitmap GenerateMinimap(IMapModel mapModel)
+        {
+            int mapWidth = mapModel.Tile.TileGrid.Width * 32;
+            int mapHeight = mapModel.Tile.TileGrid.Height * 32;
+
+            int width, height;
+
+            if (mapModel.Tile.TileGrid.Width > mapModel.Tile.TileGrid.Height)
+            {
+                width = 252;
+                height = (int)(252 * (mapHeight / (float)mapWidth));
+            }
+            else
+            {
+                height = 252;
+                width = (int)(252 * (mapWidth / (float)mapHeight));
+            }
+
+            Bitmap b = new Bitmap(width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int imageX = (int)((x / (float)width) * mapWidth);
+                    int imageY = (int)((y / (float)height) * mapHeight);
+                    b.SetPixel(x, y, GetPixel(mapModel, imageX, imageY));
+                }
+            }
+
+            return b;
+        }
+
+        private static Color GetPixel(IMapModel mapModel, int x, int y)
+        {
+            int tileX = x / 32;
+            int tileY = y / 32;
+
+            int tilePixelX = x % 32;
+            int tilePixelY = y % 32;
+
+            foreach (Positioned<IMapTile> t in mapModel.FloatingTiles.Reverse())
+            {
+                Rectangle r = new Rectangle(t.Location, new Size(t.Item.TileGrid.Width, t.Item.TileGrid.Height));
+                if (r.Contains(tileX, tileY))
+                {
+                    return t.Item.TileGrid.Get(tileX - t.Location.X, tileY - t.Location.Y).GetPixel(tilePixelX, tilePixelY);
+                }
+            }
+
+            return mapModel.Tile.TileGrid.Get(tileX, tileY).GetPixel(tilePixelX, tilePixelY);
         }
     }
 }
