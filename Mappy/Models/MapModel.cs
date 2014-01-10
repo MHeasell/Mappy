@@ -56,14 +56,14 @@
 
         public Bitmap Minimap { get; set; }
 
-        public Bitmap GenerateMinimap()
+        public static Bitmap GenerateMinimap(IMapModel mapModel)
         {
-            int mapWidth = this.Tile.TileGrid.Width * 32;
-            int mapHeight = this.Tile.TileGrid.Height * 32;
+            int mapWidth = mapModel.Tile.TileGrid.Width * 32;
+            int mapHeight = mapModel.Tile.TileGrid.Height * 32;
 
             int width, height;
 
-            if (this.Tile.TileGrid.Width > this.Tile.TileGrid.Height)
+            if (mapModel.Tile.TileGrid.Width > mapModel.Tile.TileGrid.Height)
             {
                 width = 252;
                 height = (int)(252 * (mapHeight / (float)mapWidth));
@@ -82,14 +82,14 @@
                 {
                     int imageX = (int)((x / (float)width) * mapWidth);
                     int imageY = (int)((y / (float)height) * mapHeight);
-                    b.SetPixel(x, y, this.GetPixel(imageX, imageY));
+                    b.SetPixel(x, y, GetPixel(mapModel, imageX, imageY));
                 }
             }
 
             return b;
         }
 
-        private Color GetPixel(int x, int y)
+        private static Color GetPixel(IMapModel mapModel, int x, int y)
         {
             int tileX = x / 32;
             int tileY = y / 32;
@@ -97,7 +97,7 @@
             int tilePixelX = x % 32;
             int tilePixelY = y % 32;
 
-            foreach (Positioned<IMapTile> t in this.FloatingTiles.Reverse())
+            foreach (Positioned<IMapTile> t in mapModel.FloatingTiles.Reverse())
             {
                 Rectangle r = new Rectangle(t.Location, new Size(t.Item.TileGrid.Width, t.Item.TileGrid.Height));
                 if (r.Contains(tileX, tileY))
@@ -106,7 +106,7 @@
                 }
             }
 
-            return this.Tile.TileGrid.Get(tileX, tileY).GetPixel(tilePixelX, tilePixelY);
+            return mapModel.Tile.TileGrid.Get(tileX, tileY).GetPixel(tilePixelX, tilePixelY);
         }
     }
 }

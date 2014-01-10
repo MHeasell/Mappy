@@ -379,7 +379,7 @@
 
         public void RefreshMinimap()
         {
-            this.Map.Minimap = this.baseMap.GenerateMinimap();
+            this.Map.Minimap = MapModel.GenerateMinimap(this.baseMap);
         }
 
         public void RemoveSection(int index)
