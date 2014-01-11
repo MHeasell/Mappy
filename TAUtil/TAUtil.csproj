@@ -62,7 +62,9 @@
     <Compile Include="Sct\SctReader.cs" />
     <Compile Include="Sct\SctHeader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tdf\ITdfNodeAdapter.cs" />
     <Compile Include="Tdf\TdfNode.cs" />
+    <Compile Include="Tdf\TdfNodeAdapter.cs" />
     <Compile Include="Tdf\TdfParser.cs" />
     <Compile Include="Tnt\ITntSource.cs" />
     <Compile Include="Tnt\MinimapInfo.cs" />

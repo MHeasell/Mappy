@@ -27,7 +27,10 @@
 
         public static TdfNode LoadTdf(TextReader reader)
         {
-            return new TdfParser(reader).Load();
+            var adapter = new TdfNodeAdapter();
+            var parser = new TdfParser(reader, adapter);
+            parser.Load();
+            return adapter.RootNode;
         }
 
         public void WriteTdf(Stream s)

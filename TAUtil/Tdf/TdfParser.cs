@@ -7,12 +7,14 @@
     public class TdfParser
     {
         private readonly TextReader reader;
+        private readonly ITdfNodeAdapter adapter;
 
         private int lineCount;
 
-        public TdfParser(TextReader reader)
+        public TdfParser(TextReader reader, ITdfNodeAdapter adapter)
         {
             this.reader = reader;
+            this.adapter = adapter;
         }
 
         public TdfNode Load()
@@ -22,9 +24,9 @@
             string line;
             while ((line = this.ReadNextLine()) != null)
             {
-                TdfNode block = new TdfNode(this.ParseBlockName(line));
-                this.ReadBlockBody(block);
-                root.Keys[block.Name] = block;
+                this.adapter.BeginBlock(this.ParseBlockName(line));
+                this.ReadBlockBody();
+                this.adapter.EndBlock();
             }
 
             return root;
@@ -56,7 +58,7 @@
             return line;
         }
 
-        private void ReadBlockBody(TdfNode node)
+        private void ReadBlockBody()
         {
             string openBracket = this.ReadNextLine();
             if (!string.Equals(openBracket, "{", StringComparison.Ordinal))
@@ -69,14 +71,14 @@
             {
                 if (line.StartsWith("[", StringComparison.Ordinal))
                 {
-                    TdfNode subBlock = new TdfNode(this.ParseBlockName(line));
-                    this.ReadBlockBody(subBlock);
-                    node.Keys[subBlock.Name] = subBlock;
+                    this.adapter.BeginBlock(this.ParseBlockName(line));
+                    this.ReadBlockBody();
+                    this.adapter.EndBlock();
                 }
                 else
                 {
                     var entry = this.ParseBlockLine(line);
-                    node.Entries[entry.Key] = entry.Value;
+                    this.adapter.AddProperty(entry.Key, entry.Value);
                 }
             }
         }
