@@ -22,7 +22,7 @@
             TdfNode root = new TdfNode();
 
             string line;
-            while ((line = this.ReadNextLine()) != null)
+            while ((line = this.ReadNextInterestingLine()) != null)
             {
                 this.adapter.BeginBlock(this.ParseBlockName(line));
                 this.ReadBlockBody();
@@ -32,7 +32,7 @@
             return root;
         }
 
-        private string ReadNextLine()
+        private string ReadNextInterestingLine()
         {
             string line;
             do
@@ -60,14 +60,14 @@
 
         private void ReadBlockBody()
         {
-            string openBracket = this.ReadNextLine();
+            string openBracket = this.ReadNextInterestingLine();
             if (!string.Equals(openBracket, "{", StringComparison.Ordinal))
             {
                 this.RaiseError("{", openBracket);
             }
 
             string line;
-            while (!string.Equals(line = this.ReadNextLine(), "}", StringComparison.Ordinal))
+            while (!string.Equals(line = this.ReadNextInterestingLine(), "}", StringComparison.Ordinal))
             {
                 if (line.StartsWith("[", StringComparison.Ordinal))
                 {
