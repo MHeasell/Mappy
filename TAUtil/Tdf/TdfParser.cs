@@ -37,8 +37,7 @@
             string line;
             do
             {
-                line = this.reader.ReadLine();
-                this.lineCount++;
+                line = this.ReadNextLine();
 
                 if (line == null)
                 {
@@ -55,6 +54,13 @@
             }
             while (string.Equals(line, string.Empty, StringComparison.Ordinal));
 
+            return line;
+        }
+
+        private string ReadNextLine()
+        {
+            string line = this.reader.ReadLine();
+            this.lineCount++;
             return line;
         }
 
