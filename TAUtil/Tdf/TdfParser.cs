@@ -1,7 +1,6 @@
 ﻿namespace TAUtil.Tdf
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
 
     public class TdfParser
@@ -92,8 +91,7 @@
                 }
                 else
                 {
-                    var entry = this.ParseBlockLine(line);
-                    this.adapter.AddProperty(entry.Key, entry.Value);
+                    this.ReadBlockLine(line);
                 }
             }
         }
@@ -109,7 +107,7 @@
             return nameLine.Substring(1, nameLine.Length - 2);
         }
 
-        private KeyValuePair<string, string> ParseBlockLine(string line)
+        private void ReadBlockLine(string line)
         {
             // Chomp ending semicolon.
             // Some files are missing semicolons at the end of a statement,
@@ -127,7 +125,7 @@
                 this.RaiseError("<key>=<value>", line);
             }
 
-            return new KeyValuePair<string, string>(parts[0].Trim(), parts[1].Trim());
+            this.adapter.AddProperty(parts[0].Trim(), parts[1].Trim());
         }
 
         private void RaiseError(string message)
