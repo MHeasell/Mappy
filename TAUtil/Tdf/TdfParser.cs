@@ -24,9 +24,7 @@
             string line;
             while ((line = this.ReadNextInterestingLine()) != null)
             {
-                this.adapter.BeginBlock(this.ParseBlockName(line));
-                this.ReadBlockBody();
-                this.adapter.EndBlock();
+                this.ReadBlock(line);
             }
 
             return root;
@@ -42,6 +40,13 @@
 
             line = line.Trim();
             return line;
+        }
+
+        private void ReadBlock(string firstLine)
+        {
+            this.adapter.BeginBlock(this.ParseBlockName(firstLine));
+            this.ReadBlockBody();
+            this.adapter.EndBlock();
         }
 
         private string ReadNextInterestingLine()
@@ -83,9 +88,7 @@
             {
                 if (line.StartsWith("[", StringComparison.Ordinal))
                 {
-                    this.adapter.BeginBlock(this.ParseBlockName(line));
-                    this.ReadBlockBody();
-                    this.adapter.EndBlock();
+                    this.ReadBlock(line);
                 }
                 else
                 {
