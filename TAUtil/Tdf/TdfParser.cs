@@ -32,6 +32,18 @@
             return root;
         }
 
+        private static string ExtractContent(string line)
+        {
+            int commentIndex = line.IndexOf("//", StringComparison.Ordinal);
+            if (commentIndex != -1)
+            {
+                line = line.Remove(commentIndex);
+            }
+
+            line = line.Trim();
+            return line;
+        }
+
         private string ReadNextInterestingLine()
         {
             string line;
@@ -44,13 +56,7 @@
                     return null;
                 }
 
-                int commentIndex = line.IndexOf("//", StringComparison.Ordinal);
-                if (commentIndex != -1)
-                {
-                    line = line.Remove(commentIndex);
-                }
-
-                line = line.Trim();
+                line = ExtractContent(line);
             }
             while (string.Equals(line, string.Empty, StringComparison.Ordinal));
 
