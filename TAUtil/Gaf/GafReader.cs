@@ -7,6 +7,11 @@
     {
         private readonly BinaryReader reader;
 
+        public GafReader(string filename)
+            : this(File.OpenRead(filename))
+        {
+        }
+
         public GafReader(Stream s)
             : this(new BinaryReader(s))
         {
