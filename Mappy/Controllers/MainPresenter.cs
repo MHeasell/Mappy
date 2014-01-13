@@ -30,7 +30,7 @@
 
             this.view.Presenter = this;
 
-            this.view.Features = this.model.FeatureRecords.Values.ToList();
+            this.view.Features = this.model.FeatureRecords.EnumerateAll().ToList();
 
             this.view.Sections = this.model.Sections;
 

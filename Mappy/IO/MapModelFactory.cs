@@ -15,13 +15,13 @@
     {
         private readonly BitmapDeserializer bitmapDeserializer;
 
-        private readonly IDictionary<string, Feature> featureBank;
+        private readonly IFeatureDatabase featureBank;
 
         private readonly Bitmap defaultFeatureImage;
 
         public MapModelFactory(
             IPalette palette,
-            IDictionary<string, Feature> bank,
+            IFeatureDatabase bank,
             Bitmap defaultFeatureImage)
         {
             this.bitmapDeserializer = new BitmapDeserializer(palette);
@@ -104,7 +104,7 @@
         private Feature ToFeature(string name)
         {
             Feature f;
-            if (!this.featureBank.TryGetValue(name, out f))
+            if (!this.featureBank.TryGetFeature(name, out f))
             {
                 f = new Feature(
                     name,

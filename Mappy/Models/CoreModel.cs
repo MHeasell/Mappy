@@ -21,7 +21,7 @@
     {
         private readonly OperationManager undoManager = new OperationManager();
 
-        private readonly IDictionary<string, Feature> featureRecords;
+        private readonly IFeatureDatabase featureRecords;
         private readonly IList<Section> sections;
 
         private readonly SectionFactory sectionFactory;
@@ -46,7 +46,7 @@
 
         public CoreModel()
         {
-            this.featureRecords = LoadingUtils.LoadFeatures(Globals.Palette);
+            this.featureRecords = new FeatureDictionary(Globals.Palette);
             this.sections = LoadingUtils.LoadSections(Globals.Palette);
 
             this.sectionFactory = new SectionFactory(Globals.Palette);
@@ -91,7 +91,7 @@
             get { return this.undoManager.CanRedo; }
         }
 
-        public IDictionary<string, Feature> FeatureRecords
+        public IFeatureDatabase FeatureRecords
         {
             get { return this.featureRecords; }
         }
