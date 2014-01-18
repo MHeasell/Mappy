@@ -1,6 +1,5 @@
 ﻿namespace Mappy.Collections
 {
-    using System;
     using System.Collections.Generic;
 
     public interface IGrid<T> : IEnumerable<T>
