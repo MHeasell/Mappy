@@ -21,13 +21,13 @@ namespace Mappy.Operations
 
         public void Execute()
         {
-            this.removedFeature = this.features.Get(this.x, this.y);
+            this.removedFeature = this.features[this.x, this.y];
             this.features.Remove(this.x, this.y);
         }
 
         public void Undo()
         {
-            this.features.Set(this.x, this.y, this.removedFeature);
+            this.features[this.x, this.y] = this.removedFeature;
             this.removedFeature = null;
         }
     }

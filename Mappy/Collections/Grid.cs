@@ -112,7 +112,7 @@
             {
                 for (int dx = 0; dx < width; dx++)
                 {
-                    this.Set(destX + dx, destY + dy, other.Get(sourceX + dx, sourceY + dy));
+                    this[destX + dx, destY + dy] = other[sourceX + dx, sourceY + dy];
                 }
             }
         }

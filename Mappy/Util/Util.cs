@@ -38,7 +38,7 @@ namespace Mappy.Util
 
             for (int row = heightmap.Height - 1; row >= 0; row--)
             {
-                int height = heightmap.Get(col, row);
+                int height = heightmap[col, row];
                 AxisRectangle3D rect = new AxisRectangle3D(
                     new Vector3D((col * 16) + 0.5, (row * 16) + 0.5, height),
                     16.0,
@@ -149,11 +149,11 @@ namespace Mappy.Util
                 Rectangle r = new Rectangle(t.Location, new Size(t.Item.TileGrid.Width, t.Item.TileGrid.Height));
                 if (r.Contains(tileX, tileY))
                 {
-                    return t.Item.TileGrid.Get(tileX - t.Location.X, tileY - t.Location.Y).GetPixel(tilePixelX, tilePixelY);
+                    return t.Item.TileGrid[tileX - t.Location.X, tileY - t.Location.Y].GetPixel(tilePixelX, tilePixelY);
                 }
             }
 
-            return mapModel.Tile.TileGrid.Get(tileX, tileY).GetPixel(tilePixelX, tilePixelY);
+            return mapModel.Tile.TileGrid[tileX, tileY].GetPixel(tilePixelX, tilePixelY);
         }
     }
 }

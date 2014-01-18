@@ -28,16 +28,16 @@ namespace Mappy.Operations
 
         public void Execute()
         {
-            Feature f = this.Grid.Get(this.StartX, this.StartY);
+            Feature f = this.Grid[this.StartX, this.StartY];
             this.Grid.Remove(this.StartX, this.StartY);
-            this.Grid.Set(this.DestX, this.DestY, f);
+            this.Grid[this.DestX, this.DestY] = f;
         }
 
         public void Undo()
         {
-            Feature f = this.Grid.Get(this.DestX, this.DestY);
+            Feature f = this.Grid[this.DestX, this.DestY];
             this.Grid.Remove(this.DestX, this.DestY);
-            this.Grid.Set(this.StartX, this.StartY, f);
+            this.Grid[this.StartX, this.StartY] = f;
         }
 
         public MoveFeatureOperation Combine(MoveFeatureOperation other)

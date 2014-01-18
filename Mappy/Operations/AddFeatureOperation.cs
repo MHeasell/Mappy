@@ -25,14 +25,14 @@ namespace Mappy.Operations
         public void Execute()
         {
             this.hasOldItem = this.features.TryGetValue(this.x, this.y, out this.oldItem);
-            this.features.Set(this.x, this.y, this.item);
+            this.features[this.x, this.y] = this.item;
         }
 
         public void Undo()
         {
             if (this.hasOldItem)
             {
-                this.features.Set(this.x, this.y, this.oldItem);
+                this.features[this.x, this.y] = this.oldItem;
             }
             else
             {

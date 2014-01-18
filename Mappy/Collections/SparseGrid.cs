@@ -154,7 +154,7 @@
             {
                 for (int dx = 0; dx < other.Width; dx++)
                 {
-                    T val = other.Get(dx, dy);
+                    T val = other[dx, dy];
                     this.Set(x + dx, y + dy, val);
                 }
             }
@@ -194,7 +194,7 @@
             {
                 for (int dx = 0; dx < width; dx++)
                 {
-                    this.Set(destX + dx, destY + dy, other.Get(sourceX + dx, sourceY + dy));
+                    this.Set(destX + dx, destY + dy, other[sourceX + dx, sourceY + dy]);
                 }
             }
         }

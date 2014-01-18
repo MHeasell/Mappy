@@ -26,7 +26,7 @@
             foreach (Point p in enumer)
             {
                 g.DrawImageUnscaled(
-                    this.map.Get(p.X, p.Y),
+                    this.map[p.X, p.Y],
                     p.X * this.tileSize,
                     p.Y * this.tileSize);
             }

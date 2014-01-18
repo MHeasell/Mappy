@@ -53,7 +53,7 @@ namespace Mappy.Data
                         continue;
                     }
 
-                    accum += heightmap.Get(xPos + x, yPos + y);
+                    accum += heightmap[xPos + x, yPos + y];
                 }
             }
 

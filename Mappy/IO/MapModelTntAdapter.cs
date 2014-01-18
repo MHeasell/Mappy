@@ -122,9 +122,9 @@
         {
             TileAttr attr = new TileAttr();
 
-            attr.Height = (byte)this.model.Tile.HeightGrid.Get(x, y);
+            attr.Height = (byte)this.model.Tile.HeightGrid[x, y];
 
-            if (this.model.Voids.Get(x, y))
+            if (this.model.Voids[x, y])
             {
                 attr.Feature = TileAttr.FeatureVoid;
             }

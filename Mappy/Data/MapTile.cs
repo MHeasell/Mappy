@@ -26,7 +26,7 @@ namespace Mappy.Data
             {
                 for (int x = 0; x < width; x++)
                 {
-                    this.TileGrid.Set(x, y, MapTile.DefaultSquare);
+                    this.TileGrid[x, y] = MapTile.DefaultSquare;
                 }
             }
         }

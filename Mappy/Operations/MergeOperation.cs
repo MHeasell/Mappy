@@ -35,7 +35,7 @@
             {
                 for (int dx = 0; dx < width; dx++)
                 {
-                    this.oldContents.Set(dx, dy, baseGrid.Get(destX + dx, destY + dy));
+                    this.oldContents[dx, dy] = baseGrid[destX + dx, destY + dy];
                 }
             }
         }

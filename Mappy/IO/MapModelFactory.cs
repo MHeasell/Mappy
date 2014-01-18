@@ -51,7 +51,7 @@
                 for (int x = 0; x < tnt.DataWidth * 2; x++)
                 {
                     enumer.MoveNext();
-                    model.Tile.HeightGrid.Set(x, y, enumer.Current.Height);
+                    model.Tile.HeightGrid[x, y] = enumer.Current.Height;
 
                     switch (enumer.Current.Feature)
                     {
@@ -59,10 +59,10 @@
                         case TileAttr.FeatureUnknown:
                             break;
                         case TileAttr.FeatureVoid:
-                            model.Voids.Set(x, y, true);
+                            model.Voids[x, y] = true;
                             break;
                         default:
-                            model.Features.Set(x, y, features[enumer.Current.Feature]);
+                            model.Features[x, y] = features[enumer.Current.Feature];
                             break;
                     }
                 }
@@ -77,7 +77,7 @@
                 for (int x = 0; x < tnt.DataWidth; x++)
                 {
                     enumer.MoveNext();
-                    model.Tile.TileGrid.Set(x, y, tiles[enumer.Current]);
+                    model.Tile.TileGrid[x, y] = tiles[enumer.Current];
                 }
             }
         }
