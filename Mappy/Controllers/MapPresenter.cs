@@ -23,7 +23,7 @@
         private readonly CoreModel model;
 
         private readonly List<ImageLayerCollection.Item> tileMapping = new List<ImageLayerCollection.Item>();
-        private readonly IDictionary<Point, ImageLayerCollection.Item> featureMapping = new Dictionary<Point, ImageLayerCollection.Item>();
+        private readonly IDictionary<int, ImageLayerCollection.Item> featureMapping = new Dictionary<int, ImageLayerCollection.Item>();
 
         private readonly ImageLayerCollection.Item[] startPositionMapping = new ImageLayerCollection.Item[10];
 
@@ -256,17 +256,18 @@
                     new DrawableBitmap(f.Image));
             i.Tag = new FeatureTag { Coordinates = new Point(x, y) };
             i.Visible = this.model.FeaturesVisible;
-            this.featureMapping[new Point(x, y)] = i;
+            this.featureMapping[this.ToFeatureIndex(x, y)] = i;
             this.view.Items.Add(i);
         }
 
         private bool RemoveFeature(Point p)
         {
-            if (this.featureMapping.ContainsKey(p))
+            int index = this.ToFeatureIndex(p);
+            if (this.featureMapping.ContainsKey(index))
             {
-                ImageLayerCollection.Item item = this.featureMapping[p];
+                ImageLayerCollection.Item item = this.featureMapping[index];
                 this.view.Items.Remove(item);
-                this.featureMapping.Remove(p);
+                this.featureMapping.Remove(index);
                 if (this.view.SelectedItem == item)
                 {
                     this.view.SelectedItem = null;
@@ -296,6 +297,16 @@
             return p;
         }
 
+        private int ToFeatureIndex(Point p)
+        {
+            return this.ToFeatureIndex(p.X, p.Y);
+        }
+
+        private int ToFeatureIndex(int x, int y)
+        {
+            return (y * this.model.Map.Features.Width) + x;
+        }
+
         #endregion
 
         private void DragFeatureTo(Point featureCoords, Point location)
@@ -315,7 +326,7 @@
 
             if (success)
             {
-                this.view.SelectedItem = this.featureMapping[pos.Value];
+                this.view.SelectedItem = this.featureMapping[this.ToFeatureIndex(pos.Value)];
             }
         }
 
