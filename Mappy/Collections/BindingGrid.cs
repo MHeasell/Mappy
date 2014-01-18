@@ -52,12 +52,6 @@
             }
         }
 
-        public void Clear(int x, int y)
-        {
-            this.grid.Clear(x, y);
-            this.OnAreaChanged(new GridEventArgs(x, y));
-        }
-
         public void Merge(IGrid<T> other, int x, int y)
         {
             this.Merge(other, 0, 0, x, y, other.Width, other.Height);

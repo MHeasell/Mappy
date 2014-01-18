@@ -14,13 +14,6 @@
         T this[int x, int y] { get; set; }
 
         /// <summary>
-        /// Returns the specified grid square to its default value
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        void Clear(int x, int y);
-
-        /// <summary>
         /// Merge the given grid into this one,
         /// with the top-left corner of the other grid positioned
         /// at the given coordinates.

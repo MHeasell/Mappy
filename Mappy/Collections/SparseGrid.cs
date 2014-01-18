@@ -100,13 +100,6 @@
             this[x, y] = value;
         }
 
-        public void Clear(int x, int y)
-        {
-            this.CheckIndexInBounds(x, y);
-
-            this.values.Remove(this.ToIndex(x, y));
-        }
-
         public IEnumerator<T> GetEnumerator()
         {
             for (int y = 0; y < this.Height; y++)

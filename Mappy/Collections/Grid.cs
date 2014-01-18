@@ -46,11 +46,6 @@
             }
         }
 
-        public void Clear(int x, int y)
-        {
-            this[x, y] = default(T);
-        }
-
         public IEnumerator<T> GetEnumerator()
         {
             return this.arr.Cast<T>().GetEnumerator();
