@@ -90,23 +90,13 @@
             }
         }
 
-        public T Get(int x, int y)
-        {
-            return this[x, y];
-        }
-
-        public void Set(int x, int y, T value)
-        {
-            this[x, y] = value;
-        }
-
         public IEnumerator<T> GetEnumerator()
         {
             for (int y = 0; y < this.Height; y++)
             {
                 for (int x = 0; x < this.Width; x++)
                 {
-                    yield return this.Get(x, y);
+                    yield return this[x, y];
                 }
             }
         }
@@ -155,7 +145,7 @@
                 for (int dx = 0; dx < other.Width; dx++)
                 {
                     T val = other[dx, dy];
-                    this.Set(x + dx, y + dy, val);
+                    this[x + dx, y + dy] = val;
                 }
             }
         }
@@ -169,7 +159,7 @@
 
             foreach (var e in other.Entries)
             {
-                this.Set(e.X + x, e.Y + y, e.Value);
+                this[e.X + x, e.Y + y] = e.Value;
             }
         }
 
@@ -194,7 +184,7 @@
             {
                 for (int dx = 0; dx < width; dx++)
                 {
-                    this.Set(destX + dx, destY + dy, other[sourceX + dx, sourceY + dy]);
+                    this[destX + dx, destY + dy] = other[sourceX + dx, sourceY + dy];
                 }
             }
         }
@@ -223,7 +213,7 @@
                     continue;
                 }
 
-                this.Set(destX + (e.X - sourceX), destY + (e.Y - sourceY), e.Value);
+                this[destX + (e.X - sourceX), destY + (e.Y - sourceY)] = e.Value;
             }
         }
 
