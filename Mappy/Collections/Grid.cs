@@ -1,6 +1,7 @@
 ﻿namespace Mappy.Collections
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -55,7 +56,7 @@
             return this.arr.Cast<T>().GetEnumerator();
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return this.arr.GetEnumerator();
         }
