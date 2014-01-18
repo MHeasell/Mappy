@@ -4,8 +4,8 @@
 
     public class MergeOperation<T> : IReplayableOperation
     {
-        private readonly IGrid<T> baseGrid;
-        private readonly IGrid<T> mergeGrid;
+        private readonly IGrid<T> source;
+        private readonly IGrid<T> destination;
 
         private readonly int sourceX;
         private readonly int sourceY;
@@ -18,10 +18,10 @@
 
         private IGrid<T> oldContents;
 
-        public MergeOperation(IGrid<T> baseGrid, IGrid<T> mergeGrid, int sourceX, int sourceY, int destX, int destY, int width, int height)
+        public MergeOperation(IGrid<T> source, IGrid<T> destination, int sourceX, int sourceY, int destX, int destY, int width, int height)
         {
-            this.baseGrid = baseGrid;
-            this.mergeGrid = mergeGrid;
+            this.source = source;
+            this.destination = destination;
 
             this.sourceX = sourceX;
             this.sourceY = sourceY;
@@ -31,23 +31,18 @@
             this.height = height;
 
             this.oldContents = new Grid<T>(width, height);
-            for (int dy = 0; dy < height; dy++)
-            {
-                for (int dx = 0; dx < width; dx++)
-                {
-                    this.oldContents[dx, dy] = baseGrid[destX + dx, destY + dy];
-                }
-            }
+
+            GridMethods.Copy(destination, this.oldContents, destX, destY, 0, 0, width, height);
         }
 
         public void Execute()
         {
-            this.baseGrid.Merge(this.mergeGrid, this.sourceX, this.sourceY, this.destX, this.destY, this.width, this.height);
+            GridMethods.Copy(this.source, this.destination, this.sourceX, this.sourceY, this.destX, this.destY, this.width, this.height);
         }
 
         public void Undo()
         {
-            this.baseGrid.Merge(this.oldContents, this.destX, this.destY);
+            GridMethods.Copy(this.oldContents, this.destination, this.destX, this.destY);
         }
     }
 }

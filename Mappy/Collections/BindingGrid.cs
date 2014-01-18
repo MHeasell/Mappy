@@ -53,17 +53,6 @@
             }
         }
 
-        public void Merge(IGrid<T> other, int x, int y)
-        {
-            this.Merge(other, 0, 0, x, y, other.Width, other.Height);
-        }
-
-        public void Merge(IGrid<T> other, int sourceX, int sourceY, int destX, int destY, int width, int height)
-        {
-            this.grid.Merge(other, sourceX, sourceY, destX, destY, width, height);
-            this.OnAreaChanged(new GridEventArgs(destX, destY, width, height));
-        }
-
         public IEnumerator<T> GetEnumerator()
         {
             return this.grid.GetEnumerator();

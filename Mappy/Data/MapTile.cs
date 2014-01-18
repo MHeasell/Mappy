@@ -34,16 +34,5 @@ namespace Mappy.Data
         public IGrid<Bitmap> TileGrid { get; private set; }
 
         public IGrid<int> HeightGrid { get; private set; }
-
-        public void Merge(IMapTile other, int x, int y)
-        {
-            this.Merge(other, 0, 0, x, y, other.TileGrid.Width, other.TileGrid.Height);
-        }
-
-        public void Merge(IMapTile other, int sourceX, int sourceY, int destX, int destY, int width, int height)
-        {
-            this.TileGrid.Merge(other.TileGrid, sourceX, sourceY, destX, destY, width, height);
-            this.HeightGrid.Merge(other.HeightGrid, sourceX * 2, sourceY * 2, destX * 2, destY * 2, width * 2, height * 2);
-        }
     }
 }

@@ -13,10 +13,6 @@
         bool TryGetValue(int x, int y, out T val);
 
         bool Remove(int x, int y);
-
-        void Merge(ISparseGrid<T> other, int x, int y);
-
-        void Merge(ISparseGrid<T> other, int sourceX, int sourceY, int destX, int destY, int width, int height);
     }
 
     public struct Entry<T>

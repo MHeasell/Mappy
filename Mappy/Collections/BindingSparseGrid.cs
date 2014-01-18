@@ -51,19 +51,6 @@
             return false;
         }
 
-        public void Merge(ISparseGrid<T> other, int x, int y)
-        {
-            this.grid.Merge(other, x, y);
-            this.OnEntriesChanged(
-                SparseGridEventArgs.ActionType.Set,
-                other.Entries.Select(p => this.ToIndex(p.X + x, p.Y + y)));
-        }
-
-        public void Merge(ISparseGrid<T> other, int sourceX, int sourceY, int destX, int destY, int width, int height)
-        {
-            throw new NotImplementedException("not currently supported");
-        }
-
         protected virtual void OnEntryChanged(SparseGridEventArgs args)
         {
             EventHandler<SparseGridEventArgs> h = this.EntriesChanged;
