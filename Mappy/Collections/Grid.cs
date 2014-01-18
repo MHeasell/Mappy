@@ -13,11 +13,6 @@
             this.arr = new T[height, width];
         }
 
-        private Grid(T[,] arr)
-        {
-            this.arr = arr;
-        }
-
         public int Width
         {
             get { return this.arr.GetLength(1); }
@@ -54,11 +49,6 @@
             {
                 this.arr[y, x] = value;
             }
-        }
-
-        public static Grid<T> GetView(T[,] arr)
-        {
-            return new Grid<T>(arr);
         }
 
         public void Clear(int x, int y)
