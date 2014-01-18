@@ -2,15 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
 
     public class SparseGrid<T> : ISparseGrid<T>
     {
-        private readonly IDictionary<Point, T> values;
+        private readonly IDictionary<int, T> values;
 
         public SparseGrid(int width, int height)
         {
-            this.values = new Dictionary<Point, T>();
+            this.values = new Dictionary<int, T>();
             this.Width = width;
             this.Height = height;
         }
@@ -34,8 +33,8 @@
                 foreach (var i in this.values)
                 {
                     Entry<T> e = new Entry<T>();
-                    e.X = i.Key.X;
-                    e.Y = i.Key.Y;
+                    e.X = i.Key % this.Width;
+                    e.Y = i.Key / this.Width;
                     e.Value = i.Value;
                     yield return e;
                 }
@@ -55,7 +54,7 @@
             this.CheckIndexInBounds(x, y);
 
             T val;
-            this.values.TryGetValue(new Point(x, y), out val);
+            this.values.TryGetValue((y * this.Width) + x, out val);
             return val;
         }
 
@@ -63,14 +62,14 @@
         {
             this.CheckIndexInBounds(x, y);
 
-            this.values[new Point(x, y)] = value;
+            this.values[this.ToIndex(x, y)] = value;
         }
 
         public void Clear(int x, int y)
         {
             this.CheckIndexInBounds(x, y);
 
-            this.values.Remove(new Point(x, y));
+            this.values.Remove(this.ToIndex(x, y));
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -92,19 +91,19 @@
         public bool HasValue(int x, int y)
         {
             this.CheckIndexInBounds(x, y);
-            return this.values.ContainsKey(new Point(x, y));
+            return this.values.ContainsKey(this.ToIndex(x, y));
         }
 
         public bool TryGetValue(int x, int y, out T val)
         {
             this.CheckIndexInBounds(x, y);
-            return this.values.TryGetValue(new Point(x, y), out val);
+            return this.values.TryGetValue(this.ToIndex(x, y), out val);
         }
 
         public bool Remove(int x, int y)
         {
             this.CheckIndexInBounds(x, y);
-            return this.values.Remove(new Point(x, y));
+            return this.values.Remove(this.ToIndex(x, y));
         }
 
         /// <summary>
@@ -206,6 +205,11 @@
             {
                 throw new IndexOutOfRangeException(string.Format("Coordinates ({0}, {1}) out of range", x, y));
             }
+        }
+
+        private int ToIndex(int x, int y)
+        {
+            return (y * this.Width) + x;
         }
     }
 }
