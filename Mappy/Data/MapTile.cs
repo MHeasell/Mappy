@@ -1,6 +1,5 @@
 namespace Mappy.Data
 {
-    using System.Diagnostics;
     using System.Drawing;
 
     using Mappy.Collections;
