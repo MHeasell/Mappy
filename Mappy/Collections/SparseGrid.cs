@@ -64,7 +64,14 @@
             {
                 this.CheckIndexInBounds(x, y);
 
-                this.values[this.ToIndex(x, y)] = value;
+                if (EqualityComparer<T>.Default.Equals(value, default(T)))
+                {
+                    this.Remove(x, y);
+                }
+                else
+                {
+                    this.values[this.ToIndex(x, y)] = value;
+                }
             }
         }
 
