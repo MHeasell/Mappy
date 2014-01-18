@@ -84,12 +84,17 @@
             this.OnEntryChanged(SparseGridEventArgs.ActionType.Set, x, y);
         }
 
-        protected override void OnAreaChanged(Rectangle area)
+        protected override void OnAreaChanged(GridEventArgs args)
         {
-            base.OnAreaChanged(area);
+            base.OnAreaChanged(args);
             this.OnEntriesChanged(
                 SparseGridEventArgs.ActionType.Set,
-                BindingSparseGrid<T>.EnumerateRectCells(area));
+                BindingSparseGrid<T>.EnumerateRectCells(ToRectangle(args)));
+        }
+
+        private static Rectangle ToRectangle(GridEventArgs args)
+        {
+            return new Rectangle(args.StartX, args.StartY, args.Width, args.Height);
         }
 
         private static IEnumerable<Point> EnumerateRectCells(Rectangle area)
