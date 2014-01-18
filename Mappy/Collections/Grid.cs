@@ -61,16 +61,6 @@
             return new Grid<T>(arr);
         }
 
-        public T Get(int x, int y)
-        {
-            return this[x, y];
-        }
-
-        public void Set(int x, int y, T value)
-        {
-            this[x, y] = value;
-        }
-
         public void Clear(int x, int y)
         {
             this.arr[y, x] = default(T);

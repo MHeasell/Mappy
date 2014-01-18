@@ -13,12 +13,6 @@
 
         T this[int x, int y] { get; set; }
 
-        [Obsolete]
-        T Get(int x, int y);
-
-        [Obsolete]
-        void Set(int x, int y, T value);
-
         /// <summary>
         /// Returns the specified grid square to its default value
         /// </summary>

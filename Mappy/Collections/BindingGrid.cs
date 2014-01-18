@@ -52,19 +52,6 @@
             }
         }
 
-        [Obsolete]
-        public T Get(int x, int y)
-        {
-            return this.grid.Get(x, y);
-        }
-
-        [Obsolete]
-        public void Set(int x, int y, T value)
-        {
-            this.grid.Set(x, y, value);
-            this.OnAreaChanged(new GridEventArgs(x, y));
-        }
-
         public void Clear(int x, int y)
         {
             this.grid.Clear(x, y);
