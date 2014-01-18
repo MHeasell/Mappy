@@ -31,15 +31,6 @@ namespace Mappy.Data
             }
         }
 
-        public MapTile(Bitmap[,] graphics, int[,] heightField)
-        {
-            Debug.Assert(graphics.GetLength(0) * 2 == heightField.GetLength(0), "sizes do not match");
-            Debug.Assert(graphics.GetLength(1) * 2 == heightField.GetLength(1), "sizes do not match");
-
-            this.TileGrid = Grid<Bitmap>.GetView(graphics);
-            this.HeightGrid = Grid<int>.GetView(heightField);
-        }
-
         public IGrid<Bitmap> TileGrid { get; private set; }
 
         public IGrid<int> HeightGrid { get; private set; }
