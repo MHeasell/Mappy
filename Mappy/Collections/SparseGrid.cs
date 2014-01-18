@@ -234,29 +234,5 @@
                 throw new IndexOutOfRangeException(string.Format("Coordinates ({0}, {1}) out of range", x, y));
             }
         }
-
-        private int ToIndex(int x, int y)
-        {
-            return (y * this.Width) + x;
-        }
-
-        private Coords ToCoords(int index)
-        {
-            return new Coords(index % this.Width, index / this.Width);
-        }
-
-        private struct Coords
-        {
-            public Coords(int x, int y)
-                : this()
-            {
-                this.X = x;
-                this.Y = y;
-            }
-
-            public int X { get; set; }
-
-            public int Y { get; set; }
-        }
     }
 }

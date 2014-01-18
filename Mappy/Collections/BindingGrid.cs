@@ -34,7 +34,8 @@
             set
             {
                 this.grid[index] = value;
-                this.OnAreaChanged(new GridEventArgs(index % this.Width, index / this.Width));
+                var coords = this.grid.ToCoords(index);
+                this.OnAreaChanged(new GridEventArgs(coords.X, coords.Y));
             }
         }
 

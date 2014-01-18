@@ -63,6 +63,7 @@
     <Compile Include="Collections\BindingGrid.cs" />
     <Compile Include="Collections\BindingSparseGrid.cs" />
     <Compile Include="Collections\Grid.cs" />
+    <Compile Include="Collections\GridMethods.cs" />
     <Compile Include="Collections\IBindingGrid.cs" />
     <Compile Include="Collections\IBindingSparseGrid.cs" />
     <Compile Include="Collections\IGrid.cs" />

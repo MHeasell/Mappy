@@ -86,10 +86,5 @@
                 }
             }
         }
-
-        private int ToIndex(int x, int y)
-        {
-            return (y * this.Width) + x;
-        }
     }
 }
