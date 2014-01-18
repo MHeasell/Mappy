@@ -2,7 +2,7 @@
 {
     using Mappy.Collections;
 
-    public class MergeOperation<T> : IReplayableOperation
+    public class CopyAreaOperation<T> : IReplayableOperation
     {
         private readonly IGrid<T> source;
         private readonly IGrid<T> destination;
@@ -18,7 +18,7 @@
 
         private IGrid<T> oldContents;
 
-        public MergeOperation(IGrid<T> source, IGrid<T> destination, int sourceX, int sourceY, int destX, int destY, int width, int height)
+        public CopyAreaOperation(IGrid<T> source, IGrid<T> destination, int sourceX, int sourceY, int destX, int destY, int width, int height)
         {
             this.source = source;
             this.destination = destination;

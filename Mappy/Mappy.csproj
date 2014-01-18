@@ -164,7 +164,7 @@
     <Compile Include="Models\IMapModel.cs" />
     <Compile Include="Operations\IReplayableOperation.cs" />
     <Compile Include="LoadingUtils.cs" />
-    <Compile Include="Operations\MergeOperation.cs" />
+    <Compile Include="Operations\CopyAreaOperation.cs" />
     <Compile Include="Controllers\MinimapController.cs" />
     <Compile Include="GridUtil.cs" />
     <Compile Include="Operations\MoveTileOperation.cs" />
