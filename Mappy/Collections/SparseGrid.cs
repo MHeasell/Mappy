@@ -56,7 +56,7 @@
                 this.CheckIndexInBounds(x, y);
 
                 T val;
-                this.values.TryGetValue((y * this.Width) + x, out val);
+                this.values.TryGetValue(this.ToIndex(x, y), out val);
                 return val;
             }
 
