@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
-    using System.Linq;
     using System.Windows.Forms;
     using Data;
 
@@ -260,9 +259,8 @@
             this.view.Items.Add(i);
         }
 
-        private bool RemoveFeature(Point p)
+        private bool RemoveFeature(int index)
         {
-            int index = this.ToFeatureIndex(p);
             if (this.featureMapping.ContainsKey(index))
             {
                 ImageLayerCollection.Item item = this.featureMapping[index];
@@ -279,9 +277,12 @@
             return false;
         }
 
-        private void UpdateFeature(Point p)
+        private void UpdateFeature(int index)
         {
-            this.RemoveFeature(p);
+            this.RemoveFeature(index);
+
+            Point p = this.ToFeaturePoint(index);
+
             Feature f;
             if (this.model.Map.Features.TryGetValue(p.X, p.Y, out f))
             {
@@ -474,16 +475,16 @@
             switch (e.Action)
             {
                 case SparseGridEventArgs.ActionType.Set:
-                    foreach (var p in e.Indexes.Select(this.ToFeaturePoint))
+                    foreach (var index in e.Indexes)
                     {
-                        this.UpdateFeature(p);
+                        this.UpdateFeature(index);
                     }
 
                     break;
                 case SparseGridEventArgs.ActionType.Remove:
-                    foreach (var p in e.Indexes.Select(this.ToFeaturePoint))
+                    foreach (var index in e.Indexes)
                     {
-                        this.RemoveFeature(p);
+                        this.RemoveFeature(index);
                     }
 
                     break;
