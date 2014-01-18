@@ -16,7 +16,7 @@
         private readonly int width;
         private readonly int height;
 
-        private IGrid<T> oldContents;
+        private readonly IGrid<T> oldContents;
 
         public CopyAreaOperation(IGrid<T> source, IGrid<T> destination, int sourceX, int sourceY, int destX, int destY, int width, int height)
         {
