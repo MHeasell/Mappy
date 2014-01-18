@@ -49,20 +49,48 @@
             }
         }
 
+        public T this[int x, int y]
+        {
+            get
+            {
+                this.CheckIndexInBounds(x, y);
+
+                T val;
+                this.values.TryGetValue((y * this.Width) + x, out val);
+                return val;
+            }
+
+            set
+            {
+                this.CheckIndexInBounds(x, y);
+
+                this.values[this.ToIndex(x, y)] = value;
+            }
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                var coords = this.ToCoords(index);
+                return this[coords.X, coords.Y];
+            }
+
+            set
+            {
+                var coords = this.ToCoords(index);
+                this[coords.X, coords.Y] = value;
+            }
+        }
+
         public T Get(int x, int y)
         {
-            this.CheckIndexInBounds(x, y);
-
-            T val;
-            this.values.TryGetValue((y * this.Width) + x, out val);
-            return val;
+            return this[x, y];
         }
 
         public void Set(int x, int y, T value)
         {
-            this.CheckIndexInBounds(x, y);
-
-            this.values[this.ToIndex(x, y)] = value;
+            this[x, y] = value;
         }
 
         public void Clear(int x, int y)
@@ -210,6 +238,25 @@
         private int ToIndex(int x, int y)
         {
             return (y * this.Width) + x;
+        }
+
+        private Coords ToCoords(int index)
+        {
+            return new Coords(index % this.Width, index / this.Width);
+        }
+
+        private struct Coords
+        {
+            public Coords(int x, int y)
+                : this()
+            {
+                this.X = x;
+                this.Y = y;
+            }
+
+            public int X { get; set; }
+
+            public int Y { get; set; }
         }
     }
 }

@@ -28,6 +28,34 @@
             get { return this.arr.GetLength(0); }
         }
 
+        public T this[int index]
+        {
+            get
+            {
+                var coords = this.ToCoords(index);
+                return this[coords.X, coords.Y];
+            }
+
+            set
+            {
+                var coords = this.ToCoords(index);
+                this[coords.X, coords.Y] = value;
+            }
+        }
+
+        public T this[int x, int y]
+        {
+            get
+            {
+                return this.arr[y, x];
+            }
+
+            set
+            {
+                this.arr[y, x] = value;
+            }
+        }
+
         public static Grid<T> GetView(T[,] arr)
         {
             return new Grid<T>(arr);
@@ -35,12 +63,12 @@
 
         public T Get(int x, int y)
         {
-            return this.arr[y, x];
+            return this[x, y];
         }
 
         public void Set(int x, int y, T value)
         {
-            this.arr[y, x] = value;
+            this[x, y] = value;
         }
 
         public void Clear(int x, int y)
@@ -87,6 +115,30 @@
                     this.Set(destX + dx, destY + dy, other.Get(sourceX + dx, sourceY + dy));
                 }
             }
+        }
+
+        private int ToIndex(int x, int y)
+        {
+            return (y * this.Width) + x;
+        }
+
+        private Coords ToCoords(int index)
+        {
+            return new Coords(index % this.Width, index / this.Width);
+        }
+
+        private struct Coords
+        {
+            public Coords(int x, int y)
+                : this()
+            {
+                this.X = x;
+                this.Y = y;
+            }
+
+            public int X { get; set; }
+
+            public int Y { get; set; }
         }
     }
 }

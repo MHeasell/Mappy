@@ -24,11 +24,41 @@
             get { return this.grid.Height; }
         }
 
+        public T this[int index]
+        {
+            get
+            {
+                return this.grid[index];
+            }
+
+            set
+            {
+                this.grid[index] = value;
+                this.OnAreaChanged(new GridEventArgs(index % this.Width, index / this.Width));
+            }
+        }
+
+        public T this[int x, int y]
+        {
+            get
+            {
+                return this.grid[x, y];
+            }
+
+            set
+            {
+                this.grid[x, y] = value;
+                this.OnAreaChanged(new GridEventArgs(x, y));
+            }
+        }
+
+        [Obsolete]
         public T Get(int x, int y)
         {
             return this.grid.Get(x, y);
         }
 
+        [Obsolete]
         public void Set(int x, int y, T value)
         {
             this.grid.Set(x, y, value);

@@ -1,5 +1,6 @@
 ﻿namespace Mappy.Collections
 {
+    using System;
     using System.Collections.Generic;
 
     public interface IGrid<T> : IEnumerable<T>
@@ -8,8 +9,14 @@
 
         int Height { get; }
 
+        T this[int index] { get; set; }
+
+        T this[int x, int y] { get; set; }
+
+        [Obsolete]
         T Get(int x, int y);
 
+        [Obsolete]
         void Set(int x, int y, T value);
 
         /// <summary>
