@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
+    using System.Linq;
     using System.Windows.Forms;
     using Data;
 
@@ -287,6 +288,14 @@
             }
         }
 
+        private Point ToFeaturePoint(int index)
+        {
+            int x = index % this.model.Map.Features.Width;
+            int y = index / this.model.Map.Features.Width;
+            Point p = new Point(x, y);
+            return p;
+        }
+
         #endregion
 
         private void DragFeatureTo(Point featureCoords, Point location)
@@ -454,14 +463,14 @@
             switch (e.Action)
             {
                 case SparseGridEventArgs.ActionType.Set:
-                    foreach (var p in e.Coordinates)
+                    foreach (var p in e.Indexes.Select(this.ToFeaturePoint))
                     {
                         this.UpdateFeature(p);
                     }
 
                     break;
                 case SparseGridEventArgs.ActionType.Remove:
-                    foreach (var p in e.Coordinates)
+                    foreach (var p in e.Indexes.Select(this.ToFeaturePoint))
                     {
                         this.RemoveFeature(p);
                     }

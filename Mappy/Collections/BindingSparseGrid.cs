@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using System.Linq;
 
     public class BindingSparseGrid<T> : BindingGrid<T>, IBindingSparseGrid<T>
@@ -42,7 +41,10 @@
             if (this.grid.Remove(x, y))
             {
                 base.OnCellChanged(x, y);
-                this.OnEntryChanged(SparseGridEventArgs.ActionType.Remove, x, y);
+                var args = new SparseGridEventArgs(
+                    SparseGridEventArgs.ActionType.Remove,
+                    new[] { this.ToIndex(x, y) });
+                this.OnEntryChanged(args);
                 return true;
             }
 
@@ -52,7 +54,9 @@
         public void Merge(ISparseGrid<T> other, int x, int y)
         {
             this.grid.Merge(other, x, y);
-            this.OnEntriesChanged(SparseGridEventArgs.ActionType.Set, BindingSparseGrid<T>.ProcessEntries(other.Entries, x, y));
+            this.OnEntriesChanged(
+                SparseGridEventArgs.ActionType.Set,
+                other.Entries.Select(p => this.ToIndex(p.X + x, p.Y + y)));
         }
 
         public void Merge(ISparseGrid<T> other, int sourceX, int sourceY, int destX, int destY, int width, int height)
@@ -60,28 +64,31 @@
             throw new NotImplementedException("not currently supported");
         }
 
-        protected virtual void OnEntryChanged(SparseGridEventArgs.ActionType type, int x, int y)
+        protected virtual void OnEntryChanged(SparseGridEventArgs args)
         {
             EventHandler<SparseGridEventArgs> h = this.EntriesChanged;
             if (h != null)
             {
-                h(this, new SparseGridEventArgs { Action = type, Coordinates = new[] { new Point(x, y) } });
+                h(this, args);
             }
         }
 
-        protected virtual void OnEntriesChanged(SparseGridEventArgs.ActionType type, IEnumerable<Point> entries)
+        protected virtual void OnEntriesChanged(SparseGridEventArgs.ActionType type, IEnumerable<int> entries)
         {
             EventHandler<SparseGridEventArgs> h = this.EntriesChanged;
             if (h != null)
             {
-                h(this, new SparseGridEventArgs { Action = type, Coordinates = entries });
+                h(this, new SparseGridEventArgs(type, entries));
             }
         }
 
         protected override void OnCellChanged(int x, int y)
         {
             base.OnCellChanged(x, y);
-            this.OnEntryChanged(SparseGridEventArgs.ActionType.Set, x, y);
+            var args = new SparseGridEventArgs(
+                SparseGridEventArgs.ActionType.Set,
+                new[] { this.ToIndex(x, y) });
+            this.OnEntryChanged(args);
         }
 
         protected override void OnAreaChanged(GridEventArgs args)
@@ -89,28 +96,23 @@
             base.OnAreaChanged(args);
             this.OnEntriesChanged(
                 SparseGridEventArgs.ActionType.Set,
-                BindingSparseGrid<T>.EnumerateRectCells(ToRectangle(args)));
+                this.EnumerateCells(args.StartX, args.StartY, args.Width, args.Height));
         }
 
-        private static Rectangle ToRectangle(GridEventArgs args)
+        private int ToIndex(int x, int y)
         {
-            return new Rectangle(args.StartX, args.StartY, args.Width, args.Height);
+            return (this.Width * y) + x;
         }
 
-        private static IEnumerable<Point> EnumerateRectCells(Rectangle area)
+        private IEnumerable<int> EnumerateCells(int x, int y, int width, int height)
         {
-            for (int y = 0; y < area.Height; y++)
+            for (int dy = 0; dy < height; dy++)
             {
-                for (int x = 0; x < area.Width; x++)
+                for (int dx = 0; dx < width; dx++)
                 {
-                    yield return new Point(x + area.X, y + area.Y);
+                    yield return this.ToIndex(x + dx, y + dy);
                 }
             }
-        }
-
-        private static IEnumerable<Point> ProcessEntries(IEnumerable<Entry<T>> entries, int x, int y)
-        {
-            return entries.Select(p => new Point(p.X + x, p.Y + y));
         }
     }
 }

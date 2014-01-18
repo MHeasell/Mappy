@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
 
     public interface IBindingSparseGrid<T> : ISparseGrid<T>, IBindingGrid<T>
     {
@@ -11,6 +10,12 @@
 
     public class SparseGridEventArgs : EventArgs
     {
+        public SparseGridEventArgs(ActionType action, IEnumerable<int> indexes)
+        {
+            this.Action = action;
+            this.Indexes = indexes;
+        }
+
         public enum ActionType
         {
             Set,
@@ -19,6 +24,6 @@
 
         public ActionType Action { get; set; }
 
-        public IEnumerable<Point> Coordinates { get; set; }
+        public IEnumerable<int> Indexes { get; set; }
     }
 }
