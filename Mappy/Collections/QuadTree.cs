@@ -131,7 +131,28 @@ namespace Mappy.Collections
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            if (array == null)
+            {
+                throw new ArgumentNullException("array");
+            }
+
+            if (arrayIndex < 0)
+            {
+                throw new ArgumentOutOfRangeException("arrayIndex");
+            }
+
+            if (array.Length - arrayIndex < this.Count)
+            {
+                throw new ArgumentException(
+                    "number of elements to be copied exceeds the space available in the array");
+            }
+
+            int i = 0;
+            foreach (T item in this)
+            {
+                array[arrayIndex + i] = item;
+                i++;
+            }
         }
 
         public bool Remove(T item)
