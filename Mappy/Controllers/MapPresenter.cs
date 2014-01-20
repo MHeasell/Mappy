@@ -71,28 +71,8 @@
                 return;
             }
 
-            FeatureTag f = this.view.SelectedItem.Tag as FeatureTag;
-            if (f != null)
-            {
-                this.model.RemoveFeature(f.Coordinates);
-            }
-            else
-            {
-                Positioned<IMapTile> t = this.view.SelectedItem.Tag as Positioned<IMapTile>;
-                if (t != null)
-                {
-                    int index = this.model.Map.FloatingTiles.IndexOf(t);
-                    this.model.RemoveSection(index);
-                }
-                else
-                {
-                    StartPositionTag st = this.view.SelectedItem.Tag as StartPositionTag;
-                    if (st != null)
-                    {
-                        this.model.RemoveStartPosition(st.Index);
-                    }
-                }
-            }
+            ItemTag tag = (ItemTag)this.view.SelectedItem.Tag;
+            tag.DeleteItem();
         }
 
         private void ViewDragDrop(object sender, DragEventArgs e)
@@ -229,7 +209,7 @@
                     t.Location.Y * 32,
                     index,
                     new DrawableTile(t.Item));
-            i.Tag = t;
+            i.Tag = new SectionTag(this, t);
             this.tileMapping.Insert(index, i);
             this.view.Items.Add(i);
         }
@@ -253,7 +233,7 @@
                     r.Y,
                     (y * this.model.Map.Features.Width) + x + 1000, // magic number to separate from tiles
                     new DrawableBitmap(f.Image));
-            i.Tag = new FeatureTag { Coordinates = new Point(x, y) };
+            i.Tag = new FeatureTag(this, new Point(x, y));
             i.Visible = this.model.FeaturesVisible;
             this.featureMapping[this.ToFeatureIndex(x, y)] = i;
             this.view.Items.Add(i);
@@ -427,7 +407,7 @@
                     p.Value.Y - 58,
                     int.MaxValue,
                     img);
-                i.Tag = new StartPositionTag { Index = index };
+                i.Tag = new StartPositionTag(this, index);
                 this.startPositionMapping[index] = i;
                 this.view.Items.Add(i);
             }
@@ -526,29 +506,8 @@
                     return;
                 }
 
-                FeatureTag f = this.view.SelectedItem.Tag as FeatureTag;
-
-                if (f != null)
-                {
-                    this.DragFeatureTo(f.Coordinates, virtualLocation);
-                }
-                else
-                {
-                    Positioned<IMapTile> t = this.view.SelectedItem.Tag as Positioned<IMapTile>;
-                    if (t != null)
-                    {
-                        this.DragSectionTo(t, virtualLocation);
-                    }
-                    else
-                    {
-                        StartPositionTag s = this.view.SelectedItem.Tag as StartPositionTag;
-                        if (s != null)
-                        {
-                            this.model.TranslateStartPositionTo(s.Index, virtualLocation.X, virtualLocation.Y);
-                            this.view.SelectedItem = this.startPositionMapping[s.Index];
-                        }
-                    }
-                }
+                ItemTag tag = (ItemTag)this.view.SelectedItem.Tag;
+                tag.DragTo(virtualLocation);
             }
             finally
             {
@@ -565,14 +524,83 @@
 
         #endregion
 
-        private class FeatureTag
+        private abstract class ItemTag
         {
-            public Point Coordinates { get; set; }
+            protected ItemTag(MapPresenter presenter)
+            {
+                this.Presenter = presenter;
+            }
+
+            public MapPresenter Presenter { get; private set; }
+
+            public abstract void DeleteItem();
+
+            public abstract void DragTo(Point virtualLocation);
         }
 
-        private class StartPositionTag
+        private class FeatureTag : ItemTag
         {
+            public FeatureTag(MapPresenter presenter, Point coordinates)
+                : base(presenter)
+            {
+                this.Coordinates = coordinates;
+            }
+
+            public Point Coordinates { get; private set; }
+
+            public override void DeleteItem()
+            {
+                this.Presenter.model.RemoveFeature(this.Coordinates);
+            }
+
+            public override void DragTo(Point virtualLocation)
+            {
+                this.Presenter.DragFeatureTo(this.Coordinates, virtualLocation);
+            }
+        }
+
+        private class StartPositionTag : ItemTag
+        {
+            public StartPositionTag(MapPresenter presenter, int index)
+                : base(presenter)
+            {
+                this.Index = index;
+            }
+
             public int Index { get; set; }
+
+            public override void DeleteItem()
+            {
+                this.Presenter.model.RemoveStartPosition(this.Index);
+            }
+
+            public override void DragTo(Point virtualLocation)
+            {
+                this.Presenter.model.TranslateStartPositionTo(this.Index, virtualLocation.X, virtualLocation.Y);
+                this.Presenter.view.SelectedItem = this.Presenter.startPositionMapping[this.Index];
+            }
+        }
+
+        private class SectionTag : ItemTag
+        {
+            public SectionTag(MapPresenter presenter, Positioned<IMapTile> tile)
+                : base(presenter)
+            {
+                this.Tile = tile;
+            }
+
+            public Positioned<IMapTile> Tile { get; set; }
+
+            public override void DeleteItem()
+            {
+                int index = this.Presenter.model.Map.FloatingTiles.IndexOf(this.Tile);
+                this.Presenter.model.RemoveSection(index);
+            }
+
+            public override void DragTo(Point virtualLocation)
+            {
+                this.Presenter.DragSectionTo(this.Tile, virtualLocation);
+            }
         }
     }
 }
