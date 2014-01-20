@@ -16,9 +16,17 @@
 
         public event EventHandler<SparseGridEventArgs> EntriesChanged;
 
-        public IEnumerable<Entry<T>> Entries
+        public IEnumerable<KeyValuePair<int, T>> IndexEntries
         {
-            get { return this.grid.Entries; }
+            get { return this.grid.IndexEntries; }
+        }
+
+        public IEnumerable<KeyValuePair<GridCoordinates, T>> CoordinateEntries
+        {
+            get
+            {
+                return this.grid.CoordinateEntries;
+            }
         }
 
         public IEnumerable<T> Values

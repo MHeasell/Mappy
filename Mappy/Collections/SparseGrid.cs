@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
 
     public class SparseGrid<T> : ISparseGrid<T>
     {
@@ -26,18 +28,22 @@
             private set;
         }
 
-        public IEnumerable<Entry<T>> Entries
+        public IEnumerable<KeyValuePair<int, T>> IndexEntries
         {
             get
             {
-                foreach (var i in this.values)
-                {
-                    Entry<T> e = new Entry<T>();
-                    e.X = i.Key % this.Width;
-                    e.Y = i.Key / this.Width;
-                    e.Value = i.Value;
-                    yield return e;
-                }
+                return this.values;
+            }
+        }
+
+        public IEnumerable<KeyValuePair<GridCoordinates, T>> CoordinateEntries
+        {
+            get
+            {
+                return this.values.Select(
+                    x => new KeyValuePair<GridCoordinates, T>(
+                        this.ToCoords(x.Key),
+                        x.Value));
             }
         }
 

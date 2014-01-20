@@ -211,9 +211,9 @@
                 this.InsertTile(t, count++);
             }
 
-            foreach (var f in this.model.Map.Features.Entries)
+            foreach (var f in this.model.Map.Features.CoordinateEntries)
             {
-                this.InsertFeature(f.Value, f.X, f.Y);
+                this.InsertFeature(f.Value, f.Key.X, f.Key.Y);
             }
 
             for (int i = 0; i < 10; i++)

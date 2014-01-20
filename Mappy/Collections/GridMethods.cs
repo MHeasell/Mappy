@@ -62,14 +62,20 @@
                 throw new IndexOutOfRangeException("destination area overlaps destination bounds");
             }
 
-            foreach (var e in src.Entries)
+            foreach (var e in src.CoordinateEntries)
             {
-                if (e.X < sourceX || e.Y < sourceY || e.X >= sourceX + width || e.Y >= sourceY + height)
+                var sourceCoords = e.Key;
+                var value = e.Value;
+
+                if (sourceCoords.X < sourceX
+                    || sourceCoords.Y < sourceY
+                    || sourceCoords.X >= sourceX + width
+                    || sourceCoords.Y >= sourceY + height)
                 {
                     continue;
                 }
 
-                dest[destX + (e.X - sourceX), destY + (e.Y - sourceY)] = e.Value;
+                dest[destX + (sourceCoords.X - sourceX), destY + (sourceCoords.Y - sourceY)] = value;
             }
         }
 
@@ -80,24 +86,10 @@
                 throw new IndexOutOfRangeException("part of the other grid falls outside boundaries");
             }
 
-            foreach (var e in src.Entries)
+            foreach (var e in src.CoordinateEntries)
             {
-                dest[e.X + x, e.Y + y] = e.Value;
+                dest[e.Key.X + x, e.Key.Y + y] = e.Value;
             }
-        }
-
-        public struct GridCoordinates
-        {
-            public GridCoordinates(int x, int y)
-                : this()
-            {
-                this.X = x;
-                this.Y = y;
-            }
-
-            public int X { get; private set; }
-
-            public int Y { get; private set; }
         }
     }
 }

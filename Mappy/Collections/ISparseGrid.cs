@@ -4,7 +4,9 @@
 
     public interface ISparseGrid<T> : IGrid<T>
     {
-        IEnumerable<Entry<T>> Entries { get; }
+        IEnumerable<KeyValuePair<int, T>> IndexEntries { get; }
+
+        IEnumerable<KeyValuePair<GridCoordinates, T>> CoordinateEntries { get; }
 
         IEnumerable<T> Values { get; }
 
@@ -13,12 +15,5 @@
         bool TryGetValue(int x, int y, out T val);
 
         bool Remove(int x, int y);
-    }
-
-    public struct Entry<T>
-    {
-        public int X;
-        public int Y;
-        public T Value;
     }
 }
