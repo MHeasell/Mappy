@@ -59,6 +59,12 @@
             return false;
         }
 
+        public bool Remove(int index)
+        {
+            var coords = this.ToCoords(index);
+            return this.Remove(coords.X, coords.Y);
+        }
+
         protected virtual void OnEntryChanged(SparseGridEventArgs args)
         {
             EventHandler<SparseGridEventArgs> h = this.EntriesChanged;

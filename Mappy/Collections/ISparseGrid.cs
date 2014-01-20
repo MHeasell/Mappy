@@ -15,5 +15,7 @@
         bool TryGetValue(int x, int y, out T val);
 
         bool Remove(int x, int y);
+
+        bool Remove(int index);
     }
 }

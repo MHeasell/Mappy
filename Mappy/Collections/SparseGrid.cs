@@ -125,8 +125,21 @@
 
         public bool Remove(int x, int y)
         {
-            this.CheckIndexInBounds(x, y);
-            return this.values.Remove(this.ToIndex(x, y));
+            return this.Remove(this.ToIndex(x, y));
+        }
+
+        public bool Remove(int index)
+        {
+            this.CheckIndexInBounds(index);
+            return this.values.Remove(index);
+        }
+
+        private void CheckIndexInBounds(int index)
+        {
+            if (index < 0 || index >= this.Width * this.Height)
+            {
+                throw new IndexOutOfRangeException();
+            }
         }
 
         private void CheckIndexInBounds(int x, int y)
