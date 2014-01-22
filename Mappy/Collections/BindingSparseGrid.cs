@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class BindingSparseGrid<T> : BindingGrid<T>, IBindingSparseGrid<T>
     {
