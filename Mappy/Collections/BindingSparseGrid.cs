@@ -34,6 +34,19 @@
             get { return this.grid.Values; }
         }
 
+        public void Move(int oldIndex, int newIndex)
+        {
+            this.grid[newIndex] = this.grid[oldIndex];
+            this.grid.Remove(oldIndex);
+            this.OnEntryChanged(
+                new SparseGridEventArgs(new[] { oldIndex }, new[] { newIndex }));
+        }
+
+        public void Move(int srcX, int srcY, int destX, int destY)
+        {
+            this.Move(this.ToIndex(srcX, srcY), this.ToIndex(destX, destY));
+        }
+
         public bool HasValue(int x, int y)
         {
             return this.grid.HasValue(x, y);
