@@ -7,7 +7,7 @@ namespace Mappy.Operations
 
     public class MoveFeatureOperation : IReplayableOperation
     {
-        public MoveFeatureOperation(ISparseGrid<Feature> grid, int startX, int startY, int destX, int destY)
+        public MoveFeatureOperation(IBindingSparseGrid<Feature> grid, int startX, int startY, int destX, int destY)
         {
             this.Grid = grid;
             this.StartX = startX;
@@ -24,20 +24,16 @@ namespace Mappy.Operations
 
         public int DestY { get; private set; }
 
-        public ISparseGrid<Feature> Grid { get; private set; }
+        public IBindingSparseGrid<Feature> Grid { get; private set; }
 
         public void Execute()
         {
-            Feature f = this.Grid[this.StartX, this.StartY];
-            this.Grid.Remove(this.StartX, this.StartY);
-            this.Grid[this.DestX, this.DestY] = f;
+            this.Grid.Move(this.StartX, this.StartY, this.DestX, this.DestY);
         }
 
         public void Undo()
         {
-            Feature f = this.Grid[this.DestX, this.DestY];
-            this.Grid.Remove(this.DestX, this.DestY);
-            this.Grid[this.StartX, this.StartY] = f;
+            this.Grid.Move(this.DestX, this.DestY, this.StartX, this.StartY);
         }
 
         public MoveFeatureOperation Combine(MoveFeatureOperation other)

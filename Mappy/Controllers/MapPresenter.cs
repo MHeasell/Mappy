@@ -257,10 +257,30 @@
             return false;
         }
 
+        private void MoveFeature(int oldIndex, int newIndex)
+        {
+            var old = this.featureMapping[oldIndex];
+
+            bool isSelected = this.view.SelectedItem == old;
+
+            this.RemoveFeature(oldIndex);
+            this.InsertFeature(newIndex);
+
+            if (isSelected)
+            {
+                this.view.SelectedItem = this.featureMapping[newIndex];
+            }
+        }
+
         private void UpdateFeature(int index)
         {
             this.RemoveFeature(index);
 
+            this.InsertFeature(index);
+        }
+
+        private void InsertFeature(int index)
+        {
             Point p = this.ToFeaturePoint(index);
 
             Feature f;
@@ -300,15 +320,10 @@
                 return;
             }
 
-            bool success = this.model.TranslateFeature(
+            this.model.TranslateFeature(
                 featureCoords,
                 pos.Value.X - featureCoords.X,
                 pos.Value.Y - featureCoords.Y);
-
-            if (success)
-            {
-                this.view.SelectedItem = this.featureMapping[this.ToFeatureIndex(pos.Value)];
-            }
         }
 
         private void DragSectionTo(Positioned<IMapTile> t, Point location)
@@ -458,6 +473,15 @@
                     foreach (var index in e.Indexes)
                     {
                         this.UpdateFeature(index);
+                    }
+
+                    break;
+                case SparseGridEventArgs.ActionType.Move:
+                    var oldIter = e.OriginalIndexes.GetEnumerator();
+                    var newIter = e.Indexes.GetEnumerator();
+                    while (oldIter.MoveNext() && newIter.MoveNext())
+                    {
+                        this.MoveFeature(oldIter.Current, newIter.Current);
                     }
 
                     break;
