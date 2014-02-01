@@ -7,8 +7,8 @@
 
     public class MapPainter : IPainter
     {
-        private IGrid<Bitmap> map;
-        private int tileSize;
+        private readonly IGrid<Bitmap> map;
+        private readonly int tileSize;
 
         public MapPainter(IGrid<Bitmap> map, int tileSize)
         {
