@@ -1,14 +1,14 @@
 ﻿namespace Mappy.Collections
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
 
-    public class BindingSparseGrid<T> : BindingGrid<T>, IBindingSparseGrid<T>
+    public class BindingSparseGrid<T> : ISparseGrid<T>
     {
         private readonly ISparseGrid<T> grid;
 
         public BindingSparseGrid(ISparseGrid<T> grid)
-            : base(grid)
         {
             this.grid = grid;
         }
@@ -33,12 +33,56 @@
             get { return this.grid.Values; }
         }
 
+        public int Width
+        {
+            get
+            {
+                return this.grid.Width;
+            }
+        }
+
+        public int Height
+        {
+            get
+            {
+                return this.grid.Height;
+            }
+        }
+
+        T IGrid<T>.this[int index]
+        {
+            get
+            {
+                return this.grid[index];
+            }
+
+            set
+            {
+                this.grid[index] = value;
+                this.OnEntryChanged(SparseGridEventArgs.Set(index));
+            }
+        }
+
+        T IGrid<T>.this[int x, int y]
+        {
+            get
+            {
+                return this.grid[x, y];
+            }
+
+            set
+            {
+                this.grid[x, y] = value;
+                this.OnEntryChanged(SparseGridEventArgs.Set(this.ToIndex(x, y)));
+            }
+        }
+
         public void Move(int oldIndex, int newIndex)
         {
             this.grid[newIndex] = this.grid[oldIndex];
             this.grid.Remove(oldIndex);
             this.OnEntryChanged(
-                new SparseGridEventArgs(new[] { oldIndex }, new[] { newIndex }));
+                SparseGridEventArgs.Move(oldIndex, newIndex));
         }
 
         public void Move(int srcX, int srcY, int destX, int destY)
@@ -51,20 +95,26 @@
             return this.grid.HasValue(x, y);
         }
 
+        public bool HasValue(int index)
+        {
+            return this.grid.HasValue(index);
+        }
+
         public bool TryGetValue(int x, int y, out T val)
         {
             return this.grid.TryGetValue(x, y, out val);
+        }
+
+        public bool TryGetValue(int index, out T val)
+        {
+            return this.grid.TryGetValue(index, out val);
         }
 
         public bool Remove(int x, int y)
         {
             if (this.grid.Remove(x, y))
             {
-                base.OnCellChanged(x, y);
-                var args = new SparseGridEventArgs(
-                    SparseGridEventArgs.ActionType.Remove,
-                    new[] { this.ToIndex(x, y) });
-                this.OnEntryChanged(args);
+                this.OnEntryChanged(SparseGridEventArgs.Remove(this.ToIndex(x, y)));
                 return true;
             }
 
@@ -73,8 +123,23 @@
 
         public bool Remove(int index)
         {
-            var coords = this.ToCoords(index);
-            return this.Remove(coords.X, coords.Y);
+            if (this.grid.Remove(index))
+            {
+                this.OnEntryChanged(SparseGridEventArgs.Remove(index));
+                return true;
+            }
+
+            return false;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return this.grid.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable)this.grid).GetEnumerator();
         }
 
         protected virtual void OnEntryChanged(SparseGridEventArgs args)
@@ -83,48 +148,6 @@
             if (h != null)
             {
                 h(this, args);
-            }
-        }
-
-        protected virtual void OnEntriesChanged(SparseGridEventArgs.ActionType type, IEnumerable<int> entries)
-        {
-            EventHandler<SparseGridEventArgs> h = this.EntriesChanged;
-            if (h != null)
-            {
-                h(this, new SparseGridEventArgs(type, entries));
-            }
-        }
-
-        protected override void OnCellChanged(int x, int y)
-        {
-            base.OnCellChanged(x, y);
-            var args = new SparseGridEventArgs(
-                SparseGridEventArgs.ActionType.Set,
-                new[] { this.ToIndex(x, y) });
-            this.OnEntryChanged(args);
-        }
-
-        protected override void OnAreaChanged(GridEventArgs args)
-        {
-            base.OnAreaChanged(args);
-            this.OnEntriesChanged(
-                SparseGridEventArgs.ActionType.Set,
-                this.EnumerateCells(args.StartX, args.StartY, args.Width, args.Height));
-        }
-
-        private int ToIndex(int x, int y)
-        {
-            return (this.Width * y) + x;
-        }
-
-        private IEnumerable<int> EnumerateCells(int x, int y, int width, int height)
-        {
-            for (int dy = 0; dy < height; dy++)
-            {
-                for (int dx = 0; dx < width; dx++)
-                {
-                    yield return this.ToIndex(x + dx, y + dy);
-                }
             }
         }
     }

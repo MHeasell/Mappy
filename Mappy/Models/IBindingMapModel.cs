@@ -16,8 +16,8 @@
 
         new BindingList<Positioned<IMapTile>> FloatingTiles { get; }
 
-        new IBindingSparseGrid<Feature> Features { get; }
+        new BindingSparseGrid<Feature> Features { get; }
 
-        new IBindingSparseGrid<bool> Voids { get; }
+        new BindingSparseGrid<bool> Voids { get; }
     }
 }

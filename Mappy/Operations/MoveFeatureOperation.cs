@@ -7,7 +7,7 @@ namespace Mappy.Operations
 
     public class MoveFeatureOperation : IReplayableOperation
     {
-        public MoveFeatureOperation(IBindingSparseGrid<Feature> grid, int startX, int startY, int destX, int destY)
+        public MoveFeatureOperation(BindingSparseGrid<Feature> grid, int startX, int startY, int destX, int destY)
         {
             this.Grid = grid;
             this.StartX = startX;
@@ -24,7 +24,7 @@ namespace Mappy.Operations
 
         public int DestY { get; private set; }
 
-        public IBindingSparseGrid<Feature> Grid { get; private set; }
+        public BindingSparseGrid<Feature> Grid { get; private set; }
 
         public void Execute()
         {

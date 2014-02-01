@@ -32,13 +32,13 @@
             private set;
         }
 
-        public IBindingSparseGrid<Feature> Features
+        public BindingSparseGrid<Feature> Features
         {
             get;
             private set;
         }
 
-        public IBindingSparseGrid<bool> Voids
+        public BindingSparseGrid<bool> Voids
         {
             get;
             private set;

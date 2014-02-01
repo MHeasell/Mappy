@@ -12,7 +12,11 @@
 
         bool HasValue(int x, int y);
 
+        bool HasValue(int index);
+
         bool TryGetValue(int x, int y, out T val);
+
+        bool TryGetValue(int index, out T val);
 
         bool Remove(int x, int y);
 

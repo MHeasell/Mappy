@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class BindingGrid<T> : IBindingGrid<T>
+    public class BindingGrid<T> : IGrid<T>
     {
         private readonly IGrid<T> grid;
 
@@ -35,7 +35,7 @@
             {
                 this.grid[index] = value;
                 var coords = this.grid.ToCoords(index);
-                this.OnAreaChanged(new GridEventArgs(coords.X, coords.Y));
+                this.OnCellChanged(new GridEventArgs(coords.X, coords.Y));
             }
         }
 
@@ -49,7 +49,7 @@
             set
             {
                 this.grid[x, y] = value;
-                this.OnAreaChanged(new GridEventArgs(x, y));
+                this.OnCellChanged(new GridEventArgs(x, y));
             }
         }
 
@@ -63,16 +63,7 @@
             return this.GetEnumerator();
         }
 
-        protected virtual void OnCellChanged(int x, int y)
-        {
-            EventHandler<GridEventArgs> h = this.CellsChanged;
-            if (h != null)
-            {
-                h(this, new GridEventArgs(x, y, 1, 1));
-            }
-        }
-
-        protected virtual void OnAreaChanged(GridEventArgs args)
+        protected virtual void OnCellChanged(GridEventArgs args)
         {
             EventHandler<GridEventArgs> h = this.CellsChanged;
             if (h != null)

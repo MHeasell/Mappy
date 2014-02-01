@@ -16,9 +16,9 @@ namespace Mappy.Data
             this.HeightGrid = new BindingGrid<int>(tile.HeightGrid);
         }
 
-        public IBindingGrid<Bitmap> TileGrid { get; private set; }
+        public BindingGrid<Bitmap> TileGrid { get; private set; }
 
-        public IBindingGrid<int> HeightGrid { get; private set; }
+        public BindingGrid<int> HeightGrid { get; private set; }
 
         IGrid<Bitmap> IMapTile.TileGrid
         {

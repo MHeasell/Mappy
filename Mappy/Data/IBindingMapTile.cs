@@ -6,8 +6,8 @@ namespace Mappy.Data
 
     public interface IBindingMapTile : IMapTile
     {
-        new IBindingGrid<Bitmap> TileGrid { get; }
+        new BindingGrid<Bitmap> TileGrid { get; }
 
-        new IBindingGrid<int> HeightGrid { get; }
+        new BindingGrid<int> HeightGrid { get; }
     }
 }

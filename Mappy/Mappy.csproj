@@ -64,13 +64,13 @@
     <Compile Include="Collections\BindingSparseGrid.cs" />
     <Compile Include="Collections\Grid.cs" />
     <Compile Include="Collections\GridCoordinates.cs" />
+    <Compile Include="Collections\GridEventArgs.cs" />
     <Compile Include="Collections\GridMethods.cs" />
-    <Compile Include="Collections\IBindingGrid.cs" />
-    <Compile Include="Collections\IBindingSparseGrid.cs" />
     <Compile Include="Collections\IGrid.cs" />
     <Compile Include="Collections\ISparseGrid.cs" />
     <Compile Include="Collections\QuadTree.cs" />
     <Compile Include="Collections\SparseGrid.cs" />
+    <Compile Include="Collections\SparseGridEventArgs.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Controllers\MapPresenter.cs" />
     <Compile Include="Data\BindingMapTile.cs" />

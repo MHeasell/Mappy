@@ -113,14 +113,24 @@
 
         public bool HasValue(int x, int y)
         {
-            this.CheckIndexInBounds(x, y);
-            return this.values.ContainsKey(this.ToIndex(x, y));
+            return this.HasValue(this.ToIndex(x, y));
+        }
+
+        public bool HasValue(int index)
+        {
+            this.CheckIndexInBounds(index);
+            return this.values.ContainsKey(index);
         }
 
         public bool TryGetValue(int x, int y, out T val)
         {
-            this.CheckIndexInBounds(x, y);
-            return this.values.TryGetValue(this.ToIndex(x, y), out val);
+            return this.TryGetValue(this.ToIndex(x, y), out val);
+        }
+
+        public bool TryGetValue(int index, out T val)
+        {
+            this.CheckIndexInBounds(index);
+            return this.values.TryGetValue(index, out val);
         }
 
         public bool Remove(int x, int y)
@@ -138,7 +148,8 @@
         {
             if (index < 0 || index >= this.Width * this.Height)
             {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException(
+                    string.Format("index {0} is out of range", index));
             }
         }
 
