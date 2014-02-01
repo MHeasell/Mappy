@@ -5,12 +5,12 @@
 
     using Mappy.Collections;
 
-    public class MapPainter : IPainter
+    public class BitmapGridPainter : IPainter
     {
         private readonly IGrid<Bitmap> map;
         private readonly int tileSize;
 
-        public MapPainter(IGrid<Bitmap> map, int tileSize)
+        public BitmapGridPainter(IGrid<Bitmap> map, int tileSize)
         {
             this.map = map;
             this.tileSize = tileSize;

@@ -7,13 +7,13 @@ namespace Mappy.UI.Drawables
     public class DrawableTile : IDrawable
     {
         private readonly IMapTile tile;
-        private readonly MapPainter painter;
+        private readonly BitmapGridPainter painter;
         private readonly ContourHeightPainter heightPainter;
 
         public DrawableTile(IMapTile tile)
         {
             this.tile = tile;
-            this.painter = new MapPainter(tile.TileGrid, 32);
+            this.painter = new BitmapGridPainter(tile.TileGrid, 32);
             this.heightPainter = new ContourHeightPainter(tile.HeightGrid, 16);
         }
 
