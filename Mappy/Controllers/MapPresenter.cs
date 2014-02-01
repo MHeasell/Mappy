@@ -145,8 +145,8 @@
             this.model.Map.Features.EntriesChanged += this.FeatureChanged;
             this.model.Map.FloatingTiles.ListChanged += this.TilesChanged;
 
-            this.model.Map.Tile.TileGrid.CellsChanged += this.BaseTileChanged;
-            this.model.Map.Tile.HeightGrid.CellsChanged += this.BaseTileChanged;
+            this.model.Map.Tile.TileGridChanged += this.BaseTileChanged;
+            this.model.Map.Tile.HeightGridChanged += this.BaseTileChanged;
 
             foreach (var t in this.model.Map.FloatingTiles)
             {

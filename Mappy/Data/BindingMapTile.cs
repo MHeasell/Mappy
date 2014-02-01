@@ -1,33 +1,38 @@
 namespace Mappy.Data
 {
+    using System;
     using System.Drawing;
 
     using Mappy.Collections;
 
-    public class BindingMapTile : IBindingMapTile
+    public class BindingMapTile : IMapTile
     {
-        private IMapTile baseTile;
+        private readonly BindingGrid<Bitmap> tileGrid;
+
+        private readonly BindingGrid<int> heightGrid;
 
         public BindingMapTile(IMapTile tile)
         {
-            this.baseTile = tile;
+            this.tileGrid = new BindingGrid<Bitmap>(tile.TileGrid);
+            this.heightGrid = new BindingGrid<int>(tile.HeightGrid);
 
-            this.TileGrid = new BindingGrid<Bitmap>(tile.TileGrid);
-            this.HeightGrid = new BindingGrid<int>(tile.HeightGrid);
+            this.tileGrid.CellsChanged += this.TileGridChanged;
+
+            this.heightGrid.CellsChanged += this.HeightGridChanged;
         }
 
-        public BindingGrid<Bitmap> TileGrid { get; private set; }
+        public event EventHandler<GridEventArgs> TileGridChanged;
 
-        public BindingGrid<int> HeightGrid { get; private set; }
+        public event EventHandler<GridEventArgs> HeightGridChanged;
 
-        IGrid<Bitmap> IMapTile.TileGrid
+        public IGrid<Bitmap> TileGrid
         {
-            get { return this.TileGrid; }
+            get { return this.tileGrid; }
         }
 
-        IGrid<int> IMapTile.HeightGrid
+        public IGrid<int> HeightGrid
         {
-            get { return this.HeightGrid; }
+            get { return this.heightGrid; }
         }
     }
 }

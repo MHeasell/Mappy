@@ -12,7 +12,7 @@
 
         event EventHandler SeaLevelChanged;
 
-        new IBindingMapTile Tile { get; }
+        new BindingMapTile Tile { get; }
 
         new BindingList<Positioned<IMapTile>> FloatingTiles { get; }
 

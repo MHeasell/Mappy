@@ -26,7 +26,7 @@
 
         public event EventHandler SeaLevelChanged;
 
-        public IBindingMapTile Tile
+        public BindingMapTile Tile
         {
             get;
             private set;
