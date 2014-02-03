@@ -179,22 +179,22 @@
             m.Name = r.Entries["missionname"];
             m.Description = r.Entries["missiondescription"];
             m.Planet = r.Entries["planet"];
-            m.TidalStrength = Convert.ToInt32(r.Entries["tidalstrength"]);
-            m.SolarStrength = Convert.ToInt32(r.Entries["solarstrength"]);
+            m.TidalStrength = TdfConvert.ToInt32(r.Entries["tidalstrength"]);
+            m.SolarStrength = TdfConvert.ToInt32(r.Entries["solarstrength"]);
             m.LavaWorld = TdfConvert.ToBool(r.Entries["lavaworld"]);
-            m.MinWindSpeed = Convert.ToInt32(r.Entries["minwindspeed"]);
-            m.MaxWindSpeed = Convert.ToInt32(r.Entries["maxwindspeed"]);
-            m.Gravity = Convert.ToInt32(r.Entries["gravity"]);
+            m.MinWindSpeed = TdfConvert.ToInt32(r.Entries["minwindspeed"]);
+            m.MaxWindSpeed = TdfConvert.ToInt32(r.Entries["maxwindspeed"]);
+            m.Gravity = TdfConvert.ToInt32(r.Entries["gravity"]);
             m.NumPlayers = r.Entries["numplayers"];
             m.Memory = r.Entries["memory"];
             m.AiProfile = schema.Entries["aiprofile"];
-            m.SurfaceMetal = Convert.ToInt32(schema.Entries["SurfaceMetal"]);
-            m.MohoMetal = Convert.ToInt32(schema.Entries["MohoMetal"]);
+            m.SurfaceMetal = TdfConvert.ToInt32(schema.Entries["SurfaceMetal"]);
+            m.MohoMetal = TdfConvert.ToInt32(schema.Entries["MohoMetal"]);
             m.MeteorWeapon = schema.Entries["MeteorWeapon"];
-            m.MeteorRadius = Convert.ToInt32(schema.Entries["MeteorRadius"]);
-            m.MeteorDensity = Convert.ToInt32(schema.Entries["MeteorDensity"]);
-            m.MeteorDuration = Convert.ToInt32(schema.Entries["MeteorDuration"]);
-            m.MeteorInterval = Convert.ToInt32(schema.Entries["MeteorInterval"]);
+            m.MeteorRadius = TdfConvert.ToInt32(schema.Entries["MeteorRadius"]);
+            m.MeteorDensity = TdfConvert.ToInt32(schema.Entries["MeteorDensity"]);
+            m.MeteorDuration = TdfConvert.ToInt32(schema.Entries["MeteorDuration"]);
+            m.MeteorInterval = TdfConvert.ToInt32(schema.Entries["MeteorInterval"]);
 
             TdfNode specials = schema.Keys["specials"];
 
@@ -206,9 +206,9 @@
                     continue;
                 }
 
-                int id = Convert.ToInt32(type.Substring(8));
-                int x = Convert.ToInt32(special.Entries["XPos"]);
-                int y = Convert.ToInt32(special.Entries["ZPos"]);
+                int id = TdfConvert.ToInt32(type.Substring(8));
+                int x = TdfConvert.ToInt32(special.Entries["XPos"]);
+                int y = TdfConvert.ToInt32(special.Entries["ZPos"]);
                 m.SetStartPosition(id - 1, new Point(x, y));
             }
 
@@ -245,14 +245,14 @@
             r.Entries["glamour"] = string.Empty;
             r.Entries["lineofsight"] = "0";
             r.Entries["mapping"] = "0";
-            r.Entries["tidalstrength"] = Convert.ToString(this.TidalStrength);
-            r.Entries["solarstrength"] = Convert.ToString(this.SolarStrength);
+            r.Entries["tidalstrength"] = TdfConvert.ToString(this.TidalStrength);
+            r.Entries["solarstrength"] = TdfConvert.ToString(this.SolarStrength);
             r.Entries["lavaworld"] = TdfConvert.ToString(this.lavaWorld);
             r.Entries["killmul"] = "0";
             r.Entries["timemul"] = "0";
-            r.Entries["minwindspeed"] = Convert.ToString(this.MinWindSpeed);
-            r.Entries["maxwindspeed"] = Convert.ToString(this.MaxWindSpeed);
-            r.Entries["gravity"] = Convert.ToString(this.Gravity);
+            r.Entries["minwindspeed"] = TdfConvert.ToString(this.MinWindSpeed);
+            r.Entries["maxwindspeed"] = TdfConvert.ToString(this.MaxWindSpeed);
+            r.Entries["gravity"] = TdfConvert.ToString(this.Gravity);
             r.Entries["numplayers"] = this.numPlayers;
             r.Entries["size"] = string.Empty; // TODO
             r.Entries["memory"] = this.memory;
@@ -261,17 +261,17 @@
 
             s.Entries["Type"] = "Network 1";
             s.Entries["aiprofile"] = this.AiProfile;
-            s.Entries["SurfaceMetal"] = Convert.ToString(this.SurfaceMetal);
-            s.Entries["MohoMetal"] = Convert.ToString(this.MohoMetal);
+            s.Entries["SurfaceMetal"] = TdfConvert.ToString(this.SurfaceMetal);
+            s.Entries["MohoMetal"] = TdfConvert.ToString(this.MohoMetal);
             s.Entries["HumanMetal"] = "1000";
             s.Entries["ComputerMetal"] = "1000";
             s.Entries["HumanEnergy"] = "1000";
             s.Entries["ComputerEnergy"] = "1000";
             s.Entries["MeteorWeapon"] = this.MeteorWeapon;
-            s.Entries["MeteorRadius"] = Convert.ToString(this.MeteorRadius);
-            s.Entries["MeteorDensity"] = Convert.ToString(this.MeteorDensity);
-            s.Entries["MeteorDuration"] = Convert.ToString(this.MeteorDuration);
-            s.Entries["MeteorInterval"] = Convert.ToString(this.MeteorInterval);
+            s.Entries["MeteorRadius"] = TdfConvert.ToString(this.MeteorRadius);
+            s.Entries["MeteorDensity"] = TdfConvert.ToString(this.MeteorDensity);
+            s.Entries["MeteorDuration"] = TdfConvert.ToString(this.MeteorDuration);
+            s.Entries["MeteorInterval"] = TdfConvert.ToString(this.MeteorInterval);
 
             TdfNode specials = new TdfNode("specials");
             s.Keys["specials"] = specials;
@@ -287,8 +287,8 @@
 
                 TdfNode spec = new TdfNode("special" + count);
                 spec.Entries["specialwhat"] = "StartPos" + (i + 1);
-                spec.Entries["XPos"] = Convert.ToString(p.Value.X);
-                spec.Entries["ZPos"] = Convert.ToString(p.Value.Y);
+                spec.Entries["XPos"] = TdfConvert.ToString(p.Value.X);
+                spec.Entries["ZPos"] = TdfConvert.ToString(p.Value.Y);
 
                 specials.Keys[spec.Name] = spec;
 
