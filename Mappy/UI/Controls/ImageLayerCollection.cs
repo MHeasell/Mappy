@@ -1,5 +1,6 @@
 namespace Mappy.UI.Controls
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Drawing;
@@ -10,7 +11,7 @@ namespace Mappy.UI.Controls
 
     using Util;
 
-    public class ImageLayerCollection : INotifyCollectionChanged
+    public class ImageLayerCollection : ICollection<ImageLayerCollection.Item>, INotifyCollectionChanged
     {
         private QuadTree<Item> items;
 
@@ -21,10 +22,31 @@ namespace Mappy.UI.Controls
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
+        public int Count
+        {
+            get
+            {
+                return this.items.Count;
+            }
+        }
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public void Add(Item item)
         {
             this.items.Add(item);
             this.OnAdd(item);
+        }
+
+        public void CopyTo(Item[] array, int arrayIndex)
+        {
+            this.items.CopyTo(array, arrayIndex);
         }
 
         public bool Remove(Item item)
@@ -45,6 +67,11 @@ namespace Mappy.UI.Controls
             this.OnClear();
         }
 
+        public bool Contains(Item item)
+        {
+            return this.items.Contains(item);
+        }
+
         public IEnumerable<Item> EnumerateIntersecting(Rectangle rect)
         {
             var l = this.items.FindInArea(rect).Where(x => x.Visible).ToList();
@@ -62,6 +89,16 @@ namespace Mappy.UI.Controls
         public void Resize(int newWidth, int newHeight)
         {
             this.items = new QuadTree<Item>(new Rectangle(0, 0, newWidth, newHeight), this.items);
+        }
+
+        public IEnumerator<Item> GetEnumerator()
+        {
+            return this.items.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
 
         protected virtual void OnAdd(Item item)
