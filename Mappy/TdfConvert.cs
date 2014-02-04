@@ -21,6 +21,11 @@
 
         public static int ToInt(string s)
         {
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                return 0;
+            }
+
             return Convert.ToInt32(s);
         }
     }
