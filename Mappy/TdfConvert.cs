@@ -19,7 +19,7 @@
             return !(string.IsNullOrEmpty(s) || s == "0");
         }
 
-        public static int ToInt(string s)
+        public static int ToInt32(string s)
         {
             if (string.IsNullOrWhiteSpace(s))
             {
