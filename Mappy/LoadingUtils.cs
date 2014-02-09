@@ -93,6 +93,8 @@
                         Section section = new Section(filename, sect);
                         section.Name = Path.GetFileNameWithoutExtension(sect);
                         section.Minimap = factory.MinimapFromSct(s);
+                        section.DataWidth = s.DataWidth;
+                        section.DataHeight = s.DataHeight;
 
                         string[] directories = Path.GetDirectoryName(sect).Split(Path.DirectorySeparatorChar);
 

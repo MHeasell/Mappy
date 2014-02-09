@@ -28,6 +28,26 @@ namespace Mappy.Data
 
         public string Name { get; set; }
 
+        public int DataWidth { get; set; }
+
+        public int DataHeight { get; set; }
+
+        public int PixelWidth
+        {
+            get
+            {
+                return this.DataWidth * 32;
+            }
+        }
+
+        public int PixelHeight
+        {
+            get
+            {
+                return this.DataHeight * 32;
+            }
+        }
+
         public Bitmap Minimap { get; set; }
 
         public MapTile GetTile()

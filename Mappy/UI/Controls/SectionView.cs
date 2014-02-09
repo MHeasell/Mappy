@@ -86,7 +86,8 @@
             int i = 0;
             foreach (Section s in sections)
             {
-                ListViewItem item = new ListViewItem(s.Name, i++);
+                var label = string.Format("{0} ({1}x{2})", s.Name, s.PixelWidth, s.PixelHeight);
+                ListViewItem item = new ListViewItem(label, i++);
                 item.Tag = s;
                 listView.Items.Add(item);
             }
