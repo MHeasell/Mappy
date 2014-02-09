@@ -1,5 +1,7 @@
 ﻿namespace Mappy.Palette
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Drawing;
 
     public class CompositePalette : IPalette, IReversePalette
@@ -13,6 +15,14 @@
         public IPalette ForwardPalette { get; private set; }
 
         public IReversePalette ReversePalette { get; private set; }
+
+        public int Count
+        {
+            get
+            {
+                return this.ForwardPalette.Count;
+            }
+        }
 
         Color IPalette.this[int index]
         {
@@ -28,6 +38,16 @@
             {
                 return this.ReversePalette[color];
             }
+        }
+
+        public IEnumerator<Color> GetEnumerator()
+        {
+            return this.ForwardPalette.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.GetEnumerator();
         }
     }
 }

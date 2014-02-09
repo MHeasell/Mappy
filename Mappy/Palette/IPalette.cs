@@ -1,9 +1,12 @@
 ﻿namespace Mappy.Palette
 {
+    using System.Collections.Generic;
     using System.Drawing;
 
-    public interface IPalette
+    public interface IPalette : IEnumerable<Color>
     {
+        int Count { get; }
+
         Color this[int index] { get; }
     }
 }
