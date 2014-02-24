@@ -99,6 +99,7 @@
                     int quantX = pos.X / 32;
                     int quantY = pos.Y / 32;
                     this.model.PlaceSection(id, quantX, quantY);
+                    this.view.SelectedItem = this.tileMapping[this.model.Map.FloatingTiles.Count - 1];
                 }
                 else
                 {
