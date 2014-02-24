@@ -106,7 +106,11 @@
                     Point? featurePos = Util.ScreenToHeightIndex(this.model.Map.Tile.HeightGrid, pos);
                     if (featurePos.HasValue)
                     {
-                        this.model.TryPlaceFeature(data, featurePos.Value.X, featurePos.Value.Y);
+                        if (this.model.TryPlaceFeature(data, featurePos.Value.X, featurePos.Value.Y))
+                        {
+                            var index = this.model.Map.Tile.HeightGrid.ToIndex(featurePos.Value.X, featurePos.Value.Y);
+                            this.view.SelectedItem = this.featureMapping[index];
+                        }
                     }
                 }
             }
