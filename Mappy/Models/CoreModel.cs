@@ -17,7 +17,7 @@
 
     using Util;
 
-    public class CoreModel : Notifier
+    public class CoreModel : Notifier, IMapPresenterModel
     {
         private readonly OperationManager undoManager = new OperationManager();
 

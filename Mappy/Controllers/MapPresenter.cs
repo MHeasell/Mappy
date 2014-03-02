@@ -19,7 +19,7 @@
         private static readonly IDrawable[] StartPositionImages = new IDrawable[10];
 
         private readonly ImageLayerView view;
-        private readonly CoreModel model;
+        private readonly IMapPresenterModel model;
 
         private readonly List<ImageLayerCollection.Item> tileMapping = new List<ImageLayerCollection.Item>();
         private readonly IDictionary<int, ImageLayerCollection.Item> featureMapping = new Dictionary<int, ImageLayerCollection.Item>();
@@ -41,7 +41,7 @@
             }
         }
 
-        public MapPresenter(ImageLayerView view, CoreModel model)
+        public MapPresenter(ImageLayerView view, IMapPresenterModel model)
         {
             this.view = view;
             this.model = model;
