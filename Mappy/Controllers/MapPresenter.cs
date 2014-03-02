@@ -26,9 +26,7 @@
 
         private readonly ImageLayerCollection.Item[] startPositionMapping = new ImageLayerCollection.Item[10];
 
-        private bool mouseDown;
-        private Point lastMousePos;
-        private Point delta;
+        private readonly MapCommandHandler commandHandler;
 
         private DrawableTile baseTile;
 
@@ -45,6 +43,8 @@
         {
             this.view = view;
             this.model = model;
+
+            this.commandHandler = new MapCommandHandler(view, model);
 
             this.model.PropertyChanged += this.ModelPropertyChanged;
 
@@ -214,7 +214,7 @@
                     t.Location.Y * 32,
                     index,
                     new DrawableTile(t.Item));
-            i.Tag = new SectionTag(this, t);
+            i.Tag = new SectionTag(this, this.commandHandler, t);
             this.tileMapping.Insert(index, i);
             this.view.Items.Add(i);
         }
@@ -331,26 +331,6 @@
                 pos.Value.Y - featureCoords.Y);
         }
 
-        private void DragSectionTo(Positioned<IMapTile> t, Point location)
-        {
-            Point delta = new Point(
-                location.X - this.lastMousePos.X,
-                location.Y - this.lastMousePos.Y);
-            
-            this.delta.Offset(delta);
-
-            this.model.TranslateSection(
-                t,
-                this.delta.X / 32,
-                this.delta.Y / 32);
-
-            this.delta.X %= 32;
-            this.delta.Y %= 32;
-
-            int tileIndex = this.model.Map.FloatingTiles.IndexOf(t);
-            this.view.SelectedItem = this.tileMapping[tileIndex];
-        }
-
         private void RefreshFeatureVisibility()
         {
             foreach (var i in this.featureMapping.Values)
@@ -438,8 +418,16 @@
             Positioned<IMapTile> item = (Positioned<IMapTile>)sender;
             int index = this.model.Map.FloatingTiles.IndexOf(item);
 
+            var mapping = this.tileMapping[index];
+            bool selected = mapping == this.view.SelectedItem;
+
             this.RemoveTile(index);
             this.InsertTile(item, index);
+
+            if (selected)
+            {
+                this.view.SelectedItem = this.tileMapping[index];
+            }
         }
 
         private void BaseTileChanged(object sender, EventArgs e)
@@ -514,46 +502,25 @@
 
         private void ViewMouseDown(object sender, MouseEventArgs e)
         {
-            this.view.Focus();
-            this.mouseDown = true;
-            this.lastMousePos = this.view.ToVirtualPoint(e.Location);
-            this.delta = new Point();
+            var virtualLoc = this.view.ToVirtualPoint(e.Location);
+            this.commandHandler.MouseDown(virtualLoc.X, virtualLoc.Y);
         }
 
         private void ViewMouseMove(object sender, MouseEventArgs e)
         {
-            Point virtualLocation = this.view.ToVirtualPoint(e.Location);
-            try
-            {
-                if (!this.mouseDown)
-                {
-                    return;
-                }
-
-                if (this.view.SelectedItem == null)
-                {
-                    return;
-                }
-
-                ItemTag tag = (ItemTag)this.view.SelectedItem.Tag;
-                tag.DragTo(virtualLocation);
-            }
-            finally
-            {
-                this.lastMousePos = virtualLocation;
-            }
+            var virtualLoc = this.view.ToVirtualPoint(e.Location);
+            this.commandHandler.MouseMove(virtualLoc.X, virtualLoc.Y);
         }
 
         private void ViewMouseUp(object sender, MouseEventArgs e)
         {
-            this.model.FlushTranslation();
-
-            this.mouseDown = false;
+            var virtualLoc = this.view.ToVirtualPoint(e.Location);
+            this.commandHandler.MouseUp(virtualLoc.X, virtualLoc.Y);
         }
 
         #endregion
 
-        private abstract class ItemTag
+        public abstract class ItemTag
         {
             protected ItemTag(MapPresenter presenter)
             {
@@ -567,7 +534,7 @@
             public abstract void DragTo(Point virtualLocation);
         }
 
-        private class FeatureTag : ItemTag
+        public class FeatureTag : ItemTag
         {
             public FeatureTag(MapPresenter presenter, Point coordinates)
                 : base(presenter)
@@ -588,7 +555,7 @@
             }
         }
 
-        private class StartPositionTag : ItemTag
+        public class StartPositionTag : ItemTag
         {
             public StartPositionTag(MapPresenter presenter, int index)
                 : base(presenter)
@@ -610,12 +577,15 @@
             }
         }
 
-        private class SectionTag : ItemTag
+        public class SectionTag : ItemTag
         {
-            public SectionTag(MapPresenter presenter, Positioned<IMapTile> tile)
+            private readonly MapCommandHandler handler;
+
+            public SectionTag(MapPresenter presenter, MapCommandHandler handler, Positioned<IMapTile> tile)
                 : base(presenter)
             {
                 this.Tile = tile;
+                this.handler = handler;
             }
 
             public Positioned<IMapTile> Tile { get; set; }
@@ -628,7 +598,7 @@
 
             public override void DragTo(Point virtualLocation)
             {
-                this.Presenter.DragSectionTo(this.Tile, virtualLocation);
+                this.handler.DragSectionTo(this.Tile, virtualLocation);
             }
         }
     }
