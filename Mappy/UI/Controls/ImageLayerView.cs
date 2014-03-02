@@ -221,6 +221,8 @@
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            this.Focus();
+
             base.OnMouseDown(e);
 
             this.SelectedItem = this.Items.HitTest(this.ToVirtualPoint(e.Location));

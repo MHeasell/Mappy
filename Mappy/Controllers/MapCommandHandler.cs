@@ -26,7 +26,6 @@
 
         public void MouseDown(int virtualX, int virtualY)
         {
-            this.view.Focus();
             this.mouseDown = true;
             this.lastMousePos = new Point(virtualX, virtualY);
             this.delta = new Point();
