@@ -5,6 +5,7 @@
     using Mappy.Data;
     using Mappy.Models;
     using Mappy.UI.Controls;
+    using Mappy.Util;
 
     public class MapCommandHandler
     {
@@ -75,6 +76,22 @@
 
             this.delta.X %= 32;
             this.delta.Y %= 32;
+        }
+
+        public void DragFeatureTo(Point featureCoords, Point location)
+        {
+            Point? pos = Util.ScreenToHeightIndex(
+                    this.model.Map.Tile.HeightGrid,
+                    location);
+            if (!pos.HasValue)
+            {
+                return;
+            }
+
+            this.model.TranslateFeature(
+                featureCoords,
+                pos.Value.X - featureCoords.X,
+                pos.Value.Y - featureCoords.Y);
         }
     }
 }

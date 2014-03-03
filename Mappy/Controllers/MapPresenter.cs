@@ -238,7 +238,7 @@
                     r.Y,
                     (y * this.model.Map.Features.Width) + x + 1000, // magic number to separate from tiles
                     new DrawableBitmap(f.Image));
-            i.Tag = new FeatureTag(this, new Point(x, y));
+            i.Tag = new FeatureTag(this, this.commandHandler, new Point(x, y));
             i.Visible = this.model.FeaturesVisible;
             this.featureMapping[this.ToFeatureIndex(x, y)] = i;
             this.view.Items.Add(i);
@@ -314,22 +314,6 @@
         }
 
         #endregion
-
-        private void DragFeatureTo(Point featureCoords, Point location)
-        {
-            Point? pos = Util.ScreenToHeightIndex(
-                    this.model.Map.Tile.HeightGrid,
-                    location);
-            if (!pos.HasValue)
-            {
-                return;
-            }
-
-            this.model.TranslateFeature(
-                featureCoords,
-                pos.Value.X - featureCoords.X,
-                pos.Value.Y - featureCoords.Y);
-        }
 
         private void RefreshFeatureVisibility()
         {
@@ -536,10 +520,13 @@
 
         public class FeatureTag : ItemTag
         {
-            public FeatureTag(MapPresenter presenter, Point coordinates)
+            private readonly MapCommandHandler handler;
+
+            public FeatureTag(MapPresenter presenter, MapCommandHandler handler, Point coordinates)
                 : base(presenter)
             {
                 this.Coordinates = coordinates;
+                this.handler = handler;
             }
 
             public Point Coordinates { get; private set; }
@@ -551,7 +538,7 @@
 
             public override void DragTo(Point virtualLocation)
             {
-                this.Presenter.DragFeatureTo(this.Coordinates, virtualLocation);
+                this.handler.DragFeatureTo(this.Coordinates, virtualLocation);
             }
         }
 
