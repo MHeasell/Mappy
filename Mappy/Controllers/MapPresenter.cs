@@ -44,7 +44,7 @@
             this.view = view;
             this.model = model;
 
-            this.commandHandler = new MapCommandHandler(view, model);
+            this.commandHandler = new MapCommandHandler(new CoreModelAdapter(model, view));
 
             this.model.PropertyChanged += this.ModelPropertyChanged;
 
@@ -62,17 +62,6 @@
             this.view.GridVisible = this.model.GridVisible;
             this.view.GridColor = this.model.GridColor;
             this.view.GridSize = this.model.GridSize;
-        }
-
-        public void DeleteSelection()
-        {
-            if (this.view.SelectedItem == null)
-            {
-                return;
-            }
-
-            ItemTag tag = (ItemTag)this.view.SelectedItem.Tag;
-            tag.DeleteItem();
         }
 
         private void ViewDragDrop(object sender, DragEventArgs e)
@@ -214,7 +203,7 @@
                     t.Location.Y * 32,
                     index,
                     new DrawableTile(t.Item));
-            i.Tag = new SectionTag(this, this.commandHandler, t);
+            i.Tag = new SectionTag(index);
             this.tileMapping.Insert(index, i);
             this.view.Items.Add(i);
         }
@@ -228,15 +217,16 @@
 
         private void InsertFeature(Feature f, int x, int y)
         {
+            int index = this.ToFeatureIndex(x, y);
             Rectangle r = f.GetDrawBounds(this.model.Map.Tile.HeightGrid, x, y);
             ImageLayerCollection.Item i = new ImageLayerCollection.Item(
                     r.X,
                     r.Y,
-                    (y * this.model.Map.Features.Width) + x + 1000, // magic number to separate from tiles
+                    index + 1000, // magic number to separate from tiles
                     new DrawableBitmap(f.Image));
-            i.Tag = new FeatureTag(this, this.commandHandler, new Point(x, y));
+            i.Tag = new FeatureTag(index);
             i.Visible = this.model.FeaturesVisible;
-            this.featureMapping[this.ToFeatureIndex(x, y)] = i;
+            this.featureMapping[index] = i;
             this.view.Items.Add(i);
         }
 
@@ -376,7 +366,7 @@
                     p.Value.Y - 58,
                     int.MaxValue,
                     img);
-                i.Tag = new StartPositionTag(this, index);
+                i.Tag = new StartPositionTag(index);
                 this.startPositionMapping[index] = i;
                 this.view.Items.Add(i);
             }
@@ -463,10 +453,7 @@
 
         private void ViewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Delete)
-            {
-                this.DeleteSelection();
-            }
+            this.commandHandler.KeyDown(e.KeyCode);
         }
 
         private void ViewMouseDown(object sender, MouseEventArgs e)
@@ -489,89 +476,34 @@
 
         #endregion
 
-        public abstract class ItemTag
+        public class FeatureTag
         {
-            protected ItemTag(MapPresenter presenter)
-            {
-                this.Presenter = presenter;
-            }
-
-            public MapPresenter Presenter { get; private set; }
-
-            public abstract void DeleteItem();
-
-            public abstract void DragTo(Point virtualLocation);
-        }
-
-        public class FeatureTag : ItemTag
-        {
-            private readonly MapCommandHandler handler;
-
-            public FeatureTag(MapPresenter presenter, MapCommandHandler handler, Point coordinates)
-                : base(presenter)
-            {
-                this.Coordinates = coordinates;
-                this.handler = handler;
-            }
-
-            public Point Coordinates { get; private set; }
-
-            public override void DeleteItem()
-            {
-                this.Presenter.model.RemoveFeature(this.Coordinates);
-            }
-
-            public override void DragTo(Point virtualLocation)
-            {
-                this.handler.DragFeatureTo(this.Coordinates, virtualLocation);
-            }
-        }
-
-        public class StartPositionTag : ItemTag
-        {
-            public StartPositionTag(MapPresenter presenter, int index)
-                : base(presenter)
+            public FeatureTag(int index)
             {
                 this.Index = index;
             }
 
-            public int Index { get; set; }
-
-            public override void DeleteItem()
-            {
-                this.Presenter.model.RemoveStartPosition(this.Index);
-            }
-
-            public override void DragTo(Point virtualLocation)
-            {
-                this.Presenter.model.TranslateStartPositionTo(this.Index, virtualLocation.X, virtualLocation.Y);
-                this.Presenter.view.SelectedItem = this.Presenter.startPositionMapping[this.Index];
-            }
+            public int Index { get; private set; }
         }
 
-        public class SectionTag : ItemTag
+        public class StartPositionTag
         {
-            private readonly MapCommandHandler handler;
-
-            public SectionTag(MapPresenter presenter, MapCommandHandler handler, Positioned<IMapTile> tile)
-                : base(presenter)
+            public StartPositionTag(int index)
             {
-                this.Tile = tile;
-                this.handler = handler;
+                this.Index = index;
             }
 
-            public Positioned<IMapTile> Tile { get; set; }
+            public int Index { get; private set; }
+        }
 
-            public override void DeleteItem()
+        public class SectionTag
+        {
+            public SectionTag(int index)
             {
-                int index = this.Presenter.model.Map.FloatingTiles.IndexOf(this.Tile);
-                this.Presenter.model.RemoveSection(index);
+                this.Index = index;
             }
 
-            public override void DragTo(Point virtualLocation)
-            {
-                this.handler.DragSectionTo(this.Tile, virtualLocation);
-            }
+            public int Index { get; private set; }
         }
     }
 }

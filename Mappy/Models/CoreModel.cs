@@ -6,6 +6,7 @@
     using System.IO;
     using Data;
 
+    using Mappy.Collections;
     using Mappy.IO;
 
     using Operations;
@@ -305,6 +306,12 @@
             this.previousTranslationOpen = true;
         }
 
+        public bool TranslateFeature(int index, int x, int y)
+        {
+            var coords = this.Map.Features.ToCoords(index);
+            return this.TranslateFeature(new Point(coords.X, coords.Y), x, y);
+        }
+
         public bool TranslateFeature(Point featureCoord, int x, int y)
         {
             Point newCoord = new Point(
@@ -379,6 +386,12 @@
         public void RemoveSection(int index)
         {
             this.undoManager.Execute(new RemoveTileOperation(this.Map.FloatingTiles, index));
+        }
+
+        public void RemoveFeature(int index)
+        {
+            var coords = this.Map.Features.ToCoords(index);
+            this.RemoveFeature(coords.X, coords.Y);
         }
 
         public void RemoveFeature(int x, int y)

@@ -25,11 +25,15 @@ namespace Mappy.Models
 
         bool TranslateFeature(Point featureCoord, int x, int y);
 
+        bool TranslateFeature(int index, int x, int y);
+
         void FlushTranslation();
 
         bool TryPlaceFeature(string name, int x, int y);
 
         void RemoveSection(int index);
+
+        void RemoveFeature(int index);
 
         void RemoveFeature(int x, int y);
 
