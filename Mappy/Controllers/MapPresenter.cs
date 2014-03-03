@@ -224,10 +224,6 @@
             ImageLayerCollection.Item item = this.tileMapping[index];
             this.view.Items.Remove(item);
             this.tileMapping.RemoveAt(index);
-            if (this.view.SelectedItem == item)
-            {
-                this.view.SelectedItem = null;
-            }
         }
 
         private void InsertFeature(Feature f, int x, int y)
@@ -251,11 +247,6 @@
                 ImageLayerCollection.Item item = this.featureMapping[index];
                 this.view.Items.Remove(item);
                 this.featureMapping.Remove(index);
-                if (this.view.SelectedItem == item)
-                {
-                    this.view.SelectedItem = null;
-                }
-
                 return true;
             }
 
@@ -373,12 +364,6 @@
             if (this.startPositionMapping[index] != null)
             {
                 this.view.Items.Remove(this.startPositionMapping[index]);
-
-                if (this.view.SelectedItem == this.startPositionMapping[index])
-                {
-                    this.view.SelectedItem = null;
-                }
-
                 this.startPositionMapping[index] = null;
             }
 

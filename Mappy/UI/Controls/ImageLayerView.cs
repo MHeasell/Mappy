@@ -314,6 +314,12 @@
                     {
                         ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
                         item.PropertyChanged -= this.ItemPropertyChanged;
+
+                        if (this.SelectedItem == item)
+                        {
+                            this.SelectedItem = null;
+                        }
+
                         this.Invalidate(this.ToClientRect(item.Bounds));
                     }
 
@@ -324,6 +330,12 @@
                     {
                         ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
                         item.PropertyChanged -= this.ItemPropertyChanged;
+
+                        if (this.SelectedItem == item)
+                        {
+                            this.SelectedItem = null;
+                        }
+
                         this.Invalidate(this.ToClientRect(item.Bounds));
                     }
 
