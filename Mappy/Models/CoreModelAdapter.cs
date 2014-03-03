@@ -170,6 +170,8 @@
             }
             else if (this.SelectedFeature.HasValue)
             {
+                // TODO: restore old behaviour
+                // where heightmap is taken into account when placing features
                 var coords = this.model.Map.Features.ToCoords(this.SelectedFeature.Value);
 
                 this.deltaX += x;
