@@ -321,9 +321,13 @@
 
         private void UpdateStartPosition(int index)
         {
+            bool selected = false;
+
             if (this.startPositionMapping[index] != null)
             {
-                this.view.Items.Remove(this.startPositionMapping[index]);
+                var mapping = this.startPositionMapping[index];
+                selected = this.view.SelectedItem == mapping;
+                this.view.Items.Remove(mapping);
                 this.startPositionMapping[index] = null;
             }
 
@@ -339,6 +343,11 @@
                 i.Tag = new StartPositionTag(index);
                 this.startPositionMapping[index] = i;
                 this.view.Items.Add(i);
+
+                if (selected)
+                {
+                    this.view.SelectedItem = i;
+                }
             }
         }
 
