@@ -224,15 +224,6 @@
             this.Focus();
 
             base.OnMouseDown(e);
-
-            this.SelectedItem = this.Items.HitTest(this.ToVirtualPoint(e.Location));
-        }
-
-        protected override void OnLostFocus(EventArgs e)
-        {
-            base.OnLostFocus(e);
-
-            this.SelectedItem = null;
         }
 
         protected virtual void OnSelectedItemChanging()
@@ -315,11 +306,6 @@
                         ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
                         item.PropertyChanged -= this.ItemPropertyChanged;
 
-                        if (this.SelectedItem == item)
-                        {
-                            this.SelectedItem = null;
-                        }
-
                         this.Invalidate(this.ToClientRect(item.Bounds));
                     }
 
@@ -330,11 +316,6 @@
                     {
                         ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
                         item.PropertyChanged -= this.ItemPropertyChanged;
-
-                        if (this.SelectedItem == item)
-                        {
-                            this.SelectedItem = null;
-                        }
 
                         this.Invalidate(this.ToClientRect(item.Bounds));
                     }
@@ -353,11 +334,6 @@
         private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ImageLayerCollection.Item i = (ImageLayerCollection.Item)sender;
-
-            if (i == this.SelectedItem && !i.Visible)
-            {
-                this.SelectedItem = null;
-            }
 
             this.Invalidate(this.ToClientRect(i.Bounds));
         }

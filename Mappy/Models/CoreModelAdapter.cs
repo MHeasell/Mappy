@@ -5,6 +5,7 @@
 
     using Mappy.Collections;
     using Mappy.Controllers;
+    using Mappy.Data;
     using Mappy.UI.Controls;
     using Mappy.Util;
 
@@ -202,6 +203,35 @@
             this.deltaY = 0;
             this.previousTranslationOpen = false;
             this.model.FlushTranslation();
+        }
+
+        public void DragDropFeature(string name, int x, int y)
+        {
+            Point? featurePos = Util.ScreenToHeightIndex(this.model.Map.Tile.HeightGrid, new Point(x, y));
+            if (featurePos.HasValue)
+            {
+                if (this.model.TryPlaceFeature(name, featurePos.Value.X, featurePos.Value.Y))
+                {
+                    var index = this.model.Map.Features.ToIndex(featurePos.Value.X, featurePos.Value.Y);
+                    this.SelectFeature(index);
+                }
+            }
+        }
+
+        public void DragDropTile(int id, int x, int y)
+        {
+            int quantX = x / 32;
+            int quantY = y / 32;
+            this.model.PlaceSection(id, quantX, quantY);
+
+            this.SelectTile(this.model.Map.FloatingTiles.Count - 1);
+        }
+
+        public void DragDropStartPosition(int index, int x, int y)
+        {
+            this.model.SetStartPosition(index, x, y);
+
+            this.SelectStartPosition(index);
         }
 
         private void OnSelectionChanged()

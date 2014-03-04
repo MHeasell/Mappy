@@ -28,6 +28,8 @@
 
         private readonly MapCommandHandler commandHandler;
 
+        private readonly IMapSelectionModel selectionModel;
+
         private DrawableTile baseTile;
 
         static MapPresenter()
@@ -44,7 +46,11 @@
             this.view = view;
             this.model = model;
 
-            this.commandHandler = new MapCommandHandler(new CoreModelAdapter(model, view));
+            this.selectionModel = new CoreModelAdapter(model, view);
+
+            this.selectionModel.PropertyChanged += this.SelectionModelPropertyChanged;
+
+            this.commandHandler = new MapCommandHandler(this.selectionModel);
 
             this.model.PropertyChanged += this.ModelPropertyChanged;
 
@@ -77,7 +83,7 @@
             if (e.Data.GetDataPresent(typeof(StartPositionDragData)))
             {
                 StartPositionDragData posData = (StartPositionDragData)e.Data.GetData(typeof(StartPositionDragData));
-                this.model.SetStartPosition(posData.PositionNumber, pos.X, pos.Y);
+                this.selectionModel.DragDropStartPosition(posData.PositionNumber, pos.X, pos.Y);
             }
             else
             {
@@ -85,22 +91,11 @@
                 int id;
                 if (int.TryParse(data, out id))
                 {
-                    int quantX = pos.X / 32;
-                    int quantY = pos.Y / 32;
-                    this.model.PlaceSection(id, quantX, quantY);
-                    this.view.SelectedItem = this.tileMapping[this.model.Map.FloatingTiles.Count - 1];
+                    this.selectionModel.DragDropTile(id, pos.X, pos.Y);
                 }
                 else
                 {
-                    Point? featurePos = Util.ScreenToHeightIndex(this.model.Map.Tile.HeightGrid, pos);
-                    if (featurePos.HasValue)
-                    {
-                        if (this.model.TryPlaceFeature(data, featurePos.Value.X, featurePos.Value.Y))
-                        {
-                            var index = this.model.Map.Tile.HeightGrid.ToIndex(featurePos.Value.X, featurePos.Value.Y);
-                            this.view.SelectedItem = this.featureMapping[index];
-                        }
-                    }
+                    this.selectionModel.DragDropFeature(data, pos.X, pos.Y);
                 }
             }
         }
@@ -316,6 +311,38 @@
         }
 
         #region Model Event Handlers
+
+        private void SelectionModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "SelectedTile":
+                case "SelectedFeature":
+                case "SelectedStartPosition":
+                    this.RefreshSelection();
+                    break;
+            }
+        }
+
+        private void RefreshSelection()
+        {
+            if (this.selectionModel.SelectedTile.HasValue)
+            {
+                this.view.SelectedItem = this.tileMapping[this.selectionModel.SelectedTile.Value];
+            }
+            else if (this.selectionModel.SelectedFeature.HasValue)
+            {
+                this.view.SelectedItem = this.featureMapping[this.selectionModel.SelectedFeature.Value];
+            }
+            else if (this.selectionModel.SelectedStartPosition.HasValue)
+            {
+                this.view.SelectedItem = this.startPositionMapping[this.selectionModel.SelectedStartPosition.Value];
+            }
+            else
+            {
+                this.view.SelectedItem = null;
+            }
+        }
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
