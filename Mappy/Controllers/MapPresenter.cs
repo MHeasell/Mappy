@@ -57,71 +57,12 @@
             this.PopulateView();
             this.WireMap();
 
-            this.view.MouseDown += this.ViewMouseDown;
-            this.view.MouseMove += this.ViewMouseMove;
-            this.view.MouseUp += this.ViewMouseUp;
-            this.view.KeyDown += this.ViewKeyDown;
-
-            this.view.DragEnter += this.ViewDragEnter;
-            this.view.DragDrop += this.ViewDragDrop;
-
-            this.view.LostFocus += this.ViewLostFocus;
+            // adapter wires up the command handler and the view
+            new MapViewEventHandler(this.view, this.commandHandler);
 
             this.view.GridVisible = this.model.GridVisible;
             this.view.GridColor = this.model.GridColor;
             this.view.GridSize = this.model.GridSize;
-        }
-
-        private void ViewDragDrop(object sender, DragEventArgs e)
-        {
-            if (this.model.Map == null)
-            {
-                return;
-            }
-
-            Point pos = this.view.PointToClient(new Point(e.X, e.Y));
-            pos = this.view.ToVirtualPoint(pos);
-
-            if (e.Data.GetDataPresent(typeof(StartPositionDragData)))
-            {
-                StartPositionDragData posData = (StartPositionDragData)e.Data.GetData(typeof(StartPositionDragData));
-                this.selectionModel.DragDropStartPosition(posData.PositionNumber, pos.X, pos.Y);
-            }
-            else
-            {
-                string data = e.Data.GetData(DataFormats.Text).ToString();
-                int id;
-                if (int.TryParse(data, out id))
-                {
-                    this.selectionModel.DragDropTile(id, pos.X, pos.Y);
-                }
-                else
-                {
-                    this.selectionModel.DragDropFeature(data, pos.X, pos.Y);
-                }
-            }
-        }
-
-        private void ViewDragEnter(object sender, DragEventArgs e)
-        {
-            if (this.model.Map == null)
-            {
-                e.Effect = DragDropEffects.None;
-                return;
-            }
-
-            if (e.Data.GetDataPresent(DataFormats.Text))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else if (e.Data.GetDataPresent(typeof(StartPositionDragData)))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
         }
 
         #region Private Methods
@@ -474,38 +415,6 @@
 
                     break;
             }
-        }
-
-        #endregion
-
-        #region View Event Handlers
-
-        private void ViewKeyDown(object sender, KeyEventArgs e)
-        {
-            this.commandHandler.KeyDown(e.KeyCode);
-        }
-
-        private void ViewMouseDown(object sender, MouseEventArgs e)
-        {
-            var virtualLoc = this.view.ToVirtualPoint(e.Location);
-            this.commandHandler.MouseDown(virtualLoc.X, virtualLoc.Y);
-        }
-
-        private void ViewMouseMove(object sender, MouseEventArgs e)
-        {
-            var virtualLoc = this.view.ToVirtualPoint(e.Location);
-            this.commandHandler.MouseMove(virtualLoc.X, virtualLoc.Y);
-        }
-
-        private void ViewMouseUp(object sender, MouseEventArgs e)
-        {
-            var virtualLoc = this.view.ToVirtualPoint(e.Location);
-            this.commandHandler.MouseUp(virtualLoc.X, virtualLoc.Y);
-        }
-
-        private void ViewLostFocus(object sender, EventArgs eventArgs)
-        {
-            this.selectionModel.ClearSelection();
         }
 
         #endregion
