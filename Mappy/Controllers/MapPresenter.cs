@@ -65,6 +65,8 @@
             this.view.DragEnter += this.ViewDragEnter;
             this.view.DragDrop += this.ViewDragDrop;
 
+            this.view.LostFocus += this.ViewLostFocus;
+
             this.view.GridVisible = this.model.GridVisible;
             this.view.GridColor = this.model.GridColor;
             this.view.GridSize = this.model.GridSize;
@@ -499,6 +501,11 @@
         {
             var virtualLoc = this.view.ToVirtualPoint(e.Location);
             this.commandHandler.MouseUp(virtualLoc.X, virtualLoc.Y);
+        }
+
+        private void ViewLostFocus(object sender, EventArgs eventArgs)
+        {
+            this.selectionModel.ClearSelection();
         }
 
         #endregion
