@@ -159,7 +159,7 @@
                 this.deltaY += y;
 
                 this.model.TranslateSection(
-                    this.model.Map.FloatingTiles[this.SelectedTile.Value],
+                    this.SelectedTile.Value,
                     this.deltaX / 32,
                     this.deltaY / 32);
 

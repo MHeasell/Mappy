@@ -11,6 +11,8 @@
 
         void TranslateSection(Positioned<IMapTile> tile, int x, int y);
 
+        void TranslateSection(int index, int x, int y);
+
         bool TranslateFeature(Point featureCoord, int x, int y);
 
         bool TranslateFeature(int index, int x, int y);

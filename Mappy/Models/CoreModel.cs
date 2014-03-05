@@ -283,6 +283,11 @@
                     new Positioned<IMapTile>(tile, new Point(x, y))));
         }
 
+        public void TranslateSection(int index, int x, int y)
+        {
+            this.TranslateSection(this.Map.FloatingTiles[index], x, y);
+        }
+
         public void TranslateSection(Positioned<IMapTile> tile, int x, int y)
         {
             MoveTileOperation newOp = new MoveTileOperation(tile, x, y);
