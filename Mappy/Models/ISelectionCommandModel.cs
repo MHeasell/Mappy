@@ -1,10 +1,5 @@
 ﻿namespace Mappy.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     public interface ISelectionCommandModel
     {
         void SelectAtPoint(int x, int y);
