@@ -22,7 +22,7 @@
         private readonly IMapPresenterModel model;
 
         private readonly List<ImageLayerCollection.Item> tileMapping = new List<ImageLayerCollection.Item>();
-        private readonly IDictionary<int, ImageLayerCollection.Item> featureMapping = new Dictionary<int, ImageLayerCollection.Item>();
+        private readonly IDictionary<Point, ImageLayerCollection.Item> featureMapping = new Dictionary<Point, ImageLayerCollection.Item>();
 
         private readonly ImageLayerCollection.Item[] startPositionMapping = new ImageLayerCollection.Item[10];
 
@@ -146,6 +146,7 @@
 
         private void InsertFeature(Feature f, int x, int y)
         {
+            var coords = new Point(x, y);
             int index = this.ToFeatureIndex(x, y);
             Rectangle r = f.GetDrawBounds(this.model.Map.Tile.HeightGrid, x, y);
             ImageLayerCollection.Item i = new ImageLayerCollection.Item(
@@ -153,26 +154,26 @@
                     r.Y,
                     index + 1000, // magic number to separate from tiles
                     new DrawableBitmap(f.Image));
-            i.Tag = new FeatureTag(index);
+            i.Tag = new FeatureTag(coords);
             i.Visible = this.model.FeaturesVisible;
-            this.featureMapping[index] = i;
+            this.featureMapping[coords] = i;
             this.view.Items.Add(i);
         }
 
-        private bool RemoveFeature(int index)
+        private bool RemoveFeature(Point coords)
         {
-            if (this.featureMapping.ContainsKey(index))
+            if (this.featureMapping.ContainsKey(coords))
             {
-                ImageLayerCollection.Item item = this.featureMapping[index];
+                ImageLayerCollection.Item item = this.featureMapping[coords];
                 this.view.Items.Remove(item);
-                this.featureMapping.Remove(index);
+                this.featureMapping.Remove(coords);
                 return true;
             }
 
             return false;
         }
 
-        private void MoveFeature(int oldIndex, int newIndex)
+        private void MoveFeature(Point oldIndex, Point newIndex)
         {
             var old = this.featureMapping[oldIndex];
 
@@ -187,17 +188,15 @@
             }
         }
 
-        private void UpdateFeature(int index)
+        private void UpdateFeature(Point index)
         {
             this.RemoveFeature(index);
 
             this.InsertFeature(index);
         }
 
-        private void InsertFeature(int index)
+        private void InsertFeature(Point p)
         {
-            Point p = this.ToFeaturePoint(index);
-
             Feature f;
             if (this.model.Map.Features.TryGetValue(p.X, p.Y, out f))
             {
@@ -394,7 +393,7 @@
                 case SparseGridEventArgs.ActionType.Set:
                     foreach (var index in e.Indexes)
                     {
-                        this.UpdateFeature(index);
+                        this.UpdateFeature(this.ToFeaturePoint(index));
                     }
 
                     break;
@@ -403,14 +402,16 @@
                     var newIter = e.Indexes.GetEnumerator();
                     while (oldIter.MoveNext() && newIter.MoveNext())
                     {
-                        this.MoveFeature(oldIter.Current, newIter.Current);
+                        this.MoveFeature(
+                            this.ToFeaturePoint(oldIter.Current),
+                            this.ToFeaturePoint(newIter.Current));
                     }
 
                     break;
                 case SparseGridEventArgs.ActionType.Remove:
                     foreach (var index in e.Indexes)
                     {
-                        this.RemoveFeature(index);
+                        this.RemoveFeature(this.ToFeaturePoint(index));
                     }
 
                     break;

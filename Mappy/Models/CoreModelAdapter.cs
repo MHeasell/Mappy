@@ -2,7 +2,6 @@
 {
     using System.Drawing;
 
-    using Mappy.Collections;
     using Mappy.Controllers.Tags;
     using Mappy.UI.Controls;
     using Mappy.Util;
@@ -15,7 +14,7 @@
 
         private bool hasSelection;
 
-        private int? selectedFeature;
+        private Point? selectedFeature;
 
         private int? selectedTile;
 
@@ -46,7 +45,7 @@
             }
         }
 
-        public int? SelectedFeature
+        public Point? SelectedFeature
         {
             get
             {
@@ -169,7 +168,6 @@
             {
                 // TODO: restore old behaviour
                 // where heightmap is taken into account when placing features
-                var coords = this.model.Map.Features.ToCoords(this.SelectedFeature.Value);
 
                 this.deltaX += x;
                 this.deltaY += y;
@@ -184,9 +182,9 @@
 
                 if (success)
                 {
-                    this.SelectedFeature = this.model.Map.Features.ToIndex(
-                        coords.X + quantX,
-                        coords.Y + quantY);
+                    this.SelectedFeature = new Point(
+                        this.SelectedFeature.Value.X + quantX,
+                        this.SelectedFeature.Value.Y + quantY);
 
                     this.deltaX %= 16;
                     this.deltaY %= 16;
@@ -211,8 +209,7 @@
             {
                 if (this.model.TryPlaceFeature(name, featurePos.Value.X, featurePos.Value.Y))
                 {
-                    var index = this.model.Map.Features.ToIndex(featurePos.Value.X, featurePos.Value.Y);
-                    this.SelectFeature(index);
+                    this.SelectFeature(featurePos.Value);
                 }
             }
         }
@@ -281,9 +278,9 @@
             this.SelectedStartPosition = null;
         }
 
-        private void SelectFeature(int index)
+        private void SelectFeature(Point coords)
         {
-            this.SelectedFeature = index;
+            this.SelectedFeature = coords;
             this.SelectedTile = null;
             this.SelectedStartPosition = null;
         }
