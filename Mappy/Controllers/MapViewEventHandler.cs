@@ -8,11 +8,11 @@
 
     public class MapViewEventHandler
     {
-        private readonly MapCommandHandler commandHandler;
+        private readonly IMapCommandHandler commandHandler;
 
         private readonly ImageLayerView view;
 
-        public MapViewEventHandler(ImageLayerView view, MapCommandHandler handler)
+        public MapViewEventHandler(ImageLayerView view, IMapCommandHandler handler)
         {
             this.view = view;
             this.commandHandler = handler;

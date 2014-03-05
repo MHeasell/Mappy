@@ -25,7 +25,7 @@
 
         private readonly ImageLayerCollection.Item[] startPositionMapping = new ImageLayerCollection.Item[10];
 
-        private readonly MapCommandHandler commandHandler;
+        private readonly IMapCommandHandler commandHandler;
 
         private readonly IMapSelectionModel selectionModel;
 

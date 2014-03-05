@@ -72,6 +72,7 @@
     <Compile Include="Collections\SparseGrid.cs" />
     <Compile Include="Collections\SparseGridEventArgs.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="Controllers\IMapCommandHandler.cs" />
     <Compile Include="Controllers\MapCommandHandler.cs" />
     <Compile Include="Controllers\MapPresenter.cs" />
     <Compile Include="Controllers\MapViewEventHandler.cs" />

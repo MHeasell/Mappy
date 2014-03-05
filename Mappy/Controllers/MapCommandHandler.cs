@@ -6,7 +6,7 @@
     using Mappy.Models;
     using Mappy.UI.Controls;
 
-    public class MapCommandHandler
+    public class MapCommandHandler : IMapCommandHandler
     {
         private readonly IMapSelectionModel model;
 
