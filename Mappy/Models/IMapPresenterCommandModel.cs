@@ -1,15 +1,12 @@
 ﻿namespace Mappy.Models
 {
     using System.Drawing;
-    using Mappy.Data;
 
     public interface IMapPresenterCommandModel
     {
         IBindingMapModel Map { get; }
 
         int PlaceSection(int tileId, int x, int y);
-
-        void TranslateSection(Positioned<IMapTile> tile, int x, int y);
 
         void TranslateSection(int index, int x, int y);
 
@@ -32,8 +29,6 @@
         void SetStartPosition(int i, int x, int y);
 
         void TranslateStartPosition(int i, int x, int y);
-
-        void TranslateStartPositionTo(int i, int x, int y);
 
         void RemoveStartPosition(int i);
     }

@@ -290,29 +290,6 @@
             this.TranslateSection(this.Map.FloatingTiles[index], x, y);
         }
 
-        public void TranslateSection(Positioned<IMapTile> tile, int x, int y)
-        {
-            MoveTileOperation newOp = new MoveTileOperation(tile, x, y);
-
-            MoveTileOperation lastOp = null;
-            if (this.undoManager.CanUndo)
-            {
-                lastOp = this.undoManager.PeekUndo() as MoveTileOperation;
-            }
-
-            if (this.previousTranslationOpen && lastOp != null && lastOp.Tile == tile)
-            {
-                newOp.Execute();
-                this.undoManager.Replace(lastOp.Combine(newOp));
-            }
-            else
-            {
-                this.undoManager.Execute(new MoveTileOperation(tile, x, y));
-            }
-
-            this.previousTranslationOpen = true;
-        }
-
         public bool TranslateFeature(int index, int x, int y)
         {
             var coords = this.Map.Features.ToCoords(index);
@@ -434,7 +411,40 @@
             this.TranslateStartPositionTo(i, startPos.Value.X + x, startPos.Value.Y + y);
         }
 
-        public void TranslateStartPositionTo(int i, int x, int y)
+        public void RemoveStartPosition(int i)
+        {
+            this.undoManager.Execute(new RemoveStartPositionOperation(this.Map, i));
+        }
+
+        public void UpdateAttributes(MapAttributesResult newAttrs)
+        {
+            this.undoManager.Execute(new ChangeAttributesOperation(this.Map, newAttrs));
+        }
+
+        private void TranslateSection(Positioned<IMapTile> tile, int x, int y)
+        {
+            MoveTileOperation newOp = new MoveTileOperation(tile, x, y);
+
+            MoveTileOperation lastOp = null;
+            if (this.undoManager.CanUndo)
+            {
+                lastOp = this.undoManager.PeekUndo() as MoveTileOperation;
+            }
+
+            if (this.previousTranslationOpen && lastOp != null && lastOp.Tile == tile)
+            {
+                newOp.Execute();
+                this.undoManager.Replace(lastOp.Combine(newOp));
+            }
+            else
+            {
+                this.undoManager.Execute(new MoveTileOperation(tile, x, y));
+            }
+
+            this.previousTranslationOpen = true;
+        }
+
+        private void TranslateStartPositionTo(int i, int x, int y)
         {
             var newOp = new ChangeStartPositionOperation(this.Map, i, new Point(x, y));
 
@@ -455,16 +465,6 @@
             }
 
             this.previousTranslationOpen = true;
-        }
-
-        public void RemoveStartPosition(int i)
-        {
-            this.undoManager.Execute(new RemoveStartPositionOperation(this.Map, i));
-        }
-
-        public void UpdateAttributes(MapAttributesResult newAttrs)
-        {
-            this.undoManager.Execute(new ChangeAttributesOperation(this.Map, newAttrs));
         }
 
         private void CanUndoChanged(object sender, EventArgs e)
