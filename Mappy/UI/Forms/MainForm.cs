@@ -31,7 +31,14 @@
 
             CoreModel model = new CoreModel();
 
-            new MapPresenter(this.imageLayerView1, model);
+            var selectionModel = new CoreModelAdapter(model, this.imageLayerView1);
+
+            var commandHandler = new MapCommandHandler(selectionModel);
+
+            new MapViewEventHandler(this.imageLayerView1, commandHandler);
+
+            new MapPresenter(this.imageLayerView1, model, selectionModel);
+
             new MainPresenter(this, model);
         }
 

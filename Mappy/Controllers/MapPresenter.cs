@@ -25,8 +25,6 @@
 
         private readonly ImageLayerCollection.Item[] startPositionMapping = new ImageLayerCollection.Item[10];
 
-        private readonly IMapCommandHandler commandHandler;
-
         private readonly IMapSelectionModel selectionModel;
 
         private DrawableTile baseTile;
@@ -40,24 +38,17 @@
             }
         }
 
-        public MapPresenter(ImageLayerView view, IMapPresenterModel model)
+        public MapPresenter(ImageLayerView view, IMapPresenterModel model, IMapSelectionModel selectionModel)
         {
             this.view = view;
             this.model = model;
-
-            this.selectionModel = new CoreModelAdapter(model, view);
-
-            this.selectionModel.PropertyChanged += this.SelectionModelPropertyChanged;
-
-            this.commandHandler = new MapCommandHandler(this.selectionModel);
+            this.selectionModel = selectionModel;
 
             this.model.PropertyChanged += this.ModelPropertyChanged;
+            this.selectionModel.PropertyChanged += this.SelectionModelPropertyChanged;
 
             this.PopulateView();
             this.WireMap();
-
-            // adapter wires up the command handler and the view
-            new MapViewEventHandler(this.view, this.commandHandler);
 
             this.view.GridVisible = this.model.GridVisible;
             this.view.GridColor = this.model.GridColor;

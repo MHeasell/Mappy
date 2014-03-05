@@ -8,13 +8,13 @@
 
     public class MapCommandHandler : IMapCommandHandler
     {
-        private readonly IMapSelectionModel model;
+        private readonly ISelectionCommandModel model;
 
         private bool mouseDown;
 
         private Point lastMousePos;
 
-        public MapCommandHandler(IMapSelectionModel model)
+        public MapCommandHandler(ISelectionCommandModel model)
         {
             this.model = model;
         }
@@ -53,11 +53,6 @@
             try
             {
                 if (!this.mouseDown)
-                {
-                    return;
-                }
-
-                if (!this.model.HasSelection)
                 {
                     return;
                 }

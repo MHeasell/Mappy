@@ -9,7 +9,7 @@
     using Mappy.UI.Controls;
     using Mappy.Util;
 
-    public class CoreModelAdapter : Notifier, IMapSelectionModel
+    public class CoreModelAdapter : Notifier, IMapSelectionModel, ISelectionCommandModel
     {
         private readonly IMapPresenterModel model;
 
