@@ -1,6 +1,5 @@
 ﻿namespace Mappy.Models
 {
-    using System.Diagnostics;
     using System.Drawing;
 
     using Mappy.Collections;
