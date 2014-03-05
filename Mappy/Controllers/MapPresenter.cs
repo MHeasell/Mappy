@@ -56,8 +56,6 @@
             this.view.GridSize = this.model.GridSize;
         }
 
-        #region Private Methods
-
         private void WireMap()
         {
             if (this.model.Map == null)
@@ -222,8 +220,6 @@
             return (y * this.model.Map.Features.Width) + x;
         }
 
-        #endregion
-
         private void RefreshFeatureVisibility()
         {
             foreach (var i in this.featureMapping.Values)
@@ -242,8 +238,6 @@
             this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
             this.view.Invalidate();
         }
-
-        #region Model Event Handlers
 
         private void SelectionModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -417,7 +411,5 @@
                     break;
             }
         }
-
-        #endregion
     }
 }
