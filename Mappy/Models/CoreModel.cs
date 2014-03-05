@@ -415,6 +415,18 @@
             this.previousTranslationOpen = false;
         }
 
+        public void TranslateStartPosition(int i, int x, int y)
+        {
+            var startPos = this.Map.Attributes.GetStartPosition(i);
+
+            if (startPos == null)
+            {
+                throw new ArgumentException("Start position " + i + " has not been placed");
+            }
+
+            this.TranslateStartPositionTo(i, startPos.Value.X + x, startPos.Value.Y + y);
+        }
+
         public void TranslateStartPositionTo(int i, int x, int y)
         {
             var newOp = new ChangeStartPositionOperation(this.Map, i, new Point(x, y));

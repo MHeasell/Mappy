@@ -148,12 +148,10 @@
         {
             if (this.SelectedStartPosition.HasValue)
             {
-                var startPos = this.model.Map.Attributes.GetStartPosition(this.SelectedStartPosition.Value);
-                Debug.Assert(startPos.HasValue, "Selected start position does not exist");
-                this.model.TranslateStartPositionTo(
+                this.model.TranslateStartPosition(
                     this.SelectedStartPosition.Value,
-                    startPos.Value.X + x,
-                    startPos.Value.Y + y);
+                    x,
+                    y);
             }
             else if (this.SelectedTile.HasValue)
             {

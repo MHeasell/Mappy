@@ -29,6 +29,8 @@
 
         void SetStartPosition(int i, int x, int y);
 
+        void TranslateStartPosition(int i, int x, int y);
+
         void TranslateStartPositionTo(int i, int x, int y);
 
         void RemoveStartPosition(int i);
