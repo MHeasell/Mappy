@@ -7,14 +7,14 @@ namespace Mappy.Models
     {
         IBindingMapModel Map { get; }
 
-        bool HeightmapVisible { get; set; }
+        bool HeightmapVisible { get; }
 
-        bool FeaturesVisible { get; set; }
+        bool FeaturesVisible { get; }
 
-        bool GridVisible { get; set; }
+        bool GridVisible { get; }
 
-        Size GridSize { get; set; }
+        Size GridSize { get; }
 
-        Color GridColor { get; set; }
+        Color GridColor { get; }
     }
 }
