@@ -268,11 +268,11 @@
             this.IsFileReadOnly = readOnly;
         }
 
-        public void PlaceSection(int tileId, int x, int y)
+        public int PlaceSection(int tileId, int x, int y)
         {
             if (this.Map == null)
             {
-                return;
+                return -1;
             }
 
             MapTile tile = this.sections[tileId].GetTile();
@@ -281,6 +281,8 @@
                 new AddFloatingTileOperation(
                     this.Map,
                     new Positioned<IMapTile>(tile, new Point(x, y))));
+
+            return this.Map.FloatingTiles.Count - 1;
         }
 
         public void TranslateSection(int index, int x, int y)

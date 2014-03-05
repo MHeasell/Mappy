@@ -7,7 +7,7 @@
     {
         IBindingMapModel Map { get; }
 
-        void PlaceSection(int tileId, int x, int y);
+        int PlaceSection(int tileId, int x, int y);
 
         void TranslateSection(Positioned<IMapTile> tile, int x, int y);
 

@@ -219,9 +219,12 @@
         {
             int quantX = x / 32;
             int quantY = y / 32;
-            this.model.PlaceSection(id, quantX, quantY);
+            int index = this.model.PlaceSection(id, quantX, quantY);
 
-            this.SelectTile(this.model.Map.FloatingTiles.Count - 1);
+            if (index != -1)
+            {
+                this.SelectTile(index);
+            }
         }
 
         public void DragDropStartPosition(int index, int x, int y)
