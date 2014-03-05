@@ -177,17 +177,20 @@
                 int quantX = this.deltaX / 16;
                 int quantY = this.deltaY / 16;
 
-                this.model.TranslateFeature(
+                bool success = this.model.TranslateFeature(
                     this.SelectedFeature.Value,
                     quantX,
                     quantY);
 
-                this.SelectedFeature = this.model.Map.Features.ToIndex(
-                    coords.X + quantX,
-                    coords.Y + quantY);
+                if (success)
+                {
+                    this.SelectedFeature = this.model.Map.Features.ToIndex(
+                        coords.X + quantX,
+                        coords.Y + quantY);
 
-                this.deltaX %= 16;
-                this.deltaY %= 16;
+                    this.deltaX %= 16;
+                    this.deltaY %= 16;
+                }
             }
 
             this.previousTranslationOpen = true;
