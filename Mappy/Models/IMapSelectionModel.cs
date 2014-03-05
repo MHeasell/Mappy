@@ -2,8 +2,6 @@
 {
     using System.ComponentModel;
 
-    using Mappy.Data;
-
     public interface IMapSelectionModel : INotifyPropertyChanged
     {
         bool HasSelection { get; }
