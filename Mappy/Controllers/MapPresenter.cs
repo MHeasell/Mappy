@@ -7,6 +7,7 @@
     using Data;
 
     using Mappy.Collections;
+    using Mappy.Controllers.Tags;
 
     using Models;
     using UI.Controls;
@@ -417,35 +418,5 @@
         }
 
         #endregion
-
-        public class FeatureTag
-        {
-            public FeatureTag(int index)
-            {
-                this.Index = index;
-            }
-
-            public int Index { get; private set; }
-        }
-
-        public class StartPositionTag
-        {
-            public StartPositionTag(int index)
-            {
-                this.Index = index;
-            }
-
-            public int Index { get; private set; }
-        }
-
-        public class SectionTag
-        {
-            public SectionTag(int index)
-            {
-                this.Index = index;
-            }
-
-            public int Index { get; private set; }
-        }
     }
 }

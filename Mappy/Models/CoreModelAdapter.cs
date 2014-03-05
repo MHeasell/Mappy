@@ -4,6 +4,7 @@
     using System.Drawing;
 
     using Mappy.Collections;
+    using Mappy.Controllers.Tags;
     using Mappy.Controllers;
     using Mappy.Data;
     using Mappy.UI.Controls;
@@ -243,21 +244,21 @@
 
         private void SelectFromTag(object tag)
         {
-            MapPresenter.SectionTag t = tag as MapPresenter.SectionTag;
+            SectionTag t = tag as SectionTag;
             if (t != null)
             {
                 this.SelectTile(t.Index);
                 return;
             }
 
-            MapPresenter.FeatureTag y = tag as MapPresenter.FeatureTag;
+            FeatureTag y = tag as FeatureTag;
             if (y != null)
             {
                 this.SelectFeature(y.Index);
                 return;
             }
 
-            MapPresenter.StartPositionTag u = tag as MapPresenter.StartPositionTag;
+            StartPositionTag u = tag as StartPositionTag;
             if (u != null)
             {
                 this.SelectStartPosition(u.Index);
