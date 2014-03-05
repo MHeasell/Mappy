@@ -102,6 +102,7 @@
     <Compile Include="Models\CoreModelAdapter.cs" />
     <Compile Include="Models\FeatureDictionary.cs" />
     <Compile Include="Models\IFeatureDatabase.cs" />
+    <Compile Include="Models\IMapPresenterCommandModel.cs" />
     <Compile Include="Models\IMapPresenterModel.cs" />
     <Compile Include="Models\IMapSelectionModel.cs" />
     <Compile Include="Models\ISelectionCommandModel.cs" />

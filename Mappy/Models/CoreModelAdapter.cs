@@ -5,14 +5,12 @@
 
     using Mappy.Collections;
     using Mappy.Controllers.Tags;
-    using Mappy.Controllers;
-    using Mappy.Data;
     using Mappy.UI.Controls;
     using Mappy.Util;
 
     public class CoreModelAdapter : Notifier, IMapSelectionModel, ISelectionCommandModel
     {
-        private readonly IMapPresenterModel model;
+        private readonly IMapPresenterCommandModel model;
 
         private readonly ImageLayerView view;
 
@@ -30,7 +28,7 @@
 
         private int deltaY;
 
-        public CoreModelAdapter(IMapPresenterModel model, ImageLayerView view)
+        public CoreModelAdapter(IMapPresenterCommandModel model, ImageLayerView view)
         {
             this.model = model;
             this.view = view;
