@@ -6,13 +6,13 @@
 
     using Mappy.UI.Controls;
 
-    public class MapViewEventHandler
+    public class MapViewEventAdapter
     {
         private readonly IMapCommandHandler commandHandler;
 
         private readonly ImageLayerView view;
 
-        public MapViewEventHandler(ImageLayerView view, IMapCommandHandler handler)
+        public MapViewEventAdapter(ImageLayerView view, IMapCommandHandler handler)
         {
             this.view = view;
             this.commandHandler = handler;

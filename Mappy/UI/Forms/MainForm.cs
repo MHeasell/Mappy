@@ -35,7 +35,7 @@
 
             var commandHandler = new MapCommandHandler(selectionModel);
 
-            new MapViewEventHandler(this.imageLayerView1, commandHandler);
+            new MapViewEventAdapter(this.imageLayerView1, commandHandler);
 
             new MapPresenter(this.imageLayerView1, model, selectionModel);
 

@@ -75,7 +75,7 @@
     <Compile Include="Controllers\IMapCommandHandler.cs" />
     <Compile Include="Controllers\MapCommandHandler.cs" />
     <Compile Include="Controllers\MapPresenter.cs" />
-    <Compile Include="Controllers\MapViewEventHandler.cs" />
+    <Compile Include="Controllers\MapViewEventAdapter.cs" />
     <Compile Include="Data\BindingMapTile.cs" />
     <Compile Include="Data\Feature.cs" />
     <Compile Include="Data\IMapTile.cs" />
