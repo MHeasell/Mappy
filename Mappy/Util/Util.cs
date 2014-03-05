@@ -12,6 +12,8 @@ namespace Mappy.Util
     using Mappy.Models;
     using Mappy.Properties;
 
+    using Color = System.Drawing.Color;
+
     public static class Util
     {
         public static HashSet<Bitmap> GetUsedTiles(IMapTile tile)
@@ -153,7 +155,13 @@ namespace Mappy.Util
                 }
             }
 
-            return mapModel.Tile.TileGrid[tileX, tileY].GetPixel(tilePixelX, tilePixelY);
+            Bitmap bitmap = mapModel.Tile.TileGrid[tileX, tileY];
+            if (bitmap == null)
+            {
+                return Color.Black;
+            }
+
+            return bitmap.GetPixel(tilePixelX, tilePixelY);
         }
     }
 }
