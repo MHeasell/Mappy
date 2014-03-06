@@ -8,15 +8,15 @@
 
     public class MapCommandHandler : IMapCommandHandler
     {
-        private readonly ISelectionCommandModel model;
+        private readonly ISelectionCommandHandler handler;
 
         private bool mouseDown;
 
         private Point lastMousePos;
 
-        public MapCommandHandler(ISelectionCommandModel model)
+        public MapCommandHandler(ISelectionCommandHandler handler)
         {
-            this.model = model;
+            this.handler = handler;
         }
 
         public void DragDrop(IDataObject data, int virtualX, int virtualY)
@@ -24,7 +24,7 @@
             if (data.GetDataPresent(typeof(StartPositionDragData)))
             {
                 StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
-                this.model.DragDropStartPosition(posData.PositionNumber, virtualX, virtualY);
+                this.handler.DragDropStartPosition(posData.PositionNumber, virtualX, virtualY);
             }
             else
             {
@@ -32,11 +32,11 @@
                 int id;
                 if (int.TryParse(dataString, out id))
                 {
-                    this.model.DragDropTile(id, virtualX, virtualY);
+                    this.handler.DragDropTile(id, virtualX, virtualY);
                 }
                 else
                 {
-                    this.model.DragDropFeature(dataString, virtualX, virtualY);
+                    this.handler.DragDropFeature(dataString, virtualX, virtualY);
                 }
             }
         }
@@ -45,7 +45,7 @@
         {
             this.mouseDown = true;
             this.lastMousePos = new Point(virtualX, virtualY);
-            this.model.SelectAtPoint(virtualX, virtualY);
+            this.handler.SelectAtPoint(virtualX, virtualY);
         }
 
         public void MouseMove(int virtualX, int virtualY)
@@ -57,7 +57,7 @@
                     return;
                 }
 
-                this.model.TranslateSelection(
+                this.handler.TranslateSelection(
                     virtualX - this.lastMousePos.X,
                     virtualY - this.lastMousePos.Y);
             }
@@ -69,7 +69,7 @@
 
         public void MouseUp(int virtualX, int virtualY)
         {
-            this.model.FlushTranslation();
+            this.handler.FlushTranslation();
             this.mouseDown = false;
         }
 
@@ -77,13 +77,13 @@
         {
             if (key == Keys.Delete)
             {
-                this.model.DeleteSelection();
+                this.handler.DeleteSelection();
             }
         }
 
         public void LostFocus()
         {
-            this.model.ClearSelection();
+            this.handler.ClearSelection();
         }
     }
 }

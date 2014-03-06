@@ -1,6 +1,6 @@
 ﻿namespace Mappy.Models.Session
 {
-    public interface ISelectionCommandModel
+    public interface ISelectionCommandHandler
     {
         void SelectAtPoint(int x, int y);
 
