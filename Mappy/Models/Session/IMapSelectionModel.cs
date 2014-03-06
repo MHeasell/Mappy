@@ -1,4 +1,4 @@
-﻿namespace Mappy.Models
+namespace Mappy.Models.Session
 {
     using System.ComponentModel;
     using System.Drawing;

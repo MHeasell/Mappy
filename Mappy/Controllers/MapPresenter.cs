@@ -8,6 +8,8 @@
 
     using Mappy.Collections;
     using Mappy.Controllers.Tags;
+    using Mappy.Models.Session;
+    using Mappy.Presentation;
 
     using Models;
     using UI.Controls;

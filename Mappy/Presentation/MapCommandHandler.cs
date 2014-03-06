@@ -1,9 +1,9 @@
-﻿namespace Mappy.Controllers
+﻿namespace Mappy.Presentation
 {
     using System.Drawing;
     using System.Windows.Forms;
 
-    using Mappy.Models;
+    using Mappy.Models.Session;
     using Mappy.UI.Controls;
 
     public class MapCommandHandler : IMapCommandHandler

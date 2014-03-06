@@ -1,4 +1,4 @@
-﻿namespace Mappy.Controllers
+﻿namespace Mappy.Presentation
 {
     using System.Windows.Forms;
 

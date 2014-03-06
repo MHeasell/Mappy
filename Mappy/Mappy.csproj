@@ -72,8 +72,6 @@
     <Compile Include="Collections\SparseGrid.cs" />
     <Compile Include="Collections\SparseGridEventArgs.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Controllers\IMapCommandHandler.cs" />
-    <Compile Include="Controllers\MapCommandHandler.cs" />
     <Compile Include="Controllers\MapPresenter.cs" />
     <Compile Include="Controllers\MapViewEventAdapter.cs" />
     <Compile Include="Controllers\Tags\FeatureTag.cs" />
@@ -99,14 +97,13 @@
     <Compile Include="IO\SectionFactory.cs" />
     <Compile Include="MappySettings.cs" />
     <Compile Include="Models\CoreModel.cs" />
-    <Compile Include="Models\CoreModelAdapter.cs" />
     <Compile Include="Models\FeatureDictionary.cs" />
     <Compile Include="Models\IFeatureDatabase.cs" />
     <Compile Include="Models\IMapPresenterCommandModel.cs" />
-    <Compile Include="Models\IMapPresenterModel.cs" />
-    <Compile Include="Models\IMapSelectionModel.cs" />
-    <Compile Include="Models\ISelectionCommandModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
+    <Compile Include="Models\Session\CoreModelAdapter.cs" />
+    <Compile Include="Models\Session\IMapSelectionModel.cs" />
+    <Compile Include="Models\Session\ISelectionCommandModel.cs" />
     <Compile Include="Operations\AddFeatureOperation.cs" />
     <Compile Include="Operations\ChangeAttributesOperation.cs" />
     <Compile Include="Operations\ChangeStartPositionOperation.cs" />
@@ -119,6 +116,9 @@
     <Compile Include="Palette\ArrayPalette.cs" />
     <Compile Include="Palette\DictionaryReversePalette.cs" />
     <Compile Include="Palette\TransparencyMaskedPalette.cs" />
+    <Compile Include="Presentation\IMapCommandHandler.cs" />
+    <Compile Include="Presentation\IMapPresenterModel.cs" />
+    <Compile Include="Presentation\MapCommandHandler.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

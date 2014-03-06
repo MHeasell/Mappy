@@ -1,7 +1,9 @@
-namespace Mappy.Models
+namespace Mappy.Presentation
 {
     using System.ComponentModel;
     using System.Drawing;
+
+    using Mappy.Models;
 
     public interface IMapPresenterModel : INotifyPropertyChanged
     {

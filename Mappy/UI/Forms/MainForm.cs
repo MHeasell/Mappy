@@ -7,6 +7,8 @@
     using Data;
     using Mappy.Controllers;
     using Mappy.Models;
+    using Mappy.Models.Session;
+    using Mappy.Presentation;
     using Mappy.Views;
 
     public partial class MainForm : Form, IMainView

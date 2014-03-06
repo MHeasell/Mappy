@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.Windows.Forms;
 
+    using Mappy.Presentation;
     using Mappy.UI.Controls;
 
     public class MapViewEventAdapter
