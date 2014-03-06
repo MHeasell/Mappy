@@ -99,6 +99,7 @@
     <Compile Include="Models\CoreModel.cs" />
     <Compile Include="Models\FeatureDictionary.cs" />
     <Compile Include="Models\IFeatureDatabase.cs" />
+    <Compile Include="Models\IMapDataModel.cs" />
     <Compile Include="Models\IMapPresenterCommandModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
     <Compile Include="Models\Session\IViewOptionsModel.cs" />
@@ -118,7 +119,6 @@
     <Compile Include="Palette\DictionaryReversePalette.cs" />
     <Compile Include="Palette\TransparencyMaskedPalette.cs" />
     <Compile Include="Presentation\IMapCommandHandler.cs" />
-    <Compile Include="Presentation\IMapDataModel.cs" />
     <Compile Include="Presentation\MapCommandHandler.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
