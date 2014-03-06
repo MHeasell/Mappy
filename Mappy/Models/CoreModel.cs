@@ -20,7 +20,7 @@
 
     using Util;
 
-    public class CoreModel : Notifier, IMapPresenterModel, IMapPresenterCommandModel, IViewOptionsModel
+    public class CoreModel : Notifier, IMapDataModel, IMapPresenterCommandModel, IViewOptionsModel
     {
         private readonly OperationManager undoManager = new OperationManager();
 

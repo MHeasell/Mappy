@@ -118,7 +118,7 @@
     <Compile Include="Palette\DictionaryReversePalette.cs" />
     <Compile Include="Palette\TransparencyMaskedPalette.cs" />
     <Compile Include="Presentation\IMapCommandHandler.cs" />
-    <Compile Include="Presentation\IMapPresenterModel.cs" />
+    <Compile Include="Presentation\IMapDataModel.cs" />
     <Compile Include="Presentation\MapCommandHandler.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

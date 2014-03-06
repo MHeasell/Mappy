@@ -4,7 +4,7 @@ namespace Mappy.Presentation
 
     using Mappy.Models;
 
-    public interface IMapPresenterModel : INotifyPropertyChanged
+    public interface IMapDataModel : INotifyPropertyChanged
     {
         IBindingMapModel Map { get; }
     }

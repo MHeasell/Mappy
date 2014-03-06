@@ -20,7 +20,7 @@
         private static readonly IDrawable[] StartPositionImages = new IDrawable[10];
 
         private readonly ImageLayerView view;
-        private readonly IMapPresenterModel model;
+        private readonly IMapDataModel model;
 
         private readonly List<ImageLayerCollection.Item> tileMapping = new List<ImageLayerCollection.Item>();
         private readonly IDictionary<Point, ImageLayerCollection.Item> featureMapping = new Dictionary<Point, ImageLayerCollection.Item>();
@@ -42,7 +42,7 @@
             }
         }
 
-        public MapPresenter(ImageLayerView view, IMapPresenterModel model, ISelectionModel selectionModel, IViewOptionsModel viewOptionsModel)
+        public MapPresenter(ImageLayerView view, IMapDataModel model, ISelectionModel selectionModel, IViewOptionsModel viewOptionsModel)
         {
             this.view = view;
             this.model = model;
