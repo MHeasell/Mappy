@@ -8,6 +8,7 @@
 
     using Mappy.Collections;
     using Mappy.IO;
+    using Mappy.Models.Session;
     using Mappy.Presentation;
 
     using Operations;
@@ -19,7 +20,7 @@
 
     using Util;
 
-    public class CoreModel : Notifier, IMapPresenterModel, IMapPresenterCommandModel
+    public class CoreModel : Notifier, IMapPresenterModel, IMapPresenterCommandModel, IViewOptionsModel
     {
         private readonly OperationManager undoManager = new OperationManager();
 

@@ -11,7 +11,6 @@
     using Mappy.Models.Session;
     using Mappy.Presentation;
 
-    using Models;
     using UI.Controls;
     using UI.Drawables;
     using Util;
@@ -30,6 +29,8 @@
 
         private readonly ISelectionModel selectionModel;
 
+        private readonly IViewOptionsModel viewOptionsModel;
+
         private DrawableTile baseTile;
 
         static MapPresenter()
@@ -41,21 +42,23 @@
             }
         }
 
-        public MapPresenter(ImageLayerView view, IMapPresenterModel model, ISelectionModel selectionModel)
+        public MapPresenter(ImageLayerView view, IMapPresenterModel model, ISelectionModel selectionModel, IViewOptionsModel viewOptionsModel)
         {
             this.view = view;
             this.model = model;
             this.selectionModel = selectionModel;
+            this.viewOptionsModel = viewOptionsModel;
 
             this.model.PropertyChanged += this.ModelPropertyChanged;
             this.selectionModel.PropertyChanged += this.SelectionModelPropertyChanged;
+            this.viewOptionsModel.PropertyChanged += this.ViewOptionsModelPropertyChanged;
 
             this.PopulateView();
             this.WireMap();
 
-            this.view.GridVisible = this.model.GridVisible;
-            this.view.GridColor = this.model.GridColor;
-            this.view.GridSize = this.model.GridSize;
+            this.view.GridVisible = this.viewOptionsModel.GridVisible;
+            this.view.GridColor = this.viewOptionsModel.GridColor;
+            this.view.GridSize = this.viewOptionsModel.GridSize;
         }
 
         private void WireMap()
@@ -97,7 +100,7 @@
                 this.model.Map.Tile.TileGrid.Height * 32);
 
             this.baseTile = new DrawableTile(this.model.Map.Tile);
-            this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
+            this.baseTile.DrawHeightMap = this.viewOptionsModel.HeightmapVisible;
             ImageLayerCollection.Item baseItem = new ImageLayerCollection.Item(
                 0,
                 0,
@@ -155,7 +158,7 @@
                     index + 1000, // magic number to separate from tiles
                     new DrawableBitmap(f.Image));
             i.Tag = new FeatureTag(coords);
-            i.Visible = this.model.FeaturesVisible;
+            i.Visible = this.viewOptionsModel.FeaturesVisible;
             this.featureMapping[coords] = i;
             this.view.Items.Add(i);
         }
@@ -226,7 +229,7 @@
         {
             foreach (var i in this.featureMapping.Values)
             {
-                i.Visible = this.model.FeaturesVisible;
+                i.Visible = this.viewOptionsModel.FeaturesVisible;
             }
         }
 
@@ -237,7 +240,7 @@
                 return;
             }
 
-            this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
+            this.baseTile.DrawHeightMap = this.viewOptionsModel.HeightmapVisible;
             this.view.Invalidate();
         }
 
@@ -282,6 +285,13 @@
                     this.PopulateView();
                     this.RefreshHeightmapVisibility();
                     break;
+            }
+        }
+
+        private void ViewOptionsModelPropertyChanged(object sneder, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
                 case "FeaturesVisible":
                     this.RefreshFeatureVisibility();
                     break;
@@ -289,13 +299,13 @@
                     this.RefreshHeightmapVisibility();
                     break;
                 case "GridVisible":
-                    this.view.GridVisible = this.model.GridVisible;
+                    this.view.GridVisible = this.viewOptionsModel.GridVisible;
                     break;
                 case "GridColor":
-                    this.view.GridColor = this.model.GridColor;
+                    this.view.GridColor = this.viewOptionsModel.GridColor;
                     break;
                 case "GridSize":
-                    this.view.GridSize = this.model.GridSize;
+                    this.view.GridSize = this.viewOptionsModel.GridSize;
                     break;
             }
         }

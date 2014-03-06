@@ -39,7 +39,7 @@
 
             new MapViewEventAdapter(this.imageLayerView1, commandHandler);
 
-            new MapPresenter(this.imageLayerView1, model, selectionModel);
+            new MapPresenter(this.imageLayerView1, model, selectionModel, model);
 
             new MainPresenter(this, model);
         }

@@ -101,6 +101,7 @@
     <Compile Include="Models\IFeatureDatabase.cs" />
     <Compile Include="Models\IMapPresenterCommandModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
+    <Compile Include="Models\Session\IViewOptionsModel.cs" />
     <Compile Include="Models\Session\SelectionModel.cs" />
     <Compile Include="Models\Session\ISelectionModel.cs" />
     <Compile Include="Models\Session\ISelectionCommandHandler.cs" />
