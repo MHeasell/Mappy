@@ -5,6 +5,7 @@
     using System.Linq;
 
     using Mappy.Data;
+    using Mappy.Database;
     using Mappy.Models;
     using Mappy.Palette;
 

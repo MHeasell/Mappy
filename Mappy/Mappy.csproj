@@ -75,6 +75,8 @@
     <Compile Include="Controllers\Tags\FeatureTag.cs" />
     <Compile Include="Controllers\Tags\SectionTag.cs" />
     <Compile Include="Controllers\Tags\StartPositionTag.cs" />
+    <Compile Include="Database\FeatureDictionary.cs" />
+    <Compile Include="Database\IFeatureDatabase.cs" />
     <Compile Include="Data\BindingMapTile.cs" />
     <Compile Include="Data\Feature.cs" />
     <Compile Include="Data\IMapTile.cs" />
@@ -95,8 +97,6 @@
     <Compile Include="IO\SectionFactory.cs" />
     <Compile Include="MappySettings.cs" />
     <Compile Include="Models\CoreModel.cs" />
-    <Compile Include="Models\FeatureDictionary.cs" />
-    <Compile Include="Models\IFeatureDatabase.cs" />
     <Compile Include="Models\IMapDataModel.cs" />
     <Compile Include="Models\IMapPresenterCommandModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />

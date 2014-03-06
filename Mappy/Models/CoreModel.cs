@@ -7,6 +7,7 @@
     using Data;
 
     using Mappy.Collections;
+    using Mappy.Database;
     using Mappy.IO;
     using Mappy.Models.Session;
     using Mappy.Presentation;

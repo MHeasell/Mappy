@@ -1,4 +1,4 @@
-﻿namespace Mappy.Models
+﻿namespace Mappy.Database
 {
     using System.Collections.Generic;
 
