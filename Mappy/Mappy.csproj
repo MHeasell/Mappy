@@ -98,7 +98,7 @@
     <Compile Include="MappySettings.cs" />
     <Compile Include="Models\CoreModel.cs" />
     <Compile Include="Models\IMapDataModel.cs" />
-    <Compile Include="Models\IMapPresenterCommandModel.cs" />
+    <Compile Include="Models\IMapCommandHandler.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
     <Compile Include="Models\Session\IViewOptionsModel.cs" />
     <Compile Include="Models\Session\SelectionModel.cs" />

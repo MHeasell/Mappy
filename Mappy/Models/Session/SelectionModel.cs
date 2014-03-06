@@ -8,7 +8,7 @@
 
     public class SelectionModel : Notifier, ISelectionModel, ISelectionCommandHandler
     {
-        private readonly IMapPresenterCommandModel model;
+        private readonly IMapCommandHandler model;
 
         private readonly ImageLayerView view;
 
@@ -26,7 +26,7 @@
 
         private int deltaY;
 
-        public SelectionModel(IMapPresenterCommandModel model, ImageLayerView view)
+        public SelectionModel(IMapCommandHandler model, ImageLayerView view)
         {
             this.model = model;
             this.view = view;

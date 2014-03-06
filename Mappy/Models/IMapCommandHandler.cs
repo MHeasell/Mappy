@@ -2,7 +2,7 @@
 {
     using System.Drawing;
 
-    public interface IMapPresenterCommandModel
+    public interface IMapCommandHandler
     {
         IBindingMapModel Map { get; }
 
