@@ -72,8 +72,6 @@
     <Compile Include="Collections\SparseGrid.cs" />
     <Compile Include="Collections\SparseGridEventArgs.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Controllers\MapPresenter.cs" />
-    <Compile Include="Controllers\MapViewEventAdapter.cs" />
     <Compile Include="Controllers\Tags\FeatureTag.cs" />
     <Compile Include="Controllers\Tags\SectionTag.cs" />
     <Compile Include="Controllers\Tags\StartPositionTag.cs" />
@@ -120,6 +118,8 @@
     <Compile Include="Palette\TransparencyMaskedPalette.cs" />
     <Compile Include="Presentation\IMapCommandHandler.cs" />
     <Compile Include="Presentation\MapCommandHandler.cs" />
+    <Compile Include="Presentation\MapPresenter.cs" />
+    <Compile Include="Presentation\MapViewEventAdapter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

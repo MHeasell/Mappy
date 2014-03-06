@@ -1,20 +1,18 @@
-﻿namespace Mappy.Controllers
+﻿namespace Mappy.Presentation
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
-    using Data;
 
     using Mappy.Collections;
     using Mappy.Controllers.Tags;
+    using Mappy.Data;
     using Mappy.Models;
     using Mappy.Models.Session;
-    using Mappy.Presentation;
-
-    using UI.Controls;
-    using UI.Drawables;
-    using Util;
+    using Mappy.UI.Controls;
+    using Mappy.UI.Drawables;
+    using Mappy.Util;
 
     public class MapPresenter
     {
