@@ -3,7 +3,7 @@ namespace Mappy.Models.Session
     using System.ComponentModel;
     using System.Drawing;
 
-    public interface IMapSelectionModel : INotifyPropertyChanged
+    public interface ISelectionModel : INotifyPropertyChanged
     {
         bool HasSelection { get; }
 

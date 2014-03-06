@@ -28,7 +28,7 @@
 
         private readonly ImageLayerCollection.Item[] startPositionMapping = new ImageLayerCollection.Item[10];
 
-        private readonly IMapSelectionModel selectionModel;
+        private readonly ISelectionModel selectionModel;
 
         private DrawableTile baseTile;
 
@@ -41,7 +41,7 @@
             }
         }
 
-        public MapPresenter(ImageLayerView view, IMapPresenterModel model, IMapSelectionModel selectionModel)
+        public MapPresenter(ImageLayerView view, IMapPresenterModel model, ISelectionModel selectionModel)
         {
             this.view = view;
             this.model = model;

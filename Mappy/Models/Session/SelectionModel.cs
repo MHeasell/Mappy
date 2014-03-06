@@ -6,7 +6,7 @@
     using Mappy.UI.Controls;
     using Mappy.Util;
 
-    public class SelectionModel : Notifier, IMapSelectionModel, ISelectionCommandModel
+    public class SelectionModel : Notifier, ISelectionModel, ISelectionCommandModel
     {
         private readonly IMapPresenterCommandModel model;
 
