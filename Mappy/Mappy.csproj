@@ -101,7 +101,7 @@
     <Compile Include="Models\IFeatureDatabase.cs" />
     <Compile Include="Models\IMapPresenterCommandModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
-    <Compile Include="Models\Session\CoreModelAdapter.cs" />
+    <Compile Include="Models\Session\SelectionModel.cs" />
     <Compile Include="Models\Session\IMapSelectionModel.cs" />
     <Compile Include="Models\Session\ISelectionCommandModel.cs" />
     <Compile Include="Operations\AddFeatureOperation.cs" />

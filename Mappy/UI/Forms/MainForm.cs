@@ -33,7 +33,7 @@
 
             CoreModel model = new CoreModel();
 
-            var selectionModel = new CoreModelAdapter(model, this.imageLayerView1);
+            var selectionModel = new SelectionModel(model, this.imageLayerView1);
 
             var commandHandler = new MapCommandHandler(selectionModel);
 

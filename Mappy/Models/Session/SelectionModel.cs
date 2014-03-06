@@ -6,7 +6,7 @@
     using Mappy.UI.Controls;
     using Mappy.Util;
 
-    public class CoreModelAdapter : Notifier, IMapSelectionModel, ISelectionCommandModel
+    public class SelectionModel : Notifier, IMapSelectionModel, ISelectionCommandModel
     {
         private readonly IMapPresenterCommandModel model;
 
@@ -26,7 +26,7 @@
 
         private int deltaY;
 
-        public CoreModelAdapter(IMapPresenterCommandModel model, ImageLayerView view)
+        public SelectionModel(IMapPresenterCommandModel model, ImageLayerView view)
         {
             this.model = model;
             this.view = view;
