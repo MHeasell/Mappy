@@ -16,6 +16,8 @@
 
     public class MapPresenter
     {
+        private const int BandboxDepth = 10000;
+
         private static readonly IDrawable[] StartPositionImages = new IDrawable[10];
 
         private readonly ImageLayerView view;
@@ -31,6 +33,8 @@
         private readonly IViewOptionsModel viewOptionsModel;
 
         private DrawableTile baseTile;
+
+        private ImageLayerCollection.Item bandboxMapping;
 
         static MapPresenter()
         {
@@ -252,6 +256,9 @@
                 case "SelectedStartPosition":
                     this.RefreshSelection();
                     break;
+                case "BandboxRectangle":
+                    this.UpdateBandbox();
+                    break;
             }
         }
 
@@ -420,6 +427,30 @@
                     }
 
                     break;
+            }
+        }
+
+        private void UpdateBandbox()
+        {
+            if (this.bandboxMapping != null)
+            {
+                this.view.Items.Remove(this.bandboxMapping);
+            }
+
+            if (this.selectionModel.BandboxRectangle != Rectangle.Empty)
+            {
+                var bandbox = DrawableBandbox.CreateSimple(
+                    this.selectionModel.BandboxRectangle.Size,
+                    Color.Blue,
+                    Color.Black);
+
+                this.bandboxMapping = new ImageLayerCollection.Item(
+                    this.selectionModel.BandboxRectangle.X,
+                    this.selectionModel.BandboxRectangle.Y,
+                    BandboxDepth,
+                    bandbox);
+
+                this.view.Items.Add(this.bandboxMapping);
             }
         }
     }
