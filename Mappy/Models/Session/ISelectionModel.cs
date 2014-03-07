@@ -12,5 +12,7 @@ namespace Mappy.Models.Session
         int? SelectedTile { get; }
 
         int? SelectedStartPosition { get; }
+
+        Rectangle BandboxRectangle { get; }
     }
 }

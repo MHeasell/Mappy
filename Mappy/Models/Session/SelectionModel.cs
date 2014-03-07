@@ -1,6 +1,7 @@
 ﻿namespace Mappy.Models.Session
 {
     using System.Drawing;
+    using System.Linq;
 
     using Mappy.Controllers.Tags;
     using Mappy.UI.Controls;
@@ -25,6 +26,8 @@
         private int deltaX;
 
         private int deltaY;
+
+        private Rectangle bandboxRectangle;
 
         public SelectionModel(IMapCommandHandler model, ImageLayerView view)
         {
@@ -90,6 +93,19 @@
                 {
                     this.OnSelectionChanged();
                 }
+            }
+        }
+
+        public Rectangle BandboxRectangle
+        {
+            get
+            {
+                return this.bandboxRectangle;
+            }
+
+            private set
+            {
+                this.SetField(ref this.bandboxRectangle, value, "BandboxRectangle");
             }
         }
 
@@ -242,17 +258,25 @@
 
         public void StartBandbox(int x, int y)
         {
-            throw new System.NotImplementedException();
+            this.BandboxRectangle = new Rectangle(x, y, 0, 0);
         }
 
         public void GrowBandbox(int x, int y)
         {
-            throw new System.NotImplementedException();
+            var rect = this.BandboxRectangle;
+            rect.Width += x;
+            rect.Height += y;
+            this.BandboxRectangle = rect;
         }
 
         public void CommitBandbox()
         {
-            throw new System.NotImplementedException();
+            var items = this.view.Items.EnumerateIntersecting(this.BandboxRectangle);
+            var item = items.FirstOrDefault();
+            if (item != null)
+            {
+                this.SelectFromTag(item.Tag);
+            }
         }
 
         private void OnSelectionChanged()
