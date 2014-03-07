@@ -113,6 +113,11 @@
         {
             var item = this.view.Items.HitTest(new Point(x, y));
 
+            if (item == null)
+            {
+                return false;
+            }
+
             return this.EqualsSelectedFromTag(item.Tag);
         }
 
