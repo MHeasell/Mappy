@@ -48,8 +48,8 @@
 
         public void Draw(Graphics graphics, Rectangle clipRectangle)
         {
-            graphics.FillRectangle(this.fillBrush, 0, 0, this.Width, this.Height);
-            graphics.DrawRectangle(this.borderPen, 0, 0, this.Width, this.Height);
+            graphics.FillRectangle(this.fillBrush, 0, 0, this.Width - 1, this.Height - 1);
+            graphics.DrawRectangle(this.borderPen, 0, 0, this.Width - 1, this.Height - 1);
         }
 
         public void Dispose()
