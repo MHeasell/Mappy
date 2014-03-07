@@ -14,6 +14,8 @@
 
         private Point lastMousePos;
 
+        private bool bandboxMode;
+
         public MapCommandHandler(ISelectionCommandHandler handler)
         {
             this.handler = handler;
@@ -45,7 +47,15 @@
         {
             this.mouseDown = true;
             this.lastMousePos = new Point(virtualX, virtualY);
-            this.handler.SelectAtPoint(virtualX, virtualY);
+
+            if (!this.handler.IsInSelection(virtualX, virtualY))
+            {
+                if (!this.handler.SelectAtPoint(virtualX, virtualY))
+                {
+                    this.handler.StartBandbox(virtualX, virtualY);
+                    this.bandboxMode = true;
+                }
+            }
         }
 
         public void MouseMove(int virtualX, int virtualY)
@@ -57,9 +67,18 @@
                     return;
                 }
 
-                this.handler.TranslateSelection(
-                    virtualX - this.lastMousePos.X,
-                    virtualY - this.lastMousePos.Y);
+                if (this.bandboxMode)
+                {
+                    this.handler.GrowBandbox(
+                        virtualX - this.lastMousePos.X,
+                        virtualY - this.lastMousePos.Y);
+                }
+                else
+                {
+                    this.handler.TranslateSelection(
+                        virtualX - this.lastMousePos.X,
+                        virtualY - this.lastMousePos.Y);
+                }
             }
             finally
             {
@@ -69,7 +88,16 @@
 
         public void MouseUp(int virtualX, int virtualY)
         {
-            this.handler.FlushTranslation();
+            if (this.bandboxMode)
+            {
+                this.handler.CommitBandbox();
+                this.bandboxMode = false;
+            }
+            else
+            {
+                this.handler.FlushTranslation();
+            }
+
             this.mouseDown = false;
         }
 
