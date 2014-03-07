@@ -1,11 +1,15 @@
 ﻿namespace Mappy.Models.Session
 {
+    using System;
     using System.Drawing;
     using System.Linq;
+    using System.Windows;
 
     using Mappy.Controllers.Tags;
     using Mappy.UI.Controls;
     using Mappy.Util;
+
+    using Point = System.Drawing.Point;
 
     public class SelectionModel : Notifier, ISelectionModel, ISelectionCommandHandler
     {
@@ -28,6 +32,10 @@
         private int deltaY;
 
         private Rectangle bandboxRectangle;
+
+        private Point bandboxStartPoint;
+
+        private Point bandboxFinishPoint;
 
         public SelectionModel(IMapCommandHandler model, ImageLayerView view)
         {
@@ -263,21 +271,37 @@
 
         public void StartBandbox(int x, int y)
         {
-            this.BandboxRectangle = new Rectangle(x, y, 0, 0);
+            var p = new Point(x, y);
+            this.bandboxStartPoint = p;
+            this.bandboxFinishPoint = p;
+            this.UpdateBandboxRectangle();
+        }
+
+        private void UpdateBandboxRectangle()
+        {
+            int minX = Math.Min(this.bandboxStartPoint.X, this.bandboxFinishPoint.X);
+            int minY = Math.Min(this.bandboxStartPoint.Y, this.bandboxFinishPoint.Y);
+
+            int maxX = Math.Max(this.bandboxStartPoint.X, this.bandboxFinishPoint.X);
+            int maxY = Math.Max(this.bandboxStartPoint.Y, this.bandboxFinishPoint.Y);
+
+            int width = maxX - minX;
+            int height = maxY - minY;
+
+            this.BandboxRectangle = new Rectangle(minX, minY, width, height);
         }
 
         public void GrowBandbox(int x, int y)
         {
-            var rect = this.BandboxRectangle;
-            rect.Width += x;
-            rect.Height += y;
-            this.BandboxRectangle = rect;
+            this.bandboxFinishPoint.X += x;
+            this.bandboxFinishPoint.Y += y;
+            this.UpdateBandboxRectangle();
         }
 
         public void CommitBandbox()
         {
             var items = this.view.Items.EnumerateIntersecting(this.BandboxRectangle);
-            var item = items.FirstOrDefault();
+            var item = items.FirstOrDefault(x => x.Visible && !x.Locked);
             if (item != null)
             {
                 this.SelectFromTag(item.Tag);
