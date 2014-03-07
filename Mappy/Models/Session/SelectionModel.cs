@@ -93,6 +93,13 @@
             }
         }
 
+        public bool IsInSelection(int x, int y)
+        {
+            var item = this.view.Items.HitTest(new Point(x, y));
+
+            return this.EqualsSelectedFromTag(item.Tag);
+        }
+
         public bool SelectAtPoint(int x, int y)
         {
             if (this.previousTranslationOpen)
@@ -238,6 +245,29 @@
             this.HasSelection = this.SelectedFeature.HasValue
                     || this.SelectedTile.HasValue
                     || this.SelectedStartPosition.HasValue;
+        }
+
+        private bool EqualsSelectedFromTag(object tag)
+        {
+            SectionTag t = tag as SectionTag;
+            if (t != null)
+            {
+                return t.Index == this.SelectedTile;
+            }
+
+            FeatureTag y = tag as FeatureTag;
+            if (y != null)
+            {
+                return y.Index == this.SelectedFeature;
+            }
+
+            StartPositionTag u = tag as StartPositionTag;
+            if (u != null)
+            {
+                return u.Index == this.SelectedStartPosition;
+            }
+
+            return false;
         }
 
         private void SelectFromTag(object tag)
