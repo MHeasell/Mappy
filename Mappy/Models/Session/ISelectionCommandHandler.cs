@@ -19,5 +19,11 @@
         void DragDropTile(int id, int x, int y);
 
         void DragDropStartPosition(int index, int x, int y);
+
+        void StartBandbox(int x, int y);
+
+        void GrowBandbox(int x, int y);
+
+        void CommitBandbox();
     }
 }

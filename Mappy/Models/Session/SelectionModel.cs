@@ -240,6 +240,21 @@
             this.SelectStartPosition(index);
         }
 
+        public void StartBandbox(int x, int y)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GrowBandbox(int x, int y)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CommitBandbox()
+        {
+            throw new System.NotImplementedException();
+        }
+
         private void OnSelectionChanged()
         {
             this.HasSelection = this.SelectedFeature.HasValue
