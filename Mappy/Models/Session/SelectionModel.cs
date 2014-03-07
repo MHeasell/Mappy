@@ -240,6 +240,11 @@
 
         public void DragDropFeature(string name, int x, int y)
         {
+            if (this.model.Map == null)
+            {
+                return;
+            }
+
             Point? featurePos = Util.ScreenToHeightIndex(this.model.Map.Tile.HeightGrid, new Point(x, y));
             if (featurePos.HasValue)
             {
