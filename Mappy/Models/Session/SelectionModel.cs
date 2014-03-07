@@ -3,7 +3,6 @@
     using System;
     using System.Drawing;
     using System.Linq;
-    using System.Windows;
 
     using Mappy.Controllers.Tags;
     using Mappy.UI.Controls;
