@@ -16,7 +16,7 @@
 
     public class MapPresenter
     {
-        private const int BandboxDepth = 10000;
+        private const int BandboxDepth = 100000000;
 
         private static readonly IDrawable[] StartPositionImages = new IDrawable[10];
 
