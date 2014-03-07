@@ -450,6 +450,8 @@
                     BandboxDepth,
                     bandbox);
 
+                this.bandboxMapping.Locked = true;
+
                 this.view.Items.Add(this.bandboxMapping);
             }
         }
