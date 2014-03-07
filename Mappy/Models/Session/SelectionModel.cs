@@ -282,6 +282,8 @@
             {
                 this.SelectFromTag(item.Tag);
             }
+
+            this.BandboxRectangle = Rectangle.Empty;
         }
 
         private void OnSelectionChanged()
