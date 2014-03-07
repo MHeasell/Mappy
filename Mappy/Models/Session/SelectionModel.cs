@@ -281,20 +281,6 @@
             this.UpdateBandboxRectangle();
         }
 
-        private void UpdateBandboxRectangle()
-        {
-            int minX = Math.Min(this.bandboxStartPoint.X, this.bandboxFinishPoint.X);
-            int minY = Math.Min(this.bandboxStartPoint.Y, this.bandboxFinishPoint.Y);
-
-            int maxX = Math.Max(this.bandboxStartPoint.X, this.bandboxFinishPoint.X);
-            int maxY = Math.Max(this.bandboxStartPoint.Y, this.bandboxFinishPoint.Y);
-
-            int width = maxX - minX;
-            int height = maxY - minY;
-
-            this.BandboxRectangle = new Rectangle(minX, minY, width, height);
-        }
-
         public void GrowBandbox(int x, int y)
         {
             this.bandboxFinishPoint.X += x;
@@ -387,6 +373,20 @@
             this.SelectedFeature = coords;
             this.SelectedTile = null;
             this.SelectedStartPosition = null;
+        }
+
+        private void UpdateBandboxRectangle()
+        {
+            int minX = Math.Min(this.bandboxStartPoint.X, this.bandboxFinishPoint.X);
+            int minY = Math.Min(this.bandboxStartPoint.Y, this.bandboxFinishPoint.Y);
+
+            int maxX = Math.Max(this.bandboxStartPoint.X, this.bandboxFinishPoint.X);
+            int maxY = Math.Max(this.bandboxStartPoint.Y, this.bandboxFinishPoint.Y);
+
+            int width = maxX - minX;
+            int height = maxY - minY;
+
+            this.BandboxRectangle = new Rectangle(minX, minY, width, height);
         }
     }
 }
