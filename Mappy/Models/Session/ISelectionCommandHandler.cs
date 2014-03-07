@@ -2,7 +2,7 @@
 {
     public interface ISelectionCommandHandler
     {
-        void SelectAtPoint(int x, int y);
+        bool SelectAtPoint(int x, int y);
 
         void ClearSelection();
 

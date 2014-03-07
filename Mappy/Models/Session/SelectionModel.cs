@@ -93,7 +93,7 @@
             }
         }
 
-        public void SelectAtPoint(int x, int y)
+        public bool SelectAtPoint(int x, int y)
         {
             if (this.previousTranslationOpen)
             {
@@ -104,11 +104,11 @@
             if (item == null)
             {
                 this.ClearSelection();
+                return false;
             }
-            else
-            {
-                this.SelectFromTag(item.Tag);
-            }
+
+            this.SelectFromTag(item.Tag);
+            return true;
         }
 
         public void ClearSelection()
