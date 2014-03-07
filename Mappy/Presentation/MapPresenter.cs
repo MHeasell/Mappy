@@ -18,6 +18,9 @@
     {
         private const int BandboxDepth = 100000000;
 
+        private static readonly Color BandboxFillColor = Color.FromArgb(127, Color.Blue);
+        private static readonly Color BandboxBorderColor = Color.FromArgb(127, Color.Black);
+
         private static readonly IDrawable[] StartPositionImages = new IDrawable[10];
 
         private readonly ImageLayerView view;
@@ -441,8 +444,8 @@
             {
                 var bandbox = DrawableBandbox.CreateSimple(
                     this.selectionModel.BandboxRectangle.Size,
-                    Color.Blue,
-                    Color.Black);
+                    BandboxFillColor,
+                    BandboxBorderColor);
 
                 this.bandboxMapping = new ImageLayerCollection.Item(
                     this.selectionModel.BandboxRectangle.X,
