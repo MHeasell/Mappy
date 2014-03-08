@@ -298,10 +298,12 @@
         public void CommitBandbox()
         {
             var items = this.view.Items.EnumerateIntersecting(this.BandboxRectangle);
-            var item = items.FirstOrDefault(x => x.Visible && !x.Locked);
-            if (item != null)
+            var filteredItems = items.Where(x => x.Visible && !x.Locked && x.Tag is FeatureTag);
+
+            foreach (var i in filteredItems)
             {
-                this.SelectFromTag(item.Tag);
+                var tag = (FeatureTag)i.Tag;
+                this.SelectedFeatures.Add(tag.Index);
             }
 
             this.BandboxRectangle = Rectangle.Empty;
