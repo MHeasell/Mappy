@@ -339,6 +339,11 @@
 
         public bool TranslateFeatureBatch(IEnumerable<GridCoordinates> coords, int x, int y)
         {
+            if (x == 0 && y == 0)
+            {
+                return true;
+            }
+
             var coordSet = new HashSet<GridCoordinates>(coords);
 
             // pre-move check to see if anything is in our way
@@ -370,6 +375,8 @@
             {
                 this.undoManager.Execute(newOp);
             }
+
+            this.previousTranslationOpen = true;
 
             return true;
         }
