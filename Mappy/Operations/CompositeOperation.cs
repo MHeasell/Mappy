@@ -7,12 +7,12 @@
     {
         private readonly IEnumerable<IReplayableOperation> ops;
 
-        public CompositeOperation(IReplayableOperation op1, IReplayableOperation op2)
-            : this(new[] { op1, op2 })
+        public CompositeOperation(IEnumerable<IReplayableOperation> ops)
         {
+            this.ops = ops;
         }
 
-        public CompositeOperation(IEnumerable<IReplayableOperation> ops)
+        public CompositeOperation(params IReplayableOperation[] ops)
         {
             this.ops = ops;
         }
