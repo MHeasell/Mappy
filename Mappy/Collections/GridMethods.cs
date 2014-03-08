@@ -91,5 +91,26 @@
                 dest[e.Key.X + x, e.Key.Y + y] = e.Value;
             }
         }
+
+        public static void Fill<T>(IGrid<T> grid, int x, int y, int width, int height, T value)
+        {
+            if (width < 0 || height < 0)
+            {
+                throw new ArgumentException("fill area has negative dimensions");
+            }
+
+            if (x < 0 || y < 0 || x + width > grid.Width || y + height > grid.Height)
+            {
+                throw new IndexOutOfRangeException("fill area overlaps boundary");
+            }
+
+            for (int dy = 0; dy < height; dy++)
+            {
+                for (int dx = 0; dx < width; dx++)
+                {
+                    grid[x + dx, y + dy] = value;
+                }
+            }
+        }
     }
 }
