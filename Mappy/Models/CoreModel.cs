@@ -350,6 +350,15 @@
             foreach (var item in coordSet)
             {
                 var translatedPoint = new GridCoordinates(item.X + x, item.Y + y);
+
+                if (translatedPoint.X < 0
+                    || translatedPoint.Y < 0
+                    || translatedPoint.X >= this.Map.Features.Width
+                    || translatedPoint.Y >= this.Map.Features.Height)
+                {
+                    return false;
+                }
+
                 bool isBlocked = !coordSet.Contains(translatedPoint)
                     && this.Map.Features.HasValue(translatedPoint.X, translatedPoint.Y);
                 if (isBlocked)
