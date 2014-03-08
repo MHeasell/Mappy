@@ -1,14 +1,13 @@
 ﻿namespace Mappy.Models.Session
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
     using System.Drawing;
-    using System.Linq;
 
     using Mappy.Collections;
     using Mappy.Controllers.Tags;
+    using Mappy.Models.Session.BandboxBehaviours;
     using Mappy.UI.Controls;
     using Mappy.Util;
 
@@ -22,6 +21,8 @@
 
         private readonly ObservableCollection<GridCoordinates> selectedFeatures = new ObservableCollection<GridCoordinates>();
 
+        private readonly IBandboxBehaviour featureBandboxBehaviour;
+
         private bool hasSelection;
 
         private int? selectedTile;
@@ -34,18 +35,15 @@
 
         private int deltaY;
 
-        private Rectangle bandboxRectangle;
-
-        private Point bandboxStartPoint;
-
-        private Point bandboxFinishPoint;
-
         public SelectionModel(IMapCommandHandler model, ImageLayerView view)
         {
             this.model = model;
             this.view = view;
 
             this.selectedFeatures.CollectionChanged += this.SelectedFeaturesChanged;
+            this.featureBandboxBehaviour = new FeatureBandboxBehaviour(view, this);
+
+            this.featureBandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
         }
 
         public bool HasSelection
@@ -105,12 +103,7 @@
         {
             get
             {
-                return this.bandboxRectangle;
-            }
-
-            private set
-            {
-                this.SetField(ref this.bandboxRectangle, value, "BandboxRectangle");
+                return this.featureBandboxBehaviour.BandboxRectangle;
             }
         }
 
@@ -282,31 +275,17 @@
 
         public void StartBandbox(int x, int y)
         {
-            var p = new Point(x, y);
-            this.bandboxStartPoint = p;
-            this.bandboxFinishPoint = p;
-            this.UpdateBandboxRectangle();
+            this.featureBandboxBehaviour.StartBandbox(x, y);
         }
 
         public void GrowBandbox(int x, int y)
         {
-            this.bandboxFinishPoint.X += x;
-            this.bandboxFinishPoint.Y += y;
-            this.UpdateBandboxRectangle();
+            this.featureBandboxBehaviour.GrowBandbox(x, y);
         }
 
         public void CommitBandbox()
         {
-            var items = this.view.Items.EnumerateIntersecting(this.BandboxRectangle);
-            var filteredItems = items.Where(x => x.Visible && !x.Locked && x.Tag is FeatureTag);
-
-            foreach (var i in filteredItems)
-            {
-                var tag = (FeatureTag)i.Tag;
-                this.SelectedFeatures.Add(tag.Index);
-            }
-
-            this.BandboxRectangle = Rectangle.Empty;
+            this.featureBandboxBehaviour.CommitBandbox();
         }
 
         private void OnSelectionChanged()
@@ -385,23 +364,19 @@
             this.SelectedStartPosition = null;
         }
 
-        private void UpdateBandboxRectangle()
-        {
-            int minX = Math.Min(this.bandboxStartPoint.X, this.bandboxFinishPoint.X);
-            int minY = Math.Min(this.bandboxStartPoint.Y, this.bandboxFinishPoint.Y);
-
-            int maxX = Math.Max(this.bandboxStartPoint.X, this.bandboxFinishPoint.X);
-            int maxY = Math.Max(this.bandboxStartPoint.Y, this.bandboxFinishPoint.Y);
-
-            int width = maxX - minX;
-            int height = maxY - minY;
-
-            this.BandboxRectangle = new Rectangle(minX, minY, width, height);
-        }
-
         private void SelectedFeaturesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             this.FireChange("SelectedFeatures");
+        }
+
+        private void BandboxBehaviourPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "BandboxRectangle":
+                    this.FireChange("BandboxRectangle");
+                    break;
+            }
         }
     }
 }
