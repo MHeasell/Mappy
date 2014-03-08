@@ -1,6 +1,9 @@
 ﻿namespace Mappy.Models
 {
+    using System.Collections.Generic;
     using System.Drawing;
+
+    using Mappy.Collections;
 
     public interface IMapCommandHandler
     {
@@ -9,6 +12,8 @@
         int PlaceSection(int tileId, int x, int y);
 
         void TranslateSection(int index, int x, int y);
+
+        bool TranslateFeatureBatch(IEnumerable<GridCoordinates> coords, int x, int y);
 
         bool TranslateFeature(Point featureCoord, int x, int y);
 

@@ -1,9 +1,13 @@
 ﻿namespace Mappy.Models.Session
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.Drawing;
     using System.Linq;
 
+    using Mappy.Collections;
     using Mappy.Controllers.Tags;
     using Mappy.UI.Controls;
     using Mappy.Util;
@@ -16,9 +20,9 @@
 
         private readonly ImageLayerView view;
 
-        private bool hasSelection;
+        private readonly ObservableCollection<GridCoordinates> selectedFeatures = new ObservableCollection<GridCoordinates>();
 
-        private Point? selectedFeature;
+        private bool hasSelection;
 
         private int? selectedTile;
 
@@ -40,6 +44,8 @@
         {
             this.model = model;
             this.view = view;
+
+            this.selectedFeatures.CollectionChanged += this.SelectedFeaturesChanged;
         }
 
         public bool HasSelection
@@ -55,19 +61,11 @@
             }
         }
 
-        public Point? SelectedFeature
+        public ICollection<GridCoordinates> SelectedFeatures
         {
             get
             {
-                return this.selectedFeature;
-            }
-
-            private set
-            {
-                if (this.SetField(ref this.selectedFeature, value, "SelectedFeature"))
-                {
-                    this.OnSelectionChanged();
-                }
+                return this.selectedFeatures;
             }
         }
 
@@ -153,17 +151,21 @@
                 this.FlushTranslation();
             }
 
-            this.SelectedFeature = null;
+            this.SelectedFeatures.Clear();
             this.SelectedTile = null;
             this.SelectedStartPosition = null;
         }
 
         public void DeleteSelection()
         {
-            if (this.SelectedFeature.HasValue)
+            if (this.SelectedFeatures.Count > 0)
             {
-                this.model.RemoveFeature(this.SelectedFeature.Value);
-                this.SelectedFeature = null;
+                foreach (var item in this.SelectedFeatures)
+                {
+                    this.model.RemoveFeature(item.X, item.Y);
+                }
+
+                this.SelectedFeatures.Clear();
             }
             else if (this.SelectedTile.HasValue)
             {
@@ -199,7 +201,7 @@
                 this.deltaX %= 32;
                 this.deltaY %= 32;
             }
-            else if (this.SelectedFeature.HasValue)
+            else if (this.SelectedFeatures.Count > 0)
             {
                 // TODO: restore old behaviour
                 // where heightmap is taken into account when placing features
@@ -210,16 +212,21 @@
                 int quantX = this.deltaX / 16;
                 int quantY = this.deltaY / 16;
 
-                bool success = this.model.TranslateFeature(
-                    this.SelectedFeature.Value,
+                bool success = this.model.TranslateFeatureBatch(
+                    this.SelectedFeatures,
                     quantX,
                     quantY);
 
                 if (success)
                 {
-                    this.SelectedFeature = new Point(
-                        this.SelectedFeature.Value.X + quantX,
-                        this.SelectedFeature.Value.Y + quantY);
+                    var tmp = new List<GridCoordinates>(this.SelectedFeatures);
+                    this.SelectedFeatures.Clear();
+
+                    foreach (var item in tmp)
+                    {
+                        this.SelectedFeatures.Add(
+                            new GridCoordinates(item.X + quantX, item.Y + quantY));
+                    }
 
                     this.deltaX %= 16;
                     this.deltaY %= 16;
@@ -249,7 +256,7 @@
             {
                 if (this.model.TryPlaceFeature(name, featurePos.Value.X, featurePos.Value.Y))
                 {
-                    this.SelectFeature(featurePos.Value);
+                    this.SelectFeature(Util.ToGridCoordinates(featurePos.Value));
                 }
             }
         }
@@ -302,7 +309,7 @@
 
         private void OnSelectionChanged()
         {
-            this.HasSelection = this.SelectedFeature.HasValue
+            this.HasSelection = this.SelectedFeatures.Count > 0
                     || this.SelectedTile.HasValue
                     || this.SelectedStartPosition.HasValue;
         }
@@ -318,7 +325,7 @@
             FeatureTag y = tag as FeatureTag;
             if (y != null)
             {
-                return y.Index == this.SelectedFeature;
+                return this.SelectedFeatures.Contains(y.Index);
             }
 
             StartPositionTag u = tag as StartPositionTag;
@@ -357,20 +364,21 @@
         private void SelectStartPosition(int index)
         {
             this.SelectedTile = null;
-            this.SelectedFeature = null;
+            this.SelectedFeatures.Clear();
             this.SelectedStartPosition = index;
         }
 
         private void SelectTile(int index)
         {
             this.SelectedTile = index;
-            this.SelectedFeature = null;
+            this.SelectedFeatures.Clear();
             this.SelectedStartPosition = null;
         }
 
-        private void SelectFeature(Point coords)
+        private void SelectFeature(GridCoordinates coords)
         {
-            this.SelectedFeature = coords;
+            this.SelectedFeatures.Clear();
+            this.SelectedFeatures.Add(coords);
             this.SelectedTile = null;
             this.SelectedStartPosition = null;
         }
@@ -387,6 +395,11 @@
             int height = maxY - minY;
 
             this.BandboxRectangle = new Rectangle(minX, minY, width, height);
+        }
+
+        private void SelectedFeaturesChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.FireChange("SelectedFeatures");
         }
     }
 }

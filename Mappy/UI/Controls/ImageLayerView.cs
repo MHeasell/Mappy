@@ -1,6 +1,7 @@
 ﻿namespace Mappy.UI.Controls
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Drawing;
@@ -11,7 +12,7 @@
     {
         private readonly ImageLayerCollection items;
 
-        private ImageLayerCollection.Item selectedItem;
+        private readonly List<ImageLayerCollection.Item> selectedItems = new List<ImageLayerCollection.Item>();
 
         private Size canvasSize;
 
@@ -31,10 +32,6 @@
             this.items = new ImageLayerCollection(this.Width, this.Height);
             this.Items.CollectionChanged += this.ItemsChanged;
         }
-
-        public event EventHandler SelectedItemChanging;
-
-        public event EventHandler SelectedItemChanged;
 
         public event EventHandler CanvasSizeChanged;
 
@@ -87,24 +84,6 @@
             get { return this.items; }
         }
 
-        public ImageLayerCollection.Item SelectedItem
-        {
-            get
-            {
-                return this.selectedItem;
-            }
-
-            set
-            {
-                if (value != this.selectedItem)
-                {
-                    this.OnSelectedItemChanging();
-                    this.selectedItem = value;
-                    this.OnSelectedItemChanged();
-                }
-            }
-        }
-
         public Size CanvasSize
         {
             get
@@ -137,6 +116,36 @@
                     this.OnCanvasColorChanged();
                 }
             }
+        }
+
+        public void AddToSelection(ImageLayerCollection.Item item)
+        {
+            this.InvalidateSelectionRect(item);
+
+            this.selectedItems.Add(item);
+        }
+
+        public void RemoveFromSelection(ImageLayerCollection.Item item)
+        {
+            if (this.selectedItems.Remove(item))
+            {
+                this.InvalidateSelectionRect(item);
+            }
+        }
+
+        public bool SelectedItemsContains(ImageLayerCollection.Item item)
+        {
+            return this.selectedItems.Contains(item);
+        }
+
+        public void ClearSelection()
+        {
+            foreach (var item in this.selectedItems)
+            {
+                this.InvalidateSelectionRect(item);
+            }
+
+            this.selectedItems.Clear();
         }
 
         public Point ToVirtualPoint(Point clientPoint)
@@ -207,15 +216,15 @@
                 }
             }
 
-            // draw selection rectangle
-            if (this.SelectedItem != null)
+            // draw selection rectangles
+            foreach (var i in this.selectedItems)
             {
                 pe.Graphics.DrawRectangle(
                     Pens.Red,
-                    this.SelectedItem.X,
-                    this.SelectedItem.Y,
-                    this.SelectedItem.Drawable.Width,
-                    this.SelectedItem.Drawable.Height);
+                    i.X,
+                    i.Y,
+                    i.Drawable.Width,
+                    i.Drawable.Height);
             }
         }
 
@@ -224,34 +233,6 @@
             this.Focus();
 
             base.OnMouseDown(e);
-        }
-
-        protected virtual void OnSelectedItemChanging()
-        {
-            if (this.SelectedItem != null)
-            {
-                this.InvalidateSelectionRect();
-            }
-
-            EventHandler h = this.SelectedItemChanging;
-            if (h != null)
-            {
-                h(this, EventArgs.Empty);
-            }
-        }
-
-        protected virtual void OnSelectedItemChanged()
-        {
-            if (this.SelectedItem != null)
-            {
-                this.InvalidateSelectionRect();
-            }
-
-            EventHandler h = this.SelectedItemChanged;
-            if (h != null)
-            {
-                h(this, EventArgs.Empty);
-            }
         }
 
         protected virtual void OnCanvasColorChanged()
@@ -277,9 +258,9 @@
             base.Dispose(disposing);
         }
 
-        private void InvalidateSelectionRect()
+        private void InvalidateSelectionRect(ImageLayerCollection.Item item)
         {
-            Rectangle r = this.ToClientRect(this.SelectedItem.Bounds);
+            Rectangle r = this.ToClientRect(item.Bounds);
             this.Invalidate(new Rectangle(r.Left, r.Top, r.Width, 1));
             this.Invalidate(new Rectangle(r.Left, r.Top, 1, r.Height));
             this.Invalidate(new Rectangle(r.Right, r.Top, 1, r.Height));

@@ -138,6 +138,16 @@ namespace Mappy.Util
             return b;
         }
 
+        public static Point ToPoint(GridCoordinates g)
+        {
+            return new Point(g.X, g.Y);
+        }
+
+        public static GridCoordinates ToGridCoordinates(Point p)
+        {
+            return new GridCoordinates(p.X, p.Y);
+        }
+
         private static Color GetPixel(IMapModel mapModel, int x, int y)
         {
             int tileX = x / 32;

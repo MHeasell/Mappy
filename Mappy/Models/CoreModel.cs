@@ -337,6 +337,43 @@
             return true;
         }
 
+        public bool TranslateFeatureBatch(IEnumerable<GridCoordinates> coords, int x, int y)
+        {
+            var coordSet = new HashSet<GridCoordinates>(coords);
+
+            // pre-move check to see if anything is in our way
+            foreach (var item in coordSet)
+            {
+                var translatedPoint = new GridCoordinates(item.X + x, item.Y + y);
+                bool isBlocked = !coordSet.Contains(translatedPoint)
+                    && this.Map.Features.HasValue(translatedPoint.X, translatedPoint.Y);
+                if (isBlocked)
+                {
+                    return false;
+                }
+            }
+
+            var newOp = new BatchMoveFeatureOperation(this.Map.Features, coordSet, x, y);
+
+            BatchMoveFeatureOperation lastOp = null;
+            if (this.undoManager.CanUndo)
+            {
+                lastOp = this.undoManager.PeekUndo() as BatchMoveFeatureOperation;
+            }
+
+            if (this.previousTranslationOpen && lastOp != null && lastOp.GetTranslatedCoords().SetEquals(coordSet))
+            {
+                newOp.Execute();
+                this.undoManager.Replace(lastOp.Combine(newOp));
+            }
+            else
+            {
+                this.undoManager.Execute(newOp);
+            }
+
+            return true;
+        }
+
         public void FlushTranslation()
         {
             this.previousTranslationOpen = false;

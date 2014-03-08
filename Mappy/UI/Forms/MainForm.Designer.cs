@@ -466,7 +466,6 @@
             this.imageLayerView1.GridVisible = false;
             this.imageLayerView1.Location = new System.Drawing.Point(215, 24);
             this.imageLayerView1.Name = "imageLayerView1";
-            this.imageLayerView1.SelectedItem = null;
             this.imageLayerView1.Size = new System.Drawing.Size(569, 538);
             this.imageLayerView1.TabIndex = 5;
             this.imageLayerView1.Text = "imageLayerView1";

@@ -27,7 +27,7 @@
         private readonly IMapDataModel model;
 
         private readonly List<ImageLayerCollection.Item> tileMapping = new List<ImageLayerCollection.Item>();
-        private readonly IDictionary<Point, ImageLayerCollection.Item> featureMapping = new Dictionary<Point, ImageLayerCollection.Item>();
+        private readonly IDictionary<GridCoordinates, ImageLayerCollection.Item> featureMapping = new Dictionary<GridCoordinates, ImageLayerCollection.Item>();
 
         private readonly ImageLayerCollection.Item[] startPositionMapping = new ImageLayerCollection.Item[10];
 
@@ -150,12 +150,13 @@
         {
             ImageLayerCollection.Item item = this.tileMapping[index];
             this.view.Items.Remove(item);
+            this.view.RemoveFromSelection(item);
             this.tileMapping.RemoveAt(index);
         }
 
         private void InsertFeature(Feature f, int x, int y)
         {
-            var coords = new Point(x, y);
+            var coords = new GridCoordinates(x, y);
             int index = this.ToFeatureIndex(x, y);
             Rectangle r = f.GetDrawBounds(this.model.Map.Tile.HeightGrid, x, y);
             ImageLayerCollection.Item i = new ImageLayerCollection.Item(
@@ -169,12 +170,13 @@
             this.view.Items.Add(i);
         }
 
-        private bool RemoveFeature(Point coords)
+        private bool RemoveFeature(GridCoordinates coords)
         {
             if (this.featureMapping.ContainsKey(coords))
             {
                 ImageLayerCollection.Item item = this.featureMapping[coords];
                 this.view.Items.Remove(item);
+                this.view.RemoveFromSelection(item);
                 this.featureMapping.Remove(coords);
                 return true;
             }
@@ -182,29 +184,29 @@
             return false;
         }
 
-        private void MoveFeature(Point oldIndex, Point newIndex)
+        private void MoveFeature(GridCoordinates oldIndex, GridCoordinates newIndex)
         {
             var old = this.featureMapping[oldIndex];
 
-            bool isSelected = this.view.SelectedItem == old;
+            bool isSelected = this.view.SelectedItemsContains(old);
 
             this.RemoveFeature(oldIndex);
             this.InsertFeature(newIndex);
 
             if (isSelected)
             {
-                this.view.SelectedItem = this.featureMapping[newIndex];
+                this.view.AddToSelection(this.featureMapping[newIndex]);
             }
         }
 
-        private void UpdateFeature(Point index)
+        private void UpdateFeature(GridCoordinates index)
         {
             this.RemoveFeature(index);
 
             this.InsertFeature(index);
         }
 
-        private void InsertFeature(Point p)
+        private void InsertFeature(GridCoordinates p)
         {
             Feature f;
             if (this.model.Map.Features.TryGetValue(p.X, p.Y, out f))
@@ -213,15 +215,15 @@
             }
         }
 
-        private Point ToFeaturePoint(int index)
+        private GridCoordinates ToFeaturePoint(int index)
         {
             int x = index % this.model.Map.Features.Width;
             int y = index / this.model.Map.Features.Width;
-            Point p = new Point(x, y);
+            var p = new GridCoordinates(x, y);
             return p;
         }
 
-        private int ToFeatureIndex(Point p)
+        private int ToFeatureIndex(GridCoordinates p)
         {
             return this.ToFeatureIndex(p.X, p.Y);
         }
@@ -255,7 +257,7 @@
             switch (e.PropertyName)
             {
                 case "SelectedTile":
-                case "SelectedFeature":
+                case "SelectedFeatures":
                 case "SelectedStartPosition":
                     this.RefreshSelection();
                     break;
@@ -267,21 +269,22 @@
 
         private void RefreshSelection()
         {
+            this.view.ClearSelection();
+
             if (this.selectionModel.SelectedTile.HasValue)
             {
-                this.view.SelectedItem = this.tileMapping[this.selectionModel.SelectedTile.Value];
+                this.view.AddToSelection(this.tileMapping[this.selectionModel.SelectedTile.Value]);
             }
-            else if (this.selectionModel.SelectedFeature.HasValue)
+            else if (this.selectionModel.SelectedFeatures.Count > 0)
             {
-                this.view.SelectedItem = this.featureMapping[this.selectionModel.SelectedFeature.Value];
+                foreach (var item in this.selectionModel.SelectedFeatures)
+                {
+                    this.view.AddToSelection(this.featureMapping[item]);
+                }
             }
             else if (this.selectionModel.SelectedStartPosition.HasValue)
             {
-                this.view.SelectedItem = this.startPositionMapping[this.selectionModel.SelectedStartPosition.Value];
-            }
-            else
-            {
-                this.view.SelectedItem = null;
+                this.view.AddToSelection(this.startPositionMapping[this.selectionModel.SelectedStartPosition.Value]);
             }
         }
 
@@ -331,8 +334,9 @@
             if (this.startPositionMapping[index] != null)
             {
                 var mapping = this.startPositionMapping[index];
-                selected = this.view.SelectedItem == mapping;
+                selected = this.view.SelectedItemsContains(mapping);
                 this.view.Items.Remove(mapping);
+                this.view.RemoveFromSelection(mapping);
                 this.startPositionMapping[index] = null;
             }
 
@@ -351,7 +355,7 @@
 
                 if (selected)
                 {
-                    this.view.SelectedItem = i;
+                    this.view.AddToSelection(i);
                 }
             }
         }
@@ -362,14 +366,14 @@
             int index = this.model.Map.FloatingTiles.IndexOf(item);
 
             var mapping = this.tileMapping[index];
-            bool selected = mapping == this.view.SelectedItem;
+            bool selected = this.view.SelectedItemsContains(mapping);
 
             this.RemoveTile(index);
             this.InsertTile(item, index);
 
             if (selected)
             {
-                this.view.SelectedItem = this.tileMapping[index];
+                this.view.AddToSelection(this.tileMapping[index]);
             }
         }
 

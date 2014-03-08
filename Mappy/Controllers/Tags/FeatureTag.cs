@@ -1,14 +1,14 @@
 ﻿namespace Mappy.Controllers.Tags
 {
-    using System.Drawing;
+    using Mappy.Collections;
 
     public class FeatureTag
     {
-        public FeatureTag(Point index)
+        public FeatureTag(GridCoordinates index)
         {
             this.Index = index;
         }
 
-        public Point Index { get; private set; }
+        public GridCoordinates Index { get; private set; }
     }
 }
