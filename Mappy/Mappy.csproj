@@ -110,6 +110,7 @@
     <Compile Include="Operations\ChangeAttributesOperation.cs" />
     <Compile Include="Operations\ChangeStartPositionOperation.cs" />
     <Compile Include="Operations\BatchMoveFeatureOperation.cs" />
+    <Compile Include="Operations\FillAreaOperation.cs" />
     <Compile Include="Operations\MoveFeatureOperation.cs" />
     <Compile Include="Operations\RemoveFeatureOperation.cs" />
     <Compile Include="Operations\RemoveStartPositionOperation.cs" />
