@@ -102,6 +102,7 @@
     <Compile Include="Models\MapAttributesResult.cs" />
     <Compile Include="Models\Session\BandboxBehaviours\FeatureBandboxBehaviour.cs" />
     <Compile Include="Models\Session\BandboxBehaviours\IBandboxBehaviour.cs" />
+    <Compile Include="Models\Session\BandboxBehaviours\TileBandboxBehaviour.cs" />
     <Compile Include="Models\Session\IViewOptionsModel.cs" />
     <Compile Include="Models\Session\SelectionModel.cs" />
     <Compile Include="Models\Session\ISelectionModel.cs" />

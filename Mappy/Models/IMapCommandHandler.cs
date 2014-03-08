@@ -38,5 +38,7 @@
         void RemoveStartPosition(int i);
 
         void MergeSection(int index);
+
+        int LiftArea(int x, int y, int width, int height);
     }
 }

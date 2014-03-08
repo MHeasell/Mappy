@@ -2,6 +2,8 @@
 {
     using System.Drawing;
     using Data;
+
+    using Mappy.Collections;
     using Mappy.Models;
 
     public static class OperationFactory
@@ -46,6 +48,22 @@
             var removeOp = new RemoveTileOperation(map.FloatingTiles, index);
 
             return new CompositeOperation(mergeOp, removeOp);
+        }
+
+        public static IReplayableOperation CreateLiftAreaOperation(IMapModel map, int x, int y, int width, int height)
+        {
+            // copy the target area to a new tile
+            var tile = new MapTile(width, height);
+            GridMethods.Copy(map.Tile.TileGrid, tile.TileGrid, x, y, 0, 0, width, height);
+            GridMethods.Copy(map.Tile.HeightGrid, tile.HeightGrid, x * 2, y * 2, 0, 0, width * 2, height * 2);
+
+            var positionedTile = new Positioned<IMapTile>(tile, new Point(x, y));
+
+            var addOp = new AddFloatingTileOperation(map, positionedTile);
+            var clearBitmapOp = new FillAreaOperation<Bitmap>(map.Tile.TileGrid, x, y, width, height, null);
+            var clearHeightOp = new FillAreaOperation<int>(map.Tile.HeightGrid, x * 2, y * 2, width * 2, height * 2, 0);
+
+            return new CompositeOperation(addOp, clearBitmapOp, clearHeightOp);
         }
     }
 }

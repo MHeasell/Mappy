@@ -21,7 +21,7 @@
 
         private readonly ObservableCollection<GridCoordinates> selectedFeatures = new ObservableCollection<GridCoordinates>();
 
-        private readonly IBandboxBehaviour featureBandboxBehaviour;
+        private readonly IBandboxBehaviour bandboxBehaviour;
 
         private bool hasSelection;
 
@@ -41,9 +41,10 @@
             this.view = view;
 
             this.selectedFeatures.CollectionChanged += this.SelectedFeaturesChanged;
-            this.featureBandboxBehaviour = new FeatureBandboxBehaviour(view, this);
+            ////this.bandboxBehaviour = new FeatureBandboxBehaviour(view, this);
+            this.bandboxBehaviour = new TileBandboxBehaviour(this.model, this);
 
-            this.featureBandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
+            this.bandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
         }
 
         public bool HasSelection
@@ -103,7 +104,7 @@
         {
             get
             {
-                return this.featureBandboxBehaviour.BandboxRectangle;
+                return this.bandboxBehaviour.BandboxRectangle;
             }
         }
 
@@ -275,17 +276,17 @@
 
         public void StartBandbox(int x, int y)
         {
-            this.featureBandboxBehaviour.StartBandbox(x, y);
+            this.bandboxBehaviour.StartBandbox(x, y);
         }
 
         public void GrowBandbox(int x, int y)
         {
-            this.featureBandboxBehaviour.GrowBandbox(x, y);
+            this.bandboxBehaviour.GrowBandbox(x, y);
         }
 
         public void CommitBandbox()
         {
-            this.featureBandboxBehaviour.CommitBandbox();
+            this.bandboxBehaviour.CommitBandbox();
         }
 
         public void SelectTile(int index)
