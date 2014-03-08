@@ -287,6 +287,11 @@
             return this.Map.FloatingTiles.Count - 1;
         }
 
+        public void MergeSection(int index)
+        {
+            this.undoManager.Execute(OperationFactory.CreateMergeSectionOperation(this.Map, index));
+        }
+
         public void TranslateSection(int index, int x, int y)
         {
             this.TranslateSection(this.Map.FloatingTiles[index], x, y);

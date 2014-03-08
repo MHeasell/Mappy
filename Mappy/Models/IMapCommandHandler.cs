@@ -36,5 +36,7 @@
         void TranslateStartPosition(int i, int x, int y);
 
         void RemoveStartPosition(int i);
+
+        void MergeSection(int index);
     }
 }

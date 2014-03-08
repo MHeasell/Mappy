@@ -145,7 +145,7 @@
             }
 
             this.SelectedFeatures.Clear();
-            this.SelectedTile = null;
+            this.MergeDownSelectedTile();
             this.SelectedStartPosition = null;
         }
 
@@ -344,7 +344,7 @@
 
         private void SelectStartPosition(int index)
         {
-            this.SelectedTile = null;
+            this.MergeDownSelectedTile();
             this.SelectedFeatures.Clear();
             this.SelectedStartPosition = index;
         }
@@ -360,8 +360,17 @@
         {
             this.SelectedFeatures.Clear();
             this.SelectedFeatures.Add(coords);
-            this.SelectedTile = null;
+            this.MergeDownSelectedTile();
             this.SelectedStartPosition = null;
+        }
+
+        private void MergeDownSelectedTile()
+        {
+            if (this.SelectedTile.HasValue)
+            {
+                this.model.MergeSection(this.SelectedTile.Value);
+                this.SelectedTile = null;
+            }
         }
 
         private void SelectedFeaturesChanged(object sender, NotifyCollectionChangedEventArgs e)

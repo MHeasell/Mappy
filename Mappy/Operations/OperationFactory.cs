@@ -36,5 +36,16 @@
 
             return new CompositeOperation(arr);
         }
+
+        public static IReplayableOperation CreateMergeSectionOperation(IMapModel map, int index)
+        {
+            var tile = map.FloatingTiles[index];
+
+            var mergeOp = OperationFactory.CreateClipMergeTileOperation(tile.Item, map.Tile, tile.Location.X, tile.Location.Y);
+
+            var removeOp = new RemoveTileOperation(map.FloatingTiles, index);
+
+            return new CompositeOperation(mergeOp, removeOp);
+        }
     }
 }
