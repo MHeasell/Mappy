@@ -25,5 +25,7 @@
         void GrowBandbox(int x, int y);
 
         void CommitBandbox();
+
+        void SelectTile(int index);
     }
 }

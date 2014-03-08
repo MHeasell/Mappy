@@ -288,6 +288,13 @@
             this.featureBandboxBehaviour.CommitBandbox();
         }
 
+        public void SelectTile(int index)
+        {
+            this.SelectedTile = index;
+            this.SelectedFeatures.Clear();
+            this.SelectedStartPosition = null;
+        }
+
         private void OnSelectionChanged()
         {
             this.HasSelection = this.SelectedFeatures.Count > 0
@@ -347,13 +354,6 @@
             this.MergeDownSelectedTile();
             this.SelectedFeatures.Clear();
             this.SelectedStartPosition = index;
-        }
-
-        private void SelectTile(int index)
-        {
-            this.SelectedTile = index;
-            this.SelectedFeatures.Clear();
-            this.SelectedStartPosition = null;
         }
 
         private void SelectFeature(GridCoordinates coords)
