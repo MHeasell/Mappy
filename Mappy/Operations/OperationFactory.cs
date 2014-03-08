@@ -18,8 +18,8 @@
             int srcY = rect.Y - y;
 
             return new CompositeOperation(
-                new CopyAreaOperation<Bitmap>(dst.TileGrid, src.TileGrid, srcX, srcY, rect.X, rect.Y, rect.Width, rect.Height),
-                new CopyAreaOperation<int>(dst.HeightGrid, src.HeightGrid, srcX * 2, srcY * 2, rect.X * 2, rect.Y * 2, rect.Width * 2, rect.Height * 2));
+                new CopyAreaOperation<Bitmap>(src.TileGrid, dst.TileGrid, srcX, srcY, rect.X, rect.Y, rect.Width, rect.Height),
+                new CopyAreaOperation<int>(src.HeightGrid, dst.HeightGrid, srcX * 2, srcY * 2, rect.X * 2, rect.Y * 2, rect.Width * 2, rect.Height * 2));
         }
 
         public static IReplayableOperation CreateFlattenOperation(IMapModel model)
