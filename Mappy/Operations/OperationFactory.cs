@@ -50,6 +50,19 @@
             return new CompositeOperation(mergeOp, removeOp);
         }
 
+        public static IReplayableOperation CreateClippedLiftAreaOperation(
+            IMapModel map,
+            int x,
+            int y,
+            int width,
+            int height)
+        {
+            Rectangle rect = new Rectangle(x, y, width, height);
+            rect.Intersect(new Rectangle(0, 0, map.Tile.TileGrid.Width, map.Tile.TileGrid.Height));
+
+            return CreateLiftAreaOperation(map, rect.X, rect.Y, rect.Width, rect.Height);
+        }
+
         public static IReplayableOperation CreateLiftAreaOperation(IMapModel map, int x, int y, int width, int height)
         {
             // copy the target area to a new tile

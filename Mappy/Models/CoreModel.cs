@@ -294,7 +294,7 @@
 
         public int LiftArea(int x, int y, int width, int height)
         {
-            this.undoManager.Execute(OperationFactory.CreateLiftAreaOperation(this.Map, x, y, width, height));
+            this.undoManager.Execute(OperationFactory.CreateClippedLiftAreaOperation(this.Map, x, y, width, height));
             return this.Map.FloatingTiles.Count - 1;
         }
 
