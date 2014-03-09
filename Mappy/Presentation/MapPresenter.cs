@@ -106,6 +106,7 @@
                 this.model.Map.Tile.TileGrid.Height * 32);
 
             this.baseTile = new DrawableTile(this.model.Map.Tile);
+            this.baseTile.BackgroundColor = Color.CornflowerBlue;
             this.baseTile.DrawHeightMap = this.viewOptionsModel.HeightmapVisible;
             ImageLayerCollection.Item baseItem = new ImageLayerCollection.Item(
                 0,
@@ -136,11 +137,13 @@
 
         private void InsertTile(Positioned<IMapTile> t, int index)
         {
+            var drawable = new DrawableTile(t.Item);
+            drawable.BackgroundColor = Color.CornflowerBlue;
             ImageLayerCollection.Item i = new ImageLayerCollection.Item(
                     t.Location.X * 32,
                     t.Location.Y * 32,
                     index,
-                    new DrawableTile(t.Item));
+                    drawable);
             i.Tag = new SectionTag(index);
             this.tileMapping.Insert(index, i);
             this.view.Items.Add(i);

@@ -32,6 +32,19 @@ namespace Mappy.UI.Drawables
             get { return this.tile.TileGrid.Height * 32; }
         }
 
+        public Color BackgroundColor
+        {
+            get
+            {
+                return this.painter.BackgroundColor;
+            }
+
+            set
+            {
+                this.painter.BackgroundColor = value;
+            }
+        }
+
         public bool DrawHeightMap { get; set; }
 
         public void Draw(Graphics graphics, Rectangle clipRectangle)
