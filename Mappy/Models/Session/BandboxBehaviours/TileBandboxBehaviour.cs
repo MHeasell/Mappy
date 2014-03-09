@@ -42,12 +42,12 @@
 
         public void StartBandbox(int x, int y)
         {
-            var p = new Point(x / 32, y / 32);
+            var p = new Point((x + 16) / 32, (y + 16) / 32);
             this.startPoint = p;
             this.finishPoint = p;
             this.UpdateBandboxRectangle();
-            this.bufferX = x % 32;
-            this.bufferY = y % 32;
+            this.bufferX = x - (p.X * 32);
+            this.bufferY = y - (p.Y * 32);
         }
 
         public void GrowBandbox(int x, int y)
@@ -55,11 +55,29 @@
             this.bufferX += x;
             this.bufferY += y;
 
-            this.finishPoint.X += this.bufferX / 32;
-            this.finishPoint.Y += this.bufferY / 32;
+            while (this.bufferX >= 16)
+            {
+                this.finishPoint.X++;
+                this.bufferX -= 32;
+            }
 
-            this.bufferX %= 32;
-            this.bufferY %= 32;
+            while (this.bufferY >= 16)
+            {
+                this.finishPoint.Y++;
+                this.bufferY -= 32;
+            }
+
+            while (this.bufferX < -16)
+            {
+                this.finishPoint.X--;
+                this.bufferX += 32;
+            }
+
+            while (this.bufferY < -16)
+            {
+                this.finishPoint.Y--;
+                this.bufferY += 32;
+            }
 
             this.UpdateBandboxRectangle();
         }
