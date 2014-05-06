@@ -70,6 +70,7 @@
                         maskedPalette.TransparencyIndex = frame.TransparencyIndex;
                         image = deserializer.Deserialize(frame.Data, frame.Width, frame.Height);
                     }
+
                     Feature f = new Feature(e.Key, image, new Point(frame.OffsetX, frame.OffsetY), new Size(footX, footY));
                     f.World = e.Value.Entries["world"];
                     f.Category = e.Value.Entries["category"];
