@@ -3,6 +3,9 @@ namespace Mappy.Data
     using System;
     using System.Drawing;
 
+    /// <summary>
+    /// Wrapper class providing position information on top of the wrapped type.
+    /// </summary>
     public class Positioned<T>
     {
         private Point location;

@@ -5,6 +5,10 @@ namespace Mappy.Data
 
     using Mappy.Collections;
 
+    /// <summary>
+    /// Wrapper for IMapTile instances that provides events
+    /// for when tile grid or height grid cells are changed.
+    /// </summary>
     public class BindingMapTile : IMapTile
     {
         private readonly BindingGrid<Bitmap> tileGrid;

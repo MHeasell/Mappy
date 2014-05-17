@@ -10,6 +10,10 @@
     using TAUtil;
     using TAUtil.Sct;
 
+    /// <summary>
+    /// Provides methods for creating tiles and sections
+    /// from SCT sources.
+    /// </summary>
     public class SectionFactory
     {
         private readonly BitmapDeserializer bitmapDeserializer;

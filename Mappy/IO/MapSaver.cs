@@ -8,6 +8,10 @@
     using TAUtil.Hpi;
     using TAUtil.Tnt;
 
+    /// <summary>
+    /// Provides methods for writing out a IMapModel instance
+    /// as TNT or HPI.
+    /// </summary>
     public class MapSaver
     {
         private readonly IReversePalette reversePalette;

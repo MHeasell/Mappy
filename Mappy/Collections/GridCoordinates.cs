@@ -1,5 +1,8 @@
 namespace Mappy.Collections
 {
+    /// <summary>
+    /// Represents the coordinates of a grid cell.
+    /// </summary>
     public struct GridCoordinates
     {
         public GridCoordinates(int x, int y)

@@ -5,6 +5,11 @@
 
     using Mappy.Util;
 
+    /// <summary>
+    /// Defines a tile-based bandbox behaviour.
+    /// In this mode, dragging out a bandbox selects an area of the map,
+    /// in 32x32 tile increments.
+    /// </summary>
     public class TileBandboxBehaviour : Notifier, IBandboxBehaviour
     {
         private readonly ISelectionCommandHandler selectionHandler;

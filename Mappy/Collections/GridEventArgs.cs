@@ -2,6 +2,9 @@
 {
     using System;
 
+    /// <summary>
+    /// Arguments for grid cell events.
+    /// </summary>
     public class GridEventArgs : EventArgs
     {
         public GridEventArgs(int x, int y)

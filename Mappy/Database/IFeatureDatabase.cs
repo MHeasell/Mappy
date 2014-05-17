@@ -4,6 +4,9 @@
 
     using Mappy.Data;
 
+    /// <summary>
+    /// Defines a store for feature data.
+    /// </summary>
     public interface IFeatureDatabase
     {
         Feature this[string name] { get; }

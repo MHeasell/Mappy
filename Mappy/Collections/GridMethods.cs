@@ -2,6 +2,10 @@
 {
     using System;
 
+    /// <summary>
+    /// Provides a set of extension methods for manipulating IGrid
+    /// and ISparseGrid instances.
+    /// </summary>
     public static class GridMethods
     {
         public static int ToIndex<T>(this IGrid<T> grid, int x, int y)

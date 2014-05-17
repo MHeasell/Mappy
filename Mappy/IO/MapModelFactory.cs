@@ -12,6 +12,10 @@
     using TAUtil;
     using TAUtil.Tnt;
 
+    /// <summary>
+    /// Provides methods for creating a MapModel instance
+    /// from TNT and OTA files.
+    /// </summary>
     public class MapModelFactory
     {
         private readonly BitmapDeserializer bitmapDeserializer;

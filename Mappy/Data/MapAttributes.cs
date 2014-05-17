@@ -8,6 +8,9 @@
 
     using Util;
 
+    /// <summary>
+    /// Contains all the metadata about a map.
+    /// </summary>
     public class MapAttributes : Notifier
     {
         private readonly Point?[] startPositions = new Point?[10];

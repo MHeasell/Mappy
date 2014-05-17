@@ -4,6 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// Sparse grid implementation backed by a dictionary.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements.</typeparam>
     public class SparseGrid<T> : ISparseGrid<T>
     {
         private readonly IDictionary<int, T> values;

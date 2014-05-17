@@ -5,6 +5,9 @@
     using Mappy.Data;
     using Mappy.Palette;
 
+    /// <summary>
+    /// Features store backed by a dictionary
+    /// </summary>
     public class FeatureDictionary : IFeatureDatabase
     {
         private readonly IDictionary<string, Feature> records;

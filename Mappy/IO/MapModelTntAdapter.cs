@@ -12,6 +12,10 @@
 
     using TAUtil.Tnt;
 
+    /// <summary>
+    /// Adapter for the TNTWriter,
+    /// allowing data in a MapModel instance to be written to TNT format.
+    /// </summary>
     public class MapModelTntAdapter : ITntSource
     {
         private readonly IMapModel model;

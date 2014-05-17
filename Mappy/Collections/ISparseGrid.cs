@@ -2,6 +2,11 @@
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Generic two-dimensional sparse grid interface.
+    /// A sparse grid may contain holes, i.e. cells with no value.
+    /// </summary>
+    /// <typeparam name="T">The type of the grid cells.</typeparam>
     public interface ISparseGrid<T> : IGrid<T>
     {
         IEnumerable<KeyValuePair<int, T>> IndexEntries { get; }

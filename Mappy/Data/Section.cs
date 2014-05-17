@@ -8,6 +8,10 @@ namespace Mappy.Data
     using TAUtil.Hpi;
     using TAUtil.Sct;
 
+    /// <summary>
+    /// Contains info about a loaded section, various metadata.
+    /// Also supports lazy-loading of the section bitmap.
+    /// </summary>
     public class Section
     {
         private MapTile cachedTile;

@@ -3,6 +3,9 @@
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Arguments to sparse grid cell events.
+    /// </summary>
     public class SparseGridEventArgs : EventArgs
     {
         public SparseGridEventArgs(ActionType action, IEnumerable<int> oldIndexes, IEnumerable<int> indexes)

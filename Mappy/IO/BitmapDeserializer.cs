@@ -6,6 +6,10 @@
 
     using Mappy.Palette;
 
+    /// <summary>
+    /// Deserializes raw 8-bit color image data into a 32-bit Bitmap instance.
+    /// The colors are translated according to the given palette.
+    /// </summary>
     public class BitmapDeserializer
     {
         private readonly IPalette palette;

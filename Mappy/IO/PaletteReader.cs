@@ -6,6 +6,9 @@
 
     using TAUtil;
 
+    /// <summary>
+    /// Reader for JASC PAL files.
+    /// </summary>
     public class PaletteReader : IDisposable
     {
         private readonly TextReader reader;

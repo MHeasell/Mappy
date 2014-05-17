@@ -3,6 +3,11 @@
     using System.Drawing;
     using Views;
 
+    /// <summary>
+    /// Presenter for the minimap viewport.
+    /// Keeps the viewport in sync with the currently displayed map
+    /// and the position of the main viewport.
+    /// </summary>
     public class MinimapController
     {
         private IMinimapView minimap;

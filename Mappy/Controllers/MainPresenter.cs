@@ -15,6 +15,10 @@
 
     using Views;
 
+    /// <summary>
+    /// Presenter for Mappy's main form.
+    /// This is essentially the top-level presenter.
+    /// </summary>
     public class MainPresenter
     {
         private const string ProgramName = "Mappy";

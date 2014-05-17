@@ -4,6 +4,11 @@
     using System.Collections;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Wrapper for ISparseGrid instances that provides an event
+    /// for change notifications.
+    /// </summary>
+    /// <typeparam name="T">The type of the grid elements.</typeparam>
     public class BindingSparseGrid<T> : ISparseGrid<T>
     {
         private readonly ISparseGrid<T> grid;

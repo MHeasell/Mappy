@@ -5,6 +5,13 @@ namespace Mappy.Collections
     using System.Drawing;
     using System.Linq;
 
+    /// <summary>
+    /// Integer based QuadTree for storing items
+    /// defined by a bounding rectangle.
+    /// QuadTree provides fast quering of elements intersecting a point
+    /// or rectangle.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements</typeparam>
     public class QuadTree<T> : ICollection<T> where T : QuadTree<T>.IQuadTreeItem
     {
         private const int TopLeftIndex = 0;

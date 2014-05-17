@@ -4,6 +4,10 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// Dense grid implementation backed by a one-dimensional array.
+    /// </summary>
+    /// <typeparam name="T">The type of the grid elements.</typeparam>
     public class Grid<T> : IGrid<T>
     {
         private readonly T[] arr;

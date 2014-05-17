@@ -4,6 +4,9 @@ namespace Mappy.Data
 
     using Mappy.Collections;
 
+    /// <summary>
+    /// Interface for a map tile.
+    /// </summary>
     public interface IMapTile
     {
         IGrid<Bitmap> TileGrid { get; }

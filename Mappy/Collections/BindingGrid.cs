@@ -3,6 +3,11 @@
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Wrapper for IGrid instances that provides an event
+    /// for change notifications.
+    /// </summary>
+    /// <typeparam name="T">The type of the grid elements.</typeparam>
     public class BindingGrid<T> : IGrid<T>
     {
         private readonly IGrid<T> grid;

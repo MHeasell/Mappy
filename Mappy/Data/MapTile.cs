@@ -4,6 +4,9 @@ namespace Mappy.Data
 
     using Mappy.Collections;
 
+    /// <summary>
+    /// Represents a tile on the map.
+    /// </summary>
     public class MapTile : IMapTile
     {
         public const int TileWidth = 32;

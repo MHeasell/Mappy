@@ -6,6 +6,11 @@ namespace Mappy.IO
 
     using Mappy.Palette;
 
+    /// <summary>
+    /// Serializes a 32-bit Bitmap instance into raw 8-bit indexed color data.
+    /// The mapping from color to index is done according to the given
+    /// reverse palette lookup.
+    /// </summary>
     public class BitmapSerializer
     {
         private readonly IReversePalette reversePalette;

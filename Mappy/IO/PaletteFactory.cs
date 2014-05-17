@@ -7,6 +7,9 @@ namespace Mappy.IO
 
     using Mappy.Palette;
 
+    /// <summary>
+    /// Provides mthods for creating palette instances from files.
+    /// </summary>
     public static class PaletteFactory
     {
         private const int TAPaletteColorCount = 256;

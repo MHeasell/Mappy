@@ -7,6 +7,11 @@
     using System.Runtime.InteropServices;
     using System.Security.Cryptography;
 
+    /// <summary>
+    /// Cache for storing bitmap data with de-duplication.
+    /// Only one unique instance of an image will be stored.
+    /// If an identical image is given, the original will be returned.
+    /// </summary>
     public class BitmapCache
     {
         private static readonly SHA1 Sha = SHA1.Create();

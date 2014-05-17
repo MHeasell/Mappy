@@ -5,6 +5,10 @@ namespace Mappy.Data
 
     using Mappy.Collections;
 
+    /// <summary>
+    /// Represents the "blueprint" for a feature.
+    /// Contains metadata about the feature.
+    /// </summary>
     public class Feature
     {
         public Feature(string name, Bitmap image)
