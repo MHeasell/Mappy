@@ -6,9 +6,9 @@
     using Mappy.Models;
     using Mappy.Views;
 
-    public partial class MinimapForm : Form, IMinimapView
+    public partial class MinimapForm : Form
     {
-        private IMainView mainView;
+        private MainForm mainView;
         private IBindingMapModel map;
 
         private bool mouseDown;
@@ -20,7 +20,7 @@
 
         public event EventHandler<MinimapMoveEventArgs> ViewportMove;
 
-        public IMainView MainView
+        public MainForm MainView
         {
             get
             {

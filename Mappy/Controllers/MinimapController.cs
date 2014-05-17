@@ -1,6 +1,9 @@
 ﻿namespace Mappy.Controllers
 {
     using System.Drawing;
+
+    using Mappy.UI.Forms;
+
     using Views;
 
     /// <summary>
@@ -10,10 +13,10 @@
     /// </summary>
     public class MinimapController
     {
-        private IMinimapView minimap;
-        private IMainView mainView;
+        private MinimapForm minimap;
+        private MainForm mainView;
 
-        public MinimapController(IMinimapView mini, IMainView main)
+        public MinimapController(MinimapForm mini, MainForm main)
         {
             this.minimap = mini;
             this.mainView = main;

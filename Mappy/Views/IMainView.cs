@@ -9,8 +9,6 @@
 
     public interface IMainView
     {
-        event EventHandler ViewportLocationChanged;
-
         string TitleText { get; set; }
 
         bool SaveEnabled { get; set; }
@@ -21,8 +19,6 @@
 
         bool RedoEnabled { get; set; }
 
-        bool MinimapVisible { get; set; }
-
         bool OpenAttributesEnabled { get; set; }
 
         IBindingMapModel Map { get; set; }
@@ -30,10 +26,6 @@
         IList<Section> Sections { get; set; }
 
         IList<Feature> Features { get; set; }
-
-        Rectangle ViewportRect { get; }
-
-        void SetViewportCenter(Point p);
 
         string AskUserToChooseMap(IList<string> maps);
 

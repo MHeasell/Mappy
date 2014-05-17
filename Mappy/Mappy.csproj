@@ -194,7 +194,6 @@
     <Compile Include="Util\Notifier.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Views\IMainView.cs" />
-    <Compile Include="Views\IMinimapView.cs" />
     <Compile Include="Controllers\MainPresenter.cs" />
     <Compile Include="UI\Painters\ContourHeightPainter.cs" />
     <Compile Include="Models\MapModel.cs" />
@@ -236,6 +235,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Operations\OperationManager.cs" />
+    <Compile Include="Views\MinimapMoveEventArgs.cs" />
     <EmbeddedResource Include="UI\Controls\FeatureView.resx">
       <DependentUpon>FeatureView.cs</DependentUpon>
     </EmbeddedResource>
