@@ -12,7 +12,7 @@
     /// </summary>
     public class TileBandboxBehaviour : Notifier, IBandboxBehaviour
     {
-        private readonly ISelectionCommandHandler selectionHandler;
+        private readonly ISelectionModel selectionModel;
 
         private readonly IMapCommandHandler handler;
 
@@ -26,10 +26,10 @@
 
         private int bufferY;
 
-        public TileBandboxBehaviour(IMapCommandHandler handler, ISelectionCommandHandler selectionHandler)
+        public TileBandboxBehaviour(IMapCommandHandler handler, ISelectionModel selectionModel)
         {
             this.handler = handler;
-            this.selectionHandler = selectionHandler;
+            this.selectionModel = selectionModel;
         }
 
         public Rectangle BandboxRectangle
@@ -105,7 +105,7 @@
                     this.BandboxRectangle.Width / 32,
                     this.bandboxRectangle.Height / 32);
 
-                this.selectionHandler.SelectTile(index);
+                this.selectionModel.SelectTile(index);
             }
             finally
             {

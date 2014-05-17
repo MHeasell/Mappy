@@ -13,7 +13,7 @@
 
     using Point = System.Drawing.Point;
 
-    public class SelectionModel : Notifier, ISelectionModel, ISelectionCommandHandler
+    public class SelectionModel : Notifier, ISelectionModel
     {
         private readonly IMapCommandHandler model;
 

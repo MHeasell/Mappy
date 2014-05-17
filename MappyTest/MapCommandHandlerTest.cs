@@ -14,12 +14,12 @@
     {
         private MapCommandHandler presenter;
 
-        private Mock<ISelectionCommandHandler> model;
+        private Mock<ISelectionModel> model;
 
         [TestInitialize]
         public void SetUp()
         {
-            this.model = new Mock<ISelectionCommandHandler>(MockBehavior.Strict);
+            this.model = new Mock<ISelectionModel>(MockBehavior.Strict);
             this.presenter = new MapCommandHandler(this.model.Object);
         }
 

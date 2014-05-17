@@ -8,7 +8,7 @@
 
     public class MapCommandHandler : IMapCommandHandler
     {
-        private readonly ISelectionCommandHandler handler;
+        private readonly ISelectionModel model;
 
         private bool mouseDown;
 
@@ -16,9 +16,9 @@
 
         private bool bandboxMode;
 
-        public MapCommandHandler(ISelectionCommandHandler handler)
+        public MapCommandHandler(ISelectionModel model)
         {
-            this.handler = handler;
+            this.model = model;
         }
 
         public void DragDrop(IDataObject data, int virtualX, int virtualY)
@@ -26,7 +26,7 @@
             if (data.GetDataPresent(typeof(StartPositionDragData)))
             {
                 StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
-                this.handler.DragDropStartPosition(posData.PositionNumber, virtualX, virtualY);
+                this.model.DragDropStartPosition(posData.PositionNumber, virtualX, virtualY);
             }
             else
             {
@@ -34,11 +34,11 @@
                 int id;
                 if (int.TryParse(dataString, out id))
                 {
-                    this.handler.DragDropTile(id, virtualX, virtualY);
+                    this.model.DragDropTile(id, virtualX, virtualY);
                 }
                 else
                 {
-                    this.handler.DragDropFeature(dataString, virtualX, virtualY);
+                    this.model.DragDropFeature(dataString, virtualX, virtualY);
                 }
             }
         }
@@ -48,11 +48,11 @@
             this.mouseDown = true;
             this.lastMousePos = new Point(virtualX, virtualY);
 
-            if (!this.handler.IsInSelection(virtualX, virtualY))
+            if (!this.model.IsInSelection(virtualX, virtualY))
             {
-                if (!this.handler.SelectAtPoint(virtualX, virtualY))
+                if (!this.model.SelectAtPoint(virtualX, virtualY))
                 {
-                    this.handler.StartBandbox(virtualX, virtualY);
+                    this.model.StartBandbox(virtualX, virtualY);
                     this.bandboxMode = true;
                 }
             }
@@ -69,13 +69,13 @@
 
                 if (this.bandboxMode)
                 {
-                    this.handler.GrowBandbox(
+                    this.model.GrowBandbox(
                         virtualX - this.lastMousePos.X,
                         virtualY - this.lastMousePos.Y);
                 }
                 else
                 {
-                    this.handler.TranslateSelection(
+                    this.model.TranslateSelection(
                         virtualX - this.lastMousePos.X,
                         virtualY - this.lastMousePos.Y);
                 }
@@ -90,12 +90,12 @@
         {
             if (this.bandboxMode)
             {
-                this.handler.CommitBandbox();
+                this.model.CommitBandbox();
                 this.bandboxMode = false;
             }
             else
             {
-                this.handler.FlushTranslation();
+                this.model.FlushTranslation();
             }
 
             this.mouseDown = false;
@@ -105,13 +105,13 @@
         {
             if (key == Keys.Delete)
             {
-                this.handler.DeleteSelection();
+                this.model.DeleteSelection();
             }
         }
 
         public void LostFocus()
         {
-            this.handler.ClearSelection();
+            this.model.ClearSelection();
         }
     }
 }

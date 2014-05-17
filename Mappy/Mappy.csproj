@@ -107,7 +107,6 @@
     <Compile Include="Models\Session\IViewOptionsModel.cs" />
     <Compile Include="Models\Session\SelectionModel.cs" />
     <Compile Include="Models\Session\ISelectionModel.cs" />
-    <Compile Include="Models\Session\ISelectionCommandHandler.cs" />
     <Compile Include="Operations\AddFeatureOperation.cs" />
     <Compile Include="Operations\ChangeAttributesOperation.cs" />
     <Compile Include="Operations\ChangeStartPositionOperation.cs" />
