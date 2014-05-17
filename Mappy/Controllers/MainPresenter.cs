@@ -32,8 +32,6 @@
             this.view = view;
             this.model = model;
 
-            this.view.Presenter = this;
-
             this.view.Features = this.model.FeatureRecords.EnumerateAll().ToList();
 
             this.view.Sections = this.model.Sections;

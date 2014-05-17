@@ -4,15 +4,12 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
-    using Controllers;
     using Data;
     using Models;
 
     public interface IMainView
     {
         event EventHandler ViewportLocationChanged;
-        
-        MainPresenter Presenter { get; set; }
 
         string TitleText { get; set; }
 
