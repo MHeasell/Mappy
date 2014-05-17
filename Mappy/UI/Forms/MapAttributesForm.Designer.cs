@@ -515,6 +515,7 @@
             // numericUpDown11
             // 
             this.numericUpDown11.DataBindings.Add(new System.Windows.Forms.Binding("Value", this.mapAttributesResultBindingSource, "MeteorDensity", true));
+            this.numericUpDown11.DecimalPlaces = 2;
             this.numericUpDown11.Location = new System.Drawing.Point(209, 19);
             this.numericUpDown11.Maximum = new decimal(new int[] {
             20000,

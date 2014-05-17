@@ -1,6 +1,7 @@
 ﻿namespace Mappy
 {
     using System;
+    using System.Globalization;
 
     public static class TdfConvert
     {
@@ -12,6 +13,11 @@
         public static string ToString(bool b)
         {
             return b ? "1" : "0";
+        }
+
+        public static string ToString(double d)
+        {
+            return Convert.ToString(d);
         }
 
         public static bool ToBool(string s)
@@ -27,6 +33,16 @@
             }
 
             return Convert.ToInt32(s);
+        }
+
+        public static double ToDouble(string s)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                return 0.0;
+            }
+
+            return Convert.ToDouble(s);
         }
     }
 }

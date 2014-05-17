@@ -39,7 +39,7 @@
 
         private string meteorWeapon;
         private int meteorRadius;
-        private int meteorDensity;
+        private double meteorDensity;
         private int meteorDuration;
         private int meteorInterval;
 
@@ -159,7 +159,7 @@
             set { this.SetField(ref this.meteorDuration, value, "MeteorDuration"); }
         }
 
-        public int MeteorDensity
+        public double MeteorDensity
         {
             get { return this.meteorDensity; }
             set { this.SetField(ref this.meteorDensity, value, "MeteorDensity"); }
@@ -195,7 +195,7 @@
             m.MohoMetal = TdfConvert.ToInt32(schema.Entries["MohoMetal"]);
             m.MeteorWeapon = schema.Entries["MeteorWeapon"];
             m.MeteorRadius = TdfConvert.ToInt32(schema.Entries["MeteorRadius"]);
-            m.MeteorDensity = TdfConvert.ToInt32(schema.Entries["MeteorDensity"]);
+            m.MeteorDensity = TdfConvert.ToDouble(schema.Entries["MeteorDensity"]);
             m.MeteorDuration = TdfConvert.ToInt32(schema.Entries["MeteorDuration"]);
             m.MeteorInterval = TdfConvert.ToInt32(schema.Entries["MeteorInterval"]);
 

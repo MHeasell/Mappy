@@ -36,7 +36,7 @@ namespace Mappy.Models
 
         public int MeteorDuration { get; set; }
 
-        public int MeteorDensity { get; set; }
+        public double MeteorDensity { get; set; }
 
         public int MeteorInterval { get; set; }
 
