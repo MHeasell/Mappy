@@ -47,6 +47,8 @@
 
         private bool previousTranslationOpen;
 
+        private BandboxMode selectionMode;
+
         public CoreModel()
         {
             this.featureRecords = new FeatureDictionary(Globals.Palette);
@@ -164,6 +166,19 @@
                 MappySettings.Settings.GridColor = value;
                 MappySettings.SaveSettings();
                 this.SetField(ref this.gridColor, value, "GridColor");
+            }
+        }
+
+        public BandboxMode SelectionMode
+        {
+            get
+            {
+                return this.selectionMode;
+            }
+
+            set
+            {
+                this.SetField(ref this.selectionMode, value, "SelectionMode");
             }
         }
 

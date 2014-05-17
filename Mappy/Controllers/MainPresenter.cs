@@ -201,6 +201,11 @@
             }
         }
 
+        public void SetSelectionMode(BandboxMode mode)
+        {
+            this.model.SelectionMode = mode;
+        }
+
         private bool SaveHelper(string filename)
         {
             string extension = Path.GetExtension(filename);

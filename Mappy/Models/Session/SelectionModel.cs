@@ -21,7 +21,7 @@
 
         private readonly ObservableCollection<GridCoordinates> selectedFeatures = new ObservableCollection<GridCoordinates>();
 
-        private readonly IBandboxBehaviour bandboxBehaviour;
+        private IBandboxBehaviour bandboxBehaviour;
 
         private bool hasSelection;
 

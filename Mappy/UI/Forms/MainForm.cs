@@ -42,6 +42,10 @@
             new MapPresenter(this.imageLayerView1, model, selectionModel, model);
 
             new MainPresenter(this, model);
+
+            this.comboBox1.Items.Add(BandboxMode.Tile);
+            this.comboBox1.Items.Add(BandboxMode.Feature);
+            this.comboBox1.SelectedItem = BandboxMode.Tile;
         }
 
         public event EventHandler ViewportLocationChanged;
@@ -410,6 +414,11 @@
         private void ToolStripMenuItem11Click(object sender, EventArgs e)
         {
             this.Presenter.OpenMapAttributes();
+        }
+
+        private void ModeDropDownSelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.Presenter.SetSelectionMode((BandboxMode)comboBox1.SelectedItem);
         }
     }
 }
