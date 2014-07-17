@@ -58,7 +58,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MinimapForm";
             this.Text = "Minimap";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MinimapForm_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MinimapFormFormClosing);
             this.ResumeLayout(false);
 
         }

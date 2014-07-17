@@ -507,7 +507,6 @@
             this.Name = "MainForm";
             this.Text = "Mappy";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1FormClosing);
-            this.Load += new System.EventHandler(this.Form1Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);

@@ -41,6 +41,8 @@
         private bool heightmapVisible;
         private bool featuresVisible = true;
 
+        private bool minimapVisible;
+
         private bool gridVisible;
         private Size gridSize = new Size(16, 16);
         private Color gridColor = MappySettings.Settings.GridColor;
@@ -48,6 +50,8 @@
         private bool previousTranslationOpen;
 
         private BandboxMode selectionMode;
+
+        private RectangleF viewportRectangle;
 
         public CoreModel()
         {
@@ -142,6 +146,19 @@
             set { this.SetField(ref this.featuresVisible, value, "FeaturesVisible"); }
         }
 
+        public bool MinimapVisible
+        {
+            get
+            {
+                return this.minimapVisible;
+            }
+
+            set
+            {
+                this.SetField(ref this.minimapVisible, value, "MinimapVisible");
+            }
+        }
+
         public bool GridVisible
         {
             get { return this.gridVisible; }
@@ -179,6 +196,19 @@
             set
             {
                 this.SetField(ref this.selectionMode, value, "SelectionMode");
+            }
+        }
+
+        public RectangleF ViewportRectangle
+        {
+            get
+            {
+                return this.viewportRectangle;
+            }
+
+            set
+            {
+                this.SetField(ref this.viewportRectangle, value, "ViewportRectangle");
             }
         }
 

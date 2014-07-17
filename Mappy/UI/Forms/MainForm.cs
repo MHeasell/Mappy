@@ -13,14 +13,12 @@
 
     public partial class MainForm : Form, IMainView
     {
-        private MinimapForm minimapForm;
-
         private Point oldAutoScrollPos;
 
         private IList<Section> sections;
         private IList<Feature> features;
 
-        private IBindingMapModel map;
+        private MainPresenter presenter;
 
         public MainForm()
         {
@@ -43,25 +41,33 @@
 
             this.Presenter = new MainPresenter(this, model);
 
+            var minimapForm = new MinimapForm();
+            minimapForm.Owner = this;
+            var minimapPresenter = new MinimapController(minimapForm, this, model);
+            minimapForm.Presenter = minimapPresenter;
+
             this.comboBox1.Items.Add(BandboxMode.Tile);
             this.comboBox1.Items.Add(BandboxMode.Feature);
             this.comboBox1.SelectedItem = BandboxMode.Tile;
         }
 
-        public event EventHandler ViewportLocationChanged;
-
-        public MainPresenter Presenter { get; set; }
+        public MainPresenter Presenter
+        {
+            get
+            {
+                return this.presenter;
+            }
+            set
+            {
+                this.presenter = value;
+                this.UpdateModelViewport();
+            }
+        }
 
         public string TitleText
         {
             get { return this.Text; }
             set { this.Text = value; }
-        }
-
-        public bool MinimapVisible
-        {
-            get { return this.minimapForm.Visible; }
-            set { this.minimapForm.Visible = value; }
         }
 
         public bool UndoEnabled
@@ -110,20 +116,6 @@
                 loc.X *= -1;
                 loc.Y *= -1;
                 return new Rectangle(loc, this.imageLayerView1.ClientSize);
-            }
-        }
-
-        public IBindingMapModel Map
-        {
-            get
-            {
-                return this.map;
-            }
-
-            set
-            {
-                this.map = value;
-                this.minimapForm.Map = value;
             }
         }
 
@@ -195,6 +187,15 @@
             p.X -= this.imageLayerView1.ClientSize.Width / 2;
             p.Y -= this.imageLayerView1.ClientSize.Height / 2;
             this.imageLayerView1.AutoScrollPosition = p;
+        }
+
+        public void SetViewportCenterNormalized(PointF location)
+        {
+            var size = this.imageLayerView1.CanvasSize;
+            var p = new Point(
+                (int)(location.X * size.Width),
+                (int)(location.Y * size.Height));
+            this.SetViewportCenter(p);
         }
 
         public void CapturePreferences()
@@ -277,14 +278,6 @@
             MessageBox.Show(this, message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void Form1Load(object sender, EventArgs e)
-        {
-            this.minimapForm = new MinimapForm();
-            this.minimapForm.Owner = this;
-            this.minimapForm.MainView = this;
-            new MinimapController(this.minimapForm, this);
-        }
-
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
             this.Presenter.Open();
@@ -295,28 +288,32 @@
             this.Presenter.ToggleHeightmap();
         }
 
-        private void OnViewportChanged()
-        {
-            EventHandler h = this.ViewportLocationChanged;
-            if (h != null)
-            {
-                h(this, EventArgs.Empty);
-            }
-        }
-
         private void MapPanel1Paint(object sender, PaintEventArgs e)
         {
             Point p = this.imageLayerView1.AutoScrollPosition;
             if (p != this.oldAutoScrollPos)
             {
                 this.oldAutoScrollPos = p;
-                this.OnViewportChanged();
+                this.UpdateModelViewport();
             }
         }
 
         private void MapPanel1SizeChanged(object sender, EventArgs e)
         {
-            this.OnViewportChanged();
+            this.UpdateModelViewport();
+        }
+
+        private void UpdateModelViewport()
+        {
+            var widthScale = (float)this.imageLayerView1.CanvasSize.Width;
+            var heightScale = (float)this.imageLayerView1.CanvasSize.Height;
+
+            var rect = this.ViewportRect;
+            var x = rect.X / widthScale;
+            var y = rect.Y / heightScale;
+            var w = rect.Width / widthScale;
+            var h = rect.Height / heightScale;
+            this.Presenter.ChangeViewport(new RectangleF(x, y, w, h));
         }
 
         private void PreferencesToolStripMenuItemClick(object sender, EventArgs e)
@@ -336,7 +333,7 @@
 
         private void MinimapToolStripMenuItem1Click(object sender, EventArgs e)
         {
-            this.MinimapVisible = this.minimapToolStripMenuItem1.Checked;
+            this.Presenter.ToggleMinimap();
         }
 
         private void UndoToolStripMenuItemClick(object sender, EventArgs e)

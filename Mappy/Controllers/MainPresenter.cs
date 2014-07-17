@@ -208,6 +208,16 @@
             this.model.SelectionMode = mode;
         }
 
+        public void ToggleMinimap()
+        {
+            this.model.MinimapVisible = !this.model.MinimapVisible;
+        }
+
+        public void ChangeViewport(RectangleF newViewport)
+        {
+            this.model.ViewportRectangle = newViewport;
+        }
+
         private bool SaveHelper(string filename)
         {
             string extension = Path.GetExtension(filename);
@@ -330,7 +340,6 @@
                     this.view.RedoEnabled = this.model.CanRedo;
                     break;
                 case "Map":
-                    this.view.Map = this.model.Map;
                     this.view.OpenAttributesEnabled = this.model.Map != null;
                     break;
                 case "IsFileOpen":

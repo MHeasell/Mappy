@@ -1,154 +1,110 @@
 ﻿namespace Mappy.UI.Forms
 {
-    using System;
     using System.Drawing;
     using System.Windows.Forms;
-    using Mappy.Models;
-    using Mappy.Views;
+
+    using Mappy.Controllers;
 
     public partial class MinimapForm : Form
     {
-        private MainForm mainView;
-        private IBindingMapModel map;
-
-        private bool mouseDown;
+        private RectangleF viewportRectangle;
 
         public MinimapForm()
         {
             this.InitializeComponent();
         }
 
-        public event EventHandler<MinimapMoveEventArgs> ViewportMove;
+        public MinimapController Presenter { get; set; }
 
-        public MainForm MainView
+        public Image MinimapImage
         {
             get
             {
-                return this.mainView;
+                return this.minimapControl1.BackgroundImage;
             }
 
             set
             {
-                if (this.mainView != null)
-                {
-                    this.mainView.ViewportLocationChanged -= this.ViewportLocationChanged;
-                }
+                this.minimapControl1.BackgroundImage = value;
+            }
+        }
 
-                this.mainView = value;
+        public RectangleF ViewportRectangle
+        {
+            get
+            {
+                return this.viewportRectangle;
+            }
 
-                if (this.mainView != null)
-                {
-                    this.mainView.ViewportLocationChanged += this.ViewportLocationChanged;
-                }
-
+            set
+            {
+                this.viewportRectangle = value;
                 this.UpdateViewportRect();
             }
         }
 
-        public IBindingMapModel Map
+        public bool ViewportVisible
         {
             get
             {
-                return this.map;
+                return this.minimapControl1.RectVisible;
             }
 
             set
             {
-                if (this.map != null)
-                {
-                    this.map.MinimapChanged -= this.MapMinimapChanged;
-                }
-
-                this.map = value;
-
-                if (this.map != null)
-                {
-                    this.map.MinimapChanged += this.MapMinimapChanged;
-                }
-
-                this.UpdateMinimapPicture();
+                this.minimapControl1.RectVisible = value;
             }
         }
 
-        private void UpdateMinimapPicture()
-        {
-            if (this.Map == null)
-            {
-                this.minimapControl1.BackgroundImage = null;
-            }
-            else
-            {
-                this.minimapControl1.BackgroundImage = this.Map.Minimap;
-            }
-        }
-
-        private void OnViewportMove(Point location)
-        {
-            EventHandler<MinimapMoveEventArgs> h = this.ViewportMove;
-            if (h != null)
-            {
-                h(this, new MinimapMoveEventArgs { Location = location });
-            }
-        }
-
-        private void MinimapForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void MinimapFormFormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                this.Hide();
+                this.Presenter.MinimapClose();
             }
-        }
-
-        private void ViewportLocationChanged(object sender, EventArgs e)
-        {
-            this.UpdateViewportRect();
         }
 
         private void UpdateViewportRect()
         {
-            bool visible = this.mainView != null && this.mainView.Map != null;
-            this.minimapControl1.RectVisible = visible;
-            if (visible)
-            {
-                this.minimapControl1.ViewportRect = this.ConvertToMinimapRect(this.mainView.ViewportRect);
-            }
+            this.minimapControl1.ViewportRect = this.ConvertToMinimapRect(this.ViewportRectangle);
         }
 
-        private Rectangle ConvertToMinimapRect(Rectangle rectangle)
+        private Rectangle ConvertToMinimapRect(RectangleF rectangle)
         {
-            float facX = this.minimapControl1.Width / (this.mainView.Map.Tile.TileGrid.Width * 32.0f);
-            float facY = this.minimapControl1.Height / (this.mainView.Map.Tile.TileGrid.Height * 32.0f);
+            int w = this.minimapControl1.Width;
+            int h = this.minimapControl1.Height;
 
             return new Rectangle(
-                (int)(rectangle.X * facX),
-                (int)(rectangle.Y * facY),
-                (int)(rectangle.Width * facX),
-                (int)(rectangle.Height * facY));
+                (int)(rectangle.X * w),
+                (int)(rectangle.Y * h),
+                (int)(rectangle.Width * w),
+                (int)(rectangle.Height * h));
         }
 
         private void MinimapControl1MouseDown(object sender, MouseEventArgs e)
         {
-            this.mouseDown = true;
-            this.OnViewportMove(e.Location);
+            var pos = this.ToNormalizedPosition(e.Location);
+            this.Presenter.MinimapClick(pos);
         }
 
         private void MinimapControl1MouseMove(object sender, MouseEventArgs e)
         {
-            if (this.mouseDown)
-            {
-                this.OnViewportMove(e.Location);
-            }
+            var pos = this.ToNormalizedPosition(e.Location);
+            this.Presenter.MinimapMouseMove(pos);
         }
 
         private void MinimapControl1MouseUp(object sender, MouseEventArgs e)
         {
-            this.mouseDown = false;
+            var pos = this.ToNormalizedPosition(e.Location);
+            this.Presenter.MinimapMouseUp(pos);
         }
 
-        private void MapMinimapChanged(object sender, EventArgs e)
+        private PointF ToNormalizedPosition(Point location)
         {
-            this.UpdateMinimapPicture();
+            return new PointF(
+                location.X / (float)this.minimapControl1.Width,
+                location.Y / (float)this.minimapControl1.Height);
         }
     }
 }

@@ -21,8 +21,6 @@
 
         bool OpenAttributesEnabled { get; set; }
 
-        IBindingMapModel Map { get; set; }
-
         IList<Section> Sections { get; set; }
 
         IList<Feature> Features { get; set; }
