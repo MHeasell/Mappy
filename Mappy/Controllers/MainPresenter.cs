@@ -304,6 +304,7 @@
                     readOnly = false;
                     break;
                 default:
+                    maps.Sort();
                     mapName = this.view.AskUserToChooseMap(maps);
                     readOnly = true;
                     break;
