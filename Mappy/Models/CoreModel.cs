@@ -9,6 +9,7 @@
     using Mappy.Collections;
     using Mappy.Database;
     using Mappy.IO;
+    using Mappy.Minimap;
     using Mappy.Models.Session;
 
     using Operations;
@@ -20,7 +21,7 @@
 
     using Util;
 
-    public class CoreModel : Notifier, IMapDataModel, IMapCommandHandler, IViewOptionsModel
+    public class CoreModel : Notifier, IMapDataModel, IMapCommandHandler, IViewOptionsModel, IMinimapModel
     {
         private readonly OperationManager undoManager = new OperationManager();
 
@@ -53,6 +54,8 @@
 
         private RectangleF viewportRectangle;
 
+        private Bitmap minimapImage;
+
         public CoreModel()
         {
             this.featureRecords = new FeatureDictionary(Globals.Palette);
@@ -84,8 +87,19 @@
                 if (this.SetField(ref this.map, value, "Map"))
                 {
                     this.undoManager.Clear();
-                    this.IsFileOpen = this.Map != null;
                     this.previousTranslationOpen = false;
+                    
+                    if (this.Map == null)
+                    {
+                        this.MinimapImage = null;
+                        this.IsFileOpen = false;
+                    }
+                    else
+                    {
+                        this.MinimapImage = this.Map.Minimap;
+                        this.Map.MinimapChanged += this.MapOnMinimapChanged;
+                        this.IsFileOpen = true;
+                    }
                 }
             }
         }
@@ -209,6 +223,19 @@
             set
             {
                 this.SetField(ref this.viewportRectangle, value, "ViewportRectangle");
+            }
+        }
+
+        public Bitmap MinimapImage
+        {
+            get
+            {
+                return this.minimapImage;
+            }
+
+            private set
+            {
+                this.SetField(ref this.minimapImage, value, "MinimapImage");
             }
         }
 
@@ -591,6 +618,11 @@
         private void IsMarkedChanged(object sender, EventArgs e)
         {
             this.IsDirty = !this.undoManager.IsMarked;
+        }
+
+        private void MapOnMinimapChanged(object sender, EventArgs eventArgs)
+        {
+            this.MinimapImage = this.Map.Minimap;
         }
     }
 }

@@ -96,6 +96,8 @@
     <Compile Include="IO\PaletteReader.cs" />
     <Compile Include="IO\SectionFactory.cs" />
     <Compile Include="MappySettings.cs" />
+    <Compile Include="Minimap\IMinimapModel.cs" />
+    <Compile Include="Minimap\IMinimapView.cs" />
     <Compile Include="Models\BandboxMode.cs" />
     <Compile Include="Models\CoreModel.cs" />
     <Compile Include="Models\IMapDataModel.cs" />

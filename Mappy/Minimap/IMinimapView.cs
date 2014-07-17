@@ -8,6 +8,6 @@
 
         RectangleF ViewportRectangle { get; set; }
 
-        Bitmap MinimapImage { get; set; }
+        Image MinimapImage { get; set; }
     }
 }

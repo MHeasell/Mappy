@@ -1,10 +1,8 @@
 ﻿namespace Mappy.Minimap
 {
-    using System;
     using System.ComponentModel;
     using System.Drawing;
 
-    using Mappy.Models;
     using Mappy.UI.Forms;
 
     /// <summary>
@@ -16,23 +14,23 @@
     {
         private readonly IMinimapView minimap;
 
-        private readonly CoreModel model;
+        private readonly IMinimapModel model;
 
         private readonly MainForm mainView;
 
         private bool mouseDown;
 
-        public MinimapPresenter(IMinimapView mini, MainForm main, CoreModel model)
+        public MinimapPresenter(IMinimapView mini, MainForm main, IMinimapModel model)
         {
             this.minimap = mini;
             this.mainView = main;
             this.model = model;
 
+            this.model.PropertyChanged += this.ModelOnPropertyChanged;
+
             this.minimap.Visible = this.model.MinimapVisible;
             this.minimap.ViewportRectangle = this.model.ViewportRectangle;
-            this.MapChanged();
-
-            this.model.PropertyChanged += this.ModelOnPropertyChanged;
+            this.minimap.MinimapImage = this.model.MinimapImage;
         }
 
         public void MinimapClick(PointF location)
@@ -69,24 +67,10 @@
                 case "ViewportRectangle":
                     this.minimap.ViewportRectangle = this.model.ViewportRectangle;
                     break;
-                case "Map":
-                    this.MapChanged();
+                case "MinimapImage":
+                    this.minimap.MinimapImage = this.model.MinimapImage;
                     break;
             }
-        }
-
-        private void MapChanged()
-        {
-            if (this.model.Map != null)
-            {
-                this.model.Map.MinimapChanged += this.MapOnMinimapChanged;
-                this.minimap.MinimapImage = this.model.Map.Minimap;
-            }
-        }
-
-        private void MapOnMinimapChanged(object sender, EventArgs eventArgs)
-        {
-            this.minimap.MinimapImage = this.model.Map.Minimap;
         }
     }
 }

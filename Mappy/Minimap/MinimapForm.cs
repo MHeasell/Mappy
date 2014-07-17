@@ -3,7 +3,7 @@
     using System.Drawing;
     using System.Windows.Forms;
 
-    public partial class MinimapForm : Form
+    public partial class MinimapForm : Form, IMinimapView
     {
         private RectangleF viewportRectangle;
 

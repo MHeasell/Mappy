@@ -86,7 +86,10 @@
             set
             {
                 base.BackgroundImage = value;
-                this.Size = base.BackgroundImage.Size;
+                if (this.BackgroundImage != null)
+                {
+                    this.Size = base.BackgroundImage.Size;
+                }
             }
         }
 
