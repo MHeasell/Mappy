@@ -14,7 +14,7 @@
     /// </summary>
     public class MinimapPresenter
     {
-        private readonly MinimapForm minimap;
+        private readonly IMinimapView minimap;
 
         private readonly CoreModel model;
 
@@ -22,7 +22,7 @@
 
         private bool mouseDown;
 
-        public MinimapPresenter(MinimapForm mini, MainForm main, CoreModel model)
+        public MinimapPresenter(IMinimapView mini, MainForm main, CoreModel model)
         {
             this.minimap = mini;
             this.mainView = main;
