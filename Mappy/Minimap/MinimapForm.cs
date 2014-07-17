@@ -1,9 +1,7 @@
-﻿namespace Mappy.UI.Forms
+﻿namespace Mappy.Minimap
 {
     using System.Drawing;
     using System.Windows.Forms;
-
-    using Mappy.Controllers;
 
     public partial class MinimapForm : Form
     {

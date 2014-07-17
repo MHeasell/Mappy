@@ -1,6 +1,6 @@
-﻿namespace Mappy.UI.Forms
+﻿namespace Mappy.Minimap
 {
-    using Controls;
+    using Mappy.UI.Controls;
 
     partial class MinimapForm
     {

@@ -6,6 +6,7 @@
     using System.Windows.Forms;
     using Data;
     using Mappy.Controllers;
+    using Mappy.Minimap;
     using Mappy.Models;
     using Mappy.Models.Session;
     using Mappy.Presentation;

@@ -185,7 +185,7 @@
     <Compile Include="Operations\IReplayableOperation.cs" />
     <Compile Include="LoadingUtils.cs" />
     <Compile Include="Operations\CopyAreaOperation.cs" />
-    <Compile Include="Controllers\MinimapPresenter.cs" />
+    <Compile Include="Minimap\MinimapPresenter.cs" />
     <Compile Include="GridUtil.cs" />
     <Compile Include="Operations\MoveTileOperation.cs" />
     <Compile Include="Operations\OperationFactory.cs" />
@@ -216,13 +216,13 @@
     <Compile Include="UI\Forms\MapSelectionForm.Designer.cs">
       <DependentUpon>MapSelectionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="UI\Controls\MinimapControl.cs">
+    <Compile Include="Minimap\MinimapControl.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="UI\Forms\MinimapForm.cs">
+    <Compile Include="Minimap\MinimapForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UI\Forms\MinimapForm.Designer.cs">
+    <Compile Include="Minimap\MinimapForm.Designer.cs">
       <DependentUpon>MinimapForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Painters\IPainter.cs" />
@@ -257,7 +257,7 @@
     <EmbeddedResource Include="UI\Forms\MapSelectionForm.resx">
       <DependentUpon>MapSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UI\Forms\MinimapForm.resx">
+    <EmbeddedResource Include="Minimap\MinimapForm.resx">
       <DependentUpon>MinimapForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\NewMapForm.resx">

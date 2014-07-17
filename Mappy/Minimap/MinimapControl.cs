@@ -1,4 +1,4 @@
-﻿namespace Mappy.UI.Controls
+﻿namespace Mappy.Minimap
 {
     using System.ComponentModel;
     using System.Drawing;
