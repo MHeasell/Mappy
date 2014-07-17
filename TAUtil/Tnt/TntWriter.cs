@@ -40,6 +40,8 @@
             ptrAccumulator += (sizeof(uint) + TntConstants.AnimNameLength) * adapter.AnimCount;
             h.PtrMiniMap = (uint)ptrAccumulator;
 
+            h.Unknown1 = 1; // if this is set to 0, the minimap doesn't show
+
             h.Write(this.writer);
 
             this.WriteData(adapter);
@@ -47,8 +49,6 @@
             this.WriteTiles(adapter);
             this.WriteAnims(adapter);
             this.WriteMinimap(adapter);
-
-            h.Unknown1 = 1; // if this is set to 0, the minimap doesn't show
         }
 
         public void Dispose()
