@@ -21,6 +21,8 @@
 
         bool OpenAttributesEnabled { get; set; }
 
+        bool MinimapVisibleChecked { get; set; }
+
         IList<Section> Sections { get; set; }
 
         IList<Feature> Features { get; set; }

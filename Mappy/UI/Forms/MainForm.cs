@@ -153,6 +153,19 @@
             set { this.toolStripMenuItem11.Enabled = value; }
         }
 
+        public bool MinimapVisibleChecked
+        {
+            get
+            {
+                return this.minimapToolStripMenuItem1.Checked;
+            }
+
+            set
+            {
+                this.minimapToolStripMenuItem1.Checked = value;
+            }
+        }
+
         public string AskUserToChooseMap(IList<string> maps)
         {
             MapSelectionForm f = new MapSelectionForm();

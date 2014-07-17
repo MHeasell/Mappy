@@ -68,14 +68,14 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.sectionView1 = new Mappy.UI.Controls.SectionView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.featureview1 = new Mappy.UI.Controls.FeatureView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
-            this.imageLayerView1 = new Mappy.UI.Controls.ImageLayerView();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.imageLayerView1 = new Mappy.UI.Controls.ImageLayerView();
+            this.sectionView1 = new Mappy.UI.Controls.SectionView();
+            this.featureview1 = new Mappy.UI.Controls.FeatureView();
+            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -253,7 +253,6 @@
             // 
             // minimapToolStripMenuItem1
             // 
-            this.minimapToolStripMenuItem1.CheckOnClick = true;
             this.minimapToolStripMenuItem1.Name = "minimapToolStripMenuItem1";
             this.minimapToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
             this.minimapToolStripMenuItem1.Size = new System.Drawing.Size(177, 22);
@@ -409,15 +408,6 @@
             this.tabPage1.Text = "Sections";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // sectionView1
-            // 
-            this.sectionView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sectionView1.Location = new System.Drawing.Point(3, 3);
-            this.sectionView1.Name = "sectionView1";
-            this.sectionView1.Sections = null;
-            this.sectionView1.Size = new System.Drawing.Size(201, 506);
-            this.sectionView1.TabIndex = 3;
-            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.featureview1);
@@ -429,15 +419,6 @@
             this.tabPage2.Text = "Features";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // featureview1
-            // 
-            this.featureview1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.featureview1.Features = null;
-            this.featureview1.Location = new System.Drawing.Point(3, 3);
-            this.featureview1.Name = "featureview1";
-            this.featureview1.Size = new System.Drawing.Size(201, 506);
-            this.featureview1.TabIndex = 0;
-            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.startPositionsView1);
@@ -448,30 +429,6 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Starts";
             this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // startPositionsView1
-            // 
-            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
-            this.startPositionsView1.Name = "startPositionsView1";
-            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
-            this.startPositionsView1.TabIndex = 0;
-            // 
-            // imageLayerView1
-            // 
-            this.imageLayerView1.AllowDrop = true;
-            this.imageLayerView1.CanvasColor = System.Drawing.Color.CornflowerBlue;
-            this.imageLayerView1.CanvasSize = new System.Drawing.Size(0, 0);
-            this.imageLayerView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageLayerView1.GridColor = System.Drawing.Color.Black;
-            this.imageLayerView1.GridSize = new System.Drawing.Size(16, 16);
-            this.imageLayerView1.GridVisible = false;
-            this.imageLayerView1.Location = new System.Drawing.Point(215, 24);
-            this.imageLayerView1.Name = "imageLayerView1";
-            this.imageLayerView1.Size = new System.Drawing.Size(569, 538);
-            this.imageLayerView1.TabIndex = 5;
-            this.imageLayerView1.Text = "imageLayerView1";
-            this.imageLayerView1.SizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
             // 
             // comboBox1
             // 
@@ -492,6 +449,48 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "Selection Mode";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // imageLayerView1
+            // 
+            this.imageLayerView1.AllowDrop = true;
+            this.imageLayerView1.CanvasColor = System.Drawing.Color.CornflowerBlue;
+            this.imageLayerView1.CanvasSize = new System.Drawing.Size(0, 0);
+            this.imageLayerView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageLayerView1.GridColor = System.Drawing.Color.Black;
+            this.imageLayerView1.GridSize = new System.Drawing.Size(16, 16);
+            this.imageLayerView1.GridVisible = false;
+            this.imageLayerView1.Location = new System.Drawing.Point(215, 24);
+            this.imageLayerView1.Name = "imageLayerView1";
+            this.imageLayerView1.Size = new System.Drawing.Size(569, 538);
+            this.imageLayerView1.TabIndex = 5;
+            this.imageLayerView1.Text = "imageLayerView1";
+            this.imageLayerView1.SizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
+            // 
+            // sectionView1
+            // 
+            this.sectionView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sectionView1.Location = new System.Drawing.Point(3, 3);
+            this.sectionView1.Name = "sectionView1";
+            this.sectionView1.Sections = null;
+            this.sectionView1.Size = new System.Drawing.Size(201, 506);
+            this.sectionView1.TabIndex = 3;
+            // 
+            // featureview1
+            // 
+            this.featureview1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.featureview1.Features = null;
+            this.featureview1.Location = new System.Drawing.Point(3, 3);
+            this.featureview1.Name = "featureview1";
+            this.featureview1.Size = new System.Drawing.Size(201, 506);
+            this.featureview1.TabIndex = 0;
+            // 
+            // startPositionsView1
+            // 
+            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
+            this.startPositionsView1.Name = "startPositionsView1";
+            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
+            this.startPositionsView1.TabIndex = 0;
             // 
             // MainForm
             // 

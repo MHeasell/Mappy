@@ -357,6 +357,9 @@
                     this.UpdateSave();
                     this.UpdateTitleText();
                     break;
+                case "MinimapVisible":
+                    this.view.MinimapVisibleChecked = this.model.MinimapVisible;
+                    break;
             }
         }
 
