@@ -43,7 +43,7 @@
 
             var minimapForm = new MinimapForm();
             minimapForm.Owner = this;
-            var minimapPresenter = new MinimapController(minimapForm, this, model);
+            var minimapPresenter = new MinimapPresenter(minimapForm, this, model);
             minimapForm.Presenter = minimapPresenter;
 
             this.comboBox1.Items.Add(BandboxMode.Tile);

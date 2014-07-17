@@ -14,7 +14,7 @@
             this.InitializeComponent();
         }
 
-        public MinimapController Presenter { get; set; }
+        public MinimapPresenter Presenter { get; set; }
 
         public Image MinimapImage
         {

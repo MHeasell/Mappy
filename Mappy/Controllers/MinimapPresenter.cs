@@ -12,7 +12,7 @@
     /// Keeps the viewport in sync with the currently displayed map
     /// and the position of the main viewport.
     /// </summary>
-    public class MinimapController
+    public class MinimapPresenter
     {
         private readonly MinimapForm minimap;
 
@@ -22,7 +22,7 @@
 
         private bool mouseDown;
 
-        public MinimapController(MinimapForm mini, MainForm main, CoreModel model)
+        public MinimapPresenter(MinimapForm mini, MainForm main, CoreModel model)
         {
             this.minimap = mini;
             this.mainView = main;
