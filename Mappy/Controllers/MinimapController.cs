@@ -7,8 +7,6 @@
     using Mappy.Models;
     using Mappy.UI.Forms;
 
-    using Views;
-
     /// <summary>
     /// Presenter for the minimap viewport.
     /// Keeps the viewport in sync with the currently displayed map
