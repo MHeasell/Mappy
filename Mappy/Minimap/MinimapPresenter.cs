@@ -29,25 +29,27 @@
             this.model.PropertyChanged += this.ModelOnPropertyChanged;
 
             this.minimap.Visible = this.model.MinimapVisible;
-            this.minimap.ViewportRectangle = this.model.ViewportRectangle;
             this.minimap.MinimapImage = this.model.MinimapImage;
+            this.UpdateViewportRectangle();
         }
 
-        public void MinimapClick(PointF location)
+        public void MinimapClick(Point location)
         {
             this.mouseDown = true;
-            this.mainView.SetViewportCenterNormalized(location);
+            var normalizedLocation = this.ToNormalizedPosition(location);
+            this.mainView.SetViewportCenterNormalized(normalizedLocation);
         }
 
-        public void MinimapMouseMove(PointF location)
+        public void MinimapMouseMove(Point location)
         {
             if (this.mouseDown)
             {
-                this.mainView.SetViewportCenterNormalized(location);
+                var normalizedLocation = this.ToNormalizedPosition(location);
+                this.mainView.SetViewportCenterNormalized(normalizedLocation);
             }
         }
 
-        public void MinimapMouseUp(PointF location)
+        public void MinimapMouseUp(Point location)
         {
             this.mouseDown = false;
         }
@@ -65,12 +67,47 @@
                     this.minimap.Visible = this.model.MinimapVisible;
                     break;
                 case "ViewportRectangle":
-                    this.minimap.ViewportRectangle = this.model.ViewportRectangle;
+                    this.UpdateViewportRectangle();
                     break;
                 case "MinimapImage":
                     this.minimap.MinimapImage = this.model.MinimapImage;
+                    this.UpdateViewportRectangle();
                     break;
             }
+        }
+
+        private void UpdateViewportRectangle()
+        {
+            this.minimap.ViewportRectangle = this.ConvertToMinimapRect(this.model.ViewportRectangle);
+        }
+
+        private Rectangle ConvertToMinimapRect(RectangleF rectangle)
+        {
+            if (this.model.MinimapImage == null)
+            {
+                return Rectangle.Empty;
+            }
+
+            int w = this.model.MinimapImage.Width;
+            int h = this.model.MinimapImage.Height;
+
+            return new Rectangle(
+                (int)(rectangle.X * w),
+                (int)(rectangle.Y * h),
+                (int)(rectangle.Width * w),
+                (int)(rectangle.Height * h));
+        }
+
+        private PointF ToNormalizedPosition(Point location)
+        {
+            if (this.minimap.MinimapImage == null)
+            {
+                return PointF.Empty;
+            }
+
+            return new PointF(
+                location.X / (float)this.minimap.MinimapImage.Width,
+                location.Y / (float)this.minimap.MinimapImage.Height);
         }
     }
 }

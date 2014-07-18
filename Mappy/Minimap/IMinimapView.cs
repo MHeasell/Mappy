@@ -6,7 +6,7 @@
     {
         bool Visible { get; set; }
 
-        RectangleF ViewportRectangle { get; set; }
+        Rectangle ViewportRectangle { get; set; }
 
         Image MinimapImage { get; set; }
     }
