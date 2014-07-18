@@ -1,4 +1,4 @@
-﻿namespace Mappy.UI.Controls
+﻿namespace Mappy.Minimap
 {
     using System.ComponentModel;
     using System.Drawing;
@@ -86,7 +86,10 @@
             set
             {
                 base.BackgroundImage = value;
-                this.Size = base.BackgroundImage.Size;
+                if (this.BackgroundImage != null)
+                {
+                    this.Size = base.BackgroundImage.Size;
+                }
             }
         }
 

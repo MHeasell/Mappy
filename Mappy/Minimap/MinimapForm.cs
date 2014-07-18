@@ -1,14 +1,10 @@
-﻿namespace Mappy.UI.Forms
+﻿namespace Mappy.Minimap
 {
     using System.Drawing;
     using System.Windows.Forms;
 
-    using Mappy.Controllers;
-
-    public partial class MinimapForm : Form
+    public partial class MinimapForm : Form, IMinimapView
     {
-        private RectangleF viewportRectangle;
-
         public MinimapForm()
         {
             this.InitializeComponent();
@@ -29,17 +25,16 @@
             }
         }
 
-        public RectangleF ViewportRectangle
+        public Rectangle ViewportRectangle
         {
             get
             {
-                return this.viewportRectangle;
+                return this.minimapControl1.ViewportRect;
             }
 
             set
             {
-                this.viewportRectangle = value;
-                this.UpdateViewportRect();
+                this.minimapControl1.ViewportRect = value;
             }
         }
 
@@ -65,46 +60,19 @@
             }
         }
 
-        private void UpdateViewportRect()
-        {
-            this.minimapControl1.ViewportRect = this.ConvertToMinimapRect(this.ViewportRectangle);
-        }
-
-        private Rectangle ConvertToMinimapRect(RectangleF rectangle)
-        {
-            int w = this.minimapControl1.Width;
-            int h = this.minimapControl1.Height;
-
-            return new Rectangle(
-                (int)(rectangle.X * w),
-                (int)(rectangle.Y * h),
-                (int)(rectangle.Width * w),
-                (int)(rectangle.Height * h));
-        }
-
         private void MinimapControl1MouseDown(object sender, MouseEventArgs e)
         {
-            var pos = this.ToNormalizedPosition(e.Location);
-            this.Presenter.MinimapClick(pos);
+            this.Presenter.MinimapClick(e.Location);
         }
 
         private void MinimapControl1MouseMove(object sender, MouseEventArgs e)
         {
-            var pos = this.ToNormalizedPosition(e.Location);
-            this.Presenter.MinimapMouseMove(pos);
+            this.Presenter.MinimapMouseMove(e.Location);
         }
 
         private void MinimapControl1MouseUp(object sender, MouseEventArgs e)
         {
-            var pos = this.ToNormalizedPosition(e.Location);
-            this.Presenter.MinimapMouseUp(pos);
-        }
-
-        private PointF ToNormalizedPosition(Point location)
-        {
-            return new PointF(
-                location.X / (float)this.minimapControl1.Width,
-                location.Y / (float)this.minimapControl1.Height);
+            this.Presenter.MinimapMouseUp(e.Location);
         }
     }
 }
