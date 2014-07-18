@@ -3,8 +3,6 @@
     using System.ComponentModel;
     using System.Drawing;
 
-    using Mappy.UI.Forms;
-
     /// <summary>
     /// Presenter for the minimap viewport.
     /// Keeps the viewport in sync with the currently displayed map
@@ -16,14 +14,14 @@
 
         private readonly IMinimapModel model;
 
-        private readonly MainForm mainView;
+        private readonly IMinimapService service;
 
         private bool mouseDown;
 
-        public MinimapPresenter(IMinimapView mini, MainForm main, IMinimapModel model)
+        public MinimapPresenter(IMinimapView mini, IMinimapService service, IMinimapModel model)
         {
             this.minimap = mini;
-            this.mainView = main;
+            this.service = service;
             this.model = model;
 
             this.model.PropertyChanged += this.ModelOnPropertyChanged;
@@ -37,7 +35,7 @@
         {
             this.mouseDown = true;
             var normalizedLocation = this.ToNormalizedPosition(location);
-            this.mainView.SetViewportCenterNormalized(normalizedLocation);
+            this.service.SetViewportCenterNormalized(normalizedLocation);
         }
 
         public void MinimapMouseMove(Point location)
@@ -45,7 +43,7 @@
             if (this.mouseDown)
             {
                 var normalizedLocation = this.ToNormalizedPosition(location);
-                this.mainView.SetViewportCenterNormalized(normalizedLocation);
+                this.service.SetViewportCenterNormalized(normalizedLocation);
             }
         }
 

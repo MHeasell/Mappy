@@ -12,7 +12,7 @@
     using Mappy.Presentation;
     using Mappy.Views;
 
-    public partial class MainForm : Form, IMainView
+    public partial class MainForm : Form, IMainView, IMinimapService
     {
         private Point oldAutoScrollPos;
 

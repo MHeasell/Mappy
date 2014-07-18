@@ -97,6 +97,7 @@
     <Compile Include="IO\SectionFactory.cs" />
     <Compile Include="MappySettings.cs" />
     <Compile Include="Minimap\IMinimapModel.cs" />
+    <Compile Include="Minimap\IMinimapService.cs" />
     <Compile Include="Minimap\IMinimapView.cs" />
     <Compile Include="Models\BandboxMode.cs" />
     <Compile Include="Models\CoreModel.cs" />
