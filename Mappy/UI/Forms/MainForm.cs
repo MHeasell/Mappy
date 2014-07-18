@@ -19,8 +19,6 @@
         private IList<Section> sections;
         private IList<Feature> features;
 
-        private MainPresenter presenter;
-
         public MainForm()
         {
             this.InitializeComponent();
@@ -52,18 +50,7 @@
             this.comboBox1.SelectedItem = BandboxMode.Tile;
         }
 
-        public MainPresenter Presenter
-        {
-            get
-            {
-                return this.presenter;
-            }
-            set
-            {
-                this.presenter = value;
-                this.UpdateModelViewport();
-            }
-        }
+        public MainPresenter Presenter { get; set; }
 
         public string TitleText
         {
@@ -308,26 +295,13 @@
             if (p != this.oldAutoScrollPos)
             {
                 this.oldAutoScrollPos = p;
-                this.UpdateModelViewport();
+                this.Presenter.UpdateMinimapViewport();
             }
         }
 
         private void MapPanel1SizeChanged(object sender, EventArgs e)
         {
-            this.UpdateModelViewport();
-        }
-
-        private void UpdateModelViewport()
-        {
-            var widthScale = (float)this.imageLayerView1.CanvasSize.Width;
-            var heightScale = (float)this.imageLayerView1.CanvasSize.Height;
-
-            var rect = this.ViewportRect;
-            var x = rect.X / widthScale;
-            var y = rect.Y / heightScale;
-            var w = rect.Width / widthScale;
-            var h = rect.Height / heightScale;
-            this.Presenter.ChangeViewport(new RectangleF(x, y, w, h));
+            this.Presenter.UpdateMinimapViewport();
         }
 
         private void PreferencesToolStripMenuItemClick(object sender, EventArgs e)

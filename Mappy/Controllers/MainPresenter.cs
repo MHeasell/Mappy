@@ -213,9 +213,27 @@
             this.model.MinimapVisible = !this.model.MinimapVisible;
         }
 
-        public void ChangeViewport(RectangleF newViewport)
+        public void UpdateMinimapViewport()
         {
-            this.model.ViewportRectangle = newViewport;
+            this.model.ViewportRectangle = this.ConvertToNormalizedViewport(this.view.ViewportRect);
+        }
+
+        private RectangleF ConvertToNormalizedViewport(Rectangle rect)
+        {
+            if (this.model.Map == null)
+            {
+                return RectangleF.Empty;
+            }
+
+            var widthScale = (float)(this.model.Map.Tile.TileGrid.Width * 32);
+            var heightScale = (float)(this.model.Map.Tile.TileGrid.Height * 32);
+
+            var x = rect.X / widthScale;
+            var y = rect.Y / heightScale;
+            var w = rect.Width / widthScale;
+            var h = rect.Height / heightScale;
+
+            return new RectangleF(x, y, w, h);
         }
 
         private bool SaveHelper(string filename)

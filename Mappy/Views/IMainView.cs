@@ -23,6 +23,8 @@
 
         bool MinimapVisibleChecked { get; set; }
 
+        Rectangle ViewportRect { get; }
+
         IList<Section> Sections { get; set; }
 
         IList<Feature> Features { get; set; }
