@@ -359,6 +359,7 @@
                     break;
                 case "Map":
                     this.view.OpenAttributesEnabled = this.model.Map != null;
+                    this.UpdateMinimapViewport();
                     break;
                 case "IsFileOpen":
                     this.view.SaveAsEnabled = this.model.IsFileOpen;
