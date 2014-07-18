@@ -107,8 +107,8 @@ namespace Mappy.Util
 
         public static Bitmap GenerateMinimap(IMapModel mapModel)
         {
-            int mapWidth = mapModel.Tile.TileGrid.Width * 32;
-            int mapHeight = mapModel.Tile.TileGrid.Height * 32;
+            int mapWidth = (mapModel.Tile.TileGrid.Width * 32) - 32;
+            int mapHeight = (mapModel.Tile.TileGrid.Height * 32) - 128;
 
             int width, height;
 

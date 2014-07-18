@@ -225,8 +225,8 @@
                 return RectangleF.Empty;
             }
 
-            var widthScale = (float)(this.model.Map.Tile.TileGrid.Width * 32);
-            var heightScale = (float)(this.model.Map.Tile.TileGrid.Height * 32);
+            var widthScale = (float)((this.model.Map.Tile.TileGrid.Width * 32) - 32);
+            var heightScale = (float)((this.model.Map.Tile.TileGrid.Height * 32) - 128);
 
             var x = rect.X / widthScale;
             var y = rect.Y / heightScale;
