@@ -137,6 +137,24 @@
 
                 this.model.Verify(x => x.SelectStartPosition(2), Times.Once);
             }
+
+            /// <summary>
+            /// Tests that, when the mouse is clicked in an empty area,
+            /// the current selection is cleared.
+            /// </summary>
+            [TestMethod]
+            public void TestClearSelection()
+            {
+                this.view.Setup(x => x.IsInSelection(2, 4)).Returns(false);
+                this.view.Setup(x => x.HitTest(2, 4)).Returns((ImageLayerCollection.Item)null);
+
+                this.model.Setup(x => x.ClearSelection());
+                this.model.Setup(x => x.StartBandbox(It.IsAny<int>(), It.IsAny<int>()));
+
+                this.presenter.MouseDown(2, 4);
+
+                this.model.Verify(x => x.ClearSelection(), Times.Once);
+            }
         }
 
         [TestClass]
@@ -266,6 +284,7 @@
                 this.view.Setup(x => x.IsInSelection(1, 1)).Returns(false);
                 this.view.Setup(x => x.HitTest(1, 1)).Returns((ImageLayerCollection.Item)null);
 
+                this.model.Setup(x => x.ClearSelection());
                 this.model.Setup(x => x.StartBandbox(1, 1));
 
                 this.presenter.MouseDown(1, 1);
@@ -282,6 +301,7 @@
                 this.view.Setup(x => x.IsInSelection(5, 3)).Returns(false);
                 this.view.Setup(x => x.HitTest(5, 3)).Returns((ImageLayerCollection.Item)null);
 
+                this.model.Setup(x => x.ClearSelection());
                 this.model.Setup(x => x.StartBandbox(5, 3));
 
                 this.presenter.MouseDown(5, 3);
@@ -299,6 +319,7 @@
                 this.view.Setup(x => x.IsInSelection(5, 3)).Returns(false);
                 this.view.Setup(x => x.HitTest(5, 3)).Returns((ImageLayerCollection.Item)null);
 
+                this.model.Setup(x => x.ClearSelection());
                 this.model.Setup(x => x.StartBandbox(It.IsAny<int>(), It.IsAny<int>()));
                 this.model.Setup(x => x.GrowBandbox(2, 2));
 
@@ -319,6 +340,7 @@
                 this.view.Setup(x => x.IsInSelection(5, 3)).Returns(false);
                 this.view.Setup(x => x.HitTest(5, 3)).Returns((ImageLayerCollection.Item)null);
 
+                this.model.Setup(x => x.ClearSelection());
                 this.model.Setup(x => x.StartBandbox(It.IsAny<int>(), It.IsAny<int>()));
                 this.model.Setup(x => x.GrowBandbox(It.IsAny<int>(), It.IsAny<int>()));
                 this.model.Setup(x => x.CommitBandbox());
@@ -340,6 +362,7 @@
             [TestMethod]
             public void TestSelectAfterEmptyClick()
             {
+                this.model.Setup(x => x.ClearSelection());
                 this.model.Setup(x => x.StartBandbox(It.IsAny<int>(), It.IsAny<int>()));
                 this.model.Setup(x => x.GrowBandbox(It.IsAny<int>(), It.IsAny<int>()));
                 this.model.Setup(x => x.CommitBandbox());
