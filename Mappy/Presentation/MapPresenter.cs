@@ -103,6 +103,7 @@
                 }
                 else
                 {
+                    this.model.ClearSelection();
                     this.model.StartBandbox(virtualX, virtualY);
                     this.bandboxMode = true;
                 }
