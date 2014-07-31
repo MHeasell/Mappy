@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Drawing;
     using System.IO;
     using Data;
@@ -75,6 +76,16 @@
             this.undoManager.IsMarkedChanged += this.IsMarkedChanged;
         }
 
+        public event EventHandler<SparseGridEventArgs> FeaturesChanged;
+
+        public event EventHandler<ListChangedEventArgs> TilesChanged;
+
+        public event EventHandler<GridEventArgs> BaseTileGraphicsChanged;
+
+        public event EventHandler<GridEventArgs> BaseTileHeightChanged;
+
+        public event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
+
         public IBindingMapModel Map
         {
             get
@@ -98,6 +109,12 @@
                     {
                         this.MinimapImage = this.Map.Minimap;
                         this.Map.MinimapChanged += this.MapOnMinimapChanged;
+
+                        this.Map.Features.EntriesChanged += this.FeaturesOnEntriesChanged;
+                        this.Map.FloatingTiles.ListChanged += this.FloatingTilesOnListChanged;
+                        this.Map.Tile.TileGridChanged += this.TileOnTileGridChanged;
+                        this.Map.Tile.HeightGridChanged += this.TileOnHeightGridChanged;
+                        this.Map.Attributes.StartPositionChanged += this.AttributesOnStartPositionChanged;
                         this.IsFileOpen = true;
                     }
                 }
@@ -158,6 +175,54 @@
         {
             get { return this.featuresVisible; }
             set { this.SetField(ref this.featuresVisible, value, "FeaturesVisible"); }
+        }
+
+        public ISparseGrid<Feature> Features
+        {
+            get
+            {
+                return this.Map == null ? null : this.Map.Features;
+            }
+        }
+
+        public IList<Positioned<IMapTile>> FloatingTiles
+        {
+            get
+            {
+                return this.Map == null ? null : this.Map.FloatingTiles;
+            }
+        }
+
+        public IMapTile BaseTile
+        {
+            get
+            {
+                return this.Map == null ? null : this.Map.Tile;
+            }
+        }
+
+        public int MapWidth
+        {
+            get
+            {
+                return this.Map == null ? 0 : this.Map.Tile.TileGrid.Width;
+            }
+        }
+
+        public int MapHeight
+        {
+            get
+            {
+                return this.Map == null ? 0 : this.Map.Tile.TileGrid.Width;
+            }
+        }
+
+        public bool MapOpen
+        {
+            get
+            {
+                return this.Map != null;
+            }
         }
 
         public bool MinimapVisible
@@ -342,6 +407,11 @@
             this.IsFileReadOnly = readOnly;
         }
 
+        public Point? GetStartPosition(int index)
+        {
+            return this.Map.Attributes.GetStartPosition(index);
+        }
+
         public int PlaceSection(int tileId, int x, int y)
         {
             if (this.Map == null)
@@ -368,6 +438,11 @@
         {
             this.undoManager.Execute(OperationFactory.CreateClippedLiftAreaOperation(this.Map, x, y, width, height));
             return this.Map.FloatingTiles.Count - 1;
+        }
+
+        public Point? ScreenToHeightIndex(int x, int y)
+        {
+            return Util.ScreenToHeightIndex(this.Map.Tile.HeightGrid, new Point(x, y));
         }
 
         public void TranslateSection(int index, int x, int y)
@@ -623,6 +698,51 @@
         private void MapOnMinimapChanged(object sender, EventArgs eventArgs)
         {
             this.MinimapImage = this.Map.Minimap;
+        }
+
+        private void TileOnHeightGridChanged(object sender, GridEventArgs gridEventArgs)
+        {
+            var h = this.BaseTileHeightChanged;
+            if (h != null)
+            {
+                h(this, gridEventArgs);
+            }
+        }
+
+        private void TileOnTileGridChanged(object sender, GridEventArgs gridEventArgs)
+        {
+            var h = this.BaseTileGraphicsChanged;
+            if (h != null)
+            {
+                h(this, gridEventArgs);
+            }
+        }
+
+        private void FloatingTilesOnListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
+        {
+            var h = this.TilesChanged;
+            if (h != null)
+            {
+                h(this, listChangedEventArgs);
+            }
+        }
+
+        private void FeaturesOnEntriesChanged(object sender, SparseGridEventArgs sparseGridEventArgs)
+        {
+            var h = this.FeaturesChanged;
+            if (h != null)
+            {
+                h(this, sparseGridEventArgs);
+            }
+        }
+
+        private void AttributesOnStartPositionChanged(object sender, StartPositionChangedEventArgs startPositionChangedEventArgs)
+        {
+            var h = this.StartPositionChanged;
+            if (h != null)
+            {
+                h(this, startPositionChangedEventArgs);
+            }
         }
     }
 }
