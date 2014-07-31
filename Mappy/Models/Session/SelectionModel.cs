@@ -44,6 +44,8 @@
             this.bandboxBehaviour = new TileBandboxBehaviour(this.model, this);
 
             this.bandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
+
+            this.model.PropertyChanged += this.ModelOnPropertyChanged;
         }
 
         public event EventHandler<SparseGridEventArgs> FeaturesChanged
@@ -466,6 +468,29 @@
                 case "BandboxRectangle":
                     this.FireChange("BandboxRectangle");
                     break;
+            }
+        }
+
+        private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            var passthroughProperties = new HashSet<string>
+                {
+                    "GridVisible",
+                    "GridColor",
+                    "GridSize",
+                    "HeightmapVisible",
+                    "FeaturesVisible",
+                    "Features",
+                    "FloatingTiles",
+                    "BaseTile",
+                    "MapWidth",
+                    "MapHeight",
+                    "MapOpen",
+                };
+
+            if (passthroughProperties.Contains(propertyChangedEventArgs.PropertyName))
+            {
+                this.FireChange(propertyChangedEventArgs.PropertyName);
             }
         }
     }

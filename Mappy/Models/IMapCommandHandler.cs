@@ -8,7 +8,7 @@
     using Mappy.Collections;
     using Mappy.Data;
 
-    public interface IMapCommandHandler
+    public interface IMapCommandHandler : INotifyPropertyChanged
     {
         event EventHandler<SparseGridEventArgs> FeaturesChanged;
 
