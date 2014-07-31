@@ -46,6 +46,16 @@
             this.bandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
         }
 
+        public event EventHandler<SparseGridEventArgs> FeaturesChanged;
+
+        public event EventHandler<ListChangedEventArgs> TilesChanged;
+
+        public event EventHandler<GridEventArgs> BaseTileGraphicsChanged;
+
+        public event EventHandler<GridEventArgs> BaseTileHeightChanged;
+
+        public event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
+
         public bool HasSelection
         {
             get
@@ -67,37 +77,93 @@
             }
         }
 
-        public ISparseGrid<Feature> Features { get; private set; }
+        public ISparseGrid<Feature> Features
+        {
+            get
+            {
+                return this.model.Map == null ? null : this.model.Map.Features;
+            }
+        }
 
-        public IList<Positioned<IMapTile>> FloatingTiles { get; private set; }
+        public IList<Positioned<IMapTile>> FloatingTiles
+        {
+            get
+            {
+                return this.model.Map == null ? null : this.model.Map.FloatingTiles;
+            }
+        }
 
-        public IMapTile BaseTile { get; private set; }
+        public IMapTile BaseTile
+        {
+            get
+            {
+                return this.model.Map == null ? null : this.model.Map.Tile;
+            }
+        }
 
-        public int MapWidth { get; private set; }
+        public int MapWidth
+        {
+            get
+            {
+                return this.model.Map == null ? 0 : this.model.Map.Tile.TileGrid.Width;
+            }
+        }
 
-        public int MapHeight { get; private set; }
+        public int MapHeight
+        {
+            get
+            {
+                return this.model.Map == null ? 0 : this.model.Map.Tile.TileGrid.Height;
+            }
+        }
 
-        public event EventHandler<SparseGridEventArgs> FeaturesChanged;
+        public bool MapOpen
+        {
+            get
+            {
+                return this.model.Map != null;
+            }
+        }
 
-        public event EventHandler<ListChangedEventArgs> TilesChanged;
+        public bool GridVisible
+        {
+            get
+            {
+                return this.model.GridVisible;
+            }
+        }
 
-        public event EventHandler<GridEventArgs> BaseTileGraphicsChanged;
+        public Color GridColor
+        {
+            get
+            {
+                return this.model.GridColor;
+            }
+        }
 
-        public event EventHandler<GridEventArgs> BaseTileHeightChanged;
+        public Size GridSize
+        {
+            get
+            {
+                return this.model.GridSize;
+            }
+        }
 
-        public event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
+        public bool HeightmapVisible
+        {
+            get
+            {
+                return this.model.HeightmapVisible;
+            }
+        }
 
-        public bool MapOpen { get; private set; }
-
-        public bool GridVisible { get; private set; }
-
-        public Color GridColor { get; private set; }
-
-        public Size GridSize { get; private set; }
-
-        public bool HeightmapVisible { get; private set; }
-
-        public bool FeaturesVisible { get; private set; }
+        public bool FeaturesVisible
+        {
+            get
+            {
+                return this.model.FeaturesVisible;
+            }
+        }
 
         public int? SelectedTile
         {
@@ -176,7 +242,7 @@
 
         public Point? GetStartPosition(int index)
         {
-            throw new NotImplementedException();
+            return this.model.Map.Attributes.GetStartPosition(index);
         }
 
         public void TranslateSelection(int x, int y)

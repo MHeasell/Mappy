@@ -9,6 +9,16 @@
     {
         IBindingMapModel Map { get; }
 
+        bool GridVisible { get; }
+
+        Color GridColor { get; }
+
+        Size GridSize { get; }
+
+        bool HeightmapVisible { get; }
+
+        bool FeaturesVisible { get; }
+
         int PlaceSection(int tileId, int x, int y);
 
         void TranslateSection(int index, int x, int y);
