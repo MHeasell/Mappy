@@ -8,7 +8,7 @@ namespace Mappy.Presentation
     using Mappy.Collections;
     using Mappy.Data;
 
-    public interface IMysteryModel : INotifyPropertyChanged
+    public interface ISelectionModel : INotifyPropertyChanged
     {
         event EventHandler<SparseGridEventArgs> FeaturesChanged;
 

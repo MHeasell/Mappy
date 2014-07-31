@@ -19,14 +19,14 @@
     {
         private MapPresenter presenter;
 
-        private Mock<IMysteryModel> model;
+        private Mock<ISelectionModel> model;
 
         private Mock<IMapView> view;
 
         [TestInitialize]
         public void SetUp()
         {
-            this.model = new Mock<IMysteryModel>(MockBehavior.Strict);
+            this.model = new Mock<ISelectionModel>(MockBehavior.Strict);
             this.model.SetupGet(x => x.MapOpen).Returns(true);
             this.model.SetupGet(x => x.MapWidth).Returns(32);
             this.model.SetupGet(x => x.MapHeight).Returns(32);
