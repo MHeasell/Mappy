@@ -17,7 +17,7 @@
 
     public class SelectionModel : Notifier, ISelectionModel, IMysteryModel
     {
-        private readonly IMapCommandHandler model;
+        private readonly IMainModel model;
 
         private readonly ObservableCollection<GridCoordinates> selectedFeatures = new ObservableCollection<GridCoordinates>();
 
@@ -35,7 +35,7 @@
 
         private int deltaY;
 
-        public SelectionModel(IMapCommandHandler model)
+        public SelectionModel(IMainModel model)
         {
             this.model = model;
 

@@ -14,7 +14,7 @@
     {
         private readonly ISelectionModel selectionModel;
 
-        private readonly IMapCommandHandler handler;
+        private readonly IMainModel handler;
 
         private Rectangle bandboxRectangle;
 
@@ -26,7 +26,7 @@
 
         private int bufferY;
 
-        public TileBandboxBehaviour(IMapCommandHandler handler, ISelectionModel selectionModel)
+        public TileBandboxBehaviour(IMainModel handler, ISelectionModel selectionModel)
         {
             this.handler = handler;
             this.selectionModel = selectionModel;

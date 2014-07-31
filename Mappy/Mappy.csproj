@@ -101,7 +101,7 @@
     <Compile Include="Minimap\IMinimapView.cs" />
     <Compile Include="Models\BandboxMode.cs" />
     <Compile Include="Models\CoreModel.cs" />
-    <Compile Include="Models\IMapCommandHandler.cs" />
+    <Compile Include="Models\IMainModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
     <Compile Include="Models\Session\BandboxBehaviours\FeatureBandboxBehaviour.cs" />
     <Compile Include="Models\Session\BandboxBehaviours\IBandboxBehaviour.cs" />
