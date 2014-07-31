@@ -54,14 +54,15 @@
         }
 
         [TestClass]
-        public class SelectAtPoint : MapCommandHandlerTest
+        public class SelectItems : MapCommandHandlerTest
         {
             /// <summary>
-            /// Tests that, when the mouse is clicked on something not selected,
-            /// we attempt to select at that point.
+            /// Tests that, when the mouse is clicked on a tile
+            /// that is not selected,
+            /// we attempt to select the tile.
             /// </summary>
             [TestMethod]
-            public void TestSelectAtPoint()
+            public void TestSelectTile()
             {
                 var item = new ImageLayerCollection.Item(2, 4, 5, null);
                 item.Tag = new SectionTag(3);
@@ -80,7 +81,7 @@
             /// Similar to previous test but with different coordinates.
             /// </summary>
             [TestMethod]
-            public void TestSelectAtPoint2()
+            public void TestSelectTile2()
             {
                 var item = new ImageLayerCollection.Item(3, 8, 7, null);
                 item.Tag = new SectionTag(2);
@@ -93,6 +94,48 @@
                 this.presenter.MouseDown(3, 8);
 
                 this.model.Verify(x => x.SelectTile(2), Times.Once);
+            }
+
+            /// <summary>
+            /// Tests that, when the mouse is clicked on a feature
+            /// that is not selected,
+            /// we attempt to select the feature.
+            /// </summary>
+            [TestMethod]
+            public void TestSelectFeature()
+            {
+                var item = new ImageLayerCollection.Item(2, 4, 5, null);
+                item.Tag = new FeatureTag(new GridCoordinates(6, 7));
+
+                this.view.Setup(x => x.IsInSelection(2, 4)).Returns(false);
+                this.view.Setup(x => x.HitTest(2, 4)).Returns(item);
+
+                this.model.Setup(x => x.SelectFeature(new GridCoordinates(6, 7)));
+
+                this.presenter.MouseDown(2, 4);
+
+                this.model.Verify(x => x.SelectFeature(new GridCoordinates(6, 7)), Times.Once);
+            }
+
+            /// <summary>
+            /// Tests that, when the mouse is clicked on a start position
+            /// that is not selected,
+            /// we attempt to select the start position.
+            /// </summary>
+            [TestMethod]
+            public void TestSelectStartPosition()
+            {
+                var item = new ImageLayerCollection.Item(2, 4, 5, null);
+                item.Tag = new StartPositionTag(2);
+
+                this.view.Setup(x => x.IsInSelection(2, 4)).Returns(false);
+                this.view.Setup(x => x.HitTest(2, 4)).Returns(item);
+
+                this.model.Setup(x => x.SelectStartPosition(2));
+
+                this.presenter.MouseDown(2, 4);
+
+                this.model.Verify(x => x.SelectStartPosition(2), Times.Once);
             }
         }
 
