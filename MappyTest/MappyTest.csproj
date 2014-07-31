@@ -60,7 +60,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="MapCommandHandlerTest.cs" />
+    <Compile Include="MapPresenterTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QuadTreeTest.cs" />
     <Compile Include="TreeItem.cs" />

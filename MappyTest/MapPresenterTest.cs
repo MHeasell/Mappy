@@ -15,7 +15,7 @@
     using Moq;
 
     [TestClass]
-    public class MapCommandHandlerTest
+    public class MapPresenterTest
     {
         private MapPresenter presenter;
 
@@ -54,7 +54,7 @@
         }
 
         [TestClass]
-        public class SelectItems : MapCommandHandlerTest
+        public class SelectItems : MapPresenterTest
         {
             /// <summary>
             /// Tests that, when the mouse is clicked on a tile
@@ -140,7 +140,7 @@
         }
 
         [TestClass]
-        public class DragTranslate : MapCommandHandlerTest
+        public class DragTranslate : MapPresenterTest
         {
             /// <summary>
             /// Tests that when the mouse is clicked down on a selection
@@ -254,7 +254,7 @@
         }
 
         [TestClass]
-        public class BandBoxSelection : MapCommandHandlerTest
+        public class BandBoxSelection : MapPresenterTest
         {
             /// <summary>
             /// Tests that, when the mouse is clicked down over empty space,
@@ -360,7 +360,7 @@
         }
 
         [TestClass]
-        public class Delete : MapCommandHandlerTest
+        public class Delete : MapPresenterTest
         {
             /// <summary>
             /// Tests that when the delete key is pressed,
