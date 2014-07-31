@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
+    using System.Windows.Forms;
 
     using Mappy.Collections;
     using Mappy.Controllers.Tags;
@@ -39,6 +40,12 @@
 
         private ImageLayerCollection.Item bandboxMapping;
 
+        private bool mouseDown;
+
+        private Point lastMousePos;
+
+        private bool bandboxMode;
+
         static MapPresenter()
         {
             for (int i = 0; i < 10; i++)
@@ -65,6 +72,99 @@
             this.view.GridVisible = this.viewOptionsModel.GridVisible;
             this.view.GridColor = this.viewOptionsModel.GridColor;
             this.view.GridSize = this.viewOptionsModel.GridSize;
+        }
+
+        public void DragDrop(IDataObject data, int virtualX, int virtualY)
+        {
+            if (data.GetDataPresent(typeof(StartPositionDragData)))
+            {
+                StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
+                this.selectionModel.DragDropStartPosition(posData.PositionNumber, virtualX, virtualY);
+            }
+            else
+            {
+                string dataString = data.GetData(DataFormats.Text).ToString();
+                int id;
+                if (int.TryParse(dataString, out id))
+                {
+                    this.selectionModel.DragDropTile(id, virtualX, virtualY);
+                }
+                else
+                {
+                    this.selectionModel.DragDropFeature(dataString, virtualX, virtualY);
+                }
+            }
+        }
+
+        public void MouseDown(int virtualX, int virtualY)
+        {
+            this.mouseDown = true;
+            this.lastMousePos = new Point(virtualX, virtualY);
+
+            if (!this.selectionModel.IsInSelection(virtualX, virtualY))
+            {
+                if (!this.selectionModel.SelectAtPoint(virtualX, virtualY))
+                {
+                    this.selectionModel.StartBandbox(virtualX, virtualY);
+                    this.bandboxMode = true;
+                }
+            }
+        }
+
+        public void MouseMove(int virtualX, int virtualY)
+        {
+            try
+            {
+                if (!this.mouseDown)
+                {
+                    return;
+                }
+
+                if (this.bandboxMode)
+                {
+                    this.selectionModel.GrowBandbox(
+                        virtualX - this.lastMousePos.X,
+                        virtualY - this.lastMousePos.Y);
+                }
+                else
+                {
+                    this.selectionModel.TranslateSelection(
+                        virtualX - this.lastMousePos.X,
+                        virtualY - this.lastMousePos.Y);
+                }
+            }
+            finally
+            {
+                this.lastMousePos = new Point(virtualX, virtualY);
+            }
+        }
+
+        public void MouseUp(int virtualX, int virtualY)
+        {
+            if (this.bandboxMode)
+            {
+                this.selectionModel.CommitBandbox();
+                this.bandboxMode = false;
+            }
+            else
+            {
+                this.selectionModel.FlushTranslation();
+            }
+
+            this.mouseDown = false;
+        }
+
+        public void KeyDown(Keys key)
+        {
+            if (key == Keys.Delete)
+            {
+                this.selectionModel.DeleteSelection();
+            }
+        }
+
+        public void LostFocus()
+        {
+            this.selectionModel.ClearSelection();
         }
 
         private void WireMap()

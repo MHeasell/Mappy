@@ -32,11 +32,9 @@
 
             var selectionModel = new SelectionModel(model, this.imageLayerView1);
 
-            var commandHandler = new MapCommandHandler(selectionModel);
+            var mapPresenter = new MapPresenter(this.imageLayerView1, model, selectionModel, model);
 
-            new MapViewEventAdapter(this.imageLayerView1, commandHandler);
-
-            new MapPresenter(this.imageLayerView1, model, selectionModel, model);
+            new MapViewEventAdapter(this.imageLayerView1, mapPresenter);
 
             this.Presenter = new MainPresenter(this, model);
 
