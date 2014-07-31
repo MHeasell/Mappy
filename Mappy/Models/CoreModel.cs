@@ -117,6 +117,18 @@
                         this.Map.Attributes.StartPositionChanged += this.AttributesOnStartPositionChanged;
                         this.IsFileOpen = true;
                     }
+
+                    this.FireChange("MapOpen");
+                    this.FireChange("Features");
+                    this.FireChange("FloatingTiles");
+                    this.FireChange("BaseTile");
+                    this.FireChange("MapWidth");
+                    this.FireChange("MapHeight");
+
+                    for (var i = 0; i < 10; i++)
+                    {
+                        this.AttributesOnStartPositionChanged(this, new StartPositionChangedEventArgs(i));
+                    }
                 }
             }
         }
@@ -213,7 +225,7 @@
         {
             get
             {
-                return this.Map == null ? 0 : this.Map.Tile.TileGrid.Width;
+                return this.Map == null ? 0 : this.Map.Tile.TileGrid.Height;
             }
         }
 

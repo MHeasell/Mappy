@@ -40,6 +40,8 @@
 
         private bool bandboxMode;
 
+        private ImageLayerCollection.Item baseItem;
+
         static MapPresenter()
         {
             for (int i = 0; i < 10; i++)
@@ -57,6 +59,7 @@
             this.model.PropertyChanged += this.ModelPropertyChanged;
 
             this.PopulateView();
+
             this.WireMap();
 
             this.view.GridVisible = this.model.GridVisible;
@@ -194,21 +197,47 @@
             this.model.BaseTileGraphicsChanged += this.BaseTileChanged;
             this.model.BaseTileHeightChanged += this.BaseTileChanged;
 
-            foreach (var t in this.model.FloatingTiles)
+            if (this.model.FloatingTiles != null)
             {
-                t.LocationChanged += this.TileLocationChanged;
+                foreach (var t in this.model.FloatingTiles)
+                {
+                    t.LocationChanged += this.TileLocationChanged;
+                }
             }
 
             this.model.StartPositionChanged += this.StartPositionChanged;
         }
 
-        private void PopulateView()
+        private void UpdateBaseTile()
         {
-            this.tileMapping.Clear();
-            this.featureMapping.Clear();
-            this.view.Items.Clear();
-            this.baseTile = null;
+            if (this.baseItem != null)
+            {
+                this.view.Items.Remove(this.baseItem);
+            }
 
+            if (!this.model.MapOpen)
+            {
+                this.baseTile = null;
+                this.baseItem = null;
+                return;
+            }
+
+            this.baseTile = new DrawableTile(this.model.BaseTile);
+            this.baseTile.BackgroundColor = Color.CornflowerBlue;
+            this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
+            this.baseItem = new ImageLayerCollection.Item(
+                0,
+                0,
+                -1,
+                this.baseTile);
+
+            this.baseItem.Locked = true;
+
+            this.view.Items.Add(this.baseItem);
+        }
+
+        private void UpdateCanvasSize()
+        {
             if (!this.model.MapOpen)
             {
                 this.view.CanvasSize = Size.Empty;
@@ -218,35 +247,59 @@
             this.view.CanvasSize = new Size(
                 this.model.MapWidth * 32,
                 this.model.MapHeight * 32);
+        }
 
-            this.baseTile = new DrawableTile(this.model.BaseTile);
-            this.baseTile.BackgroundColor = Color.CornflowerBlue;
-            this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
-            ImageLayerCollection.Item baseItem = new ImageLayerCollection.Item(
-                0,
-                0,
-                -1,
-                this.baseTile);
+        private void UpdateFloatingTiles()
+        {
+            foreach (var t in this.tileMapping)
+            {
+                this.view.Items.Remove(t);
+            }
 
-            baseItem.Locked = true;
+            this.tileMapping.Clear();
 
-            this.view.Items.Add(baseItem);
+            if (!this.model.MapOpen)
+            {
+                return;
+            }
 
             int count = 0;
-            foreach (Positioned<IMapTile> t in this.model.FloatingTiles)
+            foreach (var t in this.model.FloatingTiles)
             {
                 this.InsertTile(t, count++);
+            }
+        }
+
+        private void UpdateFeatures()
+        {
+            foreach (var f in this.featureMapping.Values)
+            {
+                this.view.Items.Remove(f);
+            }
+
+            this.featureMapping.Clear();
+
+            if (!this.model.MapOpen)
+            {
+                return;
             }
 
             foreach (var f in this.model.Features.CoordinateEntries)
             {
                 this.InsertFeature(f.Value, f.Key.X, f.Key.Y);
             }
+        }
 
-            for (int i = 0; i < 10; i++)
-            {
-                this.UpdateStartPosition(i);
-            }
+        private void PopulateView()
+        {
+            this.featureMapping.Clear();
+
+            this.UpdateCanvasSize();
+            this.UpdateBaseTile();
+
+            this.UpdateFloatingTiles();
+
+            this.UpdateFeatures();
         }
 
         private void InsertTile(Positioned<IMapTile> t, int index)
@@ -417,6 +470,20 @@
                     break;
                 case "BandboxRectangle":
                     this.UpdateBandbox();
+                    break;
+
+                case "BaseTile":
+                    this.UpdateBaseTile();
+                    break;
+                case "MapWidth":
+                case "MapHeight":
+                    this.UpdateCanvasSize();
+                    break;
+                case "FloatingTiles":
+                    this.UpdateFloatingTiles();
+                    break;
+                case "Features":
+                    this.UpdateFeatures();
                     break;
             }
         }
