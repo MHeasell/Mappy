@@ -1,13 +1,24 @@
 ﻿namespace Mappy.Models
 {
+    using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Drawing;
 
     using Mappy.Collections;
+    using Mappy.Data;
 
     public interface IMapCommandHandler
     {
-        IBindingMapModel Map { get; }
+        event EventHandler<SparseGridEventArgs> FeaturesChanged;
+
+        event EventHandler<ListChangedEventArgs> TilesChanged;
+
+        event EventHandler<GridEventArgs> BaseTileGraphicsChanged;
+
+        event EventHandler<GridEventArgs> BaseTileHeightChanged;
+
+        event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
 
         bool GridVisible { get; }
 
@@ -18,6 +29,20 @@
         bool HeightmapVisible { get; }
 
         bool FeaturesVisible { get; }
+
+        ISparseGrid<Feature> Features { get; }
+
+        IList<Positioned<IMapTile>> FloatingTiles { get; }
+
+        IMapTile BaseTile { get; }
+
+        int MapWidth { get; }
+
+        int MapHeight { get; }
+
+        bool MapOpen { get; }
+
+        Point? GetStartPosition(int index);
 
         int PlaceSection(int tileId, int x, int y);
 
@@ -50,5 +75,7 @@
         void MergeSection(int index);
 
         int LiftArea(int x, int y, int width, int height);
+
+        Point? ScreenToHeightIndex(int x, int y);
     }
 }

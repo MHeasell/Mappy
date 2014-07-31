@@ -46,15 +46,70 @@
             this.bandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
         }
 
-        public event EventHandler<SparseGridEventArgs> FeaturesChanged;
+        public event EventHandler<SparseGridEventArgs> FeaturesChanged
+        {
+            add
+            {
+                this.model.FeaturesChanged += value;
+            }
 
-        public event EventHandler<ListChangedEventArgs> TilesChanged;
+            remove
+            {
+                this.model.FeaturesChanged -= value;
+            }
+        }
 
-        public event EventHandler<GridEventArgs> BaseTileGraphicsChanged;
+        public event EventHandler<ListChangedEventArgs> TilesChanged
+        {
+            add
+            {
+                this.model.TilesChanged += value;
+            }
 
-        public event EventHandler<GridEventArgs> BaseTileHeightChanged;
+            remove
+            {
+                this.model.TilesChanged -= value;
+            }
+        }
 
-        public event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
+        public event EventHandler<GridEventArgs> BaseTileGraphicsChanged
+        {
+            add
+            {
+                this.model.BaseTileGraphicsChanged += value;
+            }
+
+            remove
+            {
+                this.model.BaseTileGraphicsChanged -= value;
+            }
+        }
+
+        public event EventHandler<GridEventArgs> BaseTileHeightChanged
+        {
+            add
+            {
+                this.model.BaseTileHeightChanged += value;
+            }
+
+            remove
+            {
+                this.model.BaseTileHeightChanged -= value;
+            }
+        }
+
+        public event EventHandler<StartPositionChangedEventArgs> StartPositionChanged
+        {
+            add
+            {
+                this.model.StartPositionChanged += value;
+            }
+
+            remove
+            {
+                this.model.StartPositionChanged -= value;
+            }
+        }
 
         public bool HasSelection
         {
@@ -81,7 +136,7 @@
         {
             get
             {
-                return this.model.Map == null ? null : this.model.Map.Features;
+                return this.model.Features;
             }
         }
 
@@ -89,7 +144,7 @@
         {
             get
             {
-                return this.model.Map == null ? null : this.model.Map.FloatingTiles;
+                return this.model.FloatingTiles;
             }
         }
 
@@ -97,7 +152,7 @@
         {
             get
             {
-                return this.model.Map == null ? null : this.model.Map.Tile;
+                return this.model.BaseTile;
             }
         }
 
@@ -105,7 +160,7 @@
         {
             get
             {
-                return this.model.Map == null ? 0 : this.model.Map.Tile.TileGrid.Width;
+                return this.model.MapWidth;
             }
         }
 
@@ -113,7 +168,7 @@
         {
             get
             {
-                return this.model.Map == null ? 0 : this.model.Map.Tile.TileGrid.Height;
+                return this.model.MapHeight;
             }
         }
 
@@ -121,7 +176,7 @@
         {
             get
             {
-                return this.model.Map != null;
+                return this.model.MapOpen;
             }
         }
 
@@ -242,7 +297,7 @@
 
         public Point? GetStartPosition(int index)
         {
-            return this.model.Map.Attributes.GetStartPosition(index);
+            return this.model.GetStartPosition(index);
         }
 
         public void TranslateSelection(int x, int y)
@@ -312,12 +367,12 @@
 
         public void DragDropFeature(string name, int x, int y)
         {
-            if (this.model.Map == null)
+            if (!this.model.MapOpen)
             {
                 return;
             }
 
-            Point? featurePos = Util.ScreenToHeightIndex(this.model.Map.Tile.HeightGrid, new Point(x, y));
+            Point? featurePos = this.model.ScreenToHeightIndex(x, y);
             if (featurePos.HasValue)
             {
                 if (this.model.TryPlaceFeature(name, featurePos.Value.X, featurePos.Value.Y))
