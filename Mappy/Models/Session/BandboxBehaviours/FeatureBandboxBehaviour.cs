@@ -12,7 +12,7 @@ namespace Mappy.Models.Session.BandboxBehaviours
     {
         private readonly ImageLayerView view;
 
-        private readonly ISelectionModel selectionModel;
+        private readonly SelectionModel selectionModel;
 
         private Point bandboxStartPoint;
 

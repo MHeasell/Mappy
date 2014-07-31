@@ -12,7 +12,7 @@
     /// </summary>
     public class TileBandboxBehaviour : Notifier, IBandboxBehaviour
     {
-        private readonly ISelectionModel selectionModel;
+        private readonly SelectionModel selectionModel;
 
         private readonly IMainModel handler;
 
@@ -26,7 +26,7 @@
 
         private int bufferY;
 
-        public TileBandboxBehaviour(IMainModel handler, ISelectionModel selectionModel)
+        public TileBandboxBehaviour(IMainModel handler, SelectionModel selectionModel)
         {
             this.handler = handler;
             this.selectionModel = selectionModel;

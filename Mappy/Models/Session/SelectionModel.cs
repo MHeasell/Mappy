@@ -15,7 +15,7 @@
 
     using Point = System.Drawing.Point;
 
-    public class SelectionModel : Notifier, ISelectionModel, IMysteryModel
+    public class SelectionModel : Notifier, IMysteryModel
     {
         private readonly IMainModel model;
 
