@@ -1,11 +1,14 @@
 ﻿namespace Mappy.Models.Session
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Collections.Specialized;
+    using System.ComponentModel;
     using System.Drawing;
 
     using Mappy.Collections;
+    using Mappy.Data;
     using Mappy.Models.Session.BandboxBehaviours;
     using Mappy.Presentation;
     using Mappy.Util;
@@ -63,6 +66,38 @@
                 return this.selectedFeatures;
             }
         }
+
+        public ISparseGrid<Feature> Features { get; private set; }
+
+        public IList<Positioned<IMapTile>> FloatingTiles { get; private set; }
+
+        public IMapTile BaseTile { get; private set; }
+
+        public int MapWidth { get; private set; }
+
+        public int MapHeight { get; private set; }
+
+        public event EventHandler<SparseGridEventArgs> FeaturesChanged;
+
+        public event EventHandler<ListChangedEventArgs> TilesChanged;
+
+        public event EventHandler<GridEventArgs> BaseTileGraphicsChanged;
+
+        public event EventHandler<GridEventArgs> BaseTileHeightChanged;
+
+        public event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
+
+        public bool MapOpen { get; private set; }
+
+        public bool GridVisible { get; private set; }
+
+        public Color GridColor { get; private set; }
+
+        public Size GridSize { get; private set; }
+
+        public bool HeightmapVisible { get; private set; }
+
+        public bool FeaturesVisible { get; private set; }
 
         public int? SelectedTile
         {
@@ -137,6 +172,11 @@
                 this.model.RemoveStartPosition(this.SelectedStartPosition.Value);
                 this.SelectedStartPosition = null;
             }
+        }
+
+        public Point? GetStartPosition(int index)
+        {
+            throw new NotImplementedException();
         }
 
         public void TranslateSelection(int x, int y)

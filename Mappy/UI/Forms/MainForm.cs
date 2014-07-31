@@ -30,7 +30,7 @@
 
             CoreModel model = new CoreModel();
 
-            var selectionModel = new SelectionModel(model, this.imageLayerView1);
+            var selectionModel = new SelectionModel(model);
 
             var mapPresenter = new MapPresenter(this.imageLayerView1, selectionModel);
 

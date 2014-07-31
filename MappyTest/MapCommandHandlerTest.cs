@@ -1,8 +1,14 @@
 ﻿namespace MappyTest
 {
+    using System.Collections.Generic;
+    using System.Drawing;
     using System.Windows.Forms;
 
+    using Mappy.Collections;
+    using Mappy.Controllers.Tags;
+    using Mappy.Data;
     using Mappy.Presentation;
+    using Mappy.UI.Controls;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,9 +27,30 @@
         public void SetUp()
         {
             this.model = new Mock<IMysteryModel>(MockBehavior.Strict);
+            this.model.SetupGet(x => x.MapOpen).Returns(true);
+            this.model.SetupGet(x => x.MapWidth).Returns(32);
+            this.model.SetupGet(x => x.MapHeight).Returns(32);
+            this.model.SetupGet(x => x.HeightmapVisible).Returns(false);
+            this.model.SetupGet(x => x.BaseTile).Returns(new MapTile(32, 32));
+            this.model.SetupGet(x => x.FloatingTiles).Returns(new List<Positioned<IMapTile>>());
+            this.model.SetupGet(x => x.Features).Returns(new SparseGrid<Feature>(64, 64));
+            this.model.Setup(x => x.GetStartPosition(It.IsAny<int>())).Returns((Point?)null);
+
+            this.model.SetupGet(x => x.GridVisible).Returns(false);
+            this.model.SetupGet(x => x.GridColor).Returns(Color.Black);
+            this.model.SetupGet(x => x.GridSize).Returns(new Size(32, 32));
+
             this.view = new Mock<IMapView>(MockBehavior.Strict);
+            this.view.SetupGet(x => x.Items).Returns(new List<ImageLayerCollection.Item>());
+            this.view.SetupProperty(x => x.CanvasSize);
+            this.view.SetupProperty(x => x.GridVisible);
+            this.view.SetupProperty(x => x.GridColor);
+            this.view.SetupProperty(x => x.GridSize);
 
             this.presenter = new MapPresenter(this.view.Object, this.model.Object);
+
+            this.model.ResetCalls();
+            this.view.ResetCalls();
         }
 
         [TestClass]
@@ -36,12 +63,17 @@
             [TestMethod]
             public void TestSelectAtPoint()
             {
-                this.model.Setup(x => x.IsInSelection(2, 4)).Returns(false);
-                this.model.Setup(x => x.SelectAtPoint(2, 4)).Returns(true);
+                var item = new ImageLayerCollection.Item(2, 4, 5, null);
+                item.Tag = new SectionTag(3);
+
+                this.view.Setup(x => x.IsInSelection(2, 4)).Returns(false);
+                this.view.Setup(x => x.HitTest(2, 4)).Returns(item);
+
+                this.model.Setup(x => x.SelectTile(3));
 
                 this.presenter.MouseDown(2, 4);
 
-                this.model.Verify(x => x.SelectAtPoint(2, 4), Times.Once);
+                this.model.Verify(x => x.SelectTile(3), Times.Once);
             }
 
             /// <summary>
@@ -50,12 +82,17 @@
             [TestMethod]
             public void TestSelectAtPoint2()
             {
-                this.model.Setup(x => x.IsInSelection(3, 8)).Returns(false);
-                this.model.Setup(x => x.SelectAtPoint(3, 8)).Returns(true);
+                var item = new ImageLayerCollection.Item(3, 8, 7, null);
+                item.Tag = new SectionTag(2);
+
+                this.view.Setup(x => x.IsInSelection(3, 8)).Returns(false);
+                this.view.Setup(x => x.HitTest(3, 8)).Returns(item);
+
+                this.model.Setup(x => x.SelectTile(2));
 
                 this.presenter.MouseDown(3, 8);
 
-                this.model.Verify(x => x.SelectAtPoint(3, 8), Times.Once);
+                this.model.Verify(x => x.SelectTile(2), Times.Once);
             }
         }
 
@@ -69,7 +106,7 @@
             [TestMethod]
             public void TestDrag()
             {
-                this.model.Setup(x => x.IsInSelection(2, 4)).Returns(true);
+                this.view.Setup(x => x.IsInSelection(2, 4)).Returns(true);
                 this.model.Setup(x => x.TranslateSelection(2, 2));
 
                 this.presenter.MouseDown(2, 4);
@@ -85,7 +122,7 @@
             [TestMethod]
             public void TestDrag2()
             {
-                this.model.Setup(x => x.IsInSelection(2, 4)).Returns(true);
+                this.view.Setup(x => x.IsInSelection(2, 4)).Returns(true);
                 this.model.Setup(x => x.TranslateSelection(3, 7));
 
                 this.presenter.MouseDown(2, 4);
@@ -117,7 +154,7 @@
                 // don't care if this is called
                 this.model.Setup(x => x.FlushTranslation());
 
-                this.model.Setup(x => x.IsInSelection(5, 3)).Returns(true);
+                this.view.Setup(x => x.IsInSelection(5, 3)).Returns(true);
 
                 this.presenter.MouseDown(5, 3);
 
@@ -134,7 +171,7 @@
             [TestMethod]
             public void TestDragFlush()
             {
-                this.model.Setup(x => x.IsInSelection(6, 7)).Returns(true);
+                this.view.Setup(x => x.IsInSelection(6, 7)).Returns(true);
                 this.model.Setup(x => x.FlushTranslation());
 
                 // don't care about calls to this
@@ -156,7 +193,7 @@
             [TestMethod]
             public void TestDragFlushMultiple()
             {
-                this.model.Setup(x => x.IsInSelection(6, 7)).Returns(true);
+                this.view.Setup(x => x.IsInSelection(6, 7)).Returns(true);
                 this.model.Setup(x => x.FlushTranslation());
 
                 // don't care about calls to this
@@ -183,8 +220,8 @@
             [TestMethod]
             public void TestBandboxSelect()
             {
-                this.model.Setup(x => x.IsInSelection(1, 1)).Returns(false);
-                this.model.Setup(x => x.SelectAtPoint(1, 1)).Returns(false);
+                this.view.Setup(x => x.IsInSelection(1, 1)).Returns(false);
+                this.view.Setup(x => x.HitTest(1, 1)).Returns((ImageLayerCollection.Item)null);
 
                 this.model.Setup(x => x.StartBandbox(1, 1));
 
@@ -199,8 +236,8 @@
             [TestMethod]
             public void TestBandboxSelect2()
             {
-                this.model.Setup(x => x.IsInSelection(5, 3)).Returns(false);
-                this.model.Setup(x => x.SelectAtPoint(5, 3)).Returns(false);
+                this.view.Setup(x => x.IsInSelection(5, 3)).Returns(false);
+                this.view.Setup(x => x.HitTest(5, 3)).Returns((ImageLayerCollection.Item)null);
 
                 this.model.Setup(x => x.StartBandbox(5, 3));
 
@@ -216,8 +253,8 @@
             [TestMethod]
             public void TestBandboxDrag()
             {
-                this.model.Setup(x => x.IsInSelection(5, 3)).Returns(false);
-                this.model.Setup(x => x.SelectAtPoint(5, 3)).Returns(false);
+                this.view.Setup(x => x.IsInSelection(5, 3)).Returns(false);
+                this.view.Setup(x => x.HitTest(5, 3)).Returns((ImageLayerCollection.Item)null);
 
                 this.model.Setup(x => x.StartBandbox(It.IsAny<int>(), It.IsAny<int>()));
                 this.model.Setup(x => x.GrowBandbox(2, 2));
@@ -236,8 +273,8 @@
             [TestMethod]
             public void TestBandboxCommitOnRelease()
             {
-                this.model.Setup(x => x.IsInSelection(5, 3)).Returns(false);
-                this.model.Setup(x => x.SelectAtPoint(5, 3)).Returns(false);
+                this.view.Setup(x => x.IsInSelection(5, 3)).Returns(false);
+                this.view.Setup(x => x.HitTest(5, 3)).Returns((ImageLayerCollection.Item)null);
 
                 this.model.Setup(x => x.StartBandbox(It.IsAny<int>(), It.IsAny<int>()));
                 this.model.Setup(x => x.GrowBandbox(It.IsAny<int>(), It.IsAny<int>()));
@@ -263,13 +300,13 @@
                 this.model.Setup(x => x.StartBandbox(It.IsAny<int>(), It.IsAny<int>()));
                 this.model.Setup(x => x.GrowBandbox(It.IsAny<int>(), It.IsAny<int>()));
                 this.model.Setup(x => x.CommitBandbox());
-                this.model.Setup(x => x.IsInSelection(1, 1)).Returns(false);
-                this.model.Setup(x => x.SelectAtPoint(1, 1)).Returns(false);
+                this.view.Setup(x => x.IsInSelection(1, 1)).Returns(false);
+                this.view.Setup(x => x.HitTest(1, 1)).Returns((ImageLayerCollection.Item)null);
 
                 this.presenter.MouseDown(1, 1);
                 this.presenter.MouseUp(1, 1);
 
-                this.model.Setup(x => x.SelectAtPoint(1, 1)).Returns(true);
+                this.view.Setup(x => x.IsInSelection(1, 1)).Returns(true);
                 this.model.Setup(x => x.TranslateSelection(1, 2));
 
                 this.presenter.MouseDown(1, 1);
