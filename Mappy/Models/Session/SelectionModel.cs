@@ -6,18 +6,15 @@
     using System.Drawing;
 
     using Mappy.Collections;
-    using Mappy.Controllers.Tags;
     using Mappy.Models.Session.BandboxBehaviours;
-    using Mappy.UI.Controls;
+    using Mappy.Presentation;
     using Mappy.Util;
 
     using Point = System.Drawing.Point;
 
-    public class SelectionModel : Notifier, ISelectionModel
+    public class SelectionModel : Notifier, ISelectionModel, IMysteryModel
     {
         private readonly IMapCommandHandler model;
-
-        private readonly ImageLayerView view;
 
         private readonly ObservableCollection<GridCoordinates> selectedFeatures = new ObservableCollection<GridCoordinates>();
 
@@ -35,10 +32,9 @@
 
         private int deltaY;
 
-        public SelectionModel(IMapCommandHandler model, ImageLayerView view)
+        public SelectionModel(IMapCommandHandler model)
         {
             this.model = model;
-            this.view = view;
 
             this.selectedFeatures.CollectionChanged += this.SelectedFeaturesChanged;
             ////this.bandboxBehaviour = new FeatureBandboxBehaviour(view, this);
@@ -106,36 +102,6 @@
             {
                 return this.bandboxBehaviour.BandboxRectangle;
             }
-        }
-
-        public bool IsInSelection(int x, int y)
-        {
-            var item = this.view.Items.HitTest(new Point(x, y));
-
-            if (item == null)
-            {
-                return false;
-            }
-
-            return this.EqualsSelectedFromTag(item.Tag);
-        }
-
-        public bool SelectAtPoint(int x, int y)
-        {
-            if (this.previousTranslationOpen)
-            {
-                this.FlushTranslation();
-            }
-
-            var item = this.view.Items.HitTest(new Point(x, y));
-            if (item == null)
-            {
-                this.ClearSelection();
-                return false;
-            }
-
-            this.SelectFromTag(item.Tag);
-            return true;
         }
 
         public void ClearSelection()
@@ -296,73 +262,26 @@
             this.SelectedStartPosition = null;
         }
 
-        private void OnSelectionChanged()
-        {
-            this.HasSelection = this.SelectedFeatures.Count > 0
-                    || this.SelectedTile.HasValue
-                    || this.SelectedStartPosition.HasValue;
-        }
-
-        private bool EqualsSelectedFromTag(object tag)
-        {
-            SectionTag t = tag as SectionTag;
-            if (t != null)
-            {
-                return t.Index == this.SelectedTile;
-            }
-
-            FeatureTag y = tag as FeatureTag;
-            if (y != null)
-            {
-                return this.SelectedFeatures.Contains(y.Index);
-            }
-
-            StartPositionTag u = tag as StartPositionTag;
-            if (u != null)
-            {
-                return u.Index == this.SelectedStartPosition;
-            }
-
-            return false;
-        }
-
-        private void SelectFromTag(object tag)
-        {
-            SectionTag t = tag as SectionTag;
-            if (t != null)
-            {
-                this.SelectTile(t.Index);
-                return;
-            }
-
-            FeatureTag y = tag as FeatureTag;
-            if (y != null)
-            {
-                this.SelectFeature(y.Index);
-                return;
-            }
-
-            StartPositionTag u = tag as StartPositionTag;
-            if (u != null)
-            {
-                this.SelectStartPosition(u.Index);
-                return;
-            }
-        }
-
-        private void SelectStartPosition(int index)
+        public void SelectStartPosition(int index)
         {
             this.MergeDownSelectedTile();
             this.SelectedFeatures.Clear();
             this.SelectedStartPosition = index;
         }
 
-        private void SelectFeature(GridCoordinates coords)
+        public void SelectFeature(GridCoordinates coords)
         {
             this.SelectedFeatures.Clear();
             this.SelectedFeatures.Add(coords);
             this.MergeDownSelectedTile();
             this.SelectedStartPosition = null;
+        }
+
+        private void OnSelectionChanged()
+        {
+            this.HasSelection = this.SelectedFeatures.Count > 0
+                    || this.SelectedTile.HasValue
+                    || this.SelectedStartPosition.HasValue;
         }
 
         private void MergeDownSelectedTile()

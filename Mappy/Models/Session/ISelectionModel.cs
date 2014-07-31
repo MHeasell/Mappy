@@ -18,10 +18,6 @@ namespace Mappy.Models.Session
 
         Rectangle BandboxRectangle { get; }
 
-        bool IsInSelection(int x, int y);
-
-        bool SelectAtPoint(int x, int y);
-
         void ClearSelection();
 
         void DeleteSelection();

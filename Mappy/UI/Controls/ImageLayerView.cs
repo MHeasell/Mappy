@@ -6,9 +6,12 @@
     using System.ComponentModel;
     using System.Drawing;
     using System.Windows.Forms;
+
+    using Mappy.Presentation;
+
     using Painters;
 
-    public class ImageLayerView : ScrollableControl
+    public class ImageLayerView : ScrollableControl, IMapView
     {
         private readonly ImageLayerCollection items;
 
@@ -84,6 +87,14 @@
             get { return this.items; }
         }
 
+        ICollection<ImageLayerCollection.Item> IMapView.Items
+        {
+            get
+            {
+                return this.items;
+            }
+        }
+
         public Size CanvasSize
         {
             get
@@ -116,6 +127,23 @@
                     this.OnCanvasColorChanged();
                 }
             }
+        }
+
+        public bool IsInSelection(int x, int y)
+        {
+            var item = this.HitTest(x, y);
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            return this.SelectedItemsContains(item);
+        }
+
+        public ImageLayerCollection.Item HitTest(int x, int y)
+        {
+            return this.Items.HitTest(new Point(x, y));
         }
 
         public void AddToSelection(ImageLayerCollection.Item item)

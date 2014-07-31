@@ -2,7 +2,6 @@
 {
     using System.Windows.Forms;
 
-    using Mappy.Models.Session;
     using Mappy.Presentation;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,15 +11,19 @@
     [TestClass]
     public class MapCommandHandlerTest
     {
-        private MapCommandHandler presenter;
+        private MapPresenter presenter;
 
-        private Mock<ISelectionModel> model;
+        private Mock<IMysteryModel> model;
+
+        private Mock<IMapView> view;
 
         [TestInitialize]
         public void SetUp()
         {
-            this.model = new Mock<ISelectionModel>(MockBehavior.Strict);
-            this.presenter = new MapCommandHandler(this.model.Object);
+            this.model = new Mock<IMysteryModel>(MockBehavior.Strict);
+            this.view = new Mock<IMapView>(MockBehavior.Strict);
+
+            this.presenter = new MapPresenter(this.view.Object, this.model.Object);
         }
 
         [TestClass]

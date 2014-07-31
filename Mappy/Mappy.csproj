@@ -124,6 +124,8 @@
     <Compile Include="Palette\ArrayPalette.cs" />
     <Compile Include="Palette\DictionaryReversePalette.cs" />
     <Compile Include="Palette\TransparencyMaskedPalette.cs" />
+    <Compile Include="Presentation\IMapView.cs" />
+    <Compile Include="Presentation\IMysteryModel.cs" />
     <Compile Include="Presentation\MapPresenter.cs" />
     <Compile Include="Presentation\MapViewEventAdapter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

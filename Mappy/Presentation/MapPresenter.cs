@@ -9,8 +9,6 @@
     using Mappy.Collections;
     using Mappy.Controllers.Tags;
     using Mappy.Data;
-    using Mappy.Models;
-    using Mappy.Models.Session;
     using Mappy.UI.Controls;
     using Mappy.UI.Drawables;
     using Mappy.Util;
@@ -24,17 +22,13 @@
 
         private static readonly IDrawable[] StartPositionImages = new IDrawable[10];
 
-        private readonly ImageLayerView view;
-        private readonly IMapDataModel model;
+        private readonly IMapView view;
+        private readonly IMysteryModel model;
 
         private readonly List<ImageLayerCollection.Item> tileMapping = new List<ImageLayerCollection.Item>();
         private readonly IDictionary<GridCoordinates, ImageLayerCollection.Item> featureMapping = new Dictionary<GridCoordinates, ImageLayerCollection.Item>();
 
         private readonly ImageLayerCollection.Item[] startPositionMapping = new ImageLayerCollection.Item[10];
-
-        private readonly ISelectionModel selectionModel;
-
-        private readonly IViewOptionsModel viewOptionsModel;
 
         private DrawableTile baseTile;
 
@@ -55,23 +49,19 @@
             }
         }
 
-        public MapPresenter(ImageLayerView view, IMapDataModel model, ISelectionModel selectionModel, IViewOptionsModel viewOptionsModel)
+        public MapPresenter(IMapView view, IMysteryModel model)
         {
             this.view = view;
             this.model = model;
-            this.selectionModel = selectionModel;
-            this.viewOptionsModel = viewOptionsModel;
 
             this.model.PropertyChanged += this.ModelPropertyChanged;
-            this.selectionModel.PropertyChanged += this.SelectionModelPropertyChanged;
-            this.viewOptionsModel.PropertyChanged += this.ViewOptionsModelPropertyChanged;
 
             this.PopulateView();
             this.WireMap();
 
-            this.view.GridVisible = this.viewOptionsModel.GridVisible;
-            this.view.GridColor = this.viewOptionsModel.GridColor;
-            this.view.GridSize = this.viewOptionsModel.GridSize;
+            this.view.GridVisible = this.model.GridVisible;
+            this.view.GridColor = this.model.GridColor;
+            this.view.GridSize = this.model.GridSize;
         }
 
         public void DragDrop(IDataObject data, int virtualX, int virtualY)
@@ -79,7 +69,7 @@
             if (data.GetDataPresent(typeof(StartPositionDragData)))
             {
                 StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
-                this.selectionModel.DragDropStartPosition(posData.PositionNumber, virtualX, virtualY);
+                this.model.DragDropStartPosition(posData.PositionNumber, virtualX, virtualY);
             }
             else
             {
@@ -87,11 +77,11 @@
                 int id;
                 if (int.TryParse(dataString, out id))
                 {
-                    this.selectionModel.DragDropTile(id, virtualX, virtualY);
+                    this.model.DragDropTile(id, virtualX, virtualY);
                 }
                 else
                 {
-                    this.selectionModel.DragDropFeature(dataString, virtualX, virtualY);
+                    this.model.DragDropFeature(dataString, virtualX, virtualY);
                 }
             }
         }
@@ -101,11 +91,16 @@
             this.mouseDown = true;
             this.lastMousePos = new Point(virtualX, virtualY);
 
-            if (!this.selectionModel.IsInSelection(virtualX, virtualY))
+            if (!this.view.IsInSelection(virtualX, virtualY))
             {
-                if (!this.selectionModel.SelectAtPoint(virtualX, virtualY))
+                var hit = this.view.HitTest(virtualX, virtualY);
+                if (hit != null)
                 {
-                    this.selectionModel.StartBandbox(virtualX, virtualY);
+                    this.SelectFromTag(hit.Tag);
+                }
+                else
+                {
+                    this.model.StartBandbox(virtualX, virtualY);
                     this.bandboxMode = true;
                 }
             }
@@ -122,13 +117,13 @@
 
                 if (this.bandboxMode)
                 {
-                    this.selectionModel.GrowBandbox(
+                    this.model.GrowBandbox(
                         virtualX - this.lastMousePos.X,
                         virtualY - this.lastMousePos.Y);
                 }
                 else
                 {
-                    this.selectionModel.TranslateSelection(
+                    this.model.TranslateSelection(
                         virtualX - this.lastMousePos.X,
                         virtualY - this.lastMousePos.Y);
                 }
@@ -143,12 +138,12 @@
         {
             if (this.bandboxMode)
             {
-                this.selectionModel.CommitBandbox();
+                this.model.CommitBandbox();
                 this.bandboxMode = false;
             }
             else
             {
-                this.selectionModel.FlushTranslation();
+                this.model.FlushTranslation();
             }
 
             this.mouseDown = false;
@@ -158,34 +153,53 @@
         {
             if (key == Keys.Delete)
             {
-                this.selectionModel.DeleteSelection();
+                this.model.DeleteSelection();
             }
         }
 
         public void LostFocus()
         {
-            this.selectionModel.ClearSelection();
+            this.model.ClearSelection();
+        }
+
+        private void SelectFromTag(object tag)
+        {
+            SectionTag t = tag as SectionTag;
+            if (t != null)
+            {
+                this.model.SelectTile(t.Index);
+                return;
+            }
+
+            FeatureTag y = tag as FeatureTag;
+            if (y != null)
+            {
+                this.model.SelectFeature(y.Index);
+                return;
+            }
+
+            StartPositionTag u = tag as StartPositionTag;
+            if (u != null)
+            {
+                this.model.SelectStartPosition(u.Index);
+                return;
+            }
         }
 
         private void WireMap()
         {
-            if (this.model.Map == null)
-            {
-                return;
-            }
+            this.model.FeaturesChanged += this.FeatureChanged;
+            this.model.TilesChanged += this.TilesChanged;
 
-            this.model.Map.Features.EntriesChanged += this.FeatureChanged;
-            this.model.Map.FloatingTiles.ListChanged += this.TilesChanged;
+            this.model.BaseTileGraphicsChanged += this.BaseTileChanged;
+            this.model.BaseTileHeightChanged += this.BaseTileChanged;
 
-            this.model.Map.Tile.TileGridChanged += this.BaseTileChanged;
-            this.model.Map.Tile.HeightGridChanged += this.BaseTileChanged;
-
-            foreach (var t in this.model.Map.FloatingTiles)
+            foreach (var t in this.model.FloatingTiles)
             {
                 t.LocationChanged += this.TileLocationChanged;
             }
 
-            this.model.Map.Attributes.StartPositionChanged += this.StartPositionChanged;
+            this.model.StartPositionChanged += this.StartPositionChanged;
         }
 
         private void PopulateView()
@@ -195,19 +209,19 @@
             this.view.Items.Clear();
             this.baseTile = null;
 
-            if (this.model.Map == null)
+            if (!this.model.MapOpen)
             {
                 this.view.CanvasSize = Size.Empty;
                 return;
             }
 
             this.view.CanvasSize = new Size(
-                this.model.Map.Tile.TileGrid.Width * 32,
-                this.model.Map.Tile.TileGrid.Height * 32);
+                this.model.MapWidth * 32,
+                this.model.MapHeight * 32);
 
-            this.baseTile = new DrawableTile(this.model.Map.Tile);
+            this.baseTile = new DrawableTile(this.model.BaseTile);
             this.baseTile.BackgroundColor = Color.CornflowerBlue;
-            this.baseTile.DrawHeightMap = this.viewOptionsModel.HeightmapVisible;
+            this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
             ImageLayerCollection.Item baseItem = new ImageLayerCollection.Item(
                 0,
                 0,
@@ -219,12 +233,12 @@
             this.view.Items.Add(baseItem);
 
             int count = 0;
-            foreach (Positioned<IMapTile> t in this.model.Map.FloatingTiles)
+            foreach (Positioned<IMapTile> t in this.model.FloatingTiles)
             {
                 this.InsertTile(t, count++);
             }
 
-            foreach (var f in this.model.Map.Features.CoordinateEntries)
+            foreach (var f in this.model.Features.CoordinateEntries)
             {
                 this.InsertFeature(f.Value, f.Key.X, f.Key.Y);
             }
@@ -261,14 +275,14 @@
         {
             var coords = new GridCoordinates(x, y);
             int index = this.ToFeatureIndex(x, y);
-            Rectangle r = f.GetDrawBounds(this.model.Map.Tile.HeightGrid, x, y);
+            Rectangle r = f.GetDrawBounds(this.model.BaseTile.HeightGrid, x, y);
             ImageLayerCollection.Item i = new ImageLayerCollection.Item(
                     r.X,
                     r.Y,
                     index + 1000, // magic number to separate from tiles
                     new DrawableBitmap(f.Image));
             i.Tag = new FeatureTag(coords);
-            i.Visible = this.viewOptionsModel.FeaturesVisible;
+            i.Visible = this.model.FeaturesVisible;
             this.featureMapping[coords] = i;
             this.view.Items.Add(i);
         }
@@ -312,7 +326,7 @@
         private void InsertFeature(GridCoordinates p)
         {
             Feature f;
-            if (this.model.Map.Features.TryGetValue(p.X, p.Y, out f))
+            if (this.model.Features.TryGetValue(p.X, p.Y, out f))
             {
                 this.InsertFeature(f, p.X, p.Y);
             }
@@ -320,8 +334,8 @@
 
         private GridCoordinates ToFeaturePoint(int index)
         {
-            int x = index % this.model.Map.Features.Width;
-            int y = index / this.model.Map.Features.Width;
+            int x = index % this.model.Features.Width;
+            int y = index / this.model.Features.Width;
             var p = new GridCoordinates(x, y);
             return p;
         }
@@ -333,14 +347,14 @@
 
         private int ToFeatureIndex(int x, int y)
         {
-            return (y * this.model.Map.Features.Width) + x;
+            return (y * this.model.Features.Width) + x;
         }
 
         private void RefreshFeatureVisibility()
         {
             foreach (var i in this.featureMapping.Values)
             {
-                i.Visible = this.viewOptionsModel.FeaturesVisible;
+                i.Visible = this.model.FeaturesVisible;
             }
         }
 
@@ -351,59 +365,32 @@
                 return;
             }
 
-            this.baseTile.DrawHeightMap = this.viewOptionsModel.HeightmapVisible;
+            this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
             this.view.Invalidate();
-        }
-
-        private void SelectionModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "SelectedTile":
-                case "SelectedFeatures":
-                case "SelectedStartPosition":
-                    this.RefreshSelection();
-                    break;
-                case "BandboxRectangle":
-                    this.UpdateBandbox();
-                    break;
-            }
         }
 
         private void RefreshSelection()
         {
             this.view.ClearSelection();
 
-            if (this.selectionModel.SelectedTile.HasValue)
+            if (this.model.SelectedTile.HasValue)
             {
-                this.view.AddToSelection(this.tileMapping[this.selectionModel.SelectedTile.Value]);
+                this.view.AddToSelection(this.tileMapping[this.model.SelectedTile.Value]);
             }
-            else if (this.selectionModel.SelectedFeatures.Count > 0)
+            else if (this.model.SelectedFeatures.Count > 0)
             {
-                foreach (var item in this.selectionModel.SelectedFeatures)
+                foreach (var item in this.model.SelectedFeatures)
                 {
                     this.view.AddToSelection(this.featureMapping[item]);
                 }
             }
-            else if (this.selectionModel.SelectedStartPosition.HasValue)
+            else if (this.model.SelectedStartPosition.HasValue)
             {
-                this.view.AddToSelection(this.startPositionMapping[this.selectionModel.SelectedStartPosition.Value]);
+                this.view.AddToSelection(this.startPositionMapping[this.model.SelectedStartPosition.Value]);
             }
         }
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "Map":
-                    this.WireMap();
-                    this.PopulateView();
-                    this.RefreshHeightmapVisibility();
-                    break;
-            }
-        }
-
-        private void ViewOptionsModelPropertyChanged(object sneder, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
@@ -414,13 +401,22 @@
                     this.RefreshHeightmapVisibility();
                     break;
                 case "GridVisible":
-                    this.view.GridVisible = this.viewOptionsModel.GridVisible;
+                    this.view.GridVisible = this.model.GridVisible;
                     break;
                 case "GridColor":
-                    this.view.GridColor = this.viewOptionsModel.GridColor;
+                    this.view.GridColor = this.model.GridColor;
                     break;
                 case "GridSize":
-                    this.view.GridSize = this.viewOptionsModel.GridSize;
+                    this.view.GridSize = this.model.GridSize;
+                    break;
+
+                case "SelectedTile":
+                case "SelectedFeatures":
+                case "SelectedStartPosition":
+                    this.RefreshSelection();
+                    break;
+                case "BandboxRectangle":
+                    this.UpdateBandbox();
                     break;
             }
         }
@@ -443,7 +439,7 @@
                 this.startPositionMapping[index] = null;
             }
 
-            Point? p = this.model.Map.Attributes.GetStartPosition(index);
+            Point? p = this.model.GetStartPosition(index);
             if (p.HasValue)
             {
                 IDrawable img = StartPositionImages[index];
@@ -466,7 +462,7 @@
         private void TileLocationChanged(object sender, EventArgs e)
         {
             Positioned<IMapTile> item = (Positioned<IMapTile>)sender;
-            int index = this.model.Map.FloatingTiles.IndexOf(item);
+            int index = this.model.FloatingTiles.IndexOf(item);
 
             var mapping = this.tileMapping[index];
             bool selected = this.view.SelectedItemsContains(mapping);
@@ -490,15 +486,15 @@
             switch (e.ListChangedType)
             {
                 case ListChangedType.ItemAdded:
-                    this.InsertTile(this.model.Map.FloatingTiles[e.NewIndex], e.NewIndex);
-                    this.model.Map.FloatingTiles[e.NewIndex].LocationChanged += this.TileLocationChanged;
+                    this.InsertTile(this.model.FloatingTiles[e.NewIndex], e.NewIndex);
+                    this.model.FloatingTiles[e.NewIndex].LocationChanged += this.TileLocationChanged;
                     break;
                 case ListChangedType.ItemDeleted:
                     this.RemoveTile(e.NewIndex);
                     break;
                 case ListChangedType.ItemMoved:
                     this.RemoveTile(e.OldIndex);
-                    this.InsertTile(this.model.Map.FloatingTiles[e.NewIndex], e.NewIndex);
+                    this.InsertTile(this.model.FloatingTiles[e.NewIndex], e.NewIndex);
                     break;
                 case ListChangedType.Reset:
                     this.PopulateView(); // probably a bit heavy-handed
@@ -547,16 +543,16 @@
                 this.view.Items.Remove(this.bandboxMapping);
             }
 
-            if (this.selectionModel.BandboxRectangle != Rectangle.Empty)
+            if (this.model.BandboxRectangle != Rectangle.Empty)
             {
                 var bandbox = DrawableBandbox.CreateSimple(
-                    this.selectionModel.BandboxRectangle.Size,
+                    this.model.BandboxRectangle.Size,
                     BandboxFillColor,
                     BandboxBorderColor);
 
                 this.bandboxMapping = new ImageLayerCollection.Item(
-                    this.selectionModel.BandboxRectangle.X,
-                    this.selectionModel.BandboxRectangle.Y,
+                    this.model.BandboxRectangle.X,
+                    this.model.BandboxRectangle.Y,
                     BandboxDepth,
                     bandbox);
 
