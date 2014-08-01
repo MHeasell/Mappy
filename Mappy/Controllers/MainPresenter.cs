@@ -244,7 +244,12 @@
 
         private bool SaveHelper(string filename)
         {
-            string extension = Path.GetExtension(filename);
+            if (filename == null)
+            {
+                throw new ArgumentNullException("filename");
+            }
+
+            string extension = Path.GetExtension(filename).ToLowerInvariant();
 
             try
             {
