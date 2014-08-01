@@ -1,4 +1,4 @@
-namespace Mappy.Presentation
+namespace Mappy.Models
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace Mappy.Presentation
     using Mappy.Collections;
     using Mappy.Data;
 
-    public interface ISelectionModel : INotifyPropertyChanged
+    public interface IMainModel : INotifyPropertyChanged
     {
         event EventHandler<SparseGridEventArgs> FeaturesChanged;
 

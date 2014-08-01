@@ -101,6 +101,7 @@
     <Compile Include="Minimap\IMinimapView.cs" />
     <Compile Include="Models\BandboxMode.cs" />
     <Compile Include="Models\CoreModel.cs" />
+    <Compile Include="Models\IMainModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
     <Compile Include="Models\Session\BandboxBehaviours\FeatureBandboxBehaviour.cs" />
     <Compile Include="Models\Session\BandboxBehaviours\IBandboxBehaviour.cs" />
@@ -120,7 +121,6 @@
     <Compile Include="Palette\DictionaryReversePalette.cs" />
     <Compile Include="Palette\TransparencyMaskedPalette.cs" />
     <Compile Include="Presentation\IMapView.cs" />
-    <Compile Include="Presentation\ISelectionModel.cs" />
     <Compile Include="Presentation\MapPresenter.cs" />
     <Compile Include="Presentation\MapViewEventAdapter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

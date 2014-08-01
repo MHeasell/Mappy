@@ -7,6 +7,7 @@
     using Mappy.Collections;
     using Mappy.Controllers.Tags;
     using Mappy.Data;
+    using Mappy.Models;
     using Mappy.Presentation;
     using Mappy.UI.Controls;
 
@@ -19,14 +20,14 @@
     {
         private MapPresenter presenter;
 
-        private Mock<ISelectionModel> model;
+        private Mock<IMainModel> model;
 
         private Mock<IMapView> view;
 
         [TestInitialize]
         public void SetUp()
         {
-            this.model = new Mock<ISelectionModel>(MockBehavior.Strict);
+            this.model = new Mock<IMainModel>(MockBehavior.Strict);
             this.model.SetupGet(x => x.MapOpen).Returns(true);
             this.model.SetupGet(x => x.MapWidth).Returns(32);
             this.model.SetupGet(x => x.MapHeight).Returns(32);
