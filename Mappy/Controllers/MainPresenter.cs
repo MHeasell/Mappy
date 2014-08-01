@@ -71,7 +71,7 @@
 
         public bool Save()
         {
-            if (this.model.FilePath == null)
+            if (this.model.FilePath == null || this.model.IsFileReadOnly)
             {
                 return this.SaveAs();
             }
