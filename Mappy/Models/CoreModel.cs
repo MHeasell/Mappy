@@ -399,11 +399,6 @@
             }
         }
 
-        public void ToggleHeightmap()
-        {
-            this.HeightmapVisible = !this.HeightmapVisible;
-        }
-
         public void Undo()
         {
             this.undoManager.Undo();
