@@ -25,7 +25,7 @@
 
     using Util;
 
-    public class CoreModel : Notifier, IMainModel, IMinimapModel, ISelectionModel
+    public class CoreModel : Notifier, IMinimapModel, ISelectionModel
     {
         private readonly OperationManager undoManager = new OperationManager();
 
