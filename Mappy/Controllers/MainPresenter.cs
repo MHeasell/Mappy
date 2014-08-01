@@ -8,6 +8,8 @@
     using System.Linq;
     using System.Windows.Forms;
 
+    using Mappy.Minimap;
+
     using Models;
 
     using TAUtil;
@@ -25,12 +27,15 @@
 
         private readonly IMainView view;
 
-        private readonly CoreModel model;
+        private readonly IMainModel model;
+
+        private readonly IMinimapModel minimapModel;
 
         public MainPresenter(IMainView view, CoreModel model)
         {
             this.view = view;
             this.model = model;
+            this.minimapModel = model;
 
             this.view.Features = this.model.FeatureRecords.EnumerateAll().ToList();
 
@@ -40,6 +45,7 @@
             this.view.RedoEnabled = this.model.CanRedo;
 
             this.model.PropertyChanged += this.CoreModelPropertyChanged;
+            this.minimapModel.PropertyChanged += this.MinimapModelPropertyChanged;
         }
 
         public bool Open()
@@ -195,7 +201,7 @@
 
         public void OpenMapAttributes()
         {
-            MapAttributesResult r = this.view.AskUserForMapAttributes(MapAttributesResult.FromModel(this.model.Map));
+            MapAttributesResult r = this.view.AskUserForMapAttributes(this.model.GetAttributes());
 
             if (r != null)
             {
@@ -210,23 +216,23 @@
 
         public void ToggleMinimap()
         {
-            this.model.MinimapVisible = !this.model.MinimapVisible;
+            this.minimapModel.MinimapVisible = !this.minimapModel.MinimapVisible;
         }
 
         public void UpdateMinimapViewport()
         {
-            this.model.ViewportRectangle = this.ConvertToNormalizedViewport(this.view.ViewportRect);
+            this.minimapModel.ViewportRectangle = this.ConvertToNormalizedViewport(this.view.ViewportRect);
         }
 
         private RectangleF ConvertToNormalizedViewport(Rectangle rect)
         {
-            if (this.model.Map == null)
+            if (!this.model.MapOpen)
             {
                 return RectangleF.Empty;
             }
 
-            var widthScale = (float)((this.model.Map.Tile.TileGrid.Width * 32) - 32);
-            var heightScale = (float)((this.model.Map.Tile.TileGrid.Height * 32) - 128);
+            var widthScale = (float)((this.model.MapWidth * 32) - 32);
+            var heightScale = (float)((this.model.MapHeight * 32) - 128);
 
             var x = rect.X / widthScale;
             var y = rect.Y / heightScale;
@@ -357,8 +363,8 @@
                 case "CanRedo":
                     this.view.RedoEnabled = this.model.CanRedo;
                     break;
-                case "Map":
-                    this.view.OpenAttributesEnabled = this.model.Map != null;
+                case "MapOpen":
+                    this.view.OpenAttributesEnabled = this.model.MapOpen;
                     this.UpdateMinimapViewport();
                     break;
                 case "IsFileOpen":
@@ -376,8 +382,15 @@
                     this.UpdateSave();
                     this.UpdateTitleText();
                     break;
+            }
+        }
+
+        private void MinimapModelPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            switch (propertyChangedEventArgs.PropertyName)
+            {
                 case "MinimapVisible":
-                    this.view.MinimapVisibleChecked = this.model.MinimapVisible;
+                    this.view.MinimapVisibleChecked = this.minimapModel.MinimapVisible;
                     break;
             }
         }

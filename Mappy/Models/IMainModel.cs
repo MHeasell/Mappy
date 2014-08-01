@@ -7,6 +7,7 @@ namespace Mappy.Models
 
     using Mappy.Collections;
     using Mappy.Data;
+    using Mappy.Database;
 
     public interface IMainModel : INotifyPropertyChanged
     {
@@ -20,17 +21,33 @@ namespace Mappy.Models
 
         event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
 
+        IFeatureDatabase FeatureRecords { get; }
+
+        IList<Section> Sections { get; }
+
+        bool CanUndo { get; }
+
+        bool CanRedo { get; }
+
+        bool IsDirty { get; }
+
         bool MapOpen { get; }
 
-        bool GridVisible { get; }
+        string FilePath { get; }
 
-        Color GridColor { get; }
+        bool IsFileOpen { get; }
 
-        Size GridSize { get; }
+        bool IsFileReadOnly { get; }
 
-        bool HeightmapVisible { get; }
+        bool GridVisible { get; set; }
 
-        bool FeaturesVisible { get; }
+        Color GridColor { get; set; }
+
+        Size GridSize { get; set; }
+
+        bool HeightmapVisible { get; set; }
+
+        bool FeaturesVisible { get; set; }
 
         int? SelectedTile { get; }
 
@@ -49,6 +66,8 @@ namespace Mappy.Models
         int MapWidth { get; }
 
         int MapHeight { get; }
+
+        BandboxMode SelectionMode { get; set; }
 
         void DragDropStartPosition(int index, int x, int y);
 
@@ -77,5 +96,27 @@ namespace Mappy.Models
         void SelectFeature(GridCoordinates index);
 
         void SelectStartPosition(int index);
+
+        void Undo();
+
+        void Redo();
+
+        void New(int width, int height);
+
+        void Save(string filename);
+
+        void SaveHpi(string filename);
+
+        void OpenTnt(string filename);
+
+        void OpenSct(string filename);
+
+        void OpenHapi(string archivePath, string filename, bool readOnly = false);
+
+        void RefreshMinimap();
+
+        MapAttributesResult GetAttributes();
+
+        void UpdateAttributes(MapAttributesResult attributes);
     }
 }

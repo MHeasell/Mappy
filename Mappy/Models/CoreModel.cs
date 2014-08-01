@@ -893,6 +893,11 @@
             this.undoManager.Execute(new ChangeAttributesOperation(this.Map, newAttrs));
         }
 
+        public MapAttributesResult GetAttributes()
+        {
+            return MapAttributesResult.FromModel(this.Map);
+        }
+
         private void TranslateSection(Positioned<IMapTile> tile, int x, int y)
         {
             MoveTileOperation newOp = new MoveTileOperation(tile, x, y);
