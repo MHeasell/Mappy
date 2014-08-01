@@ -99,13 +99,13 @@
     <Compile Include="Minimap\IMinimapModel.cs" />
     <Compile Include="Minimap\IMinimapService.cs" />
     <Compile Include="Minimap\IMinimapView.cs" />
+    <Compile Include="Models\BandboxBehaviours\FeatureBandboxBehaviour.cs" />
+    <Compile Include="Models\BandboxBehaviours\IBandboxBehaviour.cs" />
+    <Compile Include="Models\BandboxBehaviours\TileBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxMode.cs" />
     <Compile Include="Models\CoreModel.cs" />
     <Compile Include="Models\IMainModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
-    <Compile Include="Models\Session\BandboxBehaviours\FeatureBandboxBehaviour.cs" />
-    <Compile Include="Models\Session\BandboxBehaviours\IBandboxBehaviour.cs" />
-    <Compile Include="Models\Session\BandboxBehaviours\TileBandboxBehaviour.cs" />
     <Compile Include="Operations\AddFeatureOperation.cs" />
     <Compile Include="Operations\ChangeAttributesOperation.cs" />
     <Compile Include="Operations\ChangeStartPositionOperation.cs" />

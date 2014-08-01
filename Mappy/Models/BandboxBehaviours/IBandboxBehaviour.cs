@@ -1,4 +1,4 @@
-namespace Mappy.Models.Session.BandboxBehaviours
+namespace Mappy.Models.BandboxBehaviours
 {
     using System.ComponentModel;
     using System.Drawing;

@@ -13,7 +13,7 @@
     using Mappy.Database;
     using Mappy.IO;
     using Mappy.Minimap;
-    using Mappy.Models.Session.BandboxBehaviours;
+    using Mappy.Models.BandboxBehaviours;
     using Mappy.Presentation;
 
     using Operations;
