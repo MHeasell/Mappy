@@ -22,7 +22,7 @@
 
     using Util;
 
-    public class CoreModel : Notifier, IMainModel, IViewOptionsModel, IMinimapModel
+    public class CoreModel : Notifier, IMainModel, IMinimapModel
     {
         private readonly OperationManager undoManager = new OperationManager();
 
