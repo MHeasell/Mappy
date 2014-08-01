@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Drawing;
     using System.IO;
@@ -11,7 +13,8 @@
     using Mappy.Database;
     using Mappy.IO;
     using Mappy.Minimap;
-    using Mappy.Models.Session;
+    using Mappy.Models.Session.BandboxBehaviours;
+    using Mappy.Presentation;
 
     using Operations;
 
@@ -22,7 +25,7 @@
 
     using Util;
 
-    public class CoreModel : Notifier, IMainModel, IMinimapModel
+    public class CoreModel : Notifier, IMainModel, IMinimapModel, ISelectionModel
     {
         private readonly OperationManager undoManager = new OperationManager();
 
@@ -34,6 +37,8 @@
         private readonly MapModelFactory mapModelFactory;
 
         private readonly MapSaver mapSaver;
+
+        private readonly ObservableCollection<GridCoordinates> selectedFeatures = new ObservableCollection<GridCoordinates>();
 
         private IBindingMapModel map;
         private bool isDirty;
@@ -57,8 +62,24 @@
 
         private Bitmap minimapImage;
 
+        private int deltaX;
+
+        private int deltaY;
+
+        private IBandboxBehaviour bandboxBehaviour;
+
+        private int? selectedTile;
+
+        private int? selectedStartPosition;
+
+        private bool hasSelection;
+
         public CoreModel()
         {
+            this.bandboxBehaviour = new TileBandboxBehaviour(this);
+
+            this.bandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
+
             this.featureRecords = new FeatureDictionary(Globals.Palette);
             this.sections = LoadingUtils.LoadSections(Globals.Palette);
 
@@ -74,6 +95,8 @@
             this.undoManager.CanUndoChanged += this.CanUndoChanged;
             this.undoManager.CanRedoChanged += this.CanRedoChanged;
             this.undoManager.IsMarkedChanged += this.IsMarkedChanged;
+
+            this.selectedFeatures.CollectionChanged += this.SelectedFeaturesChanged;
         }
 
         public event EventHandler<SparseGridEventArgs> FeaturesChanged;
@@ -187,6 +210,67 @@
         {
             get { return this.featuresVisible; }
             set { this.SetField(ref this.featuresVisible, value, "FeaturesVisible"); }
+        }
+
+        public bool HasSelection
+        {
+            get
+            {
+                return this.hasSelection;
+            }
+
+            private set
+            {
+                this.SetField(ref this.hasSelection, value, "HasSelection");
+            }
+        }
+
+        public int? SelectedTile
+        {
+            get
+            {
+                return this.selectedTile;
+            }
+
+            private set
+            {
+                if (this.SetField(ref this.selectedTile, value, "SelectedTile"))
+                {
+                    this.OnSelectionChanged();
+                }
+            }
+        }
+
+        public int? SelectedStartPosition
+        {
+            get
+            {
+                return this.selectedStartPosition;
+            }
+
+            private set
+            {
+                if (this.SetField(ref this.selectedStartPosition, value, "SelectedStartPosition"))
+                {
+                    this.OnSelectionChanged();
+                }
+            }
+        }
+
+        public Rectangle BandboxRectangle
+        {
+            get
+            {
+                return this.bandboxBehaviour.BandboxRectangle;
+            }
+        }
+
+        public ICollection<GridCoordinates> SelectedFeatures
+        {
+            get
+            {
+                return this.selectedFeatures;
+            }
         }
 
         public ISparseGrid<Feature> Features
@@ -419,9 +503,161 @@
             this.IsFileReadOnly = readOnly;
         }
 
+        public void DragDropStartPosition(int index, int x, int y)
+        {
+            this.SetStartPosition(index, x, y);
+            this.SelectStartPosition(index);
+        }
+
+        public void DragDropTile(int id, int x, int y)
+        {
+            int quantX = x / 32;
+            int quantY = y / 32;
+            int index = this.PlaceSection(id, quantX, quantY);
+
+            if (index != -1)
+            {
+                this.SelectTile(index);
+            }
+        }
+
+        public void DragDropFeature(string name, int x, int y)
+        {
+            if (!this.MapOpen)
+            {
+                return;
+            }
+
+            Point? featurePos = this.ScreenToHeightIndex(x, y);
+            if (featurePos.HasValue)
+            {
+                if (this.TryPlaceFeature(name, featurePos.Value.X, featurePos.Value.Y))
+                {
+                    this.SelectFeature(Util.ToGridCoordinates(featurePos.Value));
+                }
+            }
+        }
+
+        public void StartBandbox(int x, int y)
+        {
+            this.bandboxBehaviour.StartBandbox(x, y);
+        }
+
+        public void GrowBandbox(int x, int y)
+        {
+            this.bandboxBehaviour.GrowBandbox(x, y);
+        }
+
+        public void CommitBandbox()
+        {
+            this.bandboxBehaviour.CommitBandbox();
+        }
+
+        public void TranslateSelection(int x, int y)
+        {
+            if (this.SelectedStartPosition.HasValue)
+            {
+                this.TranslateStartPosition(
+                    this.SelectedStartPosition.Value,
+                    x,
+                    y);
+            }
+            else if (this.SelectedTile.HasValue)
+            {
+                this.deltaX += x;
+                this.deltaY += y;
+
+                this.TranslateSection(
+                    this.SelectedTile.Value,
+                    this.deltaX / 32,
+                    this.deltaY / 32);
+
+                this.deltaX %= 32;
+                this.deltaY %= 32;
+            }
+            else if (this.SelectedFeatures.Count > 0)
+            {
+                // TODO: restore old behaviour
+                // where heightmap is taken into account when placing features
+
+                this.deltaX += x;
+                this.deltaY += y;
+
+                int quantX = this.deltaX / 16;
+                int quantY = this.deltaY / 16;
+
+                bool success = this.TranslateFeatureBatch(
+                    this.SelectedFeatures,
+                    quantX,
+                    quantY);
+
+                if (success)
+                {
+                    var tmp = new List<GridCoordinates>(this.SelectedFeatures);
+                    this.SelectedFeatures.Clear();
+
+                    foreach (var item in tmp)
+                    {
+                        this.SelectedFeatures.Add(
+                            new GridCoordinates(item.X + quantX, item.Y + quantY));
+                    }
+
+                    this.deltaX %= 16;
+                    this.deltaY %= 16;
+                }
+            }
+
+            this.previousTranslationOpen = true;
+        }
+
+        public void DeleteSelection()
+        {
+            if (this.SelectedFeatures.Count > 0)
+            {
+                foreach (var item in this.SelectedFeatures)
+                {
+                    this.RemoveFeature(item.X, item.Y);
+                }
+
+                this.SelectedFeatures.Clear();
+            }
+            else if (this.SelectedTile.HasValue)
+            {
+                this.RemoveSection(this.SelectedTile.Value);
+                this.SelectedTile = null;
+            }
+            else if (this.SelectedStartPosition.HasValue)
+            {
+                this.RemoveStartPosition(this.SelectedStartPosition.Value);
+                this.SelectedStartPosition = null;
+            }
+        }
+
         public Point? GetStartPosition(int index)
         {
             return this.Map.Attributes.GetStartPosition(index);
+        }
+
+        public void SelectTile(int index)
+        {
+            this.SelectedTile = index;
+            this.SelectedFeatures.Clear();
+            this.SelectedStartPosition = null;
+        }
+
+        public void SelectFeature(GridCoordinates index)
+        {
+            this.SelectedFeatures.Clear();
+            this.SelectedFeatures.Add(index);
+            this.MergeDownSelectedTile();
+            this.SelectedStartPosition = null;
+        }
+
+        public void SelectStartPosition(int index)
+        {
+            this.MergeDownSelectedTile();
+            this.SelectedFeatures.Clear();
+            this.SelectedStartPosition = index;
         }
 
         public int PlaceSection(int tileId, int x, int y)
@@ -563,6 +799,18 @@
         public void FlushTranslation()
         {
             this.previousTranslationOpen = false;
+        }
+
+        public void ClearSelection()
+        {
+            if (this.previousTranslationOpen)
+            {
+                this.FlushTranslation();
+            }
+
+            this.SelectedFeatures.Clear();
+            this.MergeDownSelectedTile();
+            this.SelectedStartPosition = null;
         }
 
         public bool TryPlaceFeature(string name, int x, int y)
@@ -754,6 +1002,37 @@
             if (h != null)
             {
                 h(this, startPositionChangedEventArgs);
+            }
+        }
+
+        private void MergeDownSelectedTile()
+        {
+            if (this.SelectedTile.HasValue)
+            {
+                this.MergeSection(this.SelectedTile.Value);
+                this.SelectedTile = null;
+            }
+        }
+
+        private void OnSelectionChanged()
+        {
+            this.HasSelection = this.SelectedFeatures.Count > 0
+                    || this.SelectedTile.HasValue
+                    || this.SelectedStartPosition.HasValue;
+        }
+
+        private void SelectedFeaturesChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.FireChange("SelectedFeatures");
+        }
+
+        private void BandboxBehaviourPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "BandboxRectangle":
+                    this.FireChange("BandboxRectangle");
+                    break;
             }
         }
     }

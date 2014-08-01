@@ -8,7 +8,6 @@
     using Mappy.Controllers;
     using Mappy.Minimap;
     using Mappy.Models;
-    using Mappy.Models.Session;
     using Mappy.Presentation;
     using Mappy.Views;
 
@@ -30,9 +29,7 @@
 
             CoreModel model = new CoreModel();
 
-            var selectionModel = new SelectionModel(model);
-
-            var mapPresenter = new MapPresenter(this.imageLayerView1, selectionModel);
+            var mapPresenter = new MapPresenter(this.imageLayerView1, model);
 
             new MapViewEventAdapter(this.imageLayerView1, mapPresenter);
 

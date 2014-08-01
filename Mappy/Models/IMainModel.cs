@@ -20,6 +20,8 @@
 
         event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
 
+        bool MapOpen { get; }
+
         bool GridVisible { get; }
 
         Color GridColor { get; }
@@ -39,8 +41,6 @@
         int MapWidth { get; }
 
         int MapHeight { get; }
-
-        bool MapOpen { get; }
 
         Point? GetStartPosition(int index);
 

@@ -12,9 +12,7 @@
     /// </summary>
     public class TileBandboxBehaviour : Notifier, IBandboxBehaviour
     {
-        private readonly SelectionModel selectionModel;
-
-        private readonly IMainModel handler;
+        private readonly CoreModel model;
 
         private Rectangle bandboxRectangle;
 
@@ -26,10 +24,9 @@
 
         private int bufferY;
 
-        public TileBandboxBehaviour(IMainModel handler, SelectionModel selectionModel)
+        public TileBandboxBehaviour(CoreModel model)
         {
-            this.handler = handler;
-            this.selectionModel = selectionModel;
+            this.model = model;
         }
 
         public Rectangle BandboxRectangle
@@ -99,13 +96,13 @@
                     return;
                 }
 
-                int index = this.handler.LiftArea(
+                int index = this.model.LiftArea(
                     this.BandboxRectangle.X / 32,
                     this.BandboxRectangle.Y / 32,
                     this.BandboxRectangle.Width / 32,
                     this.bandboxRectangle.Height / 32);
 
-                this.selectionModel.SelectTile(index);
+                this.model.SelectTile(index);
             }
             finally
             {

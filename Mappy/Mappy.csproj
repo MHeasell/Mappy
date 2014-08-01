@@ -106,8 +106,6 @@
     <Compile Include="Models\Session\BandboxBehaviours\FeatureBandboxBehaviour.cs" />
     <Compile Include="Models\Session\BandboxBehaviours\IBandboxBehaviour.cs" />
     <Compile Include="Models\Session\BandboxBehaviours\TileBandboxBehaviour.cs" />
-    <Compile Include="Models\Session\IViewOptionsModel.cs" />
-    <Compile Include="Models\Session\SelectionModel.cs" />
     <Compile Include="Operations\AddFeatureOperation.cs" />
     <Compile Include="Operations\ChangeAttributesOperation.cs" />
     <Compile Include="Operations\ChangeStartPositionOperation.cs" />

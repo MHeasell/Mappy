@@ -12,7 +12,7 @@ namespace Mappy.Models.Session.BandboxBehaviours
     {
         private readonly ImageLayerView view;
 
-        private readonly SelectionModel selectionModel;
+        private readonly CoreModel model;
 
         private Point bandboxStartPoint;
 
@@ -20,10 +20,10 @@ namespace Mappy.Models.Session.BandboxBehaviours
 
         private Rectangle bandboxRectangle;
 
-        public FeatureBandboxBehaviour(ImageLayerView view, SelectionModel selectionModel)
+        public FeatureBandboxBehaviour(ImageLayerView view, CoreModel model)
         {
             this.view = view;
-            this.selectionModel = selectionModel;
+            this.model = model;
         }
 
         public Rectangle BandboxRectangle
@@ -56,13 +56,13 @@ namespace Mappy.Models.Session.BandboxBehaviours
 
         public void CommitBandbox()
         {
-            var items = this.view.Items.EnumerateIntersecting(this.selectionModel.BandboxRectangle);
+            var items = this.view.Items.EnumerateIntersecting(this.model.BandboxRectangle);
             var filteredItems = items.Where(x => x.Visible && !x.Locked && x.Tag is FeatureTag);
 
             foreach (var i in filteredItems)
             {
                 var tag = (FeatureTag)i.Tag;
-                this.selectionModel.SelectedFeatures.Add(tag.Index);
+                this.model.SelectedFeatures.Add(tag.Index);
             }
 
             this.BandboxRectangle = Rectangle.Empty;
