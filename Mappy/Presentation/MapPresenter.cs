@@ -294,6 +294,11 @@
 
         private void PopulateView()
         {
+            foreach (var item in this.featureMapping.Values)
+            {
+                this.view.Items.Remove(item);
+            }
+
             this.featureMapping.Clear();
 
             this.UpdateCanvasSize();
@@ -566,6 +571,7 @@
                     this.InsertTile(this.model.FloatingTiles[e.NewIndex], e.NewIndex);
                     break;
                 case ListChangedType.Reset:
+                    this.UpdateFloatingTiles();
                     this.PopulateView(); // probably a bit heavy-handed
                     break;
                 default:
