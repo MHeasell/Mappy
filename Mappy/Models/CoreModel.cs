@@ -605,23 +605,24 @@
 
         public void DeleteSelection()
         {
-            foreach (var item in this.SelectedFeatures)
+            if (this.SelectedFeatures.Count > 0)
             {
-                var deSelectOp = OperationFactory.CreateDeselectAndMergeOperation(this.Map);
-                var removeOp = new RemoveFeatureOperation(this.Map.Features, item.X, item.Y);
-                this.undoManager.Execute(new CompositeOperation(deSelectOp, removeOp));
+                var ops = new List<IReplayableOperation>();
+                ops.Add(new DeselectOperation(this.Map));
+                ops.AddRange(this.SelectedFeatures.Select(x => new RemoveFeatureOperation(this.Map.Features, x.X, x.Y)));
+                this.undoManager.Execute(new CompositeOperation(ops));
             }
 
             if (this.SelectedTile.HasValue)
             {
-                var deSelectOp = OperationFactory.CreateDeselectAndMergeOperation(this.Map);
+                var deSelectOp = new DeselectOperation(this.Map);
                 var removeOp = new RemoveTileOperation(this.Map.FloatingTiles, this.SelectedTile.Value);
                 this.undoManager.Execute(new CompositeOperation(deSelectOp, removeOp));
             }
 
             if (this.SelectedStartPosition.HasValue)
             {
-                var deSelectOp = OperationFactory.CreateDeselectAndMergeOperation(this.Map);
+                var deSelectOp = new DeselectOperation(this.Map);
                 var removeOp = new RemoveStartPositionOperation(this.Map, this.SelectedStartPosition.Value);
                 this.undoManager.Execute(new CompositeOperation(deSelectOp, removeOp));
             }
