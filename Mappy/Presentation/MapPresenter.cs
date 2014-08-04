@@ -321,6 +321,11 @@
             i.Tag = new SectionTag(index);
             this.tileMapping.Insert(index, i);
             this.view.Items.Add(i);
+
+            if (this.model.SelectedTile == index)
+            {
+                this.view.AddToSelection(i);
+            }
         }
 
         private void RemoveTile(int index)
@@ -345,6 +350,11 @@
             i.Visible = this.model.FeaturesVisible;
             this.featureMapping[coords] = i;
             this.view.Items.Add(i);
+
+            if (this.model.SelectedFeatures.Contains(coords))
+            {
+                this.view.AddToSelection(i);
+            }
         }
 
         private bool RemoveFeature(GridCoordinates coords)
@@ -363,17 +373,8 @@
 
         private void MoveFeature(GridCoordinates oldIndex, GridCoordinates newIndex)
         {
-            var old = this.featureMapping[oldIndex];
-
-            bool isSelected = this.view.SelectedItemsContains(old);
-
             this.RemoveFeature(oldIndex);
             this.InsertFeature(newIndex);
-
-            if (isSelected)
-            {
-                this.view.AddToSelection(this.featureMapping[newIndex]);
-            }
         }
 
         private void UpdateFeature(GridCoordinates index)
@@ -435,18 +436,28 @@
 
             if (this.model.SelectedTile.HasValue)
             {
-                this.view.AddToSelection(this.tileMapping[this.model.SelectedTile.Value]);
+                if (this.tileMapping.Count > this.model.SelectedTile)
+                {
+                    this.view.AddToSelection(this.tileMapping[this.model.SelectedTile.Value]);
+                }
             }
             else if (this.model.SelectedFeatures.Count > 0)
             {
                 foreach (var item in this.model.SelectedFeatures)
                 {
-                    this.view.AddToSelection(this.featureMapping[item]);
+                    if (this.featureMapping.ContainsKey(item))
+                    {
+                        this.view.AddToSelection(this.featureMapping[item]);
+                    }
                 }
             }
             else if (this.model.SelectedStartPosition.HasValue)
             {
-                this.view.AddToSelection(this.startPositionMapping[this.model.SelectedStartPosition.Value]);
+                var mapping = this.startPositionMapping[this.model.SelectedStartPosition.Value];
+                if (mapping != null)
+                {
+                    this.view.AddToSelection(mapping);
+                }
             }
         }
 
@@ -502,12 +513,9 @@
 
         private void UpdateStartPosition(int index)
         {
-            bool selected = false;
-
             if (this.startPositionMapping[index] != null)
             {
                 var mapping = this.startPositionMapping[index];
-                selected = this.view.SelectedItemsContains(mapping);
                 this.view.Items.Remove(mapping);
                 this.view.RemoveFromSelection(mapping);
                 this.startPositionMapping[index] = null;
@@ -526,7 +534,7 @@
                 this.startPositionMapping[index] = i;
                 this.view.Items.Add(i);
 
-                if (selected)
+                if (this.model.SelectedStartPosition == index)
                 {
                     this.view.AddToSelection(i);
                 }
@@ -538,16 +546,8 @@
             Positioned<IMapTile> item = (Positioned<IMapTile>)sender;
             int index = this.model.FloatingTiles.IndexOf(item);
 
-            var mapping = this.tileMapping[index];
-            bool selected = this.view.SelectedItemsContains(mapping);
-
             this.RemoveTile(index);
             this.InsertTile(item, index);
-
-            if (selected)
-            {
-                this.view.AddToSelection(this.tileMapping[index]);
-            }
         }
 
         private void BaseTileChanged(object sender, EventArgs e)
