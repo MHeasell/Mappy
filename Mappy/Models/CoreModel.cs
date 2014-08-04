@@ -601,8 +601,6 @@
                     this.deltaY %= 16;
                 }
             }
-
-            this.previousTranslationOpen = true;
         }
 
         public void DeleteSelection()
