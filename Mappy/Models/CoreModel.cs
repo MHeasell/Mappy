@@ -40,8 +40,6 @@
 
         private readonly MapSaver mapSaver;
 
-        private readonly ObservableCollection<GridCoordinates> selectedFeatures = new ObservableCollection<GridCoordinates>();
-
         private ISelectionModel map;
         private bool isDirty;
         private string openFilePath;
@@ -91,8 +89,6 @@
             this.undoManager.CanUndoChanged += this.CanUndoChanged;
             this.undoManager.CanRedoChanged += this.CanRedoChanged;
             this.undoManager.IsMarkedChanged += this.IsMarkedChanged;
-
-            this.selectedFeatures.CollectionChanged += this.SelectedFeaturesChanged;
         }
 
         public event EventHandler<SparseGridEventArgs> FeaturesChanged;
@@ -130,6 +126,7 @@
 
                         this.Map.SelectedStartPositionChanged += this.MapSelectedStartPositionChanged;
                         this.Map.SelectedTileChanged += this.MapSelectedTileChanged;
+                        this.Map.SelectedFeatures.CollectionChanged += this.SelectedFeaturesChanged;
 
                         this.Map.MinimapChanged += this.MapOnMinimapChanged;
 
@@ -147,6 +144,10 @@
                     this.FireChange("BaseTile");
                     this.FireChange("MapWidth");
                     this.FireChange("MapHeight");
+
+                    this.FireChange("SelectedTile");
+                    this.FireChange("SelectedStartPosition");
+                    this.FireChange("SelectedFeatures");
 
                     for (var i = 0; i < 10; i++)
                     {
@@ -596,15 +597,6 @@
 
                 if (success)
                 {
-                    var tmp = new List<GridCoordinates>(this.SelectedFeatures);
-                    this.SelectedFeatures.Clear();
-
-                    foreach (var item in tmp)
-                    {
-                        this.SelectedFeatures.Add(
-                            new GridCoordinates(item.X + quantX, item.Y + quantY));
-                    }
-
                     this.deltaX %= 16;
                     this.deltaY %= 16;
                 }
