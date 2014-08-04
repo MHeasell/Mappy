@@ -793,6 +793,11 @@
 
         public void ClearSelection()
         {
+            if (this.SelectedTile == null && this.SelectedFeatures.Count == 0 && this.SelectedStartPosition == null)
+            {
+                return;
+            }
+
             if (this.previousTranslationOpen)
             {
                 this.FlushTranslation();
