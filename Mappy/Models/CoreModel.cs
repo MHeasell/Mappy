@@ -7,6 +7,8 @@
     using System.ComponentModel;
     using System.Drawing;
     using System.IO;
+    using System.Linq;
+
     using Data;
 
     using Mappy.Collections;
@@ -14,6 +16,7 @@
     using Mappy.IO;
     using Mappy.Minimap;
     using Mappy.Models.BandboxBehaviours;
+    using Mappy.Operations.SelectionModel;
 
     using Operations;
 
@@ -39,7 +42,7 @@
 
         private readonly ObservableCollection<GridCoordinates> selectedFeatures = new ObservableCollection<GridCoordinates>();
 
-        private IBindingMapModel map;
+        private ISelectionModel map;
         private bool isDirty;
         private string openFilePath;
         private bool isFileOpen;
@@ -66,12 +69,6 @@
         private int deltaY;
 
         private IBandboxBehaviour bandboxBehaviour;
-
-        private int? selectedTile;
-
-        private int? selectedStartPosition;
-
-        private bool hasSelection;
 
         public CoreModel()
         {
@@ -108,7 +105,7 @@
 
         public event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
 
-        public IBindingMapModel Map
+        public ISelectionModel Map
         {
             get
             {
@@ -130,6 +127,10 @@
                     else
                     {
                         this.MinimapImage = this.Map.Minimap;
+
+                        this.Map.SelectedStartPositionChanged += this.MapSelectedStartPositionChanged;
+                        this.Map.SelectedTileChanged += this.MapSelectedTileChanged;
+
                         this.Map.MinimapChanged += this.MapOnMinimapChanged;
 
                         this.Map.Features.EntriesChanged += this.FeaturesOnEntriesChanged;
@@ -211,32 +212,11 @@
             set { this.SetField(ref this.featuresVisible, value, "FeaturesVisible"); }
         }
 
-        public bool HasSelection
-        {
-            get
-            {
-                return this.hasSelection;
-            }
-
-            private set
-            {
-                this.SetField(ref this.hasSelection, value, "HasSelection");
-            }
-        }
-
         public int? SelectedTile
         {
             get
             {
-                return this.selectedTile;
-            }
-
-            private set
-            {
-                if (this.SetField(ref this.selectedTile, value, "SelectedTile"))
-                {
-                    this.OnSelectionChanged();
-                }
+                return this.Map.SelectedTile;
             }
         }
 
@@ -244,15 +224,15 @@
         {
             get
             {
-                return this.selectedStartPosition;
+                return this.Map.SelectedStartPosition;
             }
+        }
 
-            private set
+        public ICollection<GridCoordinates> SelectedFeatures
+        {
+            get
             {
-                if (this.SetField(ref this.selectedStartPosition, value, "SelectedStartPosition"))
-                {
-                    this.OnSelectionChanged();
-                }
+                return this.Map.SelectedFeatures;
             }
         }
 
@@ -261,14 +241,6 @@
             get
             {
                 return this.bandboxBehaviour.BandboxRectangle;
-            }
-        }
-
-        public ICollection<GridCoordinates> SelectedFeatures
-        {
-            get
-            {
-                return this.selectedFeatures;
             }
         }
 
@@ -411,7 +383,7 @@
 
         public void New(int width, int height)
         {
-            this.Map = new BindingMapModel(new MapModel(width, height));
+            this.Map = new SelectionMapModel(new BindingMapModel(new MapModel(width, height)));
             this.FilePath = null;
             this.IsFileReadOnly = false;
         }
@@ -456,7 +428,7 @@
                 t = this.sectionFactory.TileFromSct(s);
             }
 
-            this.Map = new BindingMapModel(new MapModel(t));
+            this.Map = new SelectionMapModel(new BindingMapModel(new MapModel(t)));
         }
 
         public void OpenTnt(string filename)
@@ -467,7 +439,7 @@
                 m = this.mapModelFactory.FromTnt(s);
             }
 
-            this.Map = new BindingMapModel(m);
+            this.Map = new SelectionMapModel(new BindingMapModel(m));
             this.FilePath = filename;
         }
 
@@ -492,43 +464,80 @@
                 }
             }
 
-            this.Map = new BindingMapModel(m);
+            this.Map = new SelectionMapModel(new BindingMapModel(m));
             this.FilePath = hpipath;
             this.IsFileReadOnly = readOnly;
         }
 
         public void DragDropStartPosition(int index, int x, int y)
         {
-            this.SetStartPosition(index, x, y);
-            this.SelectStartPosition(index);
+            if (this.Map == null)
+            {
+                return;
+            }
+
+            var location = new Point(x, y);
+
+            var op = new CompositeOperation(
+                OperationFactory.CreateDeselectAndMergeOperation(this.Map),
+                new ChangeStartPositionOperation(this.Map, index, location),
+                new SelectStartPositionOperation(this.Map, index));
+
+            this.undoManager.Execute(op);
+            this.previousTranslationOpen = false;
         }
 
         public void DragDropTile(int id, int x, int y)
         {
+            if (this.Map == null)
+            {
+                return;
+            }
+
             int quantX = x / 32;
             int quantY = y / 32;
-            int index = this.PlaceSection(id, quantX, quantY);
 
-            if (index != -1)
-            {
-                this.SelectTile(index);
-            }
+            var location = new Point(quantX, quantY);
+            var section = this.Sections[id].GetTile();
+
+            var floatingSection = new Positioned<IMapTile>(section, location);
+
+            var addOp = new AddFloatingTileOperation(this.Map, floatingSection);
+
+            // Guess the tile's index so we can select it.
+            // This is a hack --- we assume that the tile will go at the end.
+            var index = this.Map.FloatingTiles.Count;
+
+            var selectOp = new SelectTileOperation(this.Map, index);
+
+            var op = new CompositeOperation(
+                OperationFactory.CreateDeselectAndMergeOperation(this.Map),
+                addOp,
+                selectOp);
+
+            this.undoManager.Execute(op);
         }
 
         public void DragDropFeature(string name, int x, int y)
         {
-            if (!this.MapOpen)
+            if (this.Map == null)
             {
                 return;
             }
 
             Point? featurePos = this.ScreenToHeightIndex(x, y);
-            if (featurePos.HasValue)
+            if (featurePos.HasValue && !this.Map.Features.HasValue(featurePos.Value.X, featurePos.Value.Y))
             {
-                if (this.TryPlaceFeature(name, featurePos.Value.X, featurePos.Value.Y))
-                {
-                    this.SelectFeature(Util.ToGridCoordinates(featurePos.Value));
-                }
+                var feature = this.featureRecords[name];
+                var addOp = new AddFeatureOperation(this.Map.Features, feature, featurePos.Value.X, featurePos.Value.Y);
+                var selectOp = new SelectFeatureOperation(
+                    this.Map,
+                    new GridCoordinates(featurePos.Value.X, featurePos.Value.Y));
+                var op = new CompositeOperation(
+                    OperationFactory.CreateDeselectAndMergeOperation(this.Map),
+                    addOp,
+                    selectOp);
+                this.undoManager.Execute(op);
             }
         }
 
@@ -606,24 +615,25 @@
 
         public void DeleteSelection()
         {
-            if (this.SelectedFeatures.Count > 0)
+            foreach (var item in this.SelectedFeatures)
             {
-                foreach (var item in this.SelectedFeatures)
-                {
-                    this.RemoveFeature(item.X, item.Y);
-                }
+                var deSelectOp = OperationFactory.CreateDeselectAndMergeOperation(this.Map);
+                var removeOp = new RemoveFeatureOperation(this.Map.Features, item.X, item.Y);
+                this.undoManager.Execute(new CompositeOperation(deSelectOp, removeOp));
+            }
 
-                this.SelectedFeatures.Clear();
-            }
-            else if (this.SelectedTile.HasValue)
+            if (this.SelectedTile.HasValue)
             {
-                this.RemoveSection(this.SelectedTile.Value);
-                this.SelectedTile = null;
+                var deSelectOp = OperationFactory.CreateDeselectAndMergeOperation(this.Map);
+                var removeOp = new RemoveTileOperation(this.Map.FloatingTiles, this.SelectedTile.Value);
+                this.undoManager.Execute(new CompositeOperation(deSelectOp, removeOp));
             }
-            else if (this.SelectedStartPosition.HasValue)
+
+            if (this.SelectedStartPosition.HasValue)
             {
-                this.RemoveStartPosition(this.SelectedStartPosition.Value);
-                this.SelectedStartPosition = null;
+                var deSelectOp = OperationFactory.CreateDeselectAndMergeOperation(this.Map);
+                var removeOp = new RemoveStartPositionOperation(this.Map, this.SelectedStartPosition.Value);
+                this.undoManager.Execute(new CompositeOperation(deSelectOp, removeOp));
             }
         }
 
@@ -634,52 +644,44 @@
 
         public void SelectTile(int index)
         {
-            this.SelectedTile = index;
-            this.SelectedFeatures.Clear();
-            this.SelectedStartPosition = null;
+            this.undoManager.Execute(
+                new CompositeOperation(
+                    OperationFactory.CreateDeselectAndMergeOperation(this.Map),
+                    new SelectTileOperation(this.Map, index)));
         }
 
         public void SelectFeature(GridCoordinates index)
         {
-            this.SelectedFeatures.Clear();
-            this.SelectedFeatures.Add(index);
-            this.MergeDownSelectedTile();
-            this.SelectedStartPosition = null;
+            this.undoManager.Execute(
+                new CompositeOperation(
+                    OperationFactory.CreateDeselectAndMergeOperation(this.Map),
+                    new SelectFeatureOperation(this.Map, index)));
+        }
+
+        public void SelectFeatures(IEnumerable<GridCoordinates> indices)
+        {
+            var list = new List<IReplayableOperation>();
+
+            list.Add(OperationFactory.CreateDeselectAndMergeOperation(this.Map));
+            list.AddRange(indices.Select(x => new SelectFeatureOperation(this.Map, x)));
+
+            this.undoManager.Execute(new CompositeOperation(list));
         }
 
         public void SelectStartPosition(int index)
         {
-            this.MergeDownSelectedTile();
-            this.SelectedFeatures.Clear();
-            this.SelectedStartPosition = index;
-        }
-
-        public int PlaceSection(int tileId, int x, int y)
-        {
-            if (this.Map == null)
-            {
-                return -1;
-            }
-
-            MapTile tile = this.sections[tileId].GetTile();
-
             this.undoManager.Execute(
-                new AddFloatingTileOperation(
-                    this.Map,
-                    new Positioned<IMapTile>(tile, new Point(x, y))));
-
-            return this.Map.FloatingTiles.Count - 1;
+                new CompositeOperation(
+                    OperationFactory.CreateDeselectAndMergeOperation(this.Map),
+                    new SelectStartPositionOperation(this.Map, index)));
         }
 
-        public void MergeSection(int index)
+        public void LiftAndSelectArea(int x, int y, int width, int height)
         {
-            this.undoManager.Execute(OperationFactory.CreateMergeSectionOperation(this.Map, index));
-        }
-
-        public int LiftArea(int x, int y, int width, int height)
-        {
-            this.undoManager.Execute(OperationFactory.CreateClippedLiftAreaOperation(this.Map, x, y, width, height));
-            return this.Map.FloatingTiles.Count - 1;
+            var liftOp = OperationFactory.CreateClippedLiftAreaOperation(this.Map, x, y, width, height);
+            var index = this.Map.FloatingTiles.Count;
+            var selectOp = new SelectTileOperation(this.Map, index);
+            this.undoManager.Execute(new CompositeOperation(liftOp, selectOp));
         }
 
         public Point? ScreenToHeightIndex(int x, int y)
@@ -793,6 +795,8 @@
         public void FlushTranslation()
         {
             this.previousTranslationOpen = false;
+            this.deltaX = 0;
+            this.deltaY = 0;
         }
 
         public void ClearSelection()
@@ -802,68 +806,22 @@
                 this.FlushTranslation();
             }
 
-            this.SelectedFeatures.Clear();
-            this.MergeDownSelectedTile();
-            this.SelectedStartPosition = null;
-        }
+            var deselectOp = new DeselectOperation(this.Map);
 
-        public bool TryPlaceFeature(string name, int x, int y)
-        {
-            if (this.Map == null)
+            if (this.Map.SelectedTile.HasValue)
             {
-                return false;
+                var mergeOp = OperationFactory.CreateMergeSectionOperation(this.Map, this.Map.SelectedTile.Value);
+                this.undoManager.Execute(new CompositeOperation(deselectOp, mergeOp));
             }
-
-            if (this.Map.Features.HasValue(x, y))
+            else
             {
-                return false;
+                this.undoManager.Execute(deselectOp);
             }
-
-            this.undoManager.Execute(
-                new AddFeatureOperation(
-                    this.Map.Features,
-                    this.featureRecords[name],
-                    x,
-                    y));
-
-            return true;
         }
 
         public void RefreshMinimap()
         {
             this.Map.Minimap = Util.GenerateMinimap(this.Map);
-        }
-
-        public void RemoveSection(int index)
-        {
-            this.undoManager.Execute(new RemoveTileOperation(this.Map.FloatingTiles, index));
-        }
-
-        public void RemoveFeature(int index)
-        {
-            var coords = this.Map.Features.ToCoords(index);
-            this.RemoveFeature(coords.X, coords.Y);
-        }
-
-        public void RemoveFeature(int x, int y)
-        {
-            this.undoManager.Execute(new RemoveFeatureOperation(this.Map.Features, x, y));
-        }
-
-        public void RemoveFeature(Point coords)
-        {
-            this.RemoveFeature(coords.X, coords.Y);
-        }
-
-        public void SetStartPosition(int i, int x, int y)
-        {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.undoManager.Execute(new ChangeStartPositionOperation(this.Map, i, new Point(x, y)));
-            this.previousTranslationOpen = false;
         }
 
         public void TranslateStartPosition(int i, int x, int y)
@@ -876,11 +834,6 @@
             }
 
             this.TranslateStartPositionTo(i, startPos.Value.X + x, startPos.Value.Y + y);
-        }
-
-        public void RemoveStartPosition(int i)
-        {
-            this.undoManager.Execute(new RemoveStartPositionOperation(this.Map, i));
         }
 
         public void UpdateAttributes(MapAttributesResult newAttrs)
@@ -1004,22 +957,6 @@
             }
         }
 
-        private void MergeDownSelectedTile()
-        {
-            if (this.SelectedTile.HasValue)
-            {
-                this.MergeSection(this.SelectedTile.Value);
-                this.SelectedTile = null;
-            }
-        }
-
-        private void OnSelectionChanged()
-        {
-            this.HasSelection = this.SelectedFeatures.Count > 0
-                    || this.SelectedTile.HasValue
-                    || this.SelectedStartPosition.HasValue;
-        }
-
         private void SelectedFeaturesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             this.FireChange("SelectedFeatures");
@@ -1033,6 +970,16 @@
                     this.FireChange("BandboxRectangle");
                     break;
             }
+        }
+
+        private void MapSelectedTileChanged(object sender, EventArgs eventArgs)
+        {
+            this.FireChange("SelectedTile");
+        }
+
+        private void MapSelectedStartPositionChanged(object sender, EventArgs eventArgs)
+        {
+            this.FireChange("SelectedStartPosition");
         }
     }
 }

@@ -5,9 +5,17 @@
 
     using Mappy.Collections;
     using Mappy.Models;
+    using Mappy.Operations.SelectionModel;
 
     public static class OperationFactory
     {
+        public static IReplayableOperation CreateDeselectAndMergeOperation(ISelectionModel model)
+        {
+            var deselectOp = new DeselectOperation(model);
+            var mergeOp = CreateFlattenOperation(model);
+            return new CompositeOperation(deselectOp, mergeOp);
+        }
+
         public static IReplayableOperation CreateClipMergeTileOperation(IMapTile src, IMapTile dst, int x, int y)
         {
             // construct the destination target
