@@ -5,9 +5,9 @@
 
     public class CompositeOperation : IReplayableOperation
     {
-        private readonly IEnumerable<IReplayableOperation> ops;
+        private readonly IList<IReplayableOperation> ops;
 
-        public CompositeOperation(IEnumerable<IReplayableOperation> ops)
+        public CompositeOperation(IList<IReplayableOperation> ops)
         {
             this.ops = ops;
         }

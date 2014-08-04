@@ -105,7 +105,9 @@
     <Compile Include="Models\BandboxMode.cs" />
     <Compile Include="Models\CoreModel.cs" />
     <Compile Include="Models\IMainModel.cs" />
+    <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
+    <Compile Include="Models\SelectionMapModel.cs" />
     <Compile Include="Operations\AddFeatureOperation.cs" />
     <Compile Include="Operations\ChangeAttributesOperation.cs" />
     <Compile Include="Operations\ChangeStartPositionOperation.cs" />
@@ -114,6 +116,10 @@
     <Compile Include="Operations\MoveFeatureOperation.cs" />
     <Compile Include="Operations\RemoveFeatureOperation.cs" />
     <Compile Include="Operations\RemoveStartPositionOperation.cs" />
+    <Compile Include="Operations\SelectionModel\DeselectOperation.cs" />
+    <Compile Include="Operations\SelectionModel\SelectFeatureOperation.cs" />
+    <Compile Include="Operations\SelectionModel\SelectStartPositionOperation.cs" />
+    <Compile Include="Operations\SelectionModel\SelectTileOperation.cs" />
     <Compile Include="Palette\CompositePalette.cs" />
     <Compile Include="Palette\IPalette.cs" />
     <Compile Include="Palette\IReversePalette.cs" />

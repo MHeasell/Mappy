@@ -54,7 +54,7 @@
             }
         }
 
-        T IGrid<T>.this[int index]
+        public T this[int index]
         {
             get
             {
@@ -68,7 +68,7 @@
             }
         }
 
-        T IGrid<T>.this[int x, int y]
+        public T this[int x, int y]
         {
             get
             {

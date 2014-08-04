@@ -96,13 +96,11 @@
                     return;
                 }
 
-                int index = this.model.LiftArea(
+                this.model.LiftAndSelectArea(
                     this.BandboxRectangle.X / 32,
                     this.BandboxRectangle.Y / 32,
                     this.BandboxRectangle.Width / 32,
                     this.bandboxRectangle.Height / 32);
-
-                this.model.SelectTile(index);
             }
             finally
             {

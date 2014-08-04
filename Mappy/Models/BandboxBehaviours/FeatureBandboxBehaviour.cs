@@ -59,11 +59,9 @@ namespace Mappy.Models.BandboxBehaviours
             var items = this.view.Items.EnumerateIntersecting(this.model.BandboxRectangle);
             var filteredItems = items.Where(x => x.Visible && !x.Locked && x.Tag is FeatureTag);
 
-            foreach (var i in filteredItems)
-            {
-                var tag = (FeatureTag)i.Tag;
-                this.model.SelectedFeatures.Add(tag.Index);
-            }
+            var indices = filteredItems.Select(x => ((FeatureTag)x.Tag).Index);
+
+            this.model.SelectFeatures(indices);
 
             this.BandboxRectangle = Rectangle.Empty;
         }
