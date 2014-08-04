@@ -845,6 +845,11 @@
 
         private void TranslateSection(Positioned<IMapTile> tile, int x, int y)
         {
+            if (x == 0 && y == 0)
+            {
+                return;
+            }
+
             MoveTileOperation newOp = new MoveTileOperation(tile, x, y);
 
             MoveTileOperation lastOp = null;
