@@ -179,40 +179,43 @@
 
             MapAttributes m = new MapAttributes();
 
-            m.Name = r.Entries["missionname"];
-            m.Description = r.Entries["missiondescription"];
-            m.Planet = r.Entries["planet"];
-            m.TidalStrength = TdfConvert.ToInt32(r.Entries["tidalstrength"]);
-            m.SolarStrength = TdfConvert.ToInt32(r.Entries["solarstrength"]);
-            m.LavaWorld = TdfConvert.ToBool(r.Entries["lavaworld"]);
-            m.MinWindSpeed = TdfConvert.ToInt32(r.Entries["minwindspeed"]);
-            m.MaxWindSpeed = TdfConvert.ToInt32(r.Entries["maxwindspeed"]);
-            m.Gravity = TdfConvert.ToInt32(r.Entries["gravity"]);
-            m.NumPlayers = r.Entries["numplayers"];
-            m.Memory = r.Entries["memory"];
-            m.AiProfile = schema.Entries["aiprofile"];
-            m.SurfaceMetal = TdfConvert.ToInt32(schema.Entries["SurfaceMetal"]);
-            m.MohoMetal = TdfConvert.ToInt32(schema.Entries["MohoMetal"]);
-            m.MeteorWeapon = schema.Entries["MeteorWeapon"];
-            m.MeteorRadius = TdfConvert.ToInt32(schema.Entries["MeteorRadius"]);
-            m.MeteorDensity = TdfConvert.ToDouble(schema.Entries["MeteorDensity"]);
-            m.MeteorDuration = TdfConvert.ToInt32(schema.Entries["MeteorDuration"]);
-            m.MeteorInterval = TdfConvert.ToInt32(schema.Entries["MeteorInterval"]);
+            m.Name = r.Entries.GetOrDefault("missionname", string.Empty);
+            m.Description = r.Entries.GetOrDefault("missiondescription", string.Empty);
+            m.Planet = r.Entries.GetOrDefault("planet", string.Empty);
+            m.TidalStrength = TdfConvert.ToInt32(r.Entries.GetOrDefault("tidalstrength", "0"));
+            m.SolarStrength = TdfConvert.ToInt32(r.Entries.GetOrDefault("solarstrength", "0"));
+            m.LavaWorld = TdfConvert.ToBool(r.Entries.GetOrDefault("lavaworld", "0"));
+            m.MinWindSpeed = TdfConvert.ToInt32(r.Entries.GetOrDefault("minwindspeed", "0"));
+            m.MaxWindSpeed = TdfConvert.ToInt32(r.Entries.GetOrDefault("maxwindspeed", "0"));
+            m.Gravity = TdfConvert.ToInt32(r.Entries.GetOrDefault("gravity", "0"));
+            m.NumPlayers = r.Entries.GetOrDefault("numplayers", string.Empty);
+            m.Memory = r.Entries.GetOrDefault("memory", string.Empty);
+            m.AiProfile = schema.Entries.GetOrDefault("aiprofile", string.Empty);
+            m.SurfaceMetal = TdfConvert.ToInt32(schema.Entries.GetOrDefault("SurfaceMetal", "0"));
+            m.MohoMetal = TdfConvert.ToInt32(schema.Entries.GetOrDefault("MohoMetal", "0"));
+            m.MeteorWeapon = schema.Entries.GetOrDefault("MeteorWeapon", string.Empty);
+            m.MeteorRadius = TdfConvert.ToInt32(schema.Entries.GetOrDefault("MeteorRadius", "0"));
+            m.MeteorDensity = TdfConvert.ToDouble(schema.Entries.GetOrDefault("MeteorDensity", "0"));
+            m.MeteorDuration = TdfConvert.ToInt32(schema.Entries.GetOrDefault("MeteorDuration", "0"));
+            m.MeteorInterval = TdfConvert.ToInt32(schema.Entries.GetOrDefault("MeteorInterval", "0"));
 
-            TdfNode specials = schema.Keys["specials"];
-
-            foreach (var special in specials.Keys.Values)
+            if (schema.Keys.ContainsKey("specials"))
             {
-                var type = special.Entries["specialwhat"];
-                if (!type.StartsWith("StartPos"))
-                {
-                    continue;
-                }
+                TdfNode specials = schema.Keys["specials"];
 
-                int id = TdfConvert.ToInt32(type.Substring(8));
-                int x = TdfConvert.ToInt32(special.Entries["XPos"]);
-                int y = TdfConvert.ToInt32(special.Entries["ZPos"]);
-                m.SetStartPosition(id - 1, new Point(x, y));
+                foreach (var special in specials.Keys.Values)
+                {
+                    var type = special.Entries.GetOrDefault("specialwhat", string.Empty);
+                    if (type.Length < "StartPosX".Length || !type.StartsWith("StartPos"))
+                    {
+                        continue;
+                    }
+
+                    int id = TdfConvert.ToInt32(type.Substring(8));
+                    int x = TdfConvert.ToInt32(special.Entries.GetOrDefault("XPos", "0"));
+                    int y = TdfConvert.ToInt32(special.Entries.GetOrDefault("ZPos", "0"));
+                    m.SetStartPosition(id - 1, new Point(x, y));
+                }
             }
 
             return m;

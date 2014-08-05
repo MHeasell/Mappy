@@ -164,5 +164,16 @@ namespace Mappy.Util
         {
             return new GridCoordinates(p.X, p.Y);
         }
+
+        public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue defaultValue)
+        {
+            TValue result;
+            if (!dict.TryGetValue(key, out result))
+            {
+                return defaultValue;
+            }
+
+            return result;
+        }
     }
 }
