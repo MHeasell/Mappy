@@ -504,9 +504,9 @@
 
             var addOp = new AddFloatingTileOperation(this.Map, floatingSection);
 
-            // Guess the tile's index so we can select it.
-            // This is a hack --- we assume that the tile will go at the end.
-            var index = this.Map.FloatingTiles.Count;
+            // Tile's index should always be 0,
+            // because all other tiles are merged before adding this one.
+            var index = 0;
 
             var selectOp = new SelectTileOperation(this.Map, index);
 
