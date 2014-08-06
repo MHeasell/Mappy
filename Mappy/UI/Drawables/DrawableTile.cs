@@ -15,6 +15,7 @@ namespace Mappy.UI.Drawables
             this.tile = tile;
             this.painter = new BitmapGridPainter(tile.TileGrid, 32);
             this.heightPainter = new ContourHeightPainter(tile.HeightGrid, 16);
+            this.heightPainter.ShowSeaLevel = true;
         }
 
         public Size Size
@@ -46,6 +47,19 @@ namespace Mappy.UI.Drawables
         }
 
         public bool DrawHeightMap { get; set; }
+
+        public int SeaLevel
+        {
+            get
+            {
+                return this.heightPainter.SeaLevel;
+            }
+
+            set
+            {
+                this.heightPainter.SeaLevel = value;
+            }
+        }
 
         public void Draw(Graphics graphics, Rectangle clipRectangle)
         {

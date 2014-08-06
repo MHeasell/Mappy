@@ -227,6 +227,7 @@
             this.baseTile = new DrawableTile(this.model.BaseTile);
             this.baseTile.BackgroundColor = Color.CornflowerBlue;
             this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
+            this.baseTile.SeaLevel = this.model.SeaLevel;
             this.baseItem = new ImageLayerCollection.Item(
                 0,
                 0,
@@ -430,6 +431,17 @@
             this.view.Invalidate();
         }
 
+        private void RefreshSeaLevel()
+        {
+            if (this.baseTile == null)
+            {
+                return;
+            }
+
+            this.baseTile.SeaLevel = this.model.SeaLevel;
+            this.view.Invalidate();
+        }
+
         private void RefreshSelection()
         {
             this.view.ClearSelection();
@@ -502,6 +514,9 @@
                     break;
                 case "Features":
                     this.UpdateFeatures();
+                    break;
+                case "SeaLevel":
+                    this.RefreshSeaLevel();
                     break;
             }
         }

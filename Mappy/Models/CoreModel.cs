@@ -134,6 +134,7 @@
                         this.Map.Tile.TileGridChanged += this.TileOnTileGridChanged;
                         this.Map.Tile.HeightGridChanged += this.TileOnHeightGridChanged;
                         this.Map.Attributes.StartPositionChanged += this.AttributesOnStartPositionChanged;
+                        this.Map.SeaLevelChanged += this.MapSeaLevelChanged;
                         this.IsFileOpen = true;
                     }
 
@@ -143,6 +144,7 @@
                     this.FireChange("BaseTile");
                     this.FireChange("MapWidth");
                     this.FireChange("MapHeight");
+                    this.FireChange("SeaLevel");
 
                     this.FireChange("SelectedTile");
                     this.FireChange("SelectedStartPosition");
@@ -153,6 +155,14 @@
                         this.AttributesOnStartPositionChanged(this, new StartPositionChangedEventArgs(i));
                     }
                 }
+            }
+        }
+
+        public int SeaLevel
+        {
+            get
+            {
+                return this.Map == null ? 0 : this.Map.SeaLevel;
             }
         }
 
@@ -982,6 +992,11 @@
         private void MapSelectedStartPositionChanged(object sender, EventArgs eventArgs)
         {
             this.FireChange("SelectedStartPosition");
+        }
+
+        private void MapSeaLevelChanged(object sender, EventArgs e)
+        {
+            this.FireChange("SeaLevel");
         }
     }
 }
