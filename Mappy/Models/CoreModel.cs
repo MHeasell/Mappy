@@ -674,23 +674,98 @@
             this.undoManager.Execute(new CompositeOperation(liftOp, selectOp));
         }
 
-        public Point? ScreenToHeightIndex(int x, int y)
+        public void FlushTranslation()
+        {
+            this.previousTranslationOpen = false;
+            this.deltaX = 0;
+            this.deltaY = 0;
+        }
+
+        public void ClearSelection()
+        {
+            if (this.SelectedTile == null && this.SelectedFeatures.Count == 0 && this.SelectedStartPosition == null)
+            {
+                return;
+            }
+
+            if (this.previousTranslationOpen)
+            {
+                this.FlushTranslation();
+            }
+
+            var deselectOp = new DeselectOperation(this.Map);
+
+            if (this.Map.SelectedTile.HasValue)
+            {
+                var mergeOp = OperationFactory.CreateMergeSectionOperation(this.Map, this.Map.SelectedTile.Value);
+                this.undoManager.Execute(new CompositeOperation(deselectOp, mergeOp));
+            }
+            else
+            {
+                this.undoManager.Execute(deselectOp);
+            }
+        }
+
+        public void RefreshMinimap()
+        {
+            this.Map.Minimap = Util.GenerateMinimap(this.Map);
+        }
+
+        public void UpdateAttributes(MapAttributesResult newAttrs)
+        {
+            this.undoManager.Execute(new ChangeAttributesOperation(this.Map, newAttrs));
+        }
+
+        public MapAttributesResult GetAttributes()
+        {
+            return MapAttributesResult.FromModel(this.Map);
+        }
+
+        private Point? ScreenToHeightIndex(int x, int y)
         {
             return Util.ScreenToHeightIndex(this.Map.Tile.HeightGrid, new Point(x, y));
         }
 
-        public void TranslateSection(int index, int x, int y)
+        private void TranslateSection(int index, int x, int y)
         {
             this.TranslateSection(this.Map.FloatingTiles[index], x, y);
         }
 
-        public bool TranslateFeature(int index, int x, int y)
+        private void TranslateSection(Positioned<IMapTile> tile, int x, int y)
+        {
+            if (x == 0 && y == 0)
+            {
+                return;
+            }
+
+            MoveTileOperation newOp = new MoveTileOperation(tile, x, y);
+
+            MoveTileOperation lastOp = null;
+            if (this.undoManager.CanUndo)
+            {
+                lastOp = this.undoManager.PeekUndo() as MoveTileOperation;
+            }
+
+            if (this.previousTranslationOpen && lastOp != null && lastOp.Tile == tile)
+            {
+                newOp.Execute();
+                this.undoManager.Replace(lastOp.Combine(newOp));
+            }
+            else
+            {
+                this.undoManager.Execute(new MoveTileOperation(tile, x, y));
+            }
+
+            this.previousTranslationOpen = true;
+        }
+
+        private bool TranslateFeature(int index, int x, int y)
         {
             var coords = this.Map.Features.ToCoords(index);
             return this.TranslateFeature(new Point(coords.X, coords.Y), x, y);
         }
 
-        public bool TranslateFeature(Point featureCoord, int x, int y)
+        private bool TranslateFeature(Point featureCoord, int x, int y)
         {
             Point newCoord = new Point(
                 featureCoord.X + x,
@@ -729,7 +804,7 @@
             return true;
         }
 
-        public bool TranslateFeatureBatch(IEnumerable<GridCoordinates> coords, int x, int y)
+        private bool TranslateFeatureBatch(IEnumerable<GridCoordinates> coords, int x, int y)
         {
             if (x == 0 && y == 0)
             {
@@ -782,44 +857,7 @@
             return true;
         }
 
-        public void FlushTranslation()
-        {
-            this.previousTranslationOpen = false;
-            this.deltaX = 0;
-            this.deltaY = 0;
-        }
-
-        public void ClearSelection()
-        {
-            if (this.SelectedTile == null && this.SelectedFeatures.Count == 0 && this.SelectedStartPosition == null)
-            {
-                return;
-            }
-
-            if (this.previousTranslationOpen)
-            {
-                this.FlushTranslation();
-            }
-
-            var deselectOp = new DeselectOperation(this.Map);
-
-            if (this.Map.SelectedTile.HasValue)
-            {
-                var mergeOp = OperationFactory.CreateMergeSectionOperation(this.Map, this.Map.SelectedTile.Value);
-                this.undoManager.Execute(new CompositeOperation(deselectOp, mergeOp));
-            }
-            else
-            {
-                this.undoManager.Execute(deselectOp);
-            }
-        }
-
-        public void RefreshMinimap()
-        {
-            this.Map.Minimap = Util.GenerateMinimap(this.Map);
-        }
-
-        public void TranslateStartPosition(int i, int x, int y)
+        private void TranslateStartPosition(int i, int x, int y)
         {
             var startPos = this.Map.Attributes.GetStartPosition(i);
 
@@ -829,44 +867,6 @@
             }
 
             this.TranslateStartPositionTo(i, startPos.Value.X + x, startPos.Value.Y + y);
-        }
-
-        public void UpdateAttributes(MapAttributesResult newAttrs)
-        {
-            this.undoManager.Execute(new ChangeAttributesOperation(this.Map, newAttrs));
-        }
-
-        public MapAttributesResult GetAttributes()
-        {
-            return MapAttributesResult.FromModel(this.Map);
-        }
-
-        private void TranslateSection(Positioned<IMapTile> tile, int x, int y)
-        {
-            if (x == 0 && y == 0)
-            {
-                return;
-            }
-
-            MoveTileOperation newOp = new MoveTileOperation(tile, x, y);
-
-            MoveTileOperation lastOp = null;
-            if (this.undoManager.CanUndo)
-            {
-                lastOp = this.undoManager.PeekUndo() as MoveTileOperation;
-            }
-
-            if (this.previousTranslationOpen && lastOp != null && lastOp.Tile == tile)
-            {
-                newOp.Execute();
-                this.undoManager.Replace(lastOp.Combine(newOp));
-            }
-            else
-            {
-                this.undoManager.Execute(new MoveTileOperation(tile, x, y));
-            }
-
-            this.previousTranslationOpen = true;
         }
 
         private void TranslateStartPositionTo(int i, int x, int y)
