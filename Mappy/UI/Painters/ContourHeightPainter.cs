@@ -28,6 +28,10 @@
 
         public int SubDivisions { get; set; }
 
+        public int SeaLevel { get; set; }
+
+        public bool ShowSeaLevel { get; set; }
+
         public void Paint(Graphics g, Rectangle clipRectangle)
         {
             int startX = clipRectangle.X / this.tileSize;
@@ -66,7 +70,13 @@
             {
                 for (int x = tileRange.X; x < tileRange.X + tileRange.Width; x++)
                 {
-                    this.PaintHeightContours(g, new Point(x, y));
+                    var p = new Point(x, y);
+                    this.PaintHeightContours(g, p);
+
+                    if (this.ShowSeaLevel)
+                    {
+                        this.PaintHeight(g, p, this.SeaLevel, Pens.Blue);
+                    }
                 }
             }
         }
@@ -110,6 +120,14 @@
             }
         }
 
+        private void PaintHeight(Graphics g, Point p, float contourHeight, Pen pen)
+        {
+            foreach (Triangle3D t in this.GenerateTriangles(p))
+            {
+                this.PaintTriangle(g, t, contourHeight, pen);
+            }
+        }
+
         private IEnumerable<Triangle3D> GenerateTriangles(Point p)
         {
             Vector3D a = new Vector3D(p.X, p.Y, this.heights[p.X, p.Y]);
@@ -127,6 +145,15 @@
 
         private void PaintTriangle(Graphics g, Triangle3D tri, float contourHeight)
         {
+            int col = (int)Math.Round(Math.Pow(contourHeight / 255.0f, 1.0f / 1.5f) * 255.0f);
+            using (Pen p = new Pen(Color.FromArgb(col, col, col)))
+            {
+                this.PaintTriangle(g, tri, contourHeight, p);
+            }
+        }
+
+        private void PaintTriangle(Graphics g, Triangle3D tri, float contourHeight, Pen pen)
+        {
             Plane3D clipPlane = new Plane3D(new Vector3D(0, 0, contourHeight), Vector3D.ZAxis);
 
             Line3D line;
@@ -135,16 +162,12 @@
                 return;
             }
 
-            int col = (int)Math.Round(Math.Pow(contourHeight / 255.0f, 1.0f / 1.5f) * 255.0f);
-            using (Pen p = new Pen(Color.FromArgb(col, col, col)))
-            {
-                g.DrawLine(
-                    p,
-                    (float)line.Start.X * this.tileSize,
-                    ((float)line.Start.Y * this.tileSize) - ((float)line.Start.Z / 2.0f),
-                    (float)line.End.X * this.tileSize,
-                    ((float)line.End.Y * this.tileSize) - ((float)line.End.Z / 2.0f));
-            }
+            g.DrawLine(
+                pen,
+                (float)line.Start.X * this.tileSize,
+                ((float)line.Start.Y * this.tileSize) - ((float)line.Start.Z / 2.0f),
+                (float)line.End.X * this.tileSize,
+                ((float)line.End.Y * this.tileSize) - ((float)line.End.Z / 2.0f));
         }
     }
 }
