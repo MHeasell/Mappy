@@ -907,53 +907,53 @@
             this.IsDirty = !this.undoManager.IsMarked;
         }
 
-        private void MapOnMinimapChanged(object sender, EventArgs eventArgs)
+        private void MapOnMinimapChanged(object sender, EventArgs e)
         {
             this.MinimapImage = this.Map.Minimap;
         }
 
-        private void TileOnHeightGridChanged(object sender, GridEventArgs gridEventArgs)
+        private void TileOnHeightGridChanged(object sender, GridEventArgs e)
         {
             var h = this.BaseTileHeightChanged;
             if (h != null)
             {
-                h(this, gridEventArgs);
+                h(this, e);
             }
         }
 
-        private void TileOnTileGridChanged(object sender, GridEventArgs gridEventArgs)
+        private void TileOnTileGridChanged(object sender, GridEventArgs e)
         {
             var h = this.BaseTileGraphicsChanged;
             if (h != null)
             {
-                h(this, gridEventArgs);
+                h(this, e);
             }
         }
 
-        private void FloatingTilesOnListChanged(object sender, ListChangedEventArgs listChangedEventArgs)
+        private void FloatingTilesOnListChanged(object sender, ListChangedEventArgs e)
         {
             var h = this.TilesChanged;
             if (h != null)
             {
-                h(this, listChangedEventArgs);
+                h(this, e);
             }
         }
 
-        private void FeaturesOnEntriesChanged(object sender, SparseGridEventArgs sparseGridEventArgs)
+        private void FeaturesOnEntriesChanged(object sender, SparseGridEventArgs e)
         {
             var h = this.FeaturesChanged;
             if (h != null)
             {
-                h(this, sparseGridEventArgs);
+                h(this, e);
             }
         }
 
-        private void AttributesOnStartPositionChanged(object sender, StartPositionChangedEventArgs startPositionChangedEventArgs)
+        private void AttributesOnStartPositionChanged(object sender, StartPositionChangedEventArgs e)
         {
             var h = this.StartPositionChanged;
             if (h != null)
             {
-                h(this, startPositionChangedEventArgs);
+                h(this, e);
             }
         }
 
