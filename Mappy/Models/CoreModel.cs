@@ -962,7 +962,7 @@
             this.FireChange("SelectedFeatures");
         }
 
-        private void BandboxBehaviourPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void BandboxBehaviourPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             switch (e.PropertyName)
             {
