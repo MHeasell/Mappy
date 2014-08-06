@@ -11,8 +11,8 @@
 
     public class ContourHeightPainter : IPainter
     {
-        private IGrid<int> heights;
-        private int tileSize;
+        private readonly IGrid<int> heights;
+        private readonly int tileSize;
 
         public ContourHeightPainter(IGrid<int> heights, int tileSize, int subDivisions)
         {
