@@ -296,7 +296,10 @@
 
         private void MapPanel1SizeChanged(object sender, EventArgs e)
         {
-            this.Presenter.UpdateMinimapViewport();
+            if (this.Presenter != null)
+            {
+                this.Presenter.UpdateMinimapViewport();
+            }
         }
 
         private void PreferencesToolStripMenuItemClick(object sender, EventArgs e)
