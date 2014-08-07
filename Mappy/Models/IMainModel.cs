@@ -67,7 +67,7 @@ namespace Mappy.Models
 
         int MapHeight { get; }
 
-        int SeaLevel { get; }
+        int SeaLevel { get; set; }
 
         BandboxMode SelectionMode { get; set; }
 

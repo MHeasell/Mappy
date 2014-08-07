@@ -164,6 +164,11 @@
             {
                 return this.Map == null ? 0 : this.Map.SeaLevel;
             }
+
+            set
+            {
+                this.Map.SeaLevel = value;
+            }
         }
 
         public bool CanUndo

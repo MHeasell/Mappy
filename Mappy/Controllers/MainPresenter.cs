@@ -224,6 +224,14 @@
             this.minimapModel.ViewportRectangle = this.ConvertToNormalizedViewport(this.view.ViewportRect);
         }
 
+        public void SetSeaLevel(int value)
+        {
+            if (this.model.MapOpen)
+            {
+                this.model.SeaLevel = value;
+            }
+        }
+
         private RectangleF ConvertToNormalizedViewport(Rectangle rect)
         {
             if (!this.model.MapOpen)
@@ -386,6 +394,9 @@
                 case "IsFileReadOnly":
                     this.UpdateSave();
                     this.UpdateTitleText();
+                    break;
+                case "SeaLevel":
+                    this.view.SeaLevel = this.model.SeaLevel;
                     break;
             }
         }

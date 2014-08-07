@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Globalization;
     using System.Windows.Forms;
     using Data;
     using Mappy.Controllers;
@@ -146,6 +147,20 @@
             set
             {
                 this.minimapToolStripMenuItem1.Checked = value;
+            }
+        }
+
+        public int SeaLevel
+        {
+            get
+            {
+                return this.trackBar1.Value;
+            }
+
+            set
+            {
+                this.trackBar1.Value = value;
+                this.label3.Text = value.ToString(CultureInfo.CurrentCulture);
             }
         }
 
@@ -402,6 +417,11 @@
         private void ModeDropDownSelectedIndexChanged(object sender, EventArgs e)
         {
             this.Presenter.SetSelectionMode((BandboxMode)comboBox1.SelectedItem);
+        }
+
+        private void TrackBar1ValueChanged(object sender, EventArgs e)
+        {
+            this.Presenter.SetSeaLevel(this.trackBar1.Value);
         }
     }
 }
