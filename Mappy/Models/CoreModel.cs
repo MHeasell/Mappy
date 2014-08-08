@@ -383,7 +383,9 @@
 
         public void New(int width, int height)
         {
-            this.Map = new SelectionMapModel(new BindingMapModel(new MapModel(width, height)));
+            var map = new SelectionMapModel(new BindingMapModel(new MapModel(width, height)));
+            GridMethods.Fill(map.Tile.TileGrid, Globals.DefaultTile);
+            this.Map = map;
             this.FilePath = null;
             this.IsFileReadOnly = false;
         }

@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Drawing.Drawing2D;
+
     using Data;
 
     using Mappy.Collections;
@@ -31,6 +33,8 @@
             this.Features = new SparseGrid<Feature>(this.Tile.HeightGrid.Width, this.Tile.HeightGrid.Height);
             this.Voids = new SparseGrid<bool>(this.Tile.HeightGrid.Width, this.Tile.HeightGrid.Height);
             this.Minimap = new Bitmap(252, 252);
+            var g = Graphics.FromImage(this.Minimap);
+            g.FillRectangle(Brushes.White, 0, 0, this.Minimap.Width, this.Minimap.Height);
         }
 
         public MapAttributes Attributes { get; private set; }

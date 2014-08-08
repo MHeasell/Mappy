@@ -116,5 +116,10 @@
                 }
             }
         }
+
+        public static void Fill<T>(IGrid<T> grid, T value)
+        {
+            Fill(grid, 0, 0, grid.Width, grid.Height, value);
+        }
     }
 }
