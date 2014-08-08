@@ -184,7 +184,7 @@
         public string AskUserToOpenFile()
         {
             OpenFileDialog d = new OpenFileDialog();
-            d.Filter = "HAPI archives|*.hpi;*.ufo;*.ccx;*.gpf;*.gp3|TNT files|*.tnt|All files|*.*";
+            d.Filter = "TA Map Files|*.hpi;*.ufo;*.ccx;*.gpf;*.gp3;*.tnt|All files|*.*";
             if (d.ShowDialog(this) == DialogResult.OK)
             {
                 return d.FileName;
