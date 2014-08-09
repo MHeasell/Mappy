@@ -427,7 +427,9 @@
             IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.Map);
             flatten.Execute();
 
+            var otaName = filename.Substring(0, filename.Length - 4) + ".ota";
             this.mapSaver.SaveTnt(this.Map, filename);
+            this.mapSaver.SaveOta(this.Map.Attributes, otaName);
 
             flatten.Undo();
 

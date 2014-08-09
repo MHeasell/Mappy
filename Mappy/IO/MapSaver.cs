@@ -2,6 +2,7 @@
 {
     using System.IO;
 
+    using Mappy.Data;
     using Mappy.Models;
     using Mappy.Palette;
 
@@ -26,6 +27,14 @@
             using (var s = new TntWriter(File.Create(filename)))
             {
                 s.WriteTnt(new MapModelTntAdapter(map, this.reversePalette));
+            }
+        }
+
+        public void SaveOta(MapAttributes attrs, string filename)
+        {
+            using (Stream s = File.Create(filename))
+            {
+                attrs.WriteOta(s);
             }
         }
 
