@@ -42,14 +42,14 @@
                 return;
             }
 
-            foreach (var world in this.Sections.GroupBy(x => x.World))
+            foreach (var world in this.Sections.GroupBy(x => x.World.ToLowerInvariant()).OrderBy(x => x.Key))
             {
                 this.comboBox1.Items.Add(world.Key);
 
                 TabControl tabs = new TabControl();
                 tabs.Dock = DockStyle.Fill;
 
-                foreach (var group in world.GroupBy(x => x.Category))
+                foreach (var group in world.GroupBy(x => x.Category.ToLowerInvariant()).OrderBy(x => x.Key))
                 {
                     ListView view = this.CreateViewFor(group);
                     view.MultiSelect = false;
@@ -72,11 +72,13 @@
 
         private ListView CreateViewFor(IEnumerable<Section> sections)
         {
+            var sList = sections.OrderBy(x => x.Name).ToList();
+
             ListView listView = new ListView();
 
             ImageList imgs = new ImageList();
             imgs.ImageSize = new Size(128, 128);
-            foreach (Section s in sections)
+            foreach (Section s in sList)
             {
                 imgs.Images.Add(s.Minimap);
             }
@@ -84,7 +86,7 @@
             listView.LargeImageList = imgs;
 
             int i = 0;
-            foreach (Section s in sections)
+            foreach (Section s in sList)
             {
                 var label = string.Format("{0} ({1}x{2})", s.Name, s.PixelWidth, s.PixelHeight);
                 ListViewItem item = new ListViewItem(label, i++);

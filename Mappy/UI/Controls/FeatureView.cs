@@ -42,14 +42,14 @@
                 return;
             }
 
-            foreach (var world in this.Features.GroupBy(x => x.World))
+            foreach (var world in this.Features.GroupBy(x => x.World.ToLowerInvariant()).OrderBy(x => x.Key))
             {
                 this.comboBox1.Items.Add(world.Key);
 
                 TabControl tabs = new TabControl();
                 tabs.Dock = DockStyle.Fill;
 
-                foreach (var group in world.GroupBy(x => x.Category))
+                foreach (var group in world.GroupBy(x => x.Category.ToLowerInvariant()).OrderBy(x => x.Key))
                 {
                     ListView view = this.CreateViewFor(group);
                     view.MultiSelect = false;
@@ -76,7 +76,10 @@
 
             ImageList imgs = new ImageList();
             imgs.ImageSize = new Size(64, 64);
-            foreach (Feature f in features)
+
+            var fList = features.OrderBy(x => x.Name).ToList();
+
+            foreach (Feature f in fList)
             {
                 imgs.Images.Add(this.RescaleImage(f.Image));
             }
@@ -84,7 +87,7 @@
             view.LargeImageList = imgs;
 
             int i = 0;
-            foreach (Feature f in features)
+            foreach (Feature f in fList)
             {
                 ListViewItem item = new ListViewItem(f.Name, i++);
                 item.Tag = f;
