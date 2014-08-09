@@ -244,6 +244,16 @@
                 }
             }
 
+            // draw guides
+            using (var guidePen = new Pen(Color.Magenta, 3.0f))
+            {
+                var horizLinePos = this.CanvasSize.Height - 128;
+                pe.Graphics.DrawLine(guidePen, 0, horizLinePos, this.CanvasSize.Width, horizLinePos);
+
+                int vertLinePos = this.CanvasSize.Width - 32;
+                pe.Graphics.DrawLine(guidePen, vertLinePos, 0, vertLinePos, this.CanvasSize.Height);
+            }
+
             // draw selection rectangles
             foreach (var i in this.selectedItems)
             {
