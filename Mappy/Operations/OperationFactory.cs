@@ -81,7 +81,7 @@
             var positionedTile = new Positioned<IMapTile>(tile, new Point(x, y));
 
             var addOp = new AddFloatingTileOperation(map, positionedTile);
-            var clearBitmapOp = new FillAreaOperation<Bitmap>(map.Tile.TileGrid, x, y, width, height, null);
+            var clearBitmapOp = new FillAreaOperation<Bitmap>(map.Tile.TileGrid, x, y, width, height, Globals.DefaultTile);
             var clearHeightOp = new FillAreaOperation<int>(map.Tile.HeightGrid, x * 2, y * 2, width * 2, height * 2, 0);
 
             return new CompositeOperation(addOp, clearBitmapOp, clearHeightOp);
