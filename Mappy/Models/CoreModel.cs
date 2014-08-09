@@ -231,7 +231,7 @@
         {
             get
             {
-                return this.Map.SelectedTile;
+                return this.Map == null ? null : this.Map.SelectedTile;
             }
         }
 
@@ -239,7 +239,7 @@
         {
             get
             {
-                return this.Map.SelectedStartPosition;
+                return this.Map == null ? null : this.Map.SelectedStartPosition;
             }
         }
 
@@ -247,7 +247,7 @@
         {
             get
             {
-                return this.Map.SelectedFeatures;
+                return this.Map == null ? null : this.Map.SelectedFeatures;
             }
         }
 
@@ -666,7 +666,7 @@
 
         public Point? GetStartPosition(int index)
         {
-            return this.Map.Attributes.GetStartPosition(index);
+            return this.Map == null ? null : this.Map.Attributes.GetStartPosition(index);
         }
 
         public void SelectTile(int index)
@@ -720,7 +720,7 @@
 
         public void ClearSelection()
         {
-            if (this.SelectedTile == null && this.SelectedFeatures.Count == 0 && this.SelectedStartPosition == null)
+            if (this.SelectedTile == null && (this.SelectedFeatures == null || this.SelectedFeatures.Count == 0) && this.SelectedStartPosition == null)
             {
                 return;
             }
@@ -756,6 +756,11 @@
         public MapAttributesResult GetAttributes()
         {
             return MapAttributesResult.FromModel(this.Map);
+        }
+
+        public void CloseMap()
+        {
+            this.Map = null;
         }
 
         private Point? ScreenToHeightIndex(int x, int y)

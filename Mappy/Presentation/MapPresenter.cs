@@ -446,6 +446,11 @@
         {
             this.view.ClearSelection();
 
+            if (!this.model.MapOpen)
+            {
+                return;
+            }
+
             if (this.model.SelectedTile.HasValue)
             {
                 if (this.tileMapping.Count > this.model.SelectedTile)

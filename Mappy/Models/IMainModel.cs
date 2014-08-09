@@ -120,5 +120,7 @@ namespace Mappy.Models
         MapAttributesResult GetAttributes();
 
         void UpdateAttributes(MapAttributesResult attributes);
+
+        void CloseMap();
     }
 }

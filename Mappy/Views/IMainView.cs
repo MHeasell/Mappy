@@ -31,6 +31,8 @@
 
         IList<Feature> Features { get; set; }
 
+        bool CloseEnabled { get; set; }
+
         string AskUserToChooseMap(IList<string> maps);
 
         string AskUserToOpenFile();

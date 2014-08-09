@@ -92,6 +92,19 @@
             }
         }
 
+        public bool CloseEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem12.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem12.Enabled = value;
+            }
+        }
+
         public Rectangle ViewportRect
         {
             get
@@ -422,6 +435,11 @@
         private void TrackBar1ValueChanged(object sender, EventArgs e)
         {
             this.Presenter.SetSeaLevel(this.trackBar1.Value);
+        }
+
+        private void toolStripMenuItem12_Click(object sender, EventArgs e)
+        {
+            this.Presenter.CloseMap();
         }
     }
 }

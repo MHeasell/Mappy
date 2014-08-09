@@ -232,6 +232,14 @@
             }
         }
 
+        public void CloseMap()
+        {
+            if (this.CheckOkayDiscard())
+            {
+                this.model.CloseMap();
+            }
+        }
+
         private RectangleF ConvertToNormalizedViewport(Rectangle rect)
         {
             if (!this.model.MapOpen)
@@ -377,8 +385,10 @@
                     this.view.RedoEnabled = this.model.CanRedo;
                     break;
                 case "MapOpen":
+                    this.UpdateSave();
                     this.view.OpenAttributesEnabled = this.model.MapOpen;
                     this.UpdateMinimapViewport();
+                    this.view.CloseEnabled = this.model.MapOpen;
                     break;
                 case "IsFileOpen":
                     this.view.SaveAsEnabled = this.model.IsFileOpen;
@@ -413,7 +423,7 @@
 
         private void UpdateSave()
         {
-            this.view.SaveEnabled = this.model.FilePath != null && !this.model.IsFileReadOnly;
+            this.view.SaveEnabled = this.model.MapOpen && this.model.FilePath != null && !this.model.IsFileReadOnly;
         }
 
         private void UpdateTitleText()
