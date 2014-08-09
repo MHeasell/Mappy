@@ -451,9 +451,27 @@
         public void OpenTnt(string filename)
         {
             MapModel m;
-            using (var s = new TntReader(filename))
+
+            var otaFileName = filename.Substring(0, filename.Length - 4) + ".ota";
+            if (File.Exists(otaFileName))
             {
-                m = this.mapModelFactory.FromTnt(s);
+                MapAttributes attrs;
+                using (var ota = new StreamReader(File.OpenRead(otaFileName)))
+                {
+                    attrs = MapAttributes.Load(TdfNode.LoadTdf(ota));
+                }
+
+                using (var s = new TntReader(filename))
+                {
+                    m = this.mapModelFactory.FromTntAndOta(s, attrs);
+                }
+            }
+            else
+            {
+                using (var s = new TntReader(filename))
+                {
+                    m = this.mapModelFactory.FromTnt(s);
+                }
             }
 
             this.Map = new SelectionMapModel(new BindingMapModel(m));
