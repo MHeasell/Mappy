@@ -120,6 +120,7 @@
     <Compile Include="Operations\SelectionModel\SelectFeatureOperation.cs" />
     <Compile Include="Operations\SelectionModel\SelectStartPositionOperation.cs" />
     <Compile Include="Operations\SelectionModel\SelectTileOperation.cs" />
+    <Compile Include="Operations\SelectionModel\UpdateMinimapOperation.cs" />
     <Compile Include="Palette\CompositePalette.cs" />
     <Compile Include="Palette\IPalette.cs" />
     <Compile Include="Palette\IReversePalette.cs" />

@@ -745,7 +745,9 @@
 
         public void RefreshMinimap()
         {
-            this.Map.Minimap = Util.GenerateMinimap(this.Map);
+            var minimap = Util.GenerateMinimap(this.Map);
+            var op = new UpdateMinimapOperation(this.Map, minimap);
+            this.undoManager.Execute(op);
         }
 
         public void UpdateAttributes(MapAttributesResult newAttrs)
