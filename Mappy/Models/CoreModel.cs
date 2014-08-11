@@ -457,10 +457,10 @@
             var otaFileName = filename.Substring(0, filename.Length - 4) + ".ota";
             if (File.Exists(otaFileName))
             {
-                MapAttributes attrs;
+                TdfNode attrs;
                 using (var ota = new StreamReader(File.OpenRead(otaFileName)))
                 {
-                    attrs = MapAttributes.Load(TdfNode.LoadTdf(ota));
+                    attrs = TdfNode.LoadTdf(ota);
                 }
 
                 using (var s = new TntReader(filename))
@@ -497,7 +497,7 @@
 
                 using (var s = new TntReader(hpi.ReadFile(mappath)))
                 {
-                    m = this.mapModelFactory.FromTntAndOta(s, MapAttributes.Load(n));
+                    m = this.mapModelFactory.FromTntAndOta(s, n);
                 }
             }
 

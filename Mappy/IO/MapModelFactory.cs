@@ -10,6 +10,7 @@
     using Mappy.Palette;
 
     using TAUtil;
+    using TAUtil.Tdf;
     using TAUtil.Tnt;
 
     /// <summary>
@@ -34,11 +35,28 @@
             this.defaultFeatureImage = defaultFeatureImage;
         }
 
-        public MapModel FromTntAndOta(ITntSource tnt, MapAttributes ota)
+        public MapModel FromTntAndOta(ITntSource tnt, TdfNode ota)
         {
-            MapModel m = new MapModel(tnt.DataWidth, tnt.DataHeight, ota);
+            var attrs = MapAttributes.Load(ota);
+            var model = new MapModel(tnt.DataWidth, tnt.DataHeight, attrs);
 
-            return this.ReadTnt(tnt, m);
+            var schemaData = ota.Keys["GlobalHeader"].Keys["Schema 0"];
+            if (schemaData.Keys.ContainsKey("features"))
+            {
+                var featureData = schemaData.Keys["features"];
+                foreach (var data in featureData.Keys)
+                {
+                    TdfNode node = data.Value;
+                    var x = TdfConvert.ToInt32(node.Entries["XPos"]);
+                    var y = TdfConvert.ToInt32(node.Entries["ZPos"]);
+                    var name = node.Entries["Featurename"];
+
+                    var feature = this.ToFeature(name);
+                    model.Features[x, y] = feature;
+                }
+            }
+
+            return this.ReadTnt(tnt, model);
         }
 
         public MapModel FromTnt(ITntSource tnt)
