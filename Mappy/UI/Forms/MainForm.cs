@@ -177,6 +177,21 @@
             }
         }
 
+        public bool SeaLevelEditEnabled
+        {
+            get
+            {
+                return this.trackBar1.Enabled;
+            }
+
+            set
+            {
+                this.label2.Enabled = value;
+                this.label3.Enabled = value;
+                this.trackBar1.Enabled = value;
+            }
+        }
+
         public string AskUserToChooseMap(IList<string> maps)
         {
             MapSelectionForm f = new MapSelectionForm();

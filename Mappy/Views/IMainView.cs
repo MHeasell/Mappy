@@ -19,6 +19,8 @@
 
         bool RedoEnabled { get; set; }
 
+        bool SeaLevelEditEnabled { get; set; }
+
         bool OpenAttributesEnabled { get; set; }
 
         bool MinimapVisibleChecked { get; set; }

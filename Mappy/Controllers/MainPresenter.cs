@@ -389,6 +389,7 @@
                     this.view.OpenAttributesEnabled = this.model.MapOpen;
                     this.UpdateMinimapViewport();
                     this.view.CloseEnabled = this.model.MapOpen;
+                    this.view.SeaLevelEditEnabled = this.model.MapOpen;
                     break;
                 case "IsFileOpen":
                     this.view.SaveAsEnabled = this.model.IsFileOpen;
