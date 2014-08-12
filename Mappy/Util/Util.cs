@@ -138,6 +138,39 @@ namespace Mappy.Util
             return b;
         }
 
+        public static Bitmap GenerateMinimapLinear(IMapModel mapModel)
+        {
+            int mapWidth = mapModel.Tile.TileGrid.Width * 32;
+            int mapHeight = mapModel.Tile.TileGrid.Height * 32;
+
+            int width, height;
+
+            if (mapModel.Tile.TileGrid.Width > mapModel.Tile.TileGrid.Height)
+            {
+                width = 252;
+                height = (int)(252 * (mapHeight / (float)mapWidth));
+            }
+            else
+            {
+                height = 252;
+                width = (int)(252 * (mapWidth / (float)mapHeight));
+            }
+
+            Bitmap b = new Bitmap(width, height);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    var sampledColor = SampleArea(x, y, width, height, mapModel);
+                    var nearestNeighbour = NearestNeighbour(sampledColor, Globals.Palette);
+                    b.SetPixel(x, y, nearestNeighbour);
+                }
+            }
+
+            return b;
+        }
+
         public static Point ToPoint(GridCoordinates g)
         {
             return new Point(g.X, g.Y);
@@ -146,6 +179,69 @@ namespace Mappy.Util
         public static GridCoordinates ToGridCoordinates(Point p)
         {
             return new GridCoordinates(p.X, p.Y);
+        }
+
+        private static Color NearestNeighbour(Color color, IEnumerable<Color> choices)
+        {
+            Color winner = new Color();
+            double winningValue = double.PositiveInfinity;
+
+            foreach (var candidate in choices)
+            {
+                double dist = DistanceSquared(color, candidate);
+                if (dist < winningValue)
+                {
+                    winner = candidate;
+                    winningValue = dist;
+                }
+            }
+
+            return winner;
+        }
+
+        private static double DistanceSquared(Color a, Color b)
+        {
+            int dR = b.R - a.R;
+            int dG = b.G - a.G;
+            int dB = b.B - a.B;
+
+            return (dR * dR) + (dG * dG) + (dB * dB);
+
+        }
+
+        private static Color SampleArea(int x, int y, int outputWidth, int outputHeight, IMapModel model)
+        {
+            int mapWidth = model.Tile.TileGrid.Width * 32;
+            int mapHeight = model.Tile.TileGrid.Height * 32;
+
+            int cellWidth = mapWidth / outputWidth;
+            int cellHeight = mapHeight / outputHeight;
+
+            int startX = x * cellWidth;
+            int startY = y * cellHeight;
+
+            int r = 0;
+            int g = 0;
+            int b = 0;
+
+            for (int dy = 0; dy < cellHeight; dy++)
+            {
+                for (int dx = 0; dx < cellWidth; dx++)
+                {
+                    Color c = GetPixel(model, startX + dx, startY + dy);
+                    r += c.R;
+                    g += c.G;
+                    b += c.B;
+                }
+            }
+
+            int factor = cellWidth * cellHeight;
+
+            r /= factor;
+            g /= factor;
+            b /= factor;
+
+            return Color.FromArgb(r, g, b);
         }
 
         private static Color GetPixel(IMapModel mapModel, int x, int y)
