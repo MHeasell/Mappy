@@ -40,6 +40,7 @@
             this.model.SetupGet(x => x.GridVisible).Returns(false);
             this.model.SetupGet(x => x.GridColor).Returns(Color.Black);
             this.model.SetupGet(x => x.GridSize).Returns(new Size(32, 32));
+            this.model.SetupGet(x => x.SeaLevel).Returns(0);
 
             this.view = new Mock<IMapView>(MockBehavior.Strict);
             this.view.SetupGet(x => x.Items).Returns(new List<ImageLayerCollection.Item>());
