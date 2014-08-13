@@ -21,8 +21,12 @@
         {
             get
             {
-                int imageX = (int)((x / (float)this.Width) * this.source.Width);
-                int imageY = (int)((y / (float)this.Height) * this.source.Height);
+                // sample at the centre of each pixel
+                float ax = x + 0.5f;
+                float ay = y + 0.5f;
+
+                int imageX = (int)((ax / this.Width) * this.source.Width);
+                int imageY = (int)((ay / this.Height) * this.source.Height);
                 return this.source[imageX, imageY];
             }
         }
