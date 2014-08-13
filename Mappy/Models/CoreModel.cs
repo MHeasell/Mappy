@@ -746,7 +746,12 @@
 
         public void RefreshMinimap()
         {
-            var minimap = Util.GenerateMinimap(new MapPixelImageAdapter(this.Map));
+            Bitmap minimap;
+            using (var adapter = new MapPixelImageAdapter(this.Map.Tile.TileGrid))
+            {
+                minimap = Util.GenerateMinimap(adapter);
+            }
+
             var op = new UpdateMinimapOperation(this.Map, minimap);
             this.undoManager.Execute(op);
         }

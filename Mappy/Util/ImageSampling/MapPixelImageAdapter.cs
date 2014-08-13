@@ -1,16 +1,21 @@
 ﻿namespace Mappy.Util.ImageSampling
 {
+    using System;
+    using System.Collections.Generic;
     using System.Drawing;
-    using System.Linq;
+    using System.Drawing.Imaging;
 
-    using Mappy.Data;
-    using Mappy.Models;
+    using Mappy.Collections;
 
-    public class MapPixelImageAdapter : IPixelImage
+    public class MapPixelImageAdapter : IPixelImage, IDisposable
     {
-        private readonly IMapModel map;
+        private readonly IGrid<Bitmap> map;
 
-        public MapPixelImageAdapter(IMapModel map)
+        private readonly Dictionary<Bitmap, BitmapData> dataMap = new Dictionary<Bitmap, BitmapData>();
+
+        private bool disposed;
+
+        public MapPixelImageAdapter(IGrid<Bitmap> map)
         {
             this.map = map;
         }
@@ -19,7 +24,7 @@
         {
             get
             {
-                return (this.map.Tile.TileGrid.Width * 32) - 32;
+                return (this.map.Width * 32) - 32;
             }
         }
 
@@ -27,7 +32,7 @@
         {
             get
             {
-                return (this.map.Tile.TileGrid.Height * 32) - 128;
+                return (this.map.Height * 32) - 128;
             }
         }
 
@@ -35,31 +40,59 @@
         {
             get
             {
+                if (this.disposed)
+                {
+                    throw new ObjectDisposedException(null);
+                }
+
                 int tileX = x / 32;
                 int tileY = y / 32;
 
                 int tilePixelX = x % 32;
                 int tilePixelY = y % 32;
 
-                foreach (Positioned<IMapTile> t in this.map.FloatingTiles.Reverse())
-                {
-                    Rectangle r = new Rectangle(t.Location, new Size(t.Item.TileGrid.Width, t.Item.TileGrid.Height));
-                    if (r.Contains(tileX, tileY))
-                    {
-                        return t.Item.TileGrid[tileX - t.Location.X, tileY - t.Location.Y].GetPixel(
-                            tilePixelX,
-                            tilePixelY);
-                    }
-                }
+                Bitmap bitmap = this.map[tileX, tileY];
+                var data = this.GetOrLockData(bitmap);
 
-                Bitmap bitmap = this.map.Tile.TileGrid[tileX, tileY];
-                if (bitmap == null)
+                unsafe
                 {
-                    return Color.Black;
+                    var ptr = (int*)data.Scan0;
+                    var color = ptr[(tilePixelY * 32) + tilePixelX];
+                    return Color.FromArgb(color);
                 }
-
-                return bitmap.GetPixel(tilePixelX, tilePixelY);
             }
+        }
+
+        public void Dispose()
+        {
+            if (this.disposed)
+            {
+                return;
+            }
+
+            foreach (var e in this.dataMap)
+            {
+                e.Key.UnlockBits(e.Value);
+            }
+
+            this.dataMap.Clear();
+
+            this.disposed = true;
+        }
+
+        private BitmapData GetOrLockData(Bitmap bmp)
+        {
+            BitmapData data;
+            if (!this.dataMap.TryGetValue(bmp, out data))
+            {
+                data = bmp.LockBits(
+                    new Rectangle(0, 0, bmp.Width, bmp.Height),
+                    ImageLockMode.ReadOnly,
+                    PixelFormat.Format32bppArgb);
+                this.dataMap[bmp] = data;
+            }
+
+            return data;
         }
     }
 }
