@@ -22,13 +22,8 @@
         {
             get
             {
-                var cellWidth = this.source.Width / this.Width;
-                var cellHeight = this.source.Height / this.Height;
-
-                var startX = x * cellWidth;
-                var startY = y * cellHeight;
-
-                var sampledColor = this.SampleArea(startX, startY, cellWidth, cellHeight);
+                var rect = this.GetRect(x, y);
+                var sampledColor = this.SampleArea(rect.X, rect.Y, rect.Width, rect.Height);
                 var nearestNeighbour = NearestNeighbour(sampledColor, Globals.Palette);
 
                 return nearestNeighbour;
@@ -60,6 +55,34 @@
             int dB = b.B - a.B;
 
             return (dR * dR) + (dG * dG) + (dB * dB);
+        }
+
+        private Rectangle GetRect(int x, int y)
+        {
+            float cellWidth = this.source.Width / (float)this.Width;
+            float cellHeight = this.source.Height / (float)this.Height;
+
+            int startX = (int)(x * cellWidth);
+            int startY = (int)(y * cellHeight);
+
+            int remX = this.source.Width % this.Width;
+            int remY = this.source.Height % this.Height;
+
+            if (remX > x)
+            {
+                cellWidth++;
+            }
+
+            if (remY > y)
+            {
+                cellHeight++;
+            }
+
+            return new Rectangle(
+                startX,
+                startY,
+                (int)cellWidth + (remX > x ? 1 : 0),
+                (int)cellHeight + (remX > y ? 1 : 0));
         }
 
         private Color SampleArea(int x, int y, int width, int height)
