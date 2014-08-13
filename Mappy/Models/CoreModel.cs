@@ -16,6 +16,7 @@
     using Mappy.Minimap;
     using Mappy.Models.BandboxBehaviours;
     using Mappy.Operations.SelectionModel;
+    using Mappy.Util.ImageSampling;
 
     using Operations;
 
@@ -745,7 +746,7 @@
 
         public void RefreshMinimap()
         {
-            var minimap = Util.GenerateMinimap(this.Map);
+            var minimap = Util.GenerateMinimap(new MapPixelImageAdapter(this.Map));
             var op = new UpdateMinimapOperation(this.Map, minimap);
             this.undoManager.Execute(op);
         }

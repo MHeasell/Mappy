@@ -3,16 +3,13 @@ namespace Mappy.Util
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.Linq;
 
     using Data;
     using Geometry;
 
     using Mappy.Collections;
-    using Mappy.Models;
     using Mappy.Properties;
-
-    using Color = System.Drawing.Color;
+    using Mappy.Util.ImageSampling;
 
     public static class Util
     {
@@ -105,70 +102,57 @@ namespace Mappy.Util
             return mapping;
         }
 
-        public static Bitmap GenerateMinimap(IMapModel mapModel)
+        public static Bitmap ToBitmap(IPixelImage map)
         {
-            int mapWidth = (mapModel.Tile.TileGrid.Width * 32) - 32;
-            int mapHeight = (mapModel.Tile.TileGrid.Height * 32) - 128;
+            Bitmap b = new Bitmap(map.Width, map.Height);
 
-            int width, height;
-
-            if (mapModel.Tile.TileGrid.Width > mapModel.Tile.TileGrid.Height)
+            for (int y = 0; y < map.Height; y++)
             {
-                width = 252;
-                height = (int)(252 * (mapHeight / (float)mapWidth));
-            }
-            else
-            {
-                height = 252;
-                width = (int)(252 * (mapWidth / (float)mapHeight));
-            }
-
-            Bitmap b = new Bitmap(width, height);
-
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
+                for (int x = 0; x < map.Width; x++)
                 {
-                    int imageX = (int)((x / (float)width) * mapWidth);
-                    int imageY = (int)((y / (float)height) * mapHeight);
-                    b.SetPixel(x, y, GetPixel(mapModel, imageX, imageY));
+                    b.SetPixel(x, y, map[x, y]);
                 }
             }
 
             return b;
         }
 
-        public static Bitmap GenerateMinimapLinear(IMapModel mapModel)
+        public static Bitmap GenerateMinimap(IPixelImage map)
         {
-            int mapWidth = mapModel.Tile.TileGrid.Width * 32;
-            int mapHeight = mapModel.Tile.TileGrid.Height * 32;
-
             int width, height;
 
-            if (mapModel.Tile.TileGrid.Width > mapModel.Tile.TileGrid.Height)
+            if (map.Width > map.Height)
             {
                 width = 252;
-                height = (int)(252 * (mapHeight / (float)mapWidth));
+                height = (int)(252 * (map.Height / (float)map.Width));
             }
             else
             {
                 height = 252;
-                width = (int)(252 * (mapWidth / (float)mapHeight));
+                width = (int)(252 * (map.Width / (float)map.Height));
             }
 
-            Bitmap b = new Bitmap(width, height);
+            var wrapper = new NearestNeighbourWrapper(map, width, height);
+            return ToBitmap(wrapper);
+        }
 
-            for (int y = 0; y < height; y++)
+        public static Bitmap GenerateMinimapLinear(IPixelImage map)
+        {
+            int width, height;
+
+            if (map.Width > map.Height)
             {
-                for (int x = 0; x < width; x++)
-                {
-                    var sampledColor = SampleArea(x, y, width, height, mapModel);
-                    var nearestNeighbour = NearestNeighbour(sampledColor, Globals.Palette);
-                    b.SetPixel(x, y, nearestNeighbour);
-                }
+                width = 252;
+                height = (int)(252 * (map.Height / (float)map.Width));
+            }
+            else
+            {
+                height = 252;
+                width = (int)(252 * (map.Width / (float)map.Height));
             }
 
-            return b;
+            var wrapper = new BilinearWrapper(map, width, height);
+            return ToBitmap(wrapper);
         }
 
         public static Point ToPoint(GridCoordinates g)
@@ -179,95 +163,6 @@ namespace Mappy.Util
         public static GridCoordinates ToGridCoordinates(Point p)
         {
             return new GridCoordinates(p.X, p.Y);
-        }
-
-        private static Color NearestNeighbour(Color color, IEnumerable<Color> choices)
-        {
-            Color winner = new Color();
-            double winningValue = double.PositiveInfinity;
-
-            foreach (var candidate in choices)
-            {
-                double dist = DistanceSquared(color, candidate);
-                if (dist < winningValue)
-                {
-                    winner = candidate;
-                    winningValue = dist;
-                }
-            }
-
-            return winner;
-        }
-
-        private static double DistanceSquared(Color a, Color b)
-        {
-            int dR = b.R - a.R;
-            int dG = b.G - a.G;
-            int dB = b.B - a.B;
-
-            return (dR * dR) + (dG * dG) + (dB * dB);
-
-        }
-
-        private static Color SampleArea(int x, int y, int outputWidth, int outputHeight, IMapModel model)
-        {
-            int mapWidth = model.Tile.TileGrid.Width * 32;
-            int mapHeight = model.Tile.TileGrid.Height * 32;
-
-            int cellWidth = mapWidth / outputWidth;
-            int cellHeight = mapHeight / outputHeight;
-
-            int startX = x * cellWidth;
-            int startY = y * cellHeight;
-
-            int r = 0;
-            int g = 0;
-            int b = 0;
-
-            for (int dy = 0; dy < cellHeight; dy++)
-            {
-                for (int dx = 0; dx < cellWidth; dx++)
-                {
-                    Color c = GetPixel(model, startX + dx, startY + dy);
-                    r += c.R;
-                    g += c.G;
-                    b += c.B;
-                }
-            }
-
-            int factor = cellWidth * cellHeight;
-
-            r /= factor;
-            g /= factor;
-            b /= factor;
-
-            return Color.FromArgb(r, g, b);
-        }
-
-        private static Color GetPixel(IMapModel mapModel, int x, int y)
-        {
-            int tileX = x / 32;
-            int tileY = y / 32;
-
-            int tilePixelX = x % 32;
-            int tilePixelY = y % 32;
-
-            foreach (Positioned<IMapTile> t in mapModel.FloatingTiles.Reverse())
-            {
-                Rectangle r = new Rectangle(t.Location, new Size(t.Item.TileGrid.Width, t.Item.TileGrid.Height));
-                if (r.Contains(tileX, tileY))
-                {
-                    return t.Item.TileGrid[tileX - t.Location.X, tileY - t.Location.Y].GetPixel(tilePixelX, tilePixelY);
-                }
-            }
-
-            Bitmap bitmap = mapModel.Tile.TileGrid[tileX, tileY];
-            if (bitmap == null)
-            {
-                return Color.Black;
-            }
-
-            return bitmap.GetPixel(tilePixelX, tilePixelY);
         }
     }
 }
