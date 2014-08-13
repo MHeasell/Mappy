@@ -177,6 +177,11 @@
             this.model.RefreshMinimap();
         }
 
+        public void GenerateMinimapHiqhQualityPressed(object sender, EventArgs e)
+        {
+            this.model.RefreshMinimapHighQuality();
+        }
+
         public void SetGridSize(int size)
         {
             if (size == 0)

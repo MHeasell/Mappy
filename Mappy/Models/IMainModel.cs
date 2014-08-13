@@ -117,6 +117,8 @@ namespace Mappy.Models
 
         void RefreshMinimap();
 
+        void RefreshMinimapHighQuality();
+
         MapAttributesResult GetAttributes();
 
         void UpdateAttributes(MapAttributesResult attributes);

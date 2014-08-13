@@ -756,6 +756,18 @@
             this.undoManager.Execute(op);
         }
 
+        public void RefreshMinimapHighQuality()
+        {
+            Bitmap minimap;
+            using (var adapter = new MapPixelImageAdapter(this.Map.Tile.TileGrid))
+            {
+                minimap = Util.GenerateMinimapLinear(adapter);
+            }
+
+            var op = new UpdateMinimapOperation(this.Map, minimap);
+            this.undoManager.Execute(op);
+        }
+
         public void UpdateAttributes(MapAttributesResult newAttrs)
         {
             this.undoManager.Execute(new ChangeAttributesOperation(this.Map, newAttrs));
