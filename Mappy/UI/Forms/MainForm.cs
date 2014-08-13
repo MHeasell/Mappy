@@ -456,5 +456,10 @@
         {
             this.Presenter.CloseMap();
         }
+
+        private void toolStripMenuItem13_Click(object sender, EventArgs e)
+        {
+            this.Presenter.GenerateMinimapHiqhQualityPressed(sender, e);
+        }
     }
 }

@@ -16,6 +16,7 @@
     using Mappy.Minimap;
     using Mappy.Models.BandboxBehaviours;
     using Mappy.Operations.SelectionModel;
+    using Mappy.Util.ImageSampling;
 
     using Operations;
 
@@ -745,7 +746,24 @@
 
         public void RefreshMinimap()
         {
-            var minimap = Util.GenerateMinimap(this.Map);
+            Bitmap minimap;
+            using (var adapter = new MapPixelImageAdapter(this.Map.Tile.TileGrid))
+            {
+                minimap = Util.GenerateMinimap(adapter);
+            }
+
+            var op = new UpdateMinimapOperation(this.Map, minimap);
+            this.undoManager.Execute(op);
+        }
+
+        public void RefreshMinimapHighQuality()
+        {
+            Bitmap minimap;
+            using (var adapter = new MapPixelImageAdapter(this.Map.Tile.TileGrid))
+            {
+                minimap = Util.GenerateMinimapLinear(adapter);
+            }
+
             var op = new UpdateMinimapOperation(this.Map, minimap);
             this.undoManager.Execute(op);
         }
