@@ -23,6 +23,8 @@
 
         bool MinimapVisibleChecked { get; set; }
 
+        int SeaLevel { get; set; }
+
         Rectangle ViewportRect { get; }
 
         IList<Section> Sections { get; set; }

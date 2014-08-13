@@ -67,6 +67,8 @@ namespace Mappy.Models
 
         int MapHeight { get; }
 
+        int SeaLevel { get; set; }
+
         BandboxMode SelectionMode { get; set; }
 
         void DragDropStartPosition(int index, int x, int y);
