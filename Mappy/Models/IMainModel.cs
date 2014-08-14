@@ -124,5 +124,7 @@ namespace Mappy.Models
         void UpdateAttributes(MapAttributesResult attributes);
 
         void CloseMap();
+
+        void SetSeaLevel(int value);
     }
 }

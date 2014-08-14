@@ -783,6 +783,28 @@
             this.Map = null;
         }
 
+        public void SetSeaLevel(int value)
+        {
+            if (this.SeaLevel == value)
+            {
+                return;
+            }
+
+            var op = new SetSealevelOperation(this.Map, value);
+
+            var prevOp = this.undoManager.CanUndo ? this.undoManager.PeekUndo() as SetSealevelOperation : null;
+            if (prevOp == null)
+            {
+                this.undoManager.Execute(op);
+            }
+            else
+            {
+                op.Execute();
+                var combinedOp = prevOp.Combine(op);
+                this.undoManager.Replace(combinedOp);
+            }
+        }
+
         private Point? ScreenToHeightIndex(int x, int y)
         {
             return Util.ScreenToHeightIndex(this.Map.Tile.HeightGrid, new Point(x, y));

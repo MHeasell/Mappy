@@ -233,7 +233,7 @@
         {
             if (this.model.MapOpen)
             {
-                this.model.SeaLevel = value;
+                this.model.SetSeaLevel(value);
             }
         }
 
