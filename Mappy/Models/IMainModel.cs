@@ -126,5 +126,7 @@ namespace Mappy.Models
         void CloseMap();
 
         void SetSeaLevel(int value);
+
+        void FlushSeaLevel();
     }
 }

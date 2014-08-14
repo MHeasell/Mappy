@@ -237,6 +237,11 @@
             }
         }
 
+        public void FlushSeaLevel()
+        {
+            this.model.FlushSeaLevel();
+        }
+
         public void CloseMap()
         {
             if (this.CheckOkayDiscard())

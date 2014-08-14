@@ -48,6 +48,7 @@
             this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -70,11 +71,8 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.sectionView1 = new Mappy.UI.Controls.SectionView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.featureview1 = new Mappy.UI.Controls.FeatureView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -82,7 +80,9 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.imageLayerView1 = new Mappy.UI.Controls.ImageLayerView();
-            this.toolStripMenuItem13 = new System.Windows.Forms.ToolStripMenuItem();
+            this.sectionView1 = new Mappy.UI.Controls.SectionView();
+            this.featureview1 = new Mappy.UI.Controls.FeatureView();
+            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -243,6 +243,13 @@
             this.toolStripMenuItem6.Size = new System.Drawing.Size(250, 22);
             this.toolStripMenuItem6.Text = "&Generate Minimap";
             this.toolStripMenuItem6.Click += new System.EventHandler(this.ToolStripMenuItem6Click);
+            // 
+            // toolStripMenuItem13
+            // 
+            this.toolStripMenuItem13.Name = "toolStripMenuItem13";
+            this.toolStripMenuItem13.Size = new System.Drawing.Size(250, 22);
+            this.toolStripMenuItem13.Text = "Generate Minimap (High Quality)";
+            this.toolStripMenuItem13.Click += new System.EventHandler(this.toolStripMenuItem13_Click);
             // 
             // toolStripSeparator4
             // 
@@ -429,62 +436,33 @@
             this.tabPage1.Controls.Add(this.sectionView1);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(207, 512);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Sections";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // sectionView1
-            // 
-            this.sectionView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sectionView1.Location = new System.Drawing.Point(3, 3);
-            this.sectionView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.sectionView1.Name = "sectionView1";
-            this.sectionView1.Sections = null;
-            this.sectionView1.Size = new System.Drawing.Size(201, 506);
-            this.sectionView1.TabIndex = 3;
             // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.featureview1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage2.Size = new System.Drawing.Size(207, 514);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(207, 512);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Features";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // featureview1
-            // 
-            this.featureview1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.featureview1.Features = null;
-            this.featureview1.Location = new System.Drawing.Point(3, 3);
-            this.featureview1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.featureview1.Name = "featureview1";
-            this.featureview1.Size = new System.Drawing.Size(201, 508);
-            this.featureview1.TabIndex = 0;
             // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.startPositionsView1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage3.Size = new System.Drawing.Size(207, 514);
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(207, 512);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Starts";
             this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // startPositionsView1
-            // 
-            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
-            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.startPositionsView1.Name = "startPositionsView1";
-            this.startPositionsView1.Size = new System.Drawing.Size(201, 508);
-            this.startPositionsView1.TabIndex = 0;
             // 
             // tabPage4
             // 
@@ -492,10 +470,10 @@
             this.tabPage4.Controls.Add(this.label2);
             this.tabPage4.Controls.Add(this.trackBar1);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage4.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.tabPage4.Size = new System.Drawing.Size(207, 514);
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(2);
+            this.tabPage4.Size = new System.Drawing.Size(207, 512);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Attributes";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -529,13 +507,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBar1.Enabled = false;
             this.trackBar1.Location = new System.Drawing.Point(62, 5);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.trackBar1.Margin = new System.Windows.Forms.Padding(2);
             this.trackBar1.Maximum = 255;
             this.trackBar1.Name = "trackBar1";
             this.trackBar1.Size = new System.Drawing.Size(106, 45);
             this.trackBar1.TabIndex = 8;
             this.trackBar1.TickFrequency = 16;
             this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar1ValueChanged);
+            this.trackBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar1_MouseUp);
             // 
             // comboBox1
             // 
@@ -573,12 +552,34 @@
             this.imageLayerView1.Text = "imageLayerView1";
             this.imageLayerView1.SizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
             // 
-            // toolStripMenuItem13
+            // sectionView1
             // 
-            this.toolStripMenuItem13.Name = "toolStripMenuItem13";
-            this.toolStripMenuItem13.Size = new System.Drawing.Size(250, 22);
-            this.toolStripMenuItem13.Text = "Generate Minimap (High Quality)";
-            this.toolStripMenuItem13.Click += new System.EventHandler(this.toolStripMenuItem13_Click);
+            this.sectionView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sectionView1.Location = new System.Drawing.Point(3, 3);
+            this.sectionView1.Margin = new System.Windows.Forms.Padding(4);
+            this.sectionView1.Name = "sectionView1";
+            this.sectionView1.Sections = null;
+            this.sectionView1.Size = new System.Drawing.Size(201, 506);
+            this.sectionView1.TabIndex = 3;
+            // 
+            // featureview1
+            // 
+            this.featureview1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.featureview1.Features = null;
+            this.featureview1.Location = new System.Drawing.Point(3, 3);
+            this.featureview1.Margin = new System.Windows.Forms.Padding(4);
+            this.featureview1.Name = "featureview1";
+            this.featureview1.Size = new System.Drawing.Size(201, 506);
+            this.featureview1.TabIndex = 0;
+            // 
+            // startPositionsView1
+            // 
+            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
+            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
+            this.startPositionsView1.Name = "startPositionsView1";
+            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
+            this.startPositionsView1.TabIndex = 0;
             // 
             // MainForm
             // 

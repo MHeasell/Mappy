@@ -461,5 +461,10 @@
         {
             this.Presenter.GenerateMinimapHiqhQualityPressed(sender, e);
         }
+
+        private void trackBar1_MouseUp(object sender, MouseEventArgs e)
+        {
+            this.Presenter.FlushSeaLevel();
+        }
     }
 }

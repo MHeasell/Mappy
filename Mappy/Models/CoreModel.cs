@@ -68,6 +68,8 @@
 
         private IBandboxBehaviour bandboxBehaviour;
 
+        private bool previousSeaLevelOpen;
+
         public CoreModel()
         {
             this.bandboxBehaviour = new TileBandboxBehaviour(this);
@@ -792,7 +794,12 @@
 
             var op = new SetSealevelOperation(this.Map, value);
 
-            var prevOp = this.undoManager.CanUndo ? this.undoManager.PeekUndo() as SetSealevelOperation : null;
+            SetSealevelOperation prevOp = null;
+            if (this.undoManager.CanUndo && this.previousSeaLevelOpen)
+            {
+                prevOp = this.undoManager.PeekUndo() as SetSealevelOperation;
+            }
+
             if (prevOp == null)
             {
                 this.undoManager.Execute(op);
@@ -803,6 +810,13 @@
                 var combinedOp = prevOp.Combine(op);
                 this.undoManager.Replace(combinedOp);
             }
+
+            this.previousSeaLevelOpen = true;
+        }
+
+        public void FlushSeaLevel()
+        {
+            this.previousSeaLevelOpen = false;
         }
 
         private Point? ScreenToHeightIndex(int x, int y)
