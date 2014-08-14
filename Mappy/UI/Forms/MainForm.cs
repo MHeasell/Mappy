@@ -40,10 +40,6 @@
             minimapForm.Owner = this;
             var minimapPresenter = new MinimapPresenter(minimapForm, this, model);
             minimapForm.Presenter = minimapPresenter;
-
-            this.comboBox1.Items.Add(BandboxMode.Tile);
-            this.comboBox1.Items.Add(BandboxMode.Feature);
-            this.comboBox1.SelectedItem = BandboxMode.Tile;
         }
 
         public MainPresenter Presenter { get; set; }
@@ -440,11 +436,6 @@
         private void ToolStripMenuItem11Click(object sender, EventArgs e)
         {
             this.Presenter.OpenMapAttributes();
-        }
-
-        private void ModeDropDownSelectedIndexChanged(object sender, EventArgs e)
-        {
-            this.Presenter.SetSelectionMode((BandboxMode)comboBox1.SelectedItem);
         }
 
         private void TrackBar1ValueChanged(object sender, EventArgs e)

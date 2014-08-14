@@ -214,11 +214,6 @@
             }
         }
 
-        public void SetSelectionMode(BandboxMode mode)
-        {
-            this.model.SelectionMode = mode;
-        }
-
         public void ToggleMinimap()
         {
             this.minimapModel.MinimapVisible = !this.minimapModel.MinimapVisible;

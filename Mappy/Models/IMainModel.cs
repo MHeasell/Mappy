@@ -69,8 +69,6 @@ namespace Mappy.Models
 
         int SeaLevel { get; set; }
 
-        BandboxMode SelectionMode { get; set; }
-
         void DragDropStartPosition(int index, int x, int y);
 
         void DragDropTile(int id, int x, int y);

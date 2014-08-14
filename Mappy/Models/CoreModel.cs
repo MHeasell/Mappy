@@ -56,8 +56,6 @@
 
         private bool previousTranslationOpen;
 
-        private BandboxMode selectionMode;
-
         private RectangleF viewportRectangle;
 
         private Bitmap minimapImage;
@@ -347,19 +345,6 @@
                 MappySettings.Settings.GridColor = value;
                 MappySettings.SaveSettings();
                 this.SetField(ref this.gridColor, value, "GridColor");
-            }
-        }
-
-        public BandboxMode SelectionMode
-        {
-            get
-            {
-                return this.selectionMode;
-            }
-
-            set
-            {
-                this.SetField(ref this.selectionMode, value, "SelectionMode");
             }
         }
 
