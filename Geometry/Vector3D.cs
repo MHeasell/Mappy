@@ -8,6 +8,8 @@
         public static readonly Vector3D YAxis = new Vector3D(0.0, 1.0, 0.0);
         public static readonly Vector3D XAxis = new Vector3D(1.0, 0.0, 0.0);
 
+        public static readonly Vector3D Zero = new Vector3D(0.0, 0.0, 0.0);
+
         public Vector3D(double x, double y, double z) : this()
         {
             this.X = x;
