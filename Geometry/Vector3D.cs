@@ -43,6 +43,11 @@
             return new Vector3D(v.X * scalar, v.Y * scalar, v.Z * scalar);
         }
 
+        public static Vector3D operator /(Vector3D v, double scalar)
+        {
+            return new Vector3D(v.X / scalar, v.Y / scalar, v.Z / scalar);
+        }
+
         public static double Dot(Vector3D a, Vector3D b)
         {
             return (a.X * b.X) + (a.Y * b.Y) + (a.Z * b.Z);
