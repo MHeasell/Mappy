@@ -3,6 +3,7 @@ namespace Mappy.Util
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
 
     using Data;
     using Geometry;
@@ -174,6 +175,48 @@ namespace Mappy.Util
             }
 
             return result;
+        }
+
+        public static Bitmap RenderWireframe(IEnumerable<Line3D> edges)
+        {
+            var projectedLines = edges.Select(ProjectLine);
+
+            Bitmap b = new Bitmap(1000, 1000);
+            var g = Graphics.FromImage(b);
+
+            foreach (var l in projectedLines)
+            {
+                g.DrawLine(
+                    Pens.Magenta,
+                    (float)l.Start.X,
+                    (float)l.Start.Z,
+                    (float)l.End.X,
+                    (float)l.End.Z);
+            }
+
+            return b;
+        }
+
+        private static Vector3D ProjectPoint(Vector3D point)
+        {
+            point /= Math.Pow(2, 16);
+
+            point = new Vector3D(
+                point.X,
+                0.0,
+                point.Z - (point.Y / 2.0));
+
+            point.Y *= -1;
+            point += new Vector3D(1f, 0f, 1f) * 500f;
+
+            return point;
+        }
+
+        private static Line3D ProjectLine(Line3D line)
+        {
+            return new Line3D(
+                ProjectPoint(line.Start),
+                ProjectPoint(line.End));
         }
     }
 }
