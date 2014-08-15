@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Globalization;
     using System.Windows.Forms;
 
     public partial class NewMapForm : Form
@@ -75,6 +76,34 @@
             {
                 this.DialogResult = DialogResult.OK;
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            int valX;
+            if (!int.TryParse(textBox1.Text, out valX))
+            {
+                this.label3.Text = string.Empty;
+                return;
+            }
+
+            float convertedX = (valX * 32) / 512.0f;
+
+            this.label3.Text = string.Format("({0})", convertedX);
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            int valY;
+            if (!int.TryParse(textBox2.Text, out valY))
+            {
+                this.label4.Text = string.Empty;
+                return;
+            }
+
+            float convertedY = (valY * 32) / 512.0f;
+
+            this.label4.Text = string.Format("({0})", convertedY);
         }
     }
 }
