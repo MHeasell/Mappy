@@ -28,7 +28,7 @@ namespace Mappy.Util
         {
             int col = p.X / 16;
 
-            if (col < 0 || col >= heightmap.Height)
+            if (col < 0 || col >= heightmap.Width)
             {
                 return null;
             }
