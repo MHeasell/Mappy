@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="3do\Abstract3doReader.cs" />
     <Compile Include="3do\ObjectHeader.cs" />
     <Compile Include="3do\PrimitiveHeader.cs" />
     <Compile Include="3do\Vector.cs" />
