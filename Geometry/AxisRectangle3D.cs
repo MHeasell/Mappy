@@ -62,6 +62,19 @@
             }
         }
 
+        public static AxisRectangle3D FromTLBR(double t, double l, double b, double r)
+        {
+            double centreX = (l + r) / 2.0;
+            double centreY = (t + b) / 2.0;
+
+            double extentsX = Math.Abs((r - l) / 2.0);
+            double extentsY = Math.Abs((t - b) / 2.0);
+
+            var centreVector = new Vector3D(centreX, centreY, 0.0);
+
+            return new AxisRectangle3D(centreVector, extentsX, extentsY);
+        }
+
         public Vector3D Normal()
         {
             return Vector3D.ZAxis;
