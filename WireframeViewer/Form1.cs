@@ -32,7 +32,7 @@
 
                 var bmp = Util.RenderWireframe(loader.Edges);
 
-                this.pictureBox1.Image = bmp;
+                this.pictureBox1.Image = bmp.Image;
             }
         }
 

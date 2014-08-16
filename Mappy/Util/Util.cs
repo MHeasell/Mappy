@@ -177,24 +177,85 @@ namespace Mappy.Util
             return result;
         }
 
-        public static Bitmap RenderWireframe(IEnumerable<Line3D> edges)
+        public static Feature RenderWireframe(IEnumerable<Line3D> edges)
         {
-            var projectedLines = edges.Select(ProjectLine);
+            var projectedLines = edges.Select(ProjectLine).ToList();
+            var boundingBox = ComputeBoundingBox(projectedLines);
 
-            Bitmap b = new Bitmap(1000, 1000);
+            int w = (int)Math.Ceiling(boundingBox.Extents.X * 2) + 1;
+            int h = (int)Math.Ceiling(boundingBox.Extents.Y * 2) + 1;
+
+            Bitmap b = new Bitmap(w, h);
+
+            var offset = boundingBox.TopLeft;
+
             var g = Graphics.FromImage(b);
+
+            g.TranslateTransform((float)(-offset.X), (float)-offset.Y);
 
             foreach (var l in projectedLines)
             {
                 g.DrawLine(
                     Pens.Magenta,
                     (float)l.Start.X,
-                    (float)l.Start.Z,
+                    (float)l.Start.Y,
                     (float)l.End.X,
-                    (float)l.End.Z);
+                    (float)l.End.Y);
             }
 
-            return b;
+            var offsetPoint = new Point(
+                (int)Math.Round(offset.X),
+                (int)Math.Round(offset.Y));
+
+            var f = new Feature(null, b, offsetPoint, new Size(1, 1));
+            return f;
+        }
+
+        private static AxisRectangle3D ComputeBoundingBox(IEnumerable<Line3D> lines)
+        {
+            return ComputeBoundingBox(ToPoints(lines));
+        }
+
+        private static IEnumerable<Vector3D> ToPoints(IEnumerable<Line3D> lines)
+        {
+            foreach (var l in lines)
+            {
+                yield return l.Start;
+                yield return l.End;
+            }
+        }
+
+        private static AxisRectangle3D ComputeBoundingBox(IEnumerable<Vector3D> points)
+        {
+            double minX = double.PositiveInfinity;
+            double maxX = double.NegativeInfinity;
+            double minY = double.PositiveInfinity;
+            double maxY = double.NegativeInfinity;
+
+            foreach (var p in points)
+            {
+                if (p.X < minX)
+                {
+                    minX = p.X;
+                }
+
+                if (p.X > maxX)
+                {
+                    maxX = p.X;
+                }
+
+                if (p.Y < minY)
+                {
+                    minY = p.Y;
+                }
+
+                if (p.Y > maxY)
+                {
+                    maxY = p.Y;
+                }
+            }
+
+            return AxisRectangle3D.FromTLBR(maxY, minX, minY, maxX);
         }
 
         private static Vector3D ProjectPoint(Vector3D point)
@@ -203,11 +264,8 @@ namespace Mappy.Util
 
             point = new Vector3D(
                 point.X,
-                0.0,
-                point.Z - (point.Y / 2.0));
-
-            point.Y *= -1;
-            point += new Vector3D(1f, 0f, 1f) * 500f;
+                point.Z - (point.Y / 2.0),
+                0.0);
 
             return point;
         }
