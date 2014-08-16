@@ -262,6 +262,8 @@ namespace Mappy.Util
         {
             point /= Math.Pow(2, 16);
 
+            point.X *= -1;
+
             point = new Vector3D(
                 point.X,
                 point.Z - (point.Y / 2.0),
