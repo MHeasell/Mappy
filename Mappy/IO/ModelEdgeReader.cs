@@ -41,9 +41,9 @@
             this.vertices.Add(basePos + vec);
         }
 
-        protected override void AddPrimitive(int color, string texture, int[] vertexIndices)
+        protected override void AddPrimitive(int color, string texture, int[] vertexIndices, bool isSelectionPrimitive)
         {
-            if (vertexIndices.Length <= 1)
+            if (vertexIndices.Length <= 1 || isSelectionPrimitive)
             {
                 return;
             }

@@ -36,7 +36,7 @@
                 b.BaseStream.Seek(
                     header.PtrPrimitiveArray + offset,
                     SeekOrigin.Begin);
-                this.ReadPrimitive(b);
+                this.ReadPrimitive(b, i == header.PtrSelectionPrimitive);
             }
 
             if (header.PtrChildObject != 0)
@@ -60,9 +60,9 @@
 
         protected abstract void AddVertex(Vector v);
 
-        protected abstract void AddPrimitive(int color, string texture, int[] vertexIndices);
+        protected abstract void AddPrimitive(int color, string texture, int[] vertexIndices, bool isSelectionPrimitive);
 
-        private void ReadPrimitive(BinaryReader b)
+        private void ReadPrimitive(BinaryReader b, bool isSelectionPrimitive)
         {
             var header = new PrimitiveHeader();
             PrimitiveHeader.Read(b, ref header);
@@ -80,7 +80,7 @@
 
             string texture = this.ReadString(b);
 
-            this.AddPrimitive(header.ColorIndex, texture, vertices);
+            this.AddPrimitive(header.ColorIndex, texture, vertices, isSelectionPrimitive);
         }
 
         private string ReadString(BinaryReader b)
