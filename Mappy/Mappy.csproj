@@ -92,6 +92,7 @@
     <Compile Include="IO\MapModelFactory.cs" />
     <Compile Include="IO\MapModelTntAdapter.cs" />
     <Compile Include="IO\MapSaver.cs" />
+    <Compile Include="IO\ModelEdgeReader.cs" />
     <Compile Include="IO\PaletteFactory.cs" />
     <Compile Include="IO\PaletteReader.cs" />
     <Compile Include="IO\SectionFactory.cs" />
@@ -202,6 +203,7 @@
     <Compile Include="Util\ImageSampling\MapPixelImageAdapter.cs" />
     <Compile Include="Util\ImageSampling\NearestNeighbourWrapper.cs" />
     <Compile Include="Util\Notifier.cs" />
+    <Compile Include="Util\OffsetBitmap.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Views\IMainView.cs" />
     <Compile Include="Controllers\MainPresenter.cs" />
