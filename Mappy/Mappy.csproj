@@ -203,6 +203,7 @@
     <Compile Include="Util\ImageSampling\MapPixelImageAdapter.cs" />
     <Compile Include="Util\ImageSampling\NearestNeighbourWrapper.cs" />
     <Compile Include="Util\Notifier.cs" />
+    <Compile Include="Util\OffsetBitmap.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Views\IMainView.cs" />
     <Compile Include="Controllers\MainPresenter.cs" />

@@ -177,7 +177,7 @@ namespace Mappy.Util
             return result;
         }
 
-        public static Feature RenderWireframe(IEnumerable<Line3D> edges)
+        public static OffsetBitmap RenderWireframe(IEnumerable<Line3D> edges)
         {
             var projectedLines = edges.Select(ProjectLine).ToList();
             var boundingBox = ComputeBoundingBox(projectedLines);
@@ -203,12 +203,10 @@ namespace Mappy.Util
                     (float)l.End.Y);
             }
 
-            var offsetPoint = new Point(
+            return new OffsetBitmap(
                 (int)Math.Round(offset.X),
-                (int)Math.Round(offset.Y));
-
-            var f = new Feature(null, b, offsetPoint, new Size(1, 1));
-            return f;
+                (int)Math.Round(offset.Y),
+                b);
         }
 
         private static AxisRectangle3D ComputeBoundingBox(IEnumerable<Line3D> lines)
