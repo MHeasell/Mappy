@@ -11,3 +11,4 @@ Thanks to Kinboat for Annihilator, the original fan-made editor that is still th
 Thanks to JoeD, Saruman, Bobban, Bizmut, Kinboat and Manu for the GAF file format documentation.
 Thanks to Kinboat for the SCT file format documentation.
 Thanks to me22, Saruman and Bobban for the TNT file format documentation.
+Thanks to Dan Melchione and Dark Rain for the 3DO file format documentation.
