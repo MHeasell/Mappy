@@ -38,17 +38,16 @@ Mappy stores its settings in %LocalAppData%/ArmouredFish/Mappy/settings.xml. If,
 Known Issues
 ------------
 
-* Contour lines will not display on newly placed sections until the map is saved and reopened.
-* Saving a map takes quite a long time and freezes Mappy until it has finished.
+* No copy/paste support yet
+* High quality minimap renderer is slow and makes Mappy appear frozen while running
 
 Future Improvements
 -------------------
 
 In no particular order, here's a list of features that Mappy might one day support:
 
-* Annihilator-like tools to select and move areas
 * Copying and pasting sections and features
-* Rendering high quality minimaps
+* Bandbox select/move for features
 * Anything Annihilator already does that's cool
 
 and possibly more.
