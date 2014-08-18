@@ -305,13 +305,16 @@
                     // retrieve all required entries
                     foreach (TdfNode n in val)
                     {
-                        string seq = n.Entries["seqname"];
-                        foreach (GafEntry gafEntry in gaf)
+                        string seq;
+                        if (n.Entries.TryGetValue("seqname", out seq))
                         {
-                            if (gafEntry.Name.Equals(seq, StringComparison.OrdinalIgnoreCase))
+                            foreach (GafEntry gafEntry in gaf)
                             {
-                                bitmaps[n.Name] = gafEntry.Frames[0];
-                                break;
+                                if (gafEntry.Name.Equals(seq, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    bitmaps[n.Name] = gafEntry.Frames[0];
+                                    break;
+                                }
                             }
                         }
                     }
