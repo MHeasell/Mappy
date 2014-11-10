@@ -1,8 +1,9 @@
 ﻿namespace Mappy.Controllers.Tags
 {
     using Mappy.Collections;
+    using Mappy.Models;
 
-    public class FeatureTag
+    public class FeatureTag : IMapItemTag
     {
         public FeatureTag(GridCoordinates index)
         {
@@ -10,5 +11,10 @@
         }
 
         public GridCoordinates Index { get; private set; }
+
+        public void SelectItem(IMainModel model)
+        {
+            model.SelectFeature(this.Index);
+        }
     }
 }

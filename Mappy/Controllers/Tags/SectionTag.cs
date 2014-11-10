@@ -1,6 +1,8 @@
 namespace Mappy.Controllers.Tags
 {
-    public class SectionTag
+    using Mappy.Models;
+
+    public class SectionTag : IMapItemTag
     {
         public SectionTag(int index)
         {
@@ -8,5 +10,10 @@ namespace Mappy.Controllers.Tags
         }
 
         public int Index { get; private set; }
+
+        public void SelectItem(IMainModel model)
+        {
+            model.SelectTile(this.Index);
+        }
     }
 }

@@ -1,6 +1,8 @@
 namespace Mappy.Controllers.Tags
 {
-    public class StartPositionTag
+    using Mappy.Models;
+
+    public class StartPositionTag : IMapItemTag
     {
         public StartPositionTag(int index)
         {
@@ -8,5 +10,10 @@ namespace Mappy.Controllers.Tags
         }
 
         public int Index { get; private set; }
+
+        public void SelectItem(IMainModel model)
+        {
+            model.SelectStartPosition(this.Index);
+        }
     }
 }

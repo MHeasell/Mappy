@@ -169,26 +169,8 @@
 
         private void SelectFromTag(object tag)
         {
-            SectionTag t = tag as SectionTag;
-            if (t != null)
-            {
-                this.model.SelectTile(t.Index);
-                return;
-            }
-
-            FeatureTag y = tag as FeatureTag;
-            if (y != null)
-            {
-                this.model.SelectFeature(y.Index);
-                return;
-            }
-
-            StartPositionTag u = tag as StartPositionTag;
-            if (u != null)
-            {
-                this.model.SelectStartPosition(u.Index);
-                return;
-            }
+            IMapItemTag t = (IMapItemTag)tag;
+            t.SelectItem(this.model);
         }
 
         private void WireMap()

@@ -73,6 +73,7 @@
     <Compile Include="Collections\SparseGridEventArgs.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Controllers\Tags\FeatureTag.cs" />
+    <Compile Include="Controllers\Tags\IMapItemTag.cs" />
     <Compile Include="Controllers\Tags\SectionTag.cs" />
     <Compile Include="Controllers\Tags\StartPositionTag.cs" />
     <Compile Include="Database\FeatureDictionary.cs" />
