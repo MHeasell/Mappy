@@ -69,6 +69,8 @@
 
         private bool previousSeaLevelOpen;
 
+        private bool canCopy;
+
         public CoreModel()
         {
             this.bandboxBehaviour = new TileBandboxBehaviour(this);
@@ -152,6 +154,8 @@
                     this.FireChange("SelectedStartPosition");
                     this.FireChange("SelectedFeatures");
 
+                    this.FireChange("CanPaste");
+
                     for (var i = 0; i < 10; i++)
                     {
                         this.AttributesOnStartPositionChanged(this, new StartPositionChangedEventArgs(i));
@@ -181,6 +185,27 @@
         public bool CanRedo
         {
             get { return this.undoManager.CanRedo; }
+        }
+
+        public bool CanCopy
+        {
+            get
+            {
+                return this.canCopy;
+            }
+
+            set
+            {
+                this.SetField(ref this.canCopy, value, "CanCopy");
+            }
+        }
+
+        public bool CanPaste
+        {
+            get
+            {
+                return this.MapOpen;
+            }
         }
 
         public IFeatureDatabase FeatureRecords
@@ -1117,6 +1142,8 @@
         private void MapSelectedTileChanged(object sender, EventArgs eventArgs)
         {
             this.FireChange("SelectedTile");
+
+            this.CanCopy = this.SelectedTile.HasValue;
         }
 
         private void MapSelectedStartPositionChanged(object sender, EventArgs eventArgs)

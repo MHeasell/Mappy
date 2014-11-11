@@ -77,6 +77,9 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
+            this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem15 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.imageLayerView1 = new Mappy.UI.Controls.ImageLayerView();
             this.sectionView1 = new Mappy.UI.Controls.SectionView();
             this.featureview1 = new Mappy.UI.Controls.FeatureView();
@@ -190,6 +193,9 @@
             this.undoToolStripMenuItem,
             this.redoToolStripMenuItem,
             this.toolStripSeparator7,
+            this.toolStripMenuItem14,
+            this.toolStripMenuItem15,
+            this.toolStripSeparator9,
             this.toolStripMenuItem11,
             this.toolStripSeparator3,
             this.toolStripMenuItem6,
@@ -514,6 +520,29 @@
             this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar1ValueChanged);
             this.trackBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar1_MouseUp);
             // 
+            // toolStripMenuItem14
+            // 
+            this.toolStripMenuItem14.Enabled = false;
+            this.toolStripMenuItem14.Name = "toolStripMenuItem14";
+            this.toolStripMenuItem14.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.toolStripMenuItem14.Size = new System.Drawing.Size(250, 22);
+            this.toolStripMenuItem14.Text = "Copy";
+            this.toolStripMenuItem14.Click += new System.EventHandler(this.toolStripMenuItem14_Click);
+            // 
+            // toolStripMenuItem15
+            // 
+            this.toolStripMenuItem15.Enabled = false;
+            this.toolStripMenuItem15.Name = "toolStripMenuItem15";
+            this.toolStripMenuItem15.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.toolStripMenuItem15.Size = new System.Drawing.Size(250, 22);
+            this.toolStripMenuItem15.Text = "Paste";
+            this.toolStripMenuItem15.Click += new System.EventHandler(this.toolStripMenuItem15_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(247, 6);
+            // 
             // imageLayerView1
             // 
             this.imageLayerView1.AllowDrop = true;
@@ -638,6 +667,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem12;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem13;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem14;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem15;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
     }
 }
 

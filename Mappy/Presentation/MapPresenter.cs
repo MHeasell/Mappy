@@ -160,16 +160,6 @@
             {
                 this.model.DeleteSelection();
             }
-
-            if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control)
-            {
-                this.model.CopySelectionToClipboard();
-            }
-
-            if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control)
-            {
-                this.model.PasteFromClipboard();
-            }
         }
 
         public void LostFocus()

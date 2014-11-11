@@ -19,6 +19,10 @@
 
         bool RedoEnabled { get; set; }
 
+        bool CopyEnabled { get; set; }
+
+        bool PasteEnabled { get; set; }
+
         bool SeaLevelEditEnabled { get; set; }
 
         bool OpenAttributesEnabled { get; set; }

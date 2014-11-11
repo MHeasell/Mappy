@@ -62,6 +62,32 @@
             set { this.redoToolStripMenuItem.Enabled = value; }
         }
 
+        public bool CopyEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem14.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem14.Enabled = value;
+            }
+        }
+
+        public bool PasteEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem15.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem15.Enabled = value;
+            }
+        }
+
         public bool SaveEnabled
         {
             get
@@ -456,6 +482,16 @@
         private void trackBar1_MouseUp(object sender, MouseEventArgs e)
         {
             this.Presenter.FlushSeaLevel();
+        }
+
+        private void toolStripMenuItem14_Click(object sender, EventArgs e)
+        {
+            this.Presenter.CopyToClipboard();
+        }
+
+        private void toolStripMenuItem15_Click(object sender, EventArgs e)
+        {
+            this.Presenter.PasteFromClipboard();
         }
     }
 }

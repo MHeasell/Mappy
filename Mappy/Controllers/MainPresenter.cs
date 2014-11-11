@@ -44,6 +44,9 @@
             this.view.UndoEnabled = this.model.CanUndo;
             this.view.RedoEnabled = this.model.CanRedo;
 
+            this.view.CopyEnabled = this.model.CanCopy;
+            this.view.PasteEnabled = this.model.CanPaste;
+
             this.model.PropertyChanged += this.CoreModelPropertyChanged;
             this.minimapModel.PropertyChanged += this.MinimapModelPropertyChanged;
         }
@@ -245,6 +248,16 @@
             }
         }
 
+        public void CopyToClipboard()
+        {
+            this.model.CopySelectionToClipboard();
+        }
+
+        public void PasteFromClipboard()
+        {
+            this.model.PasteFromClipboard();
+        }
+
         private RectangleF ConvertToNormalizedViewport(Rectangle rect)
         {
             if (!this.model.MapOpen)
@@ -388,6 +401,12 @@
                     break;
                 case "CanRedo":
                     this.view.RedoEnabled = this.model.CanRedo;
+                    break;
+                case "CanCopy":
+                    this.view.CopyEnabled = this.model.CanCopy;
+                    break;
+                case "CanPaste":
+                    this.view.PasteEnabled = this.model.CanPaste;
                     break;
                 case "MapOpen":
                     this.UpdateSave();

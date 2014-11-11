@@ -29,6 +29,10 @@ namespace Mappy.Models
 
         bool CanRedo { get; }
 
+        bool CanCopy { get; }
+
+        bool CanPaste { get; }
+
         bool IsDirty { get; }
 
         bool MapOpen { get; }
