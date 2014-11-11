@@ -713,6 +713,8 @@
                 return;
             }
 
+            DeduplicateTiles(data.TileGrid);
+
             var normX = this.ViewportRectangle.X + (this.ViewportRectangle.Width / 2.0);
             var normY = this.ViewportRectangle.Y + (this.ViewportRectangle.Height / 2.0);
             int x = (int)(this.MapWidth * normX);
@@ -874,6 +876,15 @@
         public void FlushSeaLevel()
         {
             this.previousSeaLevelOpen = false;
+        }
+
+        private static void DeduplicateTiles(IGrid<Bitmap> tiles)
+        {
+            var len = tiles.Width * tiles.Height;
+            for (int i = 0; i < len; i++)
+            {
+                tiles[i] = Globals.TileCache.GetOrAddBitmap(tiles[i]);
+            }
         }
 
         private void AddAndSelectTile(IMapTile tile, int x, int y)
