@@ -816,6 +816,26 @@
 
         private void TranslateSection(Positioned<IMapTile> tile, int x, int y)
         {
+            if (tile.Location.X + tile.Item.TileGrid.Width + x <= 0)
+            {
+                x = -tile.Location.X - (tile.Item.TileGrid.Width - 1);
+            }
+
+            if (tile.Location.Y + tile.Item.TileGrid.Height + y <= 0)
+            {
+                y = -tile.Location.Y - (tile.Item.TileGrid.Height - 1);
+            }
+
+            if (tile.Location.X + x >= this.MapWidth)
+            {
+                x = this.MapWidth - tile.Location.X - 1;
+            }
+
+            if (tile.Location.Y + x >= this.MapHeight)
+            {
+                y = this.MapHeight - tile.Location.Y - 1;
+            }
+
             if (x == 0 && y == 0)
             {
                 return;
