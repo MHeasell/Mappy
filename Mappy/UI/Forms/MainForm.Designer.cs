@@ -80,11 +80,11 @@
             this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem15 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem16 = new System.Windows.Forms.ToolStripMenuItem();
             this.imageLayerView1 = new Mappy.UI.Controls.ImageLayerView();
             this.sectionView1 = new Mappy.UI.Controls.SectionView();
             this.featureview1 = new Mappy.UI.Controls.FeatureView();
             this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
-            this.toolStripMenuItem16 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -244,6 +244,7 @@
             // 
             // toolStripMenuItem6
             // 
+            this.toolStripMenuItem6.Enabled = false;
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
             this.toolStripMenuItem6.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
             this.toolStripMenuItem6.Size = new System.Drawing.Size(250, 22);
@@ -252,6 +253,7 @@
             // 
             // toolStripMenuItem13
             // 
+            this.toolStripMenuItem13.Enabled = false;
             this.toolStripMenuItem13.Name = "toolStripMenuItem13";
             this.toolStripMenuItem13.Size = new System.Drawing.Size(250, 22);
             this.toolStripMenuItem13.Text = "Generate Minimap (High Quality)";
@@ -545,6 +547,15 @@
             this.toolStripSeparator9.Name = "toolStripSeparator9";
             this.toolStripSeparator9.Size = new System.Drawing.Size(247, 6);
             // 
+            // toolStripMenuItem16
+            // 
+            this.toolStripMenuItem16.Enabled = false;
+            this.toolStripMenuItem16.Name = "toolStripMenuItem16";
+            this.toolStripMenuItem16.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.toolStripMenuItem16.Size = new System.Drawing.Size(250, 22);
+            this.toolStripMenuItem16.Text = "Cut";
+            this.toolStripMenuItem16.Click += new System.EventHandler(this.toolStripMenuItem16_Click);
+            // 
             // imageLayerView1
             // 
             this.imageLayerView1.AllowDrop = true;
@@ -589,15 +600,6 @@
             this.startPositionsView1.Name = "startPositionsView1";
             this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
             this.startPositionsView1.TabIndex = 0;
-            // 
-            // toolStripMenuItem16
-            // 
-            this.toolStripMenuItem16.Enabled = false;
-            this.toolStripMenuItem16.Name = "toolStripMenuItem16";
-            this.toolStripMenuItem16.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.toolStripMenuItem16.Size = new System.Drawing.Size(250, 22);
-            this.toolStripMenuItem16.Text = "Cut";
-            this.toolStripMenuItem16.Click += new System.EventHandler(this.toolStripMenuItem16_Click);
             // 
             // MainForm
             // 

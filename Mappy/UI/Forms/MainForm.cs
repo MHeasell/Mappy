@@ -198,6 +198,32 @@
             }
         }
 
+        public bool RefreshMinimapEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem6.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem6.Enabled = value;
+            }
+        }
+
+        public bool RefreshMinimapHighQualityEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem13.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem13.Enabled = value;
+            }
+        }
+
         public int SeaLevel
         {
             get

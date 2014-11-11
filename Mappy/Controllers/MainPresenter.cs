@@ -423,6 +423,8 @@
                     this.UpdateMinimapViewport();
                     this.view.CloseEnabled = this.model.MapOpen;
                     this.view.SeaLevelEditEnabled = this.model.MapOpen;
+                    this.view.RefreshMinimapEnabled = this.model.MapOpen;
+                    this.view.RefreshMinimapHighQualityEnabled = this.model.MapOpen;
                     break;
                 case "IsFileOpen":
                     this.view.SaveAsEnabled = this.model.IsFileOpen;

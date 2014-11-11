@@ -31,6 +31,10 @@
 
         bool MinimapVisibleChecked { get; set; }
 
+        bool RefreshMinimapEnabled { get; set; }
+
+        bool RefreshMinimapHighQualityEnabled { get; set; }
+
         int SeaLevel { get; set; }
 
         Rectangle ViewportRect { get; }
