@@ -154,11 +154,21 @@
             this.mouseDown = false;
         }
 
-        public void KeyDown(Keys key)
+        public void KeyDown(KeyEventArgs e)
         {
-            if (key == Keys.Delete)
+            if (e.KeyCode == Keys.Delete)
             {
                 this.model.DeleteSelection();
+            }
+
+            if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control)
+            {
+                this.model.CopySelectionToClipboard();
+            }
+
+            if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control)
+            {
+                this.model.PasteFromClipboard();
             }
         }
 

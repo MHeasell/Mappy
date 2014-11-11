@@ -7,6 +7,7 @@
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using System.Windows.Forms;
 
     using Data;
 
@@ -650,6 +651,51 @@
                 var removeOp = new RemoveStartPositionOperation(this.Map, this.SelectedStartPosition.Value);
                 this.undoManager.Execute(new CompositeOperation(deSelectOp, removeOp));
             }
+        }
+
+        public void CopySelectionToClipboard()
+        {
+            if (!this.SelectedTile.HasValue)
+            {
+                return;
+            }
+
+            var tile = this.FloatingTiles[this.SelectedTile.Value].Item;
+
+            Clipboard.SetData(DataFormats.Serializable, tile);
+        }
+
+        public void PasteFromClipboard()
+        {
+            var data = Clipboard.GetData(DataFormats.Serializable) as IMapTile;
+            if (data == null)
+            {
+                return;
+            }
+
+            if (this.Map == null)
+            {
+                return;
+            }
+
+            var loc = this.ViewportRectangle.Location;
+            int x = (int)(this.MapWidth * loc.X);
+            int y = (int)(this.MapHeight * loc.Y);
+
+            var floatingSection = new Positioned<IMapTile>(data, new Point(x, y));
+            var addOp = new AddFloatingTileOperation(this.Map, floatingSection);
+
+            // Tile's index should always be 0,
+            // because all other tiles are merged before adding this one.
+            var index = 0;
+
+            var selectOp = new SelectTileOperation(this.Map, index);
+            var op = new CompositeOperation(
+                OperationFactory.CreateDeselectAndMergeOperation(this.Map),
+                addOp,
+                selectOp);
+
+            this.undoManager.Execute(op);
         }
 
         public Point? GetStartPosition(int index)

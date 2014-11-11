@@ -59,7 +59,7 @@
 
         private void ViewKeyDown(object sender, KeyEventArgs e)
         {
-            this.commandHandler.KeyDown(e.KeyCode);
+            this.commandHandler.KeyDown(e);
         }
 
         private void ViewMouseDown(object sender, MouseEventArgs e)

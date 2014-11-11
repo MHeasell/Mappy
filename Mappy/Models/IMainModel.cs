@@ -126,5 +126,9 @@ namespace Mappy.Models
         void SetSeaLevel(int value);
 
         void FlushSeaLevel();
+
+        void CopySelectionToClipboard();
+
+        void PasteFromClipboard();
     }
 }

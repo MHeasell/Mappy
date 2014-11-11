@@ -396,7 +396,7 @@
             {
                 this.model.Setup(x => x.DeleteSelection());
 
-                this.presenter.KeyDown(Keys.Delete);
+                this.presenter.KeyDown(new KeyEventArgs(Keys.Delete));
 
                 this.model.Verify(x => x.DeleteSelection(), Times.Once);
             }
@@ -407,7 +407,7 @@
             [TestMethod]
             public void TestOtherKeyNoDelete()
             {
-                this.presenter.KeyDown(Keys.D8);
+                this.presenter.KeyDown(new KeyEventArgs(Keys.D));
 
                 this.model.Verify(x => x.DeleteSelection(), Times.Never);
             }
@@ -418,7 +418,7 @@
             [TestMethod]
             public void TestOtherKeyNoDelete2()
             {
-                this.presenter.KeyDown(Keys.B);
+                this.presenter.KeyDown(new KeyEventArgs(Keys.B));
 
                 this.model.Verify(x => x.DeleteSelection(), Times.Never);
             }
