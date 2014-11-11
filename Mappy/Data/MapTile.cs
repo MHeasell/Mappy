@@ -1,5 +1,6 @@
 namespace Mappy.Data
 {
+    using System;
     using System.Drawing;
 
     using Mappy.Collections;
@@ -7,6 +8,7 @@ namespace Mappy.Data
     /// <summary>
     /// Represents a tile on the map.
     /// </summary>
+    [Serializable]
     public class MapTile : IMapTile
     {
         public const int TileWidth = 32;

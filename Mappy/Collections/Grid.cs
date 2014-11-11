@@ -1,5 +1,6 @@
 ﻿namespace Mappy.Collections
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
@@ -8,6 +9,7 @@
     /// Dense grid implementation backed by a one-dimensional array.
     /// </summary>
     /// <typeparam name="T">The type of the grid elements.</typeparam>
+    [Serializable]
     public class Grid<T> : IGrid<T>
     {
         private readonly T[] arr;
