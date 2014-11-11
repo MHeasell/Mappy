@@ -45,6 +45,7 @@
             this.view.RedoEnabled = this.model.CanRedo;
 
             this.view.CopyEnabled = this.model.CanCopy;
+            this.view.CutEnabled = this.model.CanCut;
             this.view.PasteEnabled = this.model.CanPaste;
 
             this.model.PropertyChanged += this.CoreModelPropertyChanged;
@@ -248,6 +249,11 @@
             }
         }
 
+        public void CutToClipboard()
+        {
+            this.model.CutSelectionToClipboard();
+        }
+
         public void CopyToClipboard()
         {
             this.model.CopySelectionToClipboard();
@@ -404,6 +410,9 @@
                     break;
                 case "CanCopy":
                     this.view.CopyEnabled = this.model.CanCopy;
+                    break;
+                case "CanCut":
+                    this.view.CutEnabled = this.model.CanCut;
                     break;
                 case "CanPaste":
                     this.view.PasteEnabled = this.model.CanPaste;

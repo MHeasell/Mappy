@@ -71,6 +71,8 @@
 
         private bool canCopy;
 
+        private bool canCut;
+
         public CoreModel()
         {
             this.bandboxBehaviour = new TileBandboxBehaviour(this);
@@ -205,6 +207,19 @@
             get
             {
                 return this.MapOpen;
+            }
+        }
+
+        public bool CanCut
+        {
+            get
+            {
+                return this.canCut;
+            }
+
+            set
+            {
+                this.SetField(ref this.canCut, value, "CanCut");
             }
         }
 
@@ -672,6 +687,17 @@
             var tile = this.FloatingTiles[this.SelectedTile.Value].Item;
 
             Clipboard.SetData(DataFormats.Serializable, tile);
+        }
+
+        public void CutSelectionToClipboard()
+        {
+            if (!this.SelectedTile.HasValue)
+            {
+                return;
+            }
+
+            this.CopySelectionToClipboard();
+            this.DeleteSelection();
         }
 
         public void PasteFromClipboard()
@@ -1144,6 +1170,7 @@
             this.FireChange("SelectedTile");
 
             this.CanCopy = this.SelectedTile.HasValue;
+            this.CanCut = this.SelectedTile.HasValue;
         }
 
         private void MapSelectedStartPositionChanged(object sender, EventArgs eventArgs)

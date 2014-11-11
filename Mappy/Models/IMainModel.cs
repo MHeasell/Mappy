@@ -29,6 +29,8 @@ namespace Mappy.Models
 
         bool CanRedo { get; }
 
+        bool CanCut { get; }
+
         bool CanCopy { get; }
 
         bool CanPaste { get; }
@@ -130,6 +132,8 @@ namespace Mappy.Models
         void SetSeaLevel(int value);
 
         void FlushSeaLevel();
+
+        void CutSelectionToClipboard();
 
         void CopySelectionToClipboard();
 

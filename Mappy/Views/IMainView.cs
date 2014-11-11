@@ -19,6 +19,8 @@
 
         bool RedoEnabled { get; set; }
 
+        bool CutEnabled { get; set; }
+
         bool CopyEnabled { get; set; }
 
         bool PasteEnabled { get; set; }

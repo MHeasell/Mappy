@@ -62,6 +62,19 @@
             set { this.redoToolStripMenuItem.Enabled = value; }
         }
 
+        public bool CutEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem16.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem16.Enabled = value;
+            }
+        }
+
         public bool CopyEnabled
         {
             get
@@ -492,6 +505,11 @@
         private void toolStripMenuItem15_Click(object sender, EventArgs e)
         {
             this.Presenter.PasteFromClipboard();
+        }
+
+        private void toolStripMenuItem16_Click(object sender, EventArgs e)
+        {
+            this.Presenter.CutToClipboard();
         }
     }
 }
