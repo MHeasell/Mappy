@@ -662,9 +662,13 @@
                 return;
             }
 
-            var loc = this.ViewportRectangle.Location;
-            int x = (int)(this.MapWidth * loc.X);
-            int y = (int)(this.MapHeight * loc.Y);
+            var normX = this.ViewportRectangle.X + (this.ViewportRectangle.Width / 2.0);
+            var normY = this.ViewportRectangle.Y + (this.ViewportRectangle.Height / 2.0);
+            int x = (int)(this.MapWidth * normX);
+            int y = (int)(this.MapHeight * normY);
+
+            x -= data.TileGrid.Width / 2;
+            y -= data.TileGrid.Height / 2;
 
             this.AddAndSelectTile(data, x, y);
         }
