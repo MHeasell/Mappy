@@ -523,25 +523,9 @@
             int quantX = x / 32;
             int quantY = y / 32;
 
-            var location = new Point(quantX, quantY);
             var section = this.Sections[id].GetTile();
 
-            var floatingSection = new Positioned<IMapTile>(section, location);
-
-            var addOp = new AddFloatingTileOperation(this.Map, floatingSection);
-
-            // Tile's index should always be 0,
-            // because all other tiles are merged before adding this one.
-            var index = 0;
-
-            var selectOp = new SelectTileOperation(this.Map, index);
-
-            var op = new CompositeOperation(
-                OperationFactory.CreateDeselectAndMergeOperation(this.Map),
-                addOp,
-                selectOp);
-
-            this.undoManager.Execute(op);
+            this.AddAndSelectTile(section, quantX, quantY);
         }
 
         public void DragDropFeature(string name, int x, int y)
@@ -682,20 +666,7 @@
             int x = (int)(this.MapWidth * loc.X);
             int y = (int)(this.MapHeight * loc.Y);
 
-            var floatingSection = new Positioned<IMapTile>(data, new Point(x, y));
-            var addOp = new AddFloatingTileOperation(this.Map, floatingSection);
-
-            // Tile's index should always be 0,
-            // because all other tiles are merged before adding this one.
-            var index = 0;
-
-            var selectOp = new SelectTileOperation(this.Map, index);
-            var op = new CompositeOperation(
-                OperationFactory.CreateDeselectAndMergeOperation(this.Map),
-                addOp,
-                selectOp);
-
-            this.undoManager.Execute(op);
+            this.AddAndSelectTile(data, x, y);
         }
 
         public Point? GetStartPosition(int index)
@@ -848,6 +819,24 @@
         public void FlushSeaLevel()
         {
             this.previousSeaLevelOpen = false;
+        }
+
+        private void AddAndSelectTile(IMapTile tile, int x, int y)
+        {
+            var floatingSection = new Positioned<IMapTile>(tile, new Point(x, y));
+            var addOp = new AddFloatingTileOperation(this.Map, floatingSection);
+
+            // Tile's index should always be 0,
+            // because all other tiles are merged before adding this one.
+            var index = 0;
+
+            var selectOp = new SelectTileOperation(this.Map, index);
+            var op = new CompositeOperation(
+                OperationFactory.CreateDeselectAndMergeOperation(this.Map),
+                addOp,
+                selectOp);
+
+            this.undoManager.Execute(op);
         }
 
         private Point? ScreenToHeightIndex(int x, int y)
