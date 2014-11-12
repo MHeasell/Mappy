@@ -13,6 +13,14 @@
 
         IList<Positioned<IMapTile>> FloatingTiles { get; }
 
+        ISparseGrid<bool> Voids { get; }
+
+        Bitmap Minimap { get; set; }
+
+        int SeaLevel { get; set; }
+
+        MapAttributes Attributes { get; }
+
         /// <summary>
         /// Gets the width of the feature grid space.
         /// </summary>
@@ -63,13 +71,5 @@
         void RemoveFeatureInstance(Guid id);
 
         IEnumerable<FeatureInstance> EnumerateFeatureInstances();
-
-        ISparseGrid<bool> Voids { get; }
-
-        Bitmap Minimap { get; set; }
-
-        int SeaLevel { get; set; }
-
-        MapAttributes Attributes { get; }
     }
 }
