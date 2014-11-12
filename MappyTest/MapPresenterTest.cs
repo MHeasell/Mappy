@@ -1,10 +1,11 @@
 ﻿namespace MappyTest
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
     using System.Windows.Forms;
 
-    using Mappy.Collections;
     using Mappy.Controllers.Tags;
     using Mappy.Data;
     using Mappy.Models;
@@ -27,14 +28,19 @@
         [TestInitialize]
         public void SetUp()
         {
+            var mapModel = new Mock<ISelectionModel>();
+            mapModel.Setup(x => x.EnumerateFeatureInstances()).Returns(Enumerable.Empty<FeatureInstance>);
+
             this.model = new Mock<IMainModel>(MockBehavior.Strict);
+
+            this.model.SetupGet(x => x.Map).Returns(mapModel.Object);
+
             this.model.SetupGet(x => x.MapOpen).Returns(true);
             this.model.SetupGet(x => x.MapWidth).Returns(32);
             this.model.SetupGet(x => x.MapHeight).Returns(32);
             this.model.SetupGet(x => x.HeightmapVisible).Returns(false);
             this.model.SetupGet(x => x.BaseTile).Returns(new MapTile(32, 32));
             this.model.SetupGet(x => x.FloatingTiles).Returns(new List<Positioned<IMapTile>>());
-            this.model.SetupGet(x => x.Features).Returns(new SparseGrid<Feature>(64, 64));
             this.model.Setup(x => x.GetStartPosition(It.IsAny<int>())).Returns((Point?)null);
 
             this.model.SetupGet(x => x.GridVisible).Returns(false);
@@ -107,16 +113,17 @@
             public void TestSelectFeature()
             {
                 var item = new ImageLayerCollection.Item(2, 4, 5, null);
-                item.Tag = new FeatureTag(new GridCoordinates(6, 7));
+                var guid = Guid.NewGuid();
+                item.Tag = new FeatureTag(guid);
 
                 this.view.Setup(x => x.IsInSelection(2, 4)).Returns(false);
                 this.view.Setup(x => x.HitTest(2, 4)).Returns(item);
 
-                this.model.Setup(x => x.SelectFeature(new GridCoordinates(6, 7)));
+                this.model.Setup(x => x.SelectFeature(guid));
 
                 this.presenter.MouseDown(2, 4);
 
-                this.model.Verify(x => x.SelectFeature(new GridCoordinates(6, 7)), Times.Once);
+                this.model.Verify(x => x.SelectFeature(guid), Times.Once);
             }
 
             /// <summary>

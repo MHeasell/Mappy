@@ -13,7 +13,7 @@
     {
         private readonly IBindingMapModel model;
 
-        private readonly ObservableCollection<GridCoordinates> selectedFeatures = new ObservableCollection<GridCoordinates>();
+        private readonly ObservableCollection<Guid> selectedFeatures = new ObservableCollection<Guid>();
 
         private int? selectedTile;
 
@@ -25,7 +25,7 @@
 
             model.FloatingTiles.ListChanged += this.FloatingTilesListChanged;
 
-            model.Features.EntriesChanged += this.FeaturesEntriesChanged;
+            model.FeatureInstanceChanged += this.OnFeatureInstanceChanged;
         }
 
         public event EventHandler SelectedTileChanged;
@@ -55,6 +55,19 @@
             remove
             {
                 this.model.SeaLevelChanged -= value;
+            }
+        }
+
+        public event EventHandler<FeatureInstanceEventArgs> FeatureInstanceChanged
+        {
+            add
+            {
+                this.model.FeatureInstanceChanged += value;
+            }
+
+            remove
+            {
+                this.model.FeatureInstanceChanged -= value;
             }
         }
 
@@ -108,14 +121,6 @@
             }
         }
 
-        public BindingSparseGrid<Feature> Features
-        {
-            get
-            {
-                return this.model.Features;
-            }
-        }
-
         public BindingSparseGrid<bool> Voids
         {
             get
@@ -132,19 +137,27 @@
             }
         }
 
+        public int FeatureGridWidth
+        {
+            get
+            {
+                return this.model.FeatureGridWidth;
+            }
+        }
+
+        public int FeatureGridHeight
+        {
+            get
+            {
+                return this.model.FeatureGridHeight;
+            }
+        }
+
         IList<Positioned<IMapTile>> IMapModel.FloatingTiles
         {
             get
             {
                 return this.FloatingTiles;
-            }
-        }
-
-        ISparseGrid<Feature> IMapModel.Features
-        {
-            get
-            {
-                return this.Features;
             }
         }
 
@@ -198,12 +211,42 @@
             }
         }
 
-        public ObservableCollection<GridCoordinates> SelectedFeatures
+        public ObservableCollection<Guid> SelectedFeatures
         {
             get
             {
                 return this.selectedFeatures;
             }
+        }
+
+        public void AddFeatureInstance(FeatureInstance instance)
+        {
+            this.model.AddFeatureInstance(instance);
+        }
+
+        public FeatureInstance GetFeatureInstance(Guid id)
+        {
+            return this.model.GetFeatureInstance(id);
+        }
+
+        public FeatureInstance GetFeatureInstanceAt(int x, int y)
+        {
+            return this.model.GetFeatureInstanceAt(x, y);
+        }
+
+        public void RemoveFeatureInstance(Guid id)
+        {
+            this.model.RemoveFeatureInstance(id);
+        }
+
+        public bool HasFeatureInstanceAt(int x, int y)
+        {
+            return this.model.HasFeatureInstanceAt(x, y);
+        }
+
+        public void UpdateFeatureInstance(FeatureInstance instance)
+        {
+            this.model.UpdateFeatureInstance(instance);
         }
 
         public void SelectTile(int index)
@@ -250,14 +293,14 @@
             this.MergeTile(this.SelectedTile.Value);
         }
 
-        public void SelectFeature(GridCoordinates index)
+        public void SelectFeature(Guid id)
         {
-            this.SelectedFeatures.Add(index);
+            this.SelectedFeatures.Add(id);
         }
 
-        public void DeselectFeature(GridCoordinates index)
+        public void DeselectFeature(Guid id)
         {
-            this.SelectedFeatures.Remove(index);
+            this.SelectedFeatures.Remove(id);
         }
 
         public void DeselectFeatures()
@@ -265,25 +308,15 @@
             this.SelectedFeatures.Clear();
         }
 
-        public void TranslateSelectedFeatures(int x, int y)
-        {
-            this.TranslateFeatures(this.SelectedFeatures, x, y);
-        }
-
-        public bool CanTranslateSelectedFeatures(int x, int y)
-        {
-            return this.CanTranslateFeatures(this.SelectedFeatures, x, y);
-        }
-
         public void DeletedSelectedFeatures()
         {
             // take a copy, since the selected list will change
             // during deletion.
-            var features = new List<GridCoordinates>(this.SelectedFeatures);
+            var features = new List<Guid>(this.SelectedFeatures);
 
             foreach (var f in features)
             {
-                this.model.Features.Remove(f.X, f.Y);
+                this.model.RemoveFeatureInstance(f);
             }
         }
 
@@ -334,6 +367,11 @@
             this.DeselectTile();
         }
 
+        public IEnumerable<FeatureInstance> EnumerateFeatureInstances()
+        {
+            return this.model.EnumerateFeatureInstances();
+        }
+
         private void MergeTile(int index)
         {
             var tile = this.model.FloatingTiles[index];
@@ -354,54 +392,6 @@
 
             GridMethods.Copy(src.TileGrid, dst.TileGrid, srcX, srcY, rect.X, rect.Y, rect.Width, rect.Height);
             GridMethods.Copy(src.HeightGrid, dst.HeightGrid, srcX * 2, srcY * 2, rect.X * 2, rect.Y * 2, rect.Width * 2, rect.Height * 2);
-        }
-
-        private bool CanTranslateFeatures(IEnumerable<GridCoordinates> coords, int x, int y)
-        {
-            var coordSet = new HashSet<GridCoordinates>(coords);
-
-            // pre-move check to see if anything is in our way
-            foreach (var item in coordSet)
-            {
-                var translatedPoint = new GridCoordinates(item.X + x, item.Y + y);
-
-                if (translatedPoint.X < 0
-                    || translatedPoint.Y < 0
-                    || translatedPoint.X >= this.model.Features.Width
-                    || translatedPoint.Y >= this.model.Features.Height)
-                {
-                    return false;
-                }
-
-                bool isBlocked = !coordSet.Contains(translatedPoint)
-                    && this.model.Features.HasValue(translatedPoint.X, translatedPoint.Y);
-                if (isBlocked)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private void TranslateFeatures(IEnumerable<GridCoordinates> coords, int x, int y)
-        {
-            if (!this.CanTranslateFeatures(coords, x, y))
-            {
-                throw new ArgumentException("Specified translation would overwrite other features.");
-            }
-
-            var mapping = new Dictionary<GridCoordinates, Feature>();
-            foreach (var i in coords)
-            {
-                mapping[i] = this.model.Features[i.X, i.Y];
-                this.model.Features.Remove(i.X, i.Y);
-            }
-
-            foreach (var i in coords)
-            {
-                this.model.Features[i.X + x, i.Y + y] = mapping[i];
-            }
         }
         
         private void FloatingTilesListChanged(object sender, ListChangedEventArgs e)
@@ -462,42 +452,12 @@
             }
         }
 
-        private void FeaturesEntriesChanged(object sender, SparseGridEventArgs e)
+        private void OnFeatureInstanceChanged(object sender, FeatureInstanceEventArgs e)
         {
-            // keep the selected feature positions in sync
             switch (e.Action)
             {
-                case SparseGridEventArgs.ActionType.Remove:
-                    foreach (var f in e.Indexes)
-                    {
-                        // feature removed, remove it from selection
-                        this.SelectedFeatures.Remove(this.model.Features.ToCoords(f));
-                    }
-
-                    break;
-
-                case SparseGridEventArgs.ActionType.Move:
-                    // feature moved, update the selected coords
-                    // to match the feature's new coords
-                    var oldIt = e.OriginalIndexes.GetEnumerator();
-                    var newIt = e.Indexes.GetEnumerator();
-
-                    // BUG: If there was a feature at the destination of another,
-                    //      which was also moved, it might get overwritten.
-                    //      This event only gets fired for single moves anyway,
-                    //      so this should never happen.
-                    while (oldIt.MoveNext() && newIt.MoveNext())
-                    {
-                        var oldCoord = this.Features.ToCoords(oldIt.Current);
-                        var newCoord = this.Features.ToCoords(newIt.Current);
-
-                        if (this.SelectedFeatures.Contains(oldCoord))
-                        {
-                            this.SelectedFeatures.Remove(oldCoord);
-                            this.SelectedFeatures.Add(newCoord);
-                        }
-                    }
-
+                case FeatureInstanceEventArgs.ActionType.Remove:
+                    this.SelectedFeatures.Remove(e.FeatureInstanceId);
                     break;
             }
         }

@@ -83,10 +83,7 @@
             this.sections = LoadingUtils.LoadSections(Globals.Palette);
 
             this.sectionFactory = new SectionFactory(Globals.Palette);
-            this.mapModelFactory = new MapModelFactory(
-                Globals.Palette,
-                this.featureRecords,
-                Mappy.Properties.Resources.nofeature);
+            this.mapModelFactory = new MapModelFactory(Globals.Palette);
 
             this.mapSaver = new MapSaver(Globals.ReversePalette);
 
@@ -95,8 +92,6 @@
             this.undoManager.CanRedoChanged += this.CanRedoChanged;
             this.undoManager.IsMarkedChanged += this.IsMarkedChanged;
         }
-
-        public event EventHandler<SparseGridEventArgs> FeaturesChanged;
 
         public event EventHandler<ListChangedEventArgs> TilesChanged;
 
@@ -135,7 +130,6 @@
 
                         this.Map.MinimapChanged += this.MapOnMinimapChanged;
 
-                        this.Map.Features.EntriesChanged += this.FeaturesOnEntriesChanged;
                         this.Map.FloatingTiles.ListChanged += this.FloatingTilesOnListChanged;
                         this.Map.Tile.TileGridChanged += this.TileOnTileGridChanged;
                         this.Map.Tile.HeightGridChanged += this.TileOnHeightGridChanged;
@@ -285,7 +279,7 @@
             }
         }
 
-        public ICollection<GridCoordinates> SelectedFeatures
+        public ICollection<Guid> SelectedFeatures
         {
             get
             {
@@ -298,14 +292,6 @@
             get
             {
                 return this.bandboxBehaviour.BandboxRectangle;
-            }
-        }
-
-        public ISparseGrid<Feature> Features
-        {
-            get
-            {
-                return this.Map == null ? null : this.Map.Features;
             }
         }
 
@@ -576,13 +562,11 @@
             }
 
             Point? featurePos = this.ScreenToHeightIndex(x, y);
-            if (featurePos.HasValue && !this.Map.Features.HasValue(featurePos.Value.X, featurePos.Value.Y))
+            if (featurePos.HasValue && !this.Map.HasFeatureInstanceAt(featurePos.Value.X, featurePos.Value.Y))
             {
-                var feature = this.featureRecords[name];
-                var addOp = new AddFeatureOperation(this.Map.Features, feature, featurePos.Value.X, featurePos.Value.Y);
-                var selectOp = new SelectFeatureOperation(
-                    this.Map,
-                    new GridCoordinates(featurePos.Value.X, featurePos.Value.Y));
+                var inst = new FeatureInstance(Guid.NewGuid(), name, featurePos.Value.X, featurePos.Value.Y);
+                var addOp = new AddFeatureOperation(this.Map, inst);
+                var selectOp = new SelectFeatureOperation(this.Map, inst.Id);
                 var op = new CompositeOperation(
                     OperationFactory.CreateDeselectAndMergeOperation(this.Map),
                     addOp,
@@ -658,7 +642,7 @@
             {
                 var ops = new List<IReplayableOperation>();
                 ops.Add(new DeselectOperation(this.Map));
-                ops.AddRange(this.SelectedFeatures.Select(x => new RemoveFeatureOperation(this.Map.Features, x.X, x.Y)));
+                ops.AddRange(this.SelectedFeatures.Select(x => new RemoveFeatureOperation(this.Map, x)));
                 this.undoManager.Execute(new CompositeOperation(ops));
             }
 
@@ -739,7 +723,7 @@
                     new SelectTileOperation(this.Map, index)));
         }
 
-        public void SelectFeature(GridCoordinates index)
+        public void SelectFeature(Guid index)
         {
             this.undoManager.Execute(
                 new CompositeOperation(
@@ -747,7 +731,7 @@
                     new SelectFeatureOperation(this.Map, index)));
         }
 
-        public void SelectFeatures(IEnumerable<GridCoordinates> indices)
+        public void SelectFeatures(IEnumerable<Guid> indices)
         {
             var list = new List<IReplayableOperation>();
 
@@ -963,59 +947,14 @@
             this.previousTranslationOpen = true;
         }
 
-        private bool TranslateFeature(int index, int x, int y)
-        {
-            var coords = this.Map.Features.ToCoords(index);
-            return this.TranslateFeature(new Point(coords.X, coords.Y), x, y);
-        }
-
-        private bool TranslateFeature(Point featureCoord, int x, int y)
-        {
-            Point newCoord = new Point(
-                featureCoord.X + x,
-                featureCoord.Y + y);
-
-            if (this.Map.Features.HasValue(newCoord.X, newCoord.Y))
-            {
-                return false;
-            }
-
-            MoveFeatureOperation newOp = new MoveFeatureOperation(
-                this.Map.Features,
-                featureCoord.X,
-                featureCoord.Y,
-                newCoord.X,
-                newCoord.Y);
-
-            MoveFeatureOperation lastOp = null;
-            if (this.undoManager.CanUndo)
-            {
-                lastOp = this.undoManager.PeekUndo() as MoveFeatureOperation;
-            }
-
-            if (this.previousTranslationOpen && lastOp != null && lastOp.DestX == newOp.StartX && lastOp.DestY == newOp.StartY)
-            {
-                newOp.Execute();
-                this.undoManager.Replace(lastOp.Combine(newOp));
-            }
-            else
-            {
-                this.undoManager.Execute(newOp);
-            }
-
-            this.previousTranslationOpen = true;
-
-            return true;
-        }
-
-        private bool TranslateFeatureBatch(IEnumerable<GridCoordinates> coords, int x, int y)
+        private bool TranslateFeatureBatch(ICollection<Guid> ids, int x, int y)
         {
             if (x == 0 && y == 0)
             {
                 return true;
             }
 
-            var coordSet = new HashSet<GridCoordinates>(coords);
+            var coordSet = new HashSet<GridCoordinates>(ids.Select(i => this.Map.GetFeatureInstance(i).Location));
 
             // pre-move check to see if anything is in our way
             foreach (var item in coordSet)
@@ -1024,21 +963,21 @@
 
                 if (translatedPoint.X < 0
                     || translatedPoint.Y < 0
-                    || translatedPoint.X >= this.Map.Features.Width
-                    || translatedPoint.Y >= this.Map.Features.Height)
+                    || translatedPoint.X >= this.Map.FeatureGridWidth
+                    || translatedPoint.Y >= this.Map.FeatureGridHeight)
                 {
                     return false;
                 }
 
                 bool isBlocked = !coordSet.Contains(translatedPoint)
-                    && this.Map.Features.HasValue(translatedPoint.X, translatedPoint.Y);
+                    && this.Map.HasFeatureInstanceAt(translatedPoint.X, translatedPoint.Y);
                 if (isBlocked)
                 {
                     return false;
                 }
             }
 
-            var newOp = new BatchMoveFeatureOperation(this.Map.Features, coordSet, x, y);
+            var newOp = new BatchMoveFeatureOperation(this.Map, ids, x, y);
 
             BatchMoveFeatureOperation lastOp = null;
             if (this.undoManager.CanUndo)
@@ -1046,7 +985,7 @@
                 lastOp = this.undoManager.PeekUndo() as BatchMoveFeatureOperation;
             }
 
-            if (this.previousTranslationOpen && lastOp != null && lastOp.GetTranslatedCoords().SetEquals(coordSet))
+            if (this.previousTranslationOpen && lastOp != null && lastOp.CanCombine(newOp))
             {
                 newOp.Execute();
                 this.undoManager.Replace(lastOp.Combine(newOp));
@@ -1137,15 +1076,6 @@
         private void FloatingTilesOnListChanged(object sender, ListChangedEventArgs e)
         {
             var h = this.TilesChanged;
-            if (h != null)
-            {
-                h(this, e);
-            }
-        }
-
-        private void FeaturesOnEntriesChanged(object sender, SparseGridEventArgs e)
-        {
-            var h = this.FeaturesChanged;
             if (h != null)
             {
                 h(this, e);

@@ -18,21 +18,16 @@
 
             this.Tile = new BindingMapTile(model.Tile);
             this.FloatingTiles = new BindingList<Positioned<IMapTile>>(model.FloatingTiles);
-            this.Features = new BindingSparseGrid<Feature>(model.Features);
             this.Voids = new BindingSparseGrid<bool>(model.Voids);
         }
+
+        public event EventHandler<FeatureInstanceEventArgs> FeatureInstanceChanged;
 
         public event EventHandler MinimapChanged;
 
         public event EventHandler SeaLevelChanged;
 
         public BindingMapTile Tile
-        {
-            get;
-            private set;
-        }
-
-        public BindingSparseGrid<Feature> Features
         {
             get;
             private set;
@@ -78,6 +73,22 @@
             }
         }
 
+        public int FeatureGridWidth
+        {
+            get
+            {
+                return this.model.FeatureGridWidth;
+            }
+        }
+
+        public int FeatureGridHeight
+        {
+            get
+            {
+                return this.model.FeatureGridHeight;
+            }
+        }
+
         public MapAttributes Attributes
         {
             get { return this.model.Attributes; }
@@ -88,11 +99,6 @@
             get { return this.Tile; }
         }
 
-        ISparseGrid<Feature> IMapModel.Features
-        {
-            get { return this.Features; }
-        }
-
         ISparseGrid<bool> IMapModel.Voids
         {
             get { return this.Voids; }
@@ -101,6 +107,62 @@
         IList<Positioned<IMapTile>> IMapModel.FloatingTiles
         {
             get { return this.FloatingTiles; }
+        }
+
+        public FeatureInstance GetFeatureInstance(Guid id)
+        {
+            return this.model.GetFeatureInstance(id);
+        }
+
+        public FeatureInstance GetFeatureInstanceAt(int x, int y)
+        {
+            return this.model.GetFeatureInstanceAt(x, y);
+        }
+
+        public void AddFeatureInstance(FeatureInstance instance)
+        {
+            this.model.AddFeatureInstance(instance);
+            var arg = new FeatureInstanceEventArgs(
+                FeatureInstanceEventArgs.ActionType.Add,
+                instance.Id);
+            this.OnFeatureInstanceChanged(arg);
+        }
+
+        public void RemoveFeatureInstance(Guid id)
+        {
+            this.model.RemoveFeatureInstance(id);
+            var arg = new FeatureInstanceEventArgs(
+                FeatureInstanceEventArgs.ActionType.Remove,
+                id);
+            this.OnFeatureInstanceChanged(arg);
+        }
+
+        public void UpdateFeatureInstance(FeatureInstance instance)
+        {
+            this.model.UpdateFeatureInstance(instance);
+            var arg = new FeatureInstanceEventArgs(
+                FeatureInstanceEventArgs.ActionType.Move,
+                instance.Id);
+            this.OnFeatureInstanceChanged(arg);
+        }
+
+        public bool HasFeatureInstanceAt(int x, int y)
+        {
+            return this.model.HasFeatureInstanceAt(x, y);
+        }
+
+        public IEnumerable<FeatureInstance> EnumerateFeatureInstances()
+        {
+            return this.model.EnumerateFeatureInstances();
+        }
+
+        protected virtual void OnFeatureInstanceChanged(FeatureInstanceEventArgs e)
+        {
+            var h = this.FeatureInstanceChanged;
+            if (h != null)
+            {
+                h(this, e);
+            }
         }
 
         private void OnSeaLevelChanged()

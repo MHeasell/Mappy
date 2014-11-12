@@ -11,8 +11,6 @@ namespace Mappy.Models
 
     public interface IMainModel : INotifyPropertyChanged
     {
-        event EventHandler<SparseGridEventArgs> FeaturesChanged;
-
         event EventHandler<ListChangedEventArgs> TilesChanged;
 
         event EventHandler<GridEventArgs> BaseTileGraphicsChanged;
@@ -61,9 +59,7 @@ namespace Mappy.Models
 
         Rectangle BandboxRectangle { get; }
 
-        ICollection<GridCoordinates> SelectedFeatures { get; }
-
-        ISparseGrid<Feature> Features { get; }
+        ISelectionModel Map { get; }
 
         IList<Positioned<IMapTile>> FloatingTiles { get; }
 
@@ -99,7 +95,7 @@ namespace Mappy.Models
 
         void SelectTile(int index);
 
-        void SelectFeature(GridCoordinates index);
+        void SelectFeature(Guid id);
 
         void SelectStartPosition(int index);
 

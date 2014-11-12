@@ -1,34 +1,33 @@
 namespace Mappy.Operations
 {
-    using Data;
+    using System;
 
     using Mappy.Collections;
+    using Mappy.Models;
 
     public class RemoveFeatureOperation : IReplayableOperation
     {
-        private readonly int x;
-        private readonly int y;
-        private readonly ISparseGrid<Feature> features;
+        private readonly IMapModel map;
 
-        private Feature removedFeature;
+        private readonly Guid id;
 
-        public RemoveFeatureOperation(ISparseGrid<Feature> features, int x, int y)
+        private FeatureInstance removedFeature;
+
+        public RemoveFeatureOperation(IMapModel map, Guid id)
         {
-            this.features = features;
-            this.x = x;
-            this.y = y;
+            this.map = map;
+            this.id = id;
         }
 
         public void Execute()
         {
-            this.removedFeature = this.features[this.x, this.y];
-            this.features.Remove(this.x, this.y);
+            this.removedFeature = this.map.GetFeatureInstance(this.id);
+            this.map.RemoveFeatureInstance(this.id);
         }
 
         public void Undo()
         {
-            this.features[this.x, this.y] = this.removedFeature;
-            this.removedFeature = null;
+            this.map.AddFeatureInstance(this.removedFeature);
         }
     }
 }

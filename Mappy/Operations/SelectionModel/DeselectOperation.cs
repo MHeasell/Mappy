@@ -17,7 +17,7 @@
 
         private int? prevStart;
 
-        private List<GridCoordinates> features;
+        private List<Guid> features;
 
         public DeselectOperation(ISelectionModel model)
         {
@@ -27,7 +27,7 @@
         public void Execute()
         {
             this.prevTile = this.model.SelectedTile;
-            this.features = new List<GridCoordinates>(this.model.SelectedFeatures);
+            this.features = new List<Guid>(this.model.SelectedFeatures);
             this.prevStart = this.model.SelectedStartPosition;
 
             this.model.DeselectAll();

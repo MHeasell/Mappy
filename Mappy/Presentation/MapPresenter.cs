@@ -19,15 +19,21 @@
         private const int BandboxDepth = 100000000;
 
         private static readonly Color BandboxFillColor = Color.FromArgb(127, Color.Blue);
+
         private static readonly Color BandboxBorderColor = Color.FromArgb(127, Color.Black);
 
         private static readonly IDrawable[] StartPositionImages = new IDrawable[10];
 
+        private static readonly Feature DefaultFeatureRecord = new Feature("default", Mappy.Properties.Resources.nofeature, new Point(0, 0), new Size(1, 1));
+
         private readonly IMapView view;
+
         private readonly IMainModel model;
 
         private readonly List<ImageLayerCollection.Item> tileMapping = new List<ImageLayerCollection.Item>();
-        private readonly IDictionary<GridCoordinates, ImageLayerCollection.Item> featureMapping = new Dictionary<GridCoordinates, ImageLayerCollection.Item>();
+
+        private readonly IDictionary<Guid, ImageLayerCollection.Item> featureMapping =
+            new Dictionary<Guid, ImageLayerCollection.Item>();
 
         private readonly ImageLayerCollection.Item[] startPositionMapping = new ImageLayerCollection.Item[10];
 
@@ -62,6 +68,11 @@
             this.PopulateView();
 
             this.WireMap();
+
+            if (this.model.Map != null)
+            {
+                this.WireInnerMap();
+            }
 
             this.view.GridVisible = this.model.GridVisible;
             this.view.GridColor = this.model.GridColor;
@@ -173,9 +184,13 @@
             t.SelectItem(this.model);
         }
 
+        private void WireInnerMap()
+        {
+            this.model.Map.FeatureInstanceChanged += this.FeatureInstanceChanged;
+        }
+
         private void WireMap()
         {
-            this.model.FeaturesChanged += this.FeatureChanged;
             this.model.TilesChanged += this.TilesChanged;
 
             this.model.BaseTileGraphicsChanged += this.BaseTileChanged;
@@ -269,9 +284,9 @@
                 return;
             }
 
-            foreach (var f in this.model.Features.CoordinateEntries)
+            foreach (var f in this.model.Map.EnumerateFeatureInstances())
             {
-                this.InsertFeature(f.Value, f.Key.X, f.Key.Y);
+                this.InsertFeature(f.Id);
             }
         }
 
@@ -319,67 +334,58 @@
             this.tileMapping.RemoveAt(index);
         }
 
-        private void InsertFeature(Feature f, int x, int y)
+        private void InsertFeature(Guid id)
         {
-            var coords = new GridCoordinates(x, y);
-            int index = this.ToFeatureIndex(x, y);
-            Rectangle r = f.GetDrawBounds(this.model.BaseTile.HeightGrid, x, y);
+            var f = this.model.Map.GetFeatureInstance(id);
+            var coords = f.Location;
+            int index = this.ToFeatureIndex(coords);
+            Feature featureRecord;
+            if (!this.model.FeatureRecords.TryGetFeature(f.FeatureName, out featureRecord))
+            {
+                featureRecord = DefaultFeatureRecord;
+            }
+
+            Rectangle r = featureRecord.GetDrawBounds(this.model.BaseTile.HeightGrid, coords.X, coords.Y);
             ImageLayerCollection.Item i = new ImageLayerCollection.Item(
                     r.X,
                     r.Y,
                     index + 1000, // magic number to separate from tiles
-                    new DrawableBitmap(f.Image));
-            i.Tag = new FeatureTag(coords);
+                    new DrawableBitmap(featureRecord.Image));
+            i.Tag = new FeatureTag(f.Id);
             i.Visible = this.model.FeaturesVisible;
-            this.featureMapping[coords] = i;
+            this.featureMapping[f.Id] = i;
             this.view.Items.Add(i);
 
-            if (this.model.SelectedFeatures.Contains(coords))
+            if (this.model.Map.SelectedFeatures.Contains(f.Id))
             {
                 this.view.AddToSelection(i);
             }
         }
 
-        private bool RemoveFeature(GridCoordinates coords)
+        private bool RemoveFeature(Guid id)
         {
-            if (this.featureMapping.ContainsKey(coords))
+            if (this.featureMapping.ContainsKey(id))
             {
-                ImageLayerCollection.Item item = this.featureMapping[coords];
+                ImageLayerCollection.Item item = this.featureMapping[id];
                 this.view.Items.Remove(item);
                 this.view.RemoveFromSelection(item);
-                this.featureMapping.Remove(coords);
+                this.featureMapping.Remove(id);
                 return true;
             }
 
             return false;
         }
 
-        private void MoveFeature(GridCoordinates oldIndex, GridCoordinates newIndex)
+        private void UpdateFeature(Guid id)
         {
-            this.RemoveFeature(oldIndex);
-            this.InsertFeature(newIndex);
-        }
-
-        private void UpdateFeature(GridCoordinates index)
-        {
-            this.RemoveFeature(index);
-
-            this.InsertFeature(index);
-        }
-
-        private void InsertFeature(GridCoordinates p)
-        {
-            Feature f;
-            if (this.model.Features.TryGetValue(p.X, p.Y, out f))
-            {
-                this.InsertFeature(f, p.X, p.Y);
-            }
+            this.RemoveFeature(id);
+            this.InsertFeature(id);
         }
 
         private GridCoordinates ToFeaturePoint(int index)
         {
-            int x = index % this.model.Features.Width;
-            int y = index / this.model.Features.Width;
+            int x = index % this.model.Map.FeatureGridWidth;
+            int y = index / this.model.Map.FeatureGridHeight;
             var p = new GridCoordinates(x, y);
             return p;
         }
@@ -391,7 +397,7 @@
 
         private int ToFeatureIndex(int x, int y)
         {
-            return (y * this.model.Features.Width) + x;
+            return (y * this.model.Map.FeatureGridWidth) + x;
         }
 
         private void RefreshFeatureVisibility()
@@ -440,9 +446,9 @@
                     this.view.AddToSelection(this.tileMapping[this.model.SelectedTile.Value]);
                 }
             }
-            else if (this.model.SelectedFeatures.Count > 0)
+            else if (this.model.Map.SelectedFeatures.Count > 0)
             {
-                foreach (var item in this.model.SelectedFeatures)
+                foreach (var item in this.model.Map.SelectedFeatures)
                 {
                     if (this.featureMapping.ContainsKey(item))
                     {
@@ -504,6 +510,13 @@
                     break;
                 case "SeaLevel":
                     this.RefreshSeaLevel();
+                    break;
+                case "Map":
+                    if (this.model.Map != null)
+                    {
+                        this.WireInnerMap();
+                    }
+
                     break;
             }
         }
@@ -581,34 +594,18 @@
             }
         }
 
-        private void FeatureChanged(object sender, SparseGridEventArgs e)
+        private void FeatureInstanceChanged(object sender, FeatureInstanceEventArgs e)
         {
             switch (e.Action)
             {
-                case SparseGridEventArgs.ActionType.Set:
-                    foreach (var index in e.Indexes)
-                    {
-                        this.UpdateFeature(this.ToFeaturePoint(index));
-                    }
-
+                case FeatureInstanceEventArgs.ActionType.Add:
+                    this.InsertFeature(e.FeatureInstanceId);
                     break;
-                case SparseGridEventArgs.ActionType.Move:
-                    var oldIter = e.OriginalIndexes.GetEnumerator();
-                    var newIter = e.Indexes.GetEnumerator();
-                    while (oldIter.MoveNext() && newIter.MoveNext())
-                    {
-                        this.MoveFeature(
-                            this.ToFeaturePoint(oldIter.Current),
-                            this.ToFeaturePoint(newIter.Current));
-                    }
-
+                case FeatureInstanceEventArgs.ActionType.Move:
+                    this.UpdateFeature(e.FeatureInstanceId);
                     break;
-                case SparseGridEventArgs.ActionType.Remove:
-                    foreach (var index in e.Indexes)
-                    {
-                        this.RemoveFeature(this.ToFeaturePoint(index));
-                    }
-
+                case FeatureInstanceEventArgs.ActionType.Remove:
+                    this.RemoveFeature(e.FeatureInstanceId);
                     break;
             }
         }

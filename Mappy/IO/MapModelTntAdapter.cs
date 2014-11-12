@@ -5,7 +5,6 @@
     using System.IO;
     using System.Linq;
 
-    using Mappy.Data;
     using Mappy.Models;
     using Mappy.Palette;
     using Mappy.Util;
@@ -24,9 +23,9 @@
 
         private readonly IDictionary<Bitmap, int> reverseTiles;
 
-        private readonly Feature[] features;
+        private readonly string[] features;
 
-        private readonly IDictionary<Feature, int> reverseFeatures;
+        private readonly IDictionary<string, int> reverseFeatures;
 
         private readonly BitmapSerializer bitmapSerializer;
 
@@ -35,7 +34,7 @@
             this.model = model;
             this.tiles = Util.GetUsedTiles(model.Tile).ToArray();
             this.reverseTiles = Util.ReverseMapping(this.tiles);
-            this.features = model.Features.Values.Distinct().ToArray();
+            this.features = model.EnumerateFeatureInstances().Select(x => x.FeatureName).Distinct().ToArray();
             this.reverseFeatures = Util.ReverseMapping(this.features);
             this.bitmapSerializer = new BitmapSerializer(reversePalette);
         }
@@ -87,7 +86,7 @@
 
         public IEnumerable<string> EnumerateAnims()
         {
-            return this.features.Select(x => x.Name);
+            return this.features;
         }
 
         public IEnumerable<int> EnumerateData()
@@ -134,14 +133,14 @@
             }
             else
             {
-                Feature f;
-                if (this.model.Features.TryGetValue(x, y, out f))
+                var f = this.model.GetFeatureInstanceAt(x, y);
+                if (f == null)
                 {
-                    attr.Feature = (ushort)this.reverseFeatures[f];
+                    attr.Feature = TileAttr.FeatureNone;
                 }
                 else
                 {
-                    attr.Feature = TileAttr.FeatureNone;
+                    attr.Feature = (ushort)this.reverseFeatures[f.FeatureName];
                 }
             }
 

@@ -15,7 +15,7 @@
 
         int? SelectedStartPosition { get; }
 
-        ObservableCollection<GridCoordinates> SelectedFeatures { get; }
+        ObservableCollection<Guid> SelectedFeatures { get; }
 
         void SelectTile(int index);
 
@@ -27,15 +27,11 @@
 
         void MergeSelectedTile();
 
-        void SelectFeature(GridCoordinates index);
+        void SelectFeature(Guid id);
 
-        void DeselectFeature(GridCoordinates index);
+        void DeselectFeature(Guid id);
 
         void DeselectFeatures();
-
-        bool CanTranslateSelectedFeatures(int x, int y);
-
-        void TranslateSelectedFeatures(int x, int y);
 
         void DeletedSelectedFeatures();
 

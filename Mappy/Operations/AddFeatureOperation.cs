@@ -1,43 +1,26 @@
 namespace Mappy.Operations
 {
-    using Data;
-
-    using Mappy.Collections;
+    using Mappy.Models;
 
     public class AddFeatureOperation : IReplayableOperation
     {
-        private readonly ISparseGrid<Feature> features;
-        private readonly Feature item;
-        private readonly int x;
-        private readonly int y;
+        private readonly IMapModel map;
+        private readonly FeatureInstance item;
 
-        private Feature oldItem;
-        private bool hasOldItem;
-
-        public AddFeatureOperation(ISparseGrid<Feature> features, Feature feature, int x, int y)
+        public AddFeatureOperation(IMapModel map, FeatureInstance feature)
         {
-            this.features = features;
+            this.map = map;
             this.item = feature;
-            this.x = x;
-            this.y = y;
         }
 
         public void Execute()
         {
-            this.hasOldItem = this.features.TryGetValue(this.x, this.y, out this.oldItem);
-            this.features[this.x, this.y] = this.item;
+            this.map.AddFeatureInstance(this.item);
         }
 
         public void Undo()
         {
-            if (this.hasOldItem)
-            {
-                this.features[this.x, this.y] = this.oldItem;
-            }
-            else
-            {
-                this.features.Remove(this.x, this.y);
-            }
+            this.map.RemoveFeatureInstance(this.item.Id);
         }
     }
 }

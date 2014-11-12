@@ -1,28 +1,29 @@
 ﻿namespace Mappy.Operations.SelectionModel
 {
-    using Mappy.Collections;
+    using System;
+
     using Mappy.Models;
 
     public class SelectFeatureOperation : IReplayableOperation
     {
         private readonly ISelectionModel model;
 
-        private readonly GridCoordinates coord;
+        private readonly Guid id;
 
-        public SelectFeatureOperation(ISelectionModel model, GridCoordinates coord)
+        public SelectFeatureOperation(ISelectionModel model, Guid id)
         {
             this.model = model;
-            this.coord = coord;
+            this.id = id;
         }
 
         public void Execute()
         {
-            this.model.SelectFeature(this.coord);
+            this.model.SelectFeature(this.id);
         }
 
         public void Undo()
         {
-            this.model.DeselectFeature(this.coord);
+            this.model.DeselectFeature(this.id);
         }
     }
 }

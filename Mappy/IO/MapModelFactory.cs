@@ -1,11 +1,11 @@
 ﻿namespace Mappy.IO
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
 
     using Mappy.Data;
-    using Mappy.Database;
     using Mappy.Models;
     using Mappy.Palette;
 
@@ -21,18 +21,9 @@
     {
         private readonly BitmapDeserializer bitmapDeserializer;
 
-        private readonly IFeatureDatabase featureBank;
-
-        private readonly Bitmap defaultFeatureImage;
-
-        public MapModelFactory(
-            IPalette palette,
-            IFeatureDatabase bank,
-            Bitmap defaultFeatureImage)
+        public MapModelFactory(IPalette palette)
         {
             this.bitmapDeserializer = new BitmapDeserializer(palette);
-            this.featureBank = bank;
-            this.defaultFeatureImage = defaultFeatureImage;
         }
 
         public MapModel FromTntAndOta(ITntSource tnt, TdfNode ota)
@@ -51,8 +42,8 @@
                     var y = TdfConvert.ToInt32(node.Entries["ZPos"]);
                     var name = node.Entries["Featurename"];
 
-                    var feature = this.ToFeature(name);
-                    model.Features[x, y] = feature;
+                    var inst = new FeatureInstance(Guid.NewGuid(), name, x, y);
+                    model.AddFeatureInstance(inst);
                 }
             }
 
@@ -66,7 +57,7 @@
             return this.ReadTnt(tnt, m);
         }
 
-        private static void ReadFeatures(ITntSource tnt, MapModel model, List<Feature> features)
+        private static void ReadFeatures(ITntSource tnt, MapModel model, List<string> features)
         {
             var enumer = tnt.EnumerateAttrs().GetEnumerator();
             for (int y = 0; y < tnt.DataHeight * 2; y++)
@@ -85,7 +76,8 @@
                             model.Voids[x, y] = true;
                             break;
                         default:
-                            model.Features[x, y] = features[enumer.Current.Feature];
+                            var inst = new FeatureInstance(Guid.NewGuid(), features[enumer.Current.Feature], x, y);
+                            model.AddFeatureInstance(inst);
                             break;
                     }
                 }
@@ -112,8 +104,8 @@
 
             ReadData(tnt, model, tiles);
 
-            List<Feature> features = new List<Feature>(tnt.AnimCount);
-            features.AddRange(tnt.EnumerateAnims().Select(this.ToFeature));
+            List<string> features = new List<string>(tnt.AnimCount);
+            features.AddRange(tnt.EnumerateAnims());
 
             ReadFeatures(tnt, model, features);
 
@@ -122,21 +114,6 @@
             model.Minimap = this.ToBitmap(tnt.GetMinimap());
 
             return model;
-        }
-
-        private Feature ToFeature(string name)
-        {
-            Feature f;
-            if (!this.featureBank.TryGetFeature(name, out f))
-            {
-                f = new Feature(
-                    name,
-                    this.defaultFeatureImage,
-                    new Point(0, 0),
-                    new Size(1, 1));
-            }
-
-            return f;
         }
 
         private Bitmap ToBitmap(byte[] tile)

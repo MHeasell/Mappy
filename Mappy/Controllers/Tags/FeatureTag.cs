@@ -1,20 +1,21 @@
 ﻿namespace Mappy.Controllers.Tags
 {
-    using Mappy.Collections;
+    using System;
+
     using Mappy.Models;
 
     public class FeatureTag : IMapItemTag
     {
-        public FeatureTag(GridCoordinates index)
+        public FeatureTag(Guid featureId)
         {
-            this.Index = index;
+            this.FeatureId = featureId;
         }
 
-        public GridCoordinates Index { get; private set; }
+        public Guid FeatureId { get; private set; }
 
         public void SelectItem(IMainModel model)
         {
-            model.SelectFeature(this.Index);
+            model.SelectFeature(this.FeatureId);
         }
     }
 }
