@@ -10,7 +10,7 @@
 
     public class MapModel : IMapModel
     {
-        private readonly SparseGrid<Guid> featureLocationIndex;
+        private readonly SparseGrid<FeatureInstance> featureLocationIndex;
 
         private readonly Dictionary<Guid, FeatureInstance> featureInstances = new Dictionary<Guid, FeatureInstance>();
 
@@ -35,7 +35,7 @@
             this.Attributes = attrs;
             this.FloatingTiles = new List<Positioned<IMapTile>>();
             this.Voids = new SparseGrid<bool>(this.Tile.HeightGrid.Width, this.Tile.HeightGrid.Height);
-            this.featureLocationIndex = new SparseGrid<Guid>(this.Tile.HeightGrid.Width, this.Tile.HeightGrid.Height);
+            this.featureLocationIndex = new SparseGrid<FeatureInstance>(this.Tile.HeightGrid.Width, this.Tile.HeightGrid.Height);
             this.Minimap = new Bitmap(252, 252);
             var g = Graphics.FromImage(this.Minimap);
             g.FillRectangle(Brushes.White, 0, 0, this.Minimap.Width, this.Minimap.Height);
@@ -86,7 +86,7 @@
             }
 
             this.featureInstances[instance.Id] = instance;
-            this.featureLocationIndex[instance.X, instance.Y] = instance.Id;
+            this.featureLocationIndex[instance.X, instance.Y] = instance;
         }
 
         public FeatureInstance GetFeatureInstance(Guid id)
@@ -96,13 +96,13 @@
 
         public FeatureInstance GetFeatureInstanceAt(int x, int y)
         {
-            Guid id;
-            if (!this.featureLocationIndex.TryGetValue(x, y, out id))
+            FeatureInstance inst;
+            if (!this.featureLocationIndex.TryGetValue(x, y, out inst))
             {
                 return null;
             }
 
-            return this.GetFeatureInstance(id);
+            return inst;
         }
 
         public void UpdateFeatureInstance(FeatureInstance instance)
