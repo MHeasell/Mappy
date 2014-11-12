@@ -57,6 +57,9 @@
 
         public Bitmap Minimap { get; set; }
 
+        /// <summary>
+        /// <see cref="IMapModel.FeatureGridWidth"/>
+        /// </summary>
         public int FeatureGridWidth
         {
             get
@@ -65,6 +68,9 @@
             }
         }
 
+        /// <summary>
+        /// <see cref="IMapModel.FeatureGridHeight"/>
+        /// </summary>
         public int FeatureGridHeight
         {
             get
@@ -73,6 +79,9 @@
             }
         }
 
+        /// <summary>
+        /// <see cref="IMapModel.AddFeatureInstance"/>
+        /// </summary>
         public void AddFeatureInstance(FeatureInstance instance)
         {
             if (this.featureInstances.ContainsKey(instance.Id))
@@ -89,11 +98,17 @@
             this.featureLocationIndex[instance.X, instance.Y] = instance;
         }
 
+        /// <summary>
+        /// <see cref="IMapModel.GetFeatureInstance"/>
+        /// </summary>
         public FeatureInstance GetFeatureInstance(Guid id)
         {
             return this.featureInstances[id];
         }
 
+        /// <summary>
+        /// <see cref="IMapModel.GetFeatureInstanceAt"/>
+        /// </summary>
         public FeatureInstance GetFeatureInstanceAt(int x, int y)
         {
             FeatureInstance inst;
@@ -105,6 +120,9 @@
             return inst;
         }
 
+        /// <summary>
+        /// <see cref="IMapModel.UpdateFeatureInstance"/>
+        /// </summary>
         public void UpdateFeatureInstance(FeatureInstance instance)
         {
             if (!this.featureInstances.ContainsKey(instance.Id))
@@ -116,6 +134,9 @@
             this.AddFeatureInstance(instance);
         }
 
+        /// <summary>
+        /// <see cref="IMapModel.RemoveFeatureInstance"/>
+        /// </summary>
         public void RemoveFeatureInstance(Guid id)
         {
             if (!this.featureInstances.ContainsKey(id))
@@ -128,11 +149,17 @@
             this.featureLocationIndex.Remove(inst.X, inst.Y);
         }
 
+        /// <summary>
+        /// <see cref="IMapModel.HasFeatureInstanceAt"/>
+        /// </summary>
         public bool HasFeatureInstanceAt(int x, int y)
         {
             return this.featureLocationIndex.HasValue(x, y);
         }
 
+        /// <summary>
+        /// <see cref="IMapModel.EnumerateFeatureInstances"/>
+        /// </summary>
         public IEnumerable<FeatureInstance> EnumerateFeatureInstances()
         {
             return this.featureInstances.Values;
