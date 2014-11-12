@@ -663,51 +663,43 @@
 
         public void CopySelectionToClipboard()
         {
-            if (!this.SelectedTile.HasValue)
-            {
-                return;
-            }
-
-            var tile = this.FloatingTiles[this.SelectedTile.Value].Item;
-
-            Clipboard.SetData(DataFormats.Serializable, tile);
+            this.TryCopyToClipboard();
         }
 
         public void CutSelectionToClipboard()
         {
-            if (!this.SelectedTile.HasValue)
+            if (this.TryCopyToClipboard())
             {
-                return;
+                this.DeleteSelection();
             }
-
-            this.CopySelectionToClipboard();
-            this.DeleteSelection();
         }
 
         public void PasteFromClipboard()
         {
-            var data = Clipboard.GetData(DataFormats.Serializable) as IMapTile;
-            if (data == null)
-            {
-                return;
-            }
-
             if (this.Map == null)
             {
                 return;
             }
 
-            DeduplicateTiles(data.TileGrid);
+            var data = Clipboard.GetData(DataFormats.Serializable);
+            if (data == null)
+            {
+                return;
+            }
 
-            var normX = this.ViewportRectangle.X + (this.ViewportRectangle.Width / 2.0);
-            var normY = this.ViewportRectangle.Y + (this.ViewportRectangle.Height / 2.0);
-            int x = (int)(this.MapWidth * normX);
-            int y = (int)(this.MapHeight * normY);
-
-            x -= data.TileGrid.Width / 2;
-            y -= data.TileGrid.Height / 2;
-
-            this.AddAndSelectTile(data, x, y);
+            var tile = data as IMapTile;
+            if (tile != null)
+            {
+                this.PasteMapTile(tile);
+            }
+            else
+            {
+                var record = data as FeatureClipboardRecord;
+                if (record != null)
+                {
+                    this.PasteFeature(record);
+                }
+            }
         }
 
         public Point? GetStartPosition(int index)
@@ -869,6 +861,57 @@
             {
                 tiles[i] = Globals.TileCache.GetOrAddBitmap(tiles[i]);
             }
+        }
+
+        private bool TryCopyToClipboard()
+        {
+            if (this.Map == null)
+            {
+                return false;
+            }
+
+            if (this.SelectedFeatures.Count > 0)
+            {
+                var id = this.SelectedFeatures.First();
+                var inst = this.Map.GetFeatureInstance(id);
+                var rec = new FeatureClipboardRecord(inst.FeatureName);
+                Clipboard.SetData(DataFormats.Serializable, rec);
+                return true;
+            }
+
+            if (this.SelectedTile.HasValue)
+            {
+                var tile = this.FloatingTiles[this.SelectedTile.Value].Item;
+                Clipboard.SetData(DataFormats.Serializable, tile);
+                return true;
+            }
+
+            return false;
+        }
+
+        private void PasteFeature(FeatureClipboardRecord feature)
+        {
+            var normX = this.ViewportRectangle.X + (this.ViewportRectangle.Width / 2.0);
+            var normY = this.ViewportRectangle.Y + (this.ViewportRectangle.Height / 2.0);
+            int x = (int)(this.MapWidth * 32 * normX);
+            int y = (int)(this.MapHeight * 32 * normY);
+
+            this.DragDropFeature(feature.FeatureName, x, y);
+        }
+
+        private void PasteMapTile(IMapTile tile)
+        {
+            DeduplicateTiles(tile.TileGrid);
+
+            var normX = this.ViewportRectangle.X + (this.ViewportRectangle.Width / 2.0);
+            var normY = this.ViewportRectangle.Y + (this.ViewportRectangle.Height / 2.0);
+            int x = (int)(this.MapWidth * normX);
+            int y = (int)(this.MapHeight * normY);
+
+            x -= tile.TileGrid.Width / 2;
+            y -= tile.TileGrid.Height / 2;
+
+            this.AddAndSelectTile(tile, x, y);
         }
 
         private void AddAndSelectTile(IMapTile tile, int x, int y)
@@ -1094,6 +1137,9 @@
         private void SelectedFeaturesChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             this.FireChange("SelectedFeatures");
+
+            this.UpdateCanCopy();
+            this.UpdateCanCut();
         }
 
         private void BandboxBehaviourPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -1110,8 +1156,8 @@
         {
             this.FireChange("SelectedTile");
 
-            this.CanCopy = this.SelectedTile.HasValue;
-            this.CanCut = this.SelectedTile.HasValue;
+            this.UpdateCanCopy();
+            this.UpdateCanCut();
         }
 
         private void MapSelectedStartPositionChanged(object sender, EventArgs eventArgs)
@@ -1122,6 +1168,16 @@
         private void MapSeaLevelChanged(object sender, EventArgs e)
         {
             this.FireChange("SeaLevel");
+        }
+
+        private void UpdateCanCopy()
+        {
+            this.CanCopy = this.SelectedTile.HasValue || this.SelectedFeatures.Count > 0;
+        }
+
+        private void UpdateCanCut()
+        {
+            this.CanCut = this.SelectedTile.HasValue || this.SelectedFeatures.Count > 0;
         }
     }
 }
