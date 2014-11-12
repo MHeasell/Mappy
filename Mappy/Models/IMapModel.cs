@@ -70,6 +70,10 @@
         /// <param name="id">The ID of the instance to remove.</param>
         void RemoveFeatureInstance(Guid id);
 
+        /// <returns>
+        /// An enumeration of all FeatureInstance objects
+        /// contained in this map.
+        /// </returns>
         IEnumerable<FeatureInstance> EnumerateFeatureInstances();
     }
 }
