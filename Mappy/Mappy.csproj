@@ -126,11 +126,8 @@
     <Compile Include="Operations\SelectionModel\SelectTileOperation.cs" />
     <Compile Include="Operations\SelectionModel\UpdateMinimapOperation.cs" />
     <Compile Include="Operations\SetSealevelOperation.cs" />
-    <Compile Include="Palette\CompositePalette.cs" />
     <Compile Include="Palette\IPalette.cs" />
-    <Compile Include="Palette\IReversePalette.cs" />
     <Compile Include="Palette\ArrayPalette.cs" />
-    <Compile Include="Palette\DictionaryReversePalette.cs" />
     <Compile Include="Palette\TransparencyMaskedPalette.cs" />
     <Compile Include="Presentation\IMapView.cs" />
     <Compile Include="Presentation\MapPresenter.cs" />

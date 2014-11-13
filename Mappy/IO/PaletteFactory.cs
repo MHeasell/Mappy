@@ -14,8 +14,10 @@ namespace Mappy.IO
     {
         private const int TAPaletteColorCount = 256;
 
-        public static CompositePalette FromPal(Stream file)
+        public static IPalette FromPal(Stream file)
         {
+            var palette = new ArrayPalette(TAPaletteColorCount);
+
             PaletteReader r = new PaletteReader(new StreamReader(file));
 
             if (r.ColorsCount != TAPaletteColorCount)
@@ -23,19 +25,12 @@ namespace Mappy.IO
                 throw new ArgumentException("Palette is not " + TAPaletteColorCount + " colors");
             }
 
-            Color[] forward = new Color[r.ColorsCount];
-            Dictionary<Color, int> reverse = new Dictionary<Color, int>();
-
             for (int i = 0; i < r.ColorsCount; i++)
             {
-                Color c = r.ReadColor();
-                forward[i] = c;
-                reverse[c] = i;
+                palette[i] = r.ReadColor();
             }
 
-            return new CompositePalette(
-                new ArrayPalette(forward),
-                new DictionaryReversePalette(reverse));
+            return palette;
         }
     }
 }

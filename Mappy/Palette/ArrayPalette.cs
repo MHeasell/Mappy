@@ -8,9 +8,12 @@
     {
         private readonly Color[] palette;
 
-        public ArrayPalette(Color[] colors)
+        private readonly Dictionary<Color, int> reversePalette;
+
+        public ArrayPalette(int size)
         {
-            this.palette = colors;
+            this.palette = new Color[size];
+            this.reversePalette = new Dictionary<Color, int>();
         }
 
         public int Count
@@ -21,12 +24,23 @@
             }
         }
 
-        Color IPalette.this[int index]
+        public Color this[int index]
         {
             get
             {
                 return this.palette[index];
             }
+
+            set
+            {
+                this.palette[index] = value;
+                this.reversePalette[value] = index;
+            }
+        }
+
+        public int LookUp(Color color)
+        {
+            return this.reversePalette[color];
         }
 
         public IEnumerator<Color> GetEnumerator()

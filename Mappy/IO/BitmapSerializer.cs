@@ -13,11 +13,11 @@ namespace Mappy.IO
     /// </summary>
     public class BitmapSerializer
     {
-        private readonly IReversePalette reversePalette;
+        private readonly IPalette palette;
 
-        public BitmapSerializer(IReversePalette reversePalette)
+        public BitmapSerializer(IPalette palette)
         {
-            this.reversePalette = reversePalette;
+            this.palette = palette;
         }
 
         public byte[] ToBytes(Bitmap bitmap)
@@ -44,7 +44,7 @@ namespace Mappy.IO
                 for (int i = 0; i < length; i++)
                 {
                     Color c = Color.FromArgb(pointer[i]);
-                    output.WriteByte((byte)this.reversePalette[c]);
+                    output.WriteByte((byte)this.palette.LookUp(c));
                 }
             }
 

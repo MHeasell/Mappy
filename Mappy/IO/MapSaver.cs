@@ -15,18 +15,18 @@
     /// </summary>
     public class MapSaver
     {
-        private readonly IReversePalette reversePalette;
+        private readonly IPalette palette;
 
-        public MapSaver(IReversePalette reversePalette)
+        public MapSaver(IPalette palette)
         {
-            this.reversePalette = reversePalette;
+            this.palette = palette;
         }
 
         public void SaveTnt(IMapModel map, string filename)
         {
             using (var s = new TntWriter(File.Create(filename)))
             {
-                s.WriteTnt(new MapModelTntAdapter(map, this.reversePalette));
+                s.WriteTnt(new MapModelTntAdapter(map, this.palette));
             }
         }
 
@@ -47,7 +47,7 @@
             {
                 using (var s = new TntWriter(File.Create(tmpTntName)))
                 {
-                    s.WriteTnt(new MapModelTntAdapter(map, this.reversePalette));
+                    s.WriteTnt(new MapModelTntAdapter(map, this.palette));
                 }
 
                 using (Stream s = File.Create(tmpOtaName))

@@ -29,14 +29,14 @@
 
         private readonly BitmapSerializer bitmapSerializer;
 
-        public MapModelTntAdapter(IMapModel model, IReversePalette reversePalette)
+        public MapModelTntAdapter(IMapModel model, IPalette palette)
         {
             this.model = model;
             this.tiles = Util.GetUsedTiles(model.Tile).ToArray();
             this.reverseTiles = Util.ReverseMapping(this.tiles);
             this.features = model.EnumerateFeatureInstances().Select(x => x.FeatureName).Distinct().ToArray();
             this.reverseFeatures = Util.ReverseMapping(this.features);
-            this.bitmapSerializer = new BitmapSerializer(reversePalette);
+            this.bitmapSerializer = new BitmapSerializer(palette);
         }
 
         public int DataWidth

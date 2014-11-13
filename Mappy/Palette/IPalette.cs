@@ -8,5 +8,7 @@
         int Count { get; }
 
         Color this[int index] { get; }
+
+        int LookUp(Color color);
     }
 }

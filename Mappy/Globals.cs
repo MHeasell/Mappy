@@ -10,8 +10,6 @@ namespace Mappy
     {
         public static readonly IPalette Palette;
 
-        public static readonly IReversePalette ReversePalette;
-
         public static readonly BitmapCache TileCache;
 
         public static readonly Bitmap DefaultTile;
@@ -20,9 +18,7 @@ namespace Mappy
         {
             using (Stream s = new MemoryStream(Mappy.Properties.Resources.TAPalette))
             {
-                var palette = PaletteFactory.FromPal(s);
-                Palette = palette.ForwardPalette;
-                ReversePalette = palette.ReversePalette;
+                Palette = PaletteFactory.FromPal(s);
             }
 
             TileCache = new BitmapCache();

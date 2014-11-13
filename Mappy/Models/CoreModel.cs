@@ -85,7 +85,7 @@
             this.sectionFactory = new SectionFactory(Globals.Palette);
             this.mapModelFactory = new MapModelFactory(Globals.Palette);
 
-            this.mapSaver = new MapSaver(Globals.ReversePalette);
+            this.mapSaver = new MapSaver(Globals.Palette);
 
             // hook up undoManager
             this.undoManager.CanUndoChanged += this.CanUndoChanged;
