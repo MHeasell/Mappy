@@ -1,30 +1,20 @@
 ﻿namespace Mappy.UI.Forms
 {
     using System;
-    using System.ComponentModel;
     using System.Windows.Forms;
 
     using Mappy.Views;
 
     public partial class ProgressForm : Form, IProgressView
     {
+        private bool okayToClose;
+
         public ProgressForm()
         {
             this.InitializeComponent();
         }
 
-        public event EventHandler CancelPressed
-        {
-            add
-            {
-                this.button1.Click += value;
-            }
-
-            remove
-            {
-                this.button1.Click -= value;
-            }
-        }
+        public event EventHandler CancelPressed;
 
         public string Title
         {
@@ -68,6 +58,35 @@
         public void Display()
         {
             this.ShowDialog();
+        }
+
+        void IProgressView.Close()
+        {
+            this.okayToClose = true;
+            this.Close();
+        }
+
+        private void OnCancelPressed()
+        {
+            EventHandler h = this.CancelPressed;
+            if (h != null)
+            {
+                h(this, EventArgs.Empty);
+            }
+        }
+
+        private void ProgressFormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing && !this.okayToClose)
+            {
+                this.OnCancelPressed();
+                e.Cancel = true;
+            }
+        }
+
+        private void CancelButtonClick(object sender, EventArgs e)
+        {
+            this.OnCancelPressed();
         }
     }
 }
