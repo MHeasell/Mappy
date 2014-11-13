@@ -64,5 +64,7 @@
         void Close();
 
         void ShowError(string message);
+
+        IProgressView CreateProgressView();
     }
 }

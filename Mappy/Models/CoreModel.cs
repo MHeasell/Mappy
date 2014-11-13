@@ -781,6 +781,12 @@
             }
         }
 
+        public void SetMinimap(Bitmap minimap)
+        {
+            var op = new UpdateMinimapOperation(this.Map, minimap);
+            this.undoManager.Execute(op);
+        }
+
         public void RefreshMinimap()
         {
             Bitmap minimap;

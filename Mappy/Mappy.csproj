@@ -200,6 +200,12 @@
     <Compile Include="Operations\MoveTileOperation.cs" />
     <Compile Include="Operations\OperationFactory.cs" />
     <Compile Include="Operations\RemoveTileOperation.cs" />
+    <Compile Include="UI\Forms\ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\ProgressForm.Designer.cs">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Painters\GridPainter.cs" />
     <Compile Include="Util\ImageSampling\BilinearWrapper.cs" />
     <Compile Include="Util\ImageSampling\IPixelImage.cs" />
@@ -250,6 +256,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Operations\OperationManager.cs" />
+    <Compile Include="Views\IProgressView.cs" />
     <Compile Include="Views\MinimapMoveEventArgs.cs" />
     <EmbeddedResource Include="UI\Controls\FeatureView.resx">
       <DependentUpon>FeatureView.cs</DependentUpon>
@@ -288,6 +295,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\ProgressForm.resx">
+      <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\AssemblyInfo.cs.tmpl" />

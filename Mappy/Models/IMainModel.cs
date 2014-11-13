@@ -115,6 +115,8 @@ namespace Mappy.Models
 
         void OpenHapi(string archivePath, string filename, bool readOnly = false);
 
+        void SetMinimap(Bitmap minimap);
+
         void RefreshMinimap();
 
         void RefreshMinimapHighQuality();

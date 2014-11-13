@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Drawing;
     using System.Globalization;
     using System.Windows.Forms;
@@ -376,6 +377,13 @@
         public void ShowError(string message)
         {
             MessageBox.Show(this, message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        public IProgressView CreateProgressView()
+        {
+            var dlg = new ProgressForm();
+            dlg.Owner = this;
+            return dlg;
         }
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)

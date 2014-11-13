@@ -183,7 +183,32 @@
 
         public void GenerateMinimapHiqhQualityPressed(object sender, EventArgs e)
         {
-            this.model.RefreshMinimapHighQuality();
+            if (this.model.Map == null)
+            {
+                return;
+            }
+
+            var worker = Mappy.Util.Util.RenderMinimapWorker();
+
+            var dlg = this.view.CreateProgressView();
+            dlg.Title = "Generating Minimap";
+            dlg.MessageText = "Generating high quality minimap...";
+
+            dlg.CancelPressed += (o, args) => worker.CancelAsync();
+            worker.ProgressChanged += (o, args) => dlg.Progress = args.ProgressPercentage;
+            worker.RunWorkerCompleted += delegate(object o, RunWorkerCompletedEventArgs args)
+                {
+                    if (!args.Cancelled)
+                    {
+                        var img = (Bitmap)args.Result;
+                        this.model.SetMinimap(img);
+                    }
+
+                    dlg.Close();
+                };
+
+            worker.RunWorkerAsync(this.model.Map);
+            dlg.Display();
         }
 
         public void SetGridSize(int size)

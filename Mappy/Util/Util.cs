@@ -2,6 +2,7 @@ namespace Mappy.Util
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Drawing;
     using System.Linq;
 
@@ -9,8 +10,11 @@ namespace Mappy.Util
     using Geometry;
 
     using Mappy.Collections;
+    using Mappy.Models;
     using Mappy.Properties;
     using Mappy.Util.ImageSampling;
+
+    using Point = System.Drawing.Point;
 
     public static class Util
     {
@@ -101,6 +105,59 @@ namespace Mappy.Util
             }
 
             return mapping;
+        }
+
+        public static BackgroundWorker RenderMinimapWorker()
+        {
+            var worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.DoWork += delegate(object sender, DoWorkEventArgs args)
+                {
+                    var w = (BackgroundWorker)sender;
+                    var m = (IMapModel)args.Argument;
+
+                    using (var map = new MapPixelImageAdapter(m.Tile.TileGrid))
+                    {
+                        int width, height;
+
+                        if (map.Width > map.Height)
+                        {
+                            width = 252;
+                            height = (int)(252 * (map.Height / (float)map.Width));
+                        }
+                        else
+                        {
+                            height = 252;
+                            width = (int)(252 * (map.Width / (float)map.Height));
+                        }
+
+                        var wrapper = new BilinearWrapper(map, width, height);
+
+                        Bitmap b = new Bitmap(wrapper.Width, wrapper.Height);
+
+                        for (int y = 0; y < wrapper.Height; y++)
+                        {
+                            if (w.CancellationPending)
+                            {
+                                args.Cancel = true;
+                                return;
+                            }
+
+                            for (int x = 0; x < wrapper.Width; x++)
+                            {
+                                b.SetPixel(x, y, wrapper[x, y]);
+                            }
+
+                            int percentComplete = ((y + 1) * 100) / wrapper.Height;
+
+                            w.ReportProgress(percentComplete);
+                        }
+
+                        args.Result = b;
+                    }
+                };
+            return worker;
         }
 
         public static Bitmap ToBitmap(IPixelImage map)
