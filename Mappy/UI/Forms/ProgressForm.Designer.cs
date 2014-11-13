@@ -76,6 +76,8 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.progressBar1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ProgressForm";
             this.Text = "Progress";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ProgressFormClosing);
