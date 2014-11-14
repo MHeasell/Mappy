@@ -128,13 +128,12 @@
                         this.Map.SelectedTileChanged += this.MapSelectedTileChanged;
                         this.Map.SelectedFeatures.CollectionChanged += this.SelectedFeaturesChanged;
 
-                        this.Map.MinimapChanged += this.MapOnMinimapChanged;
+                        this.Map.PropertyChanged += this.MapOnPropertyChanged;
 
                         this.Map.FloatingTiles.ListChanged += this.FloatingTilesOnListChanged;
                         this.Map.Tile.TileGridChanged += this.TileOnTileGridChanged;
                         this.Map.Tile.HeightGridChanged += this.TileOnHeightGridChanged;
                         this.Map.Attributes.StartPositionChanged += this.AttributesOnStartPositionChanged;
-                        this.Map.SeaLevelChanged += this.MapSeaLevelChanged;
                         this.IsFileOpen = true;
                     }
 
@@ -1099,11 +1098,6 @@
             this.IsDirty = !this.undoManager.IsMarked;
         }
 
-        private void MapOnMinimapChanged(object sender, EventArgs e)
-        {
-            this.MinimapImage = this.Map.Minimap;
-        }
-
         private void TileOnHeightGridChanged(object sender, GridEventArgs e)
         {
             var h = this.BaseTileHeightChanged;
@@ -1171,11 +1165,6 @@
             this.FireChange("SelectedStartPosition");
         }
 
-        private void MapSeaLevelChanged(object sender, EventArgs e)
-        {
-            this.FireChange("SeaLevel");
-        }
-
         private void UpdateCanCopy()
         {
             this.CanCopy = this.SelectedTile.HasValue || this.SelectedFeatures.Count > 0;
@@ -1184,6 +1173,19 @@
         private void UpdateCanCut()
         {
             this.CanCut = this.SelectedTile.HasValue || this.SelectedFeatures.Count > 0;
+        }
+
+        private void MapOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            switch (propertyChangedEventArgs.PropertyName)
+            {
+                case "Minimap":
+                    this.MinimapImage = this.Map.Minimap;
+                    break;
+                case "SeaLevel":
+                    this.FireChange(propertyChangedEventArgs.PropertyName);
+                    break;
+            }
         }
     }
 }

@@ -6,12 +6,8 @@
 
     using Mappy.Collections;
 
-    public interface IBindingMapModel : IMapModel
+    public interface IBindingMapModel : IMapModel, INotifyPropertyChanged
     {
-        event EventHandler MinimapChanged;
-
-        event EventHandler SeaLevelChanged;
-
         event EventHandler<FeatureInstanceEventArgs> FeatureInstanceChanged;
 
         new BindingMapTile Tile { get; }

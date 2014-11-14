@@ -8,8 +8,9 @@
 
     using Mappy.Collections;
     using Mappy.Data;
+    using Mappy.Util;
 
-    public class SelectionMapModel : ISelectionModel
+    public class SelectionMapModel : Notifier, ISelectionModel
     {
         private readonly IBindingMapModel model;
 
@@ -23,6 +24,8 @@
         {
             this.model = model;
 
+            model.PropertyChanged += this.ModelPropertyChanged;
+
             model.FloatingTiles.ListChanged += this.FloatingTilesListChanged;
 
             model.FeatureInstanceChanged += this.OnFeatureInstanceChanged;
@@ -31,32 +34,6 @@
         public event EventHandler SelectedTileChanged;
 
         public event EventHandler SelectedStartPositionChanged;
-
-        public event EventHandler MinimapChanged
-        {
-            add
-            {
-                this.model.MinimapChanged += value;
-            }
-
-            remove
-            {
-                this.model.MinimapChanged -= value;
-            }
-        }
-
-        public event EventHandler SeaLevelChanged
-        {
-            add
-            {
-                this.model.SeaLevelChanged += value;
-            }
-
-            remove
-            {
-                this.model.SeaLevelChanged -= value;
-            }
-        }
 
         public event EventHandler<FeatureInstanceEventArgs> FeatureInstanceChanged
         {
@@ -458,6 +435,17 @@
             {
                 case FeatureInstanceEventArgs.ActionType.Remove:
                     this.SelectedFeatures.Remove(e.FeatureInstanceId);
+                    break;
+            }
+        }
+
+        private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "Minimap":
+                case "SeaLevel":
+                    this.FireChange(e.PropertyName);
                     break;
             }
         }

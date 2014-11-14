@@ -7,8 +7,9 @@
     using Data;
 
     using Mappy.Collections;
+    using Mappy.Util;
 
-    public class BindingMapModel : IBindingMapModel
+    public class BindingMapModel : Notifier, IBindingMapModel
     {
         private readonly IMapModel model;
 
@@ -22,10 +23,6 @@
         }
 
         public event EventHandler<FeatureInstanceEventArgs> FeatureInstanceChanged;
-
-        public event EventHandler MinimapChanged;
-
-        public event EventHandler SeaLevelChanged;
 
         public BindingMapTile Tile
         {
@@ -54,8 +51,11 @@
 
             set
             {
-                this.model.Minimap = value;
-                this.OnMinimapChanged();
+                if (this.model.Minimap != value)
+                {
+                    this.model.Minimap = value;
+                    this.FireChange("Minimap");
+                }
             }
         }
 
@@ -68,8 +68,11 @@
 
             set
             {
-                this.model.SeaLevel = value;
-                this.OnSeaLevelChanged();
+                if (this.model.SeaLevel != value)
+                {
+                    this.model.SeaLevel = value;
+                    this.FireChange("SeaLevel");
+                }
             }
         }
 
@@ -162,24 +165,6 @@
             if (h != null)
             {
                 h(this, e);
-            }
-        }
-
-        private void OnSeaLevelChanged()
-        {
-            EventHandler h = this.SeaLevelChanged;
-            if (h != null)
-            {
-                h(this, EventArgs.Empty);
-            }
-        }
-
-        private void OnMinimapChanged()
-        {
-            EventHandler h = this.MinimapChanged;
-            if (h != null)
-            {
-                h(this, EventArgs.Empty);
             }
         }
     }
