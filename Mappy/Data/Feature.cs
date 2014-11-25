@@ -36,11 +36,6 @@ namespace Mappy.Data
 
         public Bitmap Image { get; set; }
 
-        public void Draw(Graphics g, Rectangle clipRectangle)
-        {
-            g.DrawImageUnscaled(this.Image, this.Offset);
-        }
-
         public Rectangle GetDrawBounds(IGrid<int> heightmap, int xPos, int yPos)
         {
             int accum = 0;
