@@ -90,6 +90,7 @@
     <Compile Include="IO\BitmapDeserializer.cs" />
     <Compile Include="IO\BitmapCache.cs" />
     <Compile Include="IO\BitmapSerializer.cs" />
+    <Compile Include="IO\FeatureLoadingUtils.cs" />
     <Compile Include="IO\MapModelFactory.cs" />
     <Compile Include="IO\MapModelTntAdapter.cs" />
     <Compile Include="IO\MapSaver.cs" />

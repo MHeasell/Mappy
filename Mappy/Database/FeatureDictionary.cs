@@ -3,6 +3,7 @@
     using System.Collections.Generic;
 
     using Mappy.Data;
+    using Mappy.IO;
     using Mappy.Palette;
 
     /// <summary>
@@ -14,7 +15,7 @@
 
         public FeatureDictionary(IPalette palette)
         {
-            this.records = LoadingUtils.LoadFeatures(palette);
+            this.records = FeatureLoadingUtils.LoadFeatures(palette);
         }
 
         public Feature this[string name]
