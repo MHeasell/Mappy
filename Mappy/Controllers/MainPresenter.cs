@@ -57,8 +57,10 @@
             var worker = FeatureLoadingUtils.LoadFeaturesBackgroundWorker();
 
             var dlg = this.view.CreateProgressView();
-            dlg.Title = "Loading";
+            dlg.Title = "Loading Mappy";
             dlg.MessageText = "Loading features...";
+            dlg.ShowProgress = false;
+            dlg.CancelEnabled = false;
 
             worker.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage;
             worker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
