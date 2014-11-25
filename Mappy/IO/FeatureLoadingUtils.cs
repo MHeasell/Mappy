@@ -85,7 +85,7 @@
         /// <returns>A mapping of feature name to image</returns>
         private static IDictionary<string, GafFrame> LoadFeatureBitmaps(IDictionary<string, TdfNode> features)
         {
-            IDictionary<string, IList<TdfNode>> filenameFeatureMap = GroupByAnimFilename(features);
+            IDictionary<string, IList<TdfNode>> filenameFeatureMap = GroupByField(features, "filename");
 
             Dictionary<string, GafFrame> bitmaps = new Dictionary<string, GafFrame>();
 
@@ -227,38 +227,6 @@
             }
 
             return features;
-        }
-
-        private static IDictionary<string, IList<TdfNode>> GroupByAnimFilename(IDictionary<string, TdfNode> features)
-        {
-            Dictionary<string, IList<TdfNode>> filenameFeatureMap = new Dictionary<string, IList<TdfNode>>();
-            foreach (var e in features)
-            {
-                string filename;
-
-                // skip features with no filename entry
-                if (!e.Value.Entries.TryGetValue("filename", out filename))
-                {
-                    continue;
-                }
-
-                // normalize filenames
-                filename = filename.ToLower();
-
-                // try to retrieve existing list
-                IList<TdfNode> l;
-                if (!filenameFeatureMap.TryGetValue(filename, out l))
-                {
-                    // create one if it doesn't exist
-                    l = new List<TdfNode>();
-                    filenameFeatureMap[filename] = l;
-                }
-
-                // add this feature to the list for that filename
-                l.Add(e.Value);
-            }
-
-            return filenameFeatureMap;
         }
 
         private static IDictionary<string, IList<TdfNode>> GroupByField(IDictionary<string, TdfNode> features, string field)
