@@ -11,19 +11,6 @@ namespace Mappy.Data
     /// </summary>
     public class Feature
     {
-        public Feature(string name, Bitmap image)
-            : this(name, image, new Point(0, 0), new Size(1, 1))
-        {
-        }
-
-        public Feature(string name, Bitmap image, Point offset, Size footprint)
-        {
-            this.Name = name;
-            this.Image = image;
-            this.Offset = offset;
-            this.Footprint = footprint;
-        }
-
         public string Name { get; set; }
 
         public string World { get; set; }

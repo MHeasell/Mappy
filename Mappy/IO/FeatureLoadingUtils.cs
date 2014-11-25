@@ -59,18 +59,32 @@
                         image = deserializer.Deserialize(frame.Data, frame.Width, frame.Height);
                     }
 
-                    Feature f = new Feature(e.Key, image, new Point(frame.OffsetX, frame.OffsetY), new Size(footX, footY));
-                    f.World = e.Value.Entries["world"];
-                    f.Category = e.Value.Entries["category"];
+                    Feature f = new Feature
+                        {
+                            Name = e.Key,
+                            Image = image,
+                            Offset = new Point(frame.OffsetX, frame.OffsetY),
+                            Footprint = new Size(footX, footY),
+                            World = e.Value.Entries["world"],
+                            Category = e.Value.Entries["category"],
+                        };
+
                     features[e.Key] = f;
                 }
                 else if (objects.TryGetValue(e.Key, out render))
                 {
                     int footX = Convert.ToInt32(e.Value.Entries["footprintx"]);
                     int footY = Convert.ToInt32(e.Value.Entries["footprintz"]);
-                    Feature f = new Feature(e.Key, render.Bitmap, new Point(-render.OffsetX, -render.OffsetY), new Size(footX, footY));
-                    f.World = e.Value.Entries["world"];
-                    f.Category = e.Value.Entries["category"];
+                    Feature f = new Feature
+                        {
+                            Name = e.Key,
+                            Image = render.Bitmap,
+                            Offset = new Point(-render.OffsetX, -render.OffsetY),
+                            Footprint = new Size(footX, footY),
+                            World = e.Value.Entries["world"],
+                            Category = e.Value.Entries["category"],
+                        };
+
                     features[e.Key] = f;
                 }
             }

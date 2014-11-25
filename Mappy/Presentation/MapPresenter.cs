@@ -24,7 +24,13 @@
 
         private static readonly IDrawable[] StartPositionImages = new IDrawable[10];
 
-        private static readonly Feature DefaultFeatureRecord = new Feature("default", Mappy.Properties.Resources.nofeature, new Point(0, 0), new Size(1, 1));
+        private static readonly Feature DefaultFeatureRecord = new Feature
+            {
+                Name = "default",
+                Offset = new Point(0, 0),
+                Footprint = new Size(1, 1),
+                Image = Mappy.Properties.Resources.nofeature
+            };
 
         private readonly IMapView view;
 
