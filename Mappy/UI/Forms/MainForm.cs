@@ -41,6 +41,8 @@
             minimapForm.Owner = this;
             var minimapPresenter = new MinimapPresenter(minimapForm, this, model);
             minimapForm.Presenter = minimapPresenter;
+
+            this.Presenter.Initialize();
         }
 
         public MainPresenter Presenter { get; set; }

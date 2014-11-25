@@ -13,6 +13,8 @@
 
         bool TryGetFeature(string name, out Feature feature);
 
+        void AddFeature(Feature feature);
+
         IEnumerable<Feature> EnumerateAll();
     }
 }

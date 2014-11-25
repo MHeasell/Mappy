@@ -3,19 +3,17 @@
     using System.Collections.Generic;
 
     using Mappy.Data;
-    using Mappy.IO;
-    using Mappy.Palette;
 
     /// <summary>
     /// Features store backed by a dictionary
     /// </summary>
     public class FeatureDictionary : IFeatureDatabase
     {
-        private readonly IDictionary<string, Feature> records;
+        private readonly Dictionary<string, Feature> records;
 
-        public FeatureDictionary(IPalette palette)
+        public FeatureDictionary()
         {
-            this.records = FeatureLoadingUtils.LoadFeatures(palette);
+            this.records = new Dictionary<string, Feature>();
         }
 
         public Feature this[string name]
@@ -24,6 +22,11 @@
             {
                 return this.records[name];
             }
+        }
+
+        public void AddFeature(Feature f)
+        {
+            this.records[f.Name] = f;
         }
 
         public bool TryGetFeature(string name, out Feature feature)
