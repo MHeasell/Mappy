@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -16,6 +17,17 @@
 
     public class FeatureLoadingUtils
     {
+        public static BackgroundWorker LoadFeaturesBackgroundWorker()
+        {
+            var bg = new BackgroundWorker();
+            bg.DoWork += delegate(object sender, DoWorkEventArgs args)
+                {
+                    var p = (IPalette)args.Argument;
+                    args.Result = LoadFeatures(p);
+                };
+            return bg;
+        }
+
         /// <summary>
         /// Loads the database of features from disk
         /// </summary>
