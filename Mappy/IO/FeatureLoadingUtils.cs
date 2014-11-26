@@ -119,11 +119,6 @@
                 .GroupBy(x => x.AnimFileName.ToLower())
                 .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList());
 
-            if (MappySettings.Settings.SearchPaths == null)
-            {
-                yield break;
-            }
-
             foreach (string file in LoadingUtils.EnumerateSearchHpis())
             {
                 foreach (var e in LoadFeatureBitmapsFromHapi(file, filenameMap))
@@ -138,11 +133,6 @@
             var objectMap = features
                 .GroupBy(x => x.ObjectName.ToLower())
                 .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList());
-
-            if (MappySettings.Settings.SearchPaths == null)
-            {
-                yield break;
-            }
 
             foreach (string file in LoadingUtils.EnumerateSearchHpis())
             {
