@@ -80,7 +80,7 @@
             this.bandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
 
             this.featureRecords = new FeatureDictionary();
-            this.sections = SectionLoadingUtils.LoadSections(Globals.Palette);
+            this.sections = new List<Section>();
 
             this.sectionFactory = new SectionFactory(Globals.Palette);
             this.mapModelFactory = new MapModelFactory(Globals.Palette);

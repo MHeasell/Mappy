@@ -39,8 +39,6 @@
             this.model = model;
             this.minimapModel = model;
 
-            this.view.Sections = this.model.Sections;
-
             this.view.UndoEnabled = this.model.CanUndo;
             this.view.RedoEnabled = this.model.CanRedo;
 
@@ -54,6 +52,16 @@
 
         public void Initialize()
         {
+            // load sections
+            var sections = SectionLoadingUtils.LoadSections(Globals.Palette);
+            foreach (var s in sections)
+            {
+                this.model.Sections.Add(s);
+            }
+
+            this.view.Sections = this.model.Sections;
+
+            // load features in background
             var worker = FeatureLoadingUtils.LoadFeaturesBackgroundWorker();
 
             var dlg = this.view.CreateProgressView();
