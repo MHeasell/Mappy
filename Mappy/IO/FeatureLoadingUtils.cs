@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -152,6 +153,8 @@
                 {
                     foreach (var objPath in h.GetFilesRecursive("objects3d").Select(x => x.Name))
                     {
+                        Debug.Assert(objPath != null, "Null path in HPI listing.");
+
                         var objName = Path.GetFileNameWithoutExtension(objPath).ToLowerInvariant();
 
                         IList<FeatureRecord> records;
@@ -180,6 +183,8 @@
             // for each anim file in the HPI
             foreach (string anim in hapi.GetFilesRecursive("anims").Select(x => x.Name))
             {
+                Debug.Assert(anim != null, "Null path in HPI listing.");
+
                 IList<FeatureRecord> records;
                 if (!filenameFeatureMap.TryGetValue(Path.GetFileNameWithoutExtension(anim).ToLower(), out records))
                 {
