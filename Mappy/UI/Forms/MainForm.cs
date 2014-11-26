@@ -9,7 +9,6 @@
     using Mappy.Controllers;
     using Mappy.Minimap;
     using Mappy.Models;
-    using Mappy.Presentation;
     using Mappy.Views;
 
     public partial class MainForm : Form, IMainView, IMinimapService
@@ -27,21 +26,6 @@
             // so we also listen for paint events from the child mapcontrol
             // to tell us when it was scrolled
             this.imageLayerView1.Paint += this.MapPanel1Paint;
-
-            CoreModel model = new CoreModel();
-
-            var mapPresenter = new MapPresenter(this.imageLayerView1, model);
-
-            new MapViewEventAdapter(this.imageLayerView1, mapPresenter);
-
-            this.Presenter = new MainPresenter(this, model);
-
-            var minimapForm = new MinimapForm();
-            minimapForm.Owner = this;
-            var minimapPresenter = new MinimapPresenter(minimapForm, this, model);
-            minimapForm.Presenter = minimapPresenter;
-
-            this.Presenter.Initialize();
         }
 
         public MainPresenter Presenter { get; set; }
@@ -545,6 +529,11 @@
         private void toolStripMenuItem16_Click(object sender, EventArgs e)
         {
             this.Presenter.CutToClipboard();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            this.Presenter.Initialize();
         }
     }
 }

@@ -45,6 +45,10 @@
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem16 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem15 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem11 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,20 +75,16 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.sectionView1 = new Mappy.UI.Controls.SectionView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.featureview1 = new Mappy.UI.Controls.FeatureView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.toolStripMenuItem14 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem15 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem16 = new System.Windows.Forms.ToolStripMenuItem();
             this.imageLayerView1 = new Mappy.UI.Controls.ImageLayerView();
-            this.sectionView1 = new Mappy.UI.Controls.SectionView();
-            this.featureview1 = new Mappy.UI.Controls.FeatureView();
-            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             this.menuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -230,6 +230,38 @@
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(247, 6);
+            // 
+            // toolStripMenuItem16
+            // 
+            this.toolStripMenuItem16.Enabled = false;
+            this.toolStripMenuItem16.Name = "toolStripMenuItem16";
+            this.toolStripMenuItem16.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.toolStripMenuItem16.Size = new System.Drawing.Size(250, 22);
+            this.toolStripMenuItem16.Text = "Cut";
+            this.toolStripMenuItem16.Click += new System.EventHandler(this.toolStripMenuItem16_Click);
+            // 
+            // toolStripMenuItem14
+            // 
+            this.toolStripMenuItem14.Enabled = false;
+            this.toolStripMenuItem14.Name = "toolStripMenuItem14";
+            this.toolStripMenuItem14.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.toolStripMenuItem14.Size = new System.Drawing.Size(250, 22);
+            this.toolStripMenuItem14.Text = "Copy";
+            this.toolStripMenuItem14.Click += new System.EventHandler(this.toolStripMenuItem14_Click);
+            // 
+            // toolStripMenuItem15
+            // 
+            this.toolStripMenuItem15.Enabled = false;
+            this.toolStripMenuItem15.Name = "toolStripMenuItem15";
+            this.toolStripMenuItem15.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.toolStripMenuItem15.Size = new System.Drawing.Size(250, 22);
+            this.toolStripMenuItem15.Text = "Paste";
+            this.toolStripMenuItem15.Click += new System.EventHandler(this.toolStripMenuItem15_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(247, 6);
             // 
             // toolStripMenuItem11
             // 
@@ -452,6 +484,16 @@
             this.tabPage1.Text = "Sections";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // sectionView1
+            // 
+            this.sectionView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sectionView1.Location = new System.Drawing.Point(3, 3);
+            this.sectionView1.Margin = new System.Windows.Forms.Padding(4);
+            this.sectionView1.Name = "sectionView1";
+            this.sectionView1.Sections = null;
+            this.sectionView1.Size = new System.Drawing.Size(201, 506);
+            this.sectionView1.TabIndex = 3;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.featureview1);
@@ -463,6 +505,16 @@
             this.tabPage2.Text = "Features";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // featureview1
+            // 
+            this.featureview1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.featureview1.Features = null;
+            this.featureview1.Location = new System.Drawing.Point(3, 3);
+            this.featureview1.Margin = new System.Windows.Forms.Padding(4);
+            this.featureview1.Name = "featureview1";
+            this.featureview1.Size = new System.Drawing.Size(201, 506);
+            this.featureview1.TabIndex = 0;
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.startPositionsView1);
@@ -473,6 +525,15 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Starts";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // startPositionsView1
+            // 
+            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
+            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
+            this.startPositionsView1.Name = "startPositionsView1";
+            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
+            this.startPositionsView1.TabIndex = 0;
             // 
             // tabPage4
             // 
@@ -526,38 +587,6 @@
             this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar1ValueChanged);
             this.trackBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar1_MouseUp);
             // 
-            // toolStripMenuItem14
-            // 
-            this.toolStripMenuItem14.Enabled = false;
-            this.toolStripMenuItem14.Name = "toolStripMenuItem14";
-            this.toolStripMenuItem14.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.toolStripMenuItem14.Size = new System.Drawing.Size(250, 22);
-            this.toolStripMenuItem14.Text = "Copy";
-            this.toolStripMenuItem14.Click += new System.EventHandler(this.toolStripMenuItem14_Click);
-            // 
-            // toolStripMenuItem15
-            // 
-            this.toolStripMenuItem15.Enabled = false;
-            this.toolStripMenuItem15.Name = "toolStripMenuItem15";
-            this.toolStripMenuItem15.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.toolStripMenuItem15.Size = new System.Drawing.Size(250, 22);
-            this.toolStripMenuItem15.Text = "Paste";
-            this.toolStripMenuItem15.Click += new System.EventHandler(this.toolStripMenuItem15_Click);
-            // 
-            // toolStripSeparator9
-            // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(247, 6);
-            // 
-            // toolStripMenuItem16
-            // 
-            this.toolStripMenuItem16.Enabled = false;
-            this.toolStripMenuItem16.Name = "toolStripMenuItem16";
-            this.toolStripMenuItem16.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.toolStripMenuItem16.Size = new System.Drawing.Size(250, 22);
-            this.toolStripMenuItem16.Text = "Cut";
-            this.toolStripMenuItem16.Click += new System.EventHandler(this.toolStripMenuItem16_Click);
-            // 
             // imageLayerView1
             // 
             this.imageLayerView1.AllowDrop = true;
@@ -574,35 +603,6 @@
             this.imageLayerView1.Text = "imageLayerView1";
             this.imageLayerView1.SizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
             // 
-            // sectionView1
-            // 
-            this.sectionView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sectionView1.Location = new System.Drawing.Point(3, 3);
-            this.sectionView1.Margin = new System.Windows.Forms.Padding(4);
-            this.sectionView1.Name = "sectionView1";
-            this.sectionView1.Sections = null;
-            this.sectionView1.Size = new System.Drawing.Size(201, 506);
-            this.sectionView1.TabIndex = 3;
-            // 
-            // featureview1
-            // 
-            this.featureview1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.featureview1.Features = null;
-            this.featureview1.Location = new System.Drawing.Point(3, 3);
-            this.featureview1.Margin = new System.Windows.Forms.Padding(4);
-            this.featureview1.Name = "featureview1";
-            this.featureview1.Size = new System.Drawing.Size(201, 506);
-            this.featureview1.TabIndex = 0;
-            // 
-            // startPositionsView1
-            // 
-            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
-            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
-            this.startPositionsView1.Name = "startPositionsView1";
-            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
-            this.startPositionsView1.TabIndex = 0;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -615,6 +615,7 @@
             this.Name = "MainForm";
             this.Text = "Mappy";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1FormClosing);
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
@@ -674,7 +675,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem11;
         private System.Windows.Forms.TabPage tabPage3;
         private StartPositionsView startPositionsView1;
-        private ImageLayerView imageLayerView1;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
@@ -686,6 +686,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem15;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem16;
+        public ImageLayerView imageLayerView1;
     }
 }
 
