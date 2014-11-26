@@ -87,8 +87,8 @@
                 {
                     if (!args.Cancelled)
                     {
-                        var records = (IDictionary<string, Feature>)args.Result;
-                        foreach (var r in records.Values)
+                        var records = (IEnumerable<Feature>)args.Result;
+                        foreach (var r in records)
                         {
                             this.model.FeatureRecords.AddFeature(r);
                         }
