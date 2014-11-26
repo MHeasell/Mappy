@@ -177,8 +177,6 @@
 
         private static IEnumerable<KeyValuePair<string, GafFrame>> LoadFeatureBitmapsFromHapi(HpiReader hapi, IDictionary<string, IList<FeatureRecord>> filenameFeatureMap)
         {
-            Dictionary<string, GafFrame> bitmaps = new Dictionary<string, GafFrame>();
-
             // for each anim file in the HPI
             foreach (string anim in hapi.GetFilesRecursive("anims").Select(x => x.Name))
             {
@@ -218,8 +216,6 @@
 
         private static IEnumerable<FeatureRecord> LoadFeatureTdfs()
         {
-            Dictionary<string, TdfNode> features = new Dictionary<string, TdfNode>();
-
             foreach (string file in LoadingUtils.EnumerateSearchHpis())
             {
                 using (HpiReader h = new HpiReader(file))
@@ -234,7 +230,6 @@
 
         private static IEnumerable<FeatureRecord> LoadFeaturesFromHapi(HpiReader hapi)
         {
-            Dictionary<string, TdfNode> features = new Dictionary<string, TdfNode>();
             foreach (string feature in hapi.GetFilesRecursive("features").Select(x => x.Name))
             {
                 if (feature.EndsWith(".tdf", StringComparison.OrdinalIgnoreCase))
