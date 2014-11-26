@@ -54,12 +54,13 @@
         {
             var dlg = this.view.CreateProgressView();
             dlg.Title = "Loading Mappy";
-            dlg.ShowProgress = false;
-            dlg.CancelEnabled = false;
+            dlg.ShowProgress = true;
+            dlg.CancelEnabled = true;
 
             var sectionWorker = SectionLoadingUtils.LoadSectionsBackgroundWorker();
             var worker = FeatureLoadingUtils.LoadFeaturesBackgroundWorker();
 
+            sectionWorker.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage / 2;
             sectionWorker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
                 {
                     if (!args.Cancelled)
@@ -77,10 +78,11 @@
                     }
                     else
                     {
-                        dlg.Close();
+                        Application.Exit();
                     }
                 };
 
+            worker.ProgressChanged += (sender, args) => dlg.Progress = 50 + (args.ProgressPercentage / 2);
             worker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
                 {
                     if (!args.Cancelled)
@@ -92,9 +94,25 @@
                         }
 
                         this.view.Features = this.model.FeatureRecords.EnumerateAll().ToList();
+                        dlg.Close();
+                    }
+                    else
+                    {
+                        Application.Exit();
+                    }
+                };
+
+            dlg.CancelPressed += delegate
+                {
+                    if (sectionWorker.IsBusy)
+                    {
+                        sectionWorker.CancelAsync();
                     }
 
-                    dlg.Close();
+                    if (worker.IsBusy)
+                    {
+                        worker.CancelAsync();
+                    }
                 };
 
             dlg.MessageText = "Loading sections...";

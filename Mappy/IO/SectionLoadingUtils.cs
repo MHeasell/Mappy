@@ -16,14 +16,39 @@
         public static BackgroundWorker LoadSectionsBackgroundWorker()
         {
             var bg = new BackgroundWorker();
+
             bg.DoWork += delegate(object sender, DoWorkEventArgs args)
                 {
-                    var p = (IPalette)args.Argument;
-                    args.Result = LoadSections(p);
+                    var worker = (BackgroundWorker)sender;
+                    var palette = (IPalette)args.Argument;
+
+                    IList<Section> sections = new List<Section>();
+                    var hpis = LoadingUtils.EnumerateSearchHpis().ToList();
+
+                    int i = 0;
+                    int fileCount = 0;
+                    foreach (string file in hpis)
+                    {
+                        foreach (Section s in LoadSectionsFromHapi(file, palette))
+                        {
+                            if (worker.CancellationPending)
+                            {
+                                args.Cancel = true;
+                                return;
+                            }
+
+                            s.Id = i++;
+                            sections.Add(s);
+                        }
+
+                        worker.ReportProgress((++fileCount * 100) / hpis.Count);
+                    }
+
+                    args.Result = sections;
                 };
 
-            bg.WorkerSupportsCancellation = false;
-            bg.WorkerReportsProgress = false;
+            bg.WorkerSupportsCancellation = true;
+            bg.WorkerReportsProgress = true;
 
             return bg;
         }
