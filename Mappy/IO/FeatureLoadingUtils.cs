@@ -21,11 +21,87 @@
         public static BackgroundWorker LoadFeaturesBackgroundWorker()
         {
             var bg = new BackgroundWorker();
+
             bg.DoWork += delegate(object sender, DoWorkEventArgs args)
                 {
                     var p = (IPalette)args.Argument;
-                    args.Result = LoadFeatures(p).ToList();
+                    var worker = (BackgroundWorker)sender;
+                    var hpis = LoadingUtils.EnumerateSearchHpis().ToList();
+
+                    var records = new List<FeatureRecord>();
+                    var bitmaps = new Dictionary<string, GafFrame>();
+                    var renders = new Dictionary<string, OffsetBitmap>();
+
+                    // load records
+                    int fileCount = 0;
+                    foreach (string file in hpis)
+                    {
+                        if (worker.CancellationPending)
+                        {
+                            args.Cancel = true;
+                            return;
+                        }
+
+                        records.AddRange(LoadFeatureTdfsFromHapi(file));
+                        int progress = (++fileCount * 100) / hpis.Count;
+                        worker.ReportProgress((progress * 33) / 100);
+                    }
+
+                    // load bitmaps
+                    var filenameMap = records
+                        .GroupBy(x => x.AnimFileName.ToLower())
+                        .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList());
+                    fileCount = 0;
+                    foreach (string file in hpis)
+                    {
+                        if (worker.CancellationPending)
+                        {
+                            args.Cancel = true;
+                            return;
+                        }
+
+                        foreach (var e in LoadFeatureBitmapsFromHapi(file, filenameMap))
+                        {
+                            bitmaps[e.Key] = e.Value;
+                        }
+
+                        int progress = (++fileCount * 100) / hpis.Count;
+                        worker.ReportProgress(33 + ((progress * 33) / 100));
+                    }
+
+                    // load renders
+                    var objectMap = records
+                        .GroupBy(x => x.ObjectName.ToLower())
+                        .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList());
+                    fileCount = 0;
+                    foreach (string file in hpis)
+                    {
+                        if (worker.CancellationPending)
+                        {
+                            args.Cancel = true;
+                            return;
+                        }
+
+                        foreach (var item in LoadFeatureRendersFromHapi(file, objectMap))
+                        {
+                            renders[item.Key] = item.Value;
+                        }
+
+                        int progress = (++fileCount * 100) / hpis.Count;
+                        worker.ReportProgress(66 + ((progress * 33) / 100));
+                    }
+
+                    // last 1%, create the feature objects
+                    var features = LoadFeatureObjects(records, bitmaps, renders, p);
+
+                    worker.ReportProgress(100);
+
+                    args.Result = features.ToList();
                 };
+
+            bg.WorkerReportsProgress = true;
+            bg.WorkerSupportsCancellation = true;
+
             return bg;
         }
 
