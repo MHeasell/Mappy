@@ -136,30 +136,46 @@
 
             foreach (string file in LoadingUtils.EnumerateSearchHpis())
             {
-                using (HpiReader h = new HpiReader(file))
+                foreach (var item in LoadFeatureRendersFromHapi(file, objectMap))
                 {
-                    foreach (var objPath in h.GetFilesRecursive("objects3d").Select(x => x.Name))
+                    yield return item;
+                }
+            }
+        }
+
+        private static IEnumerable<KeyValuePair<string, OffsetBitmap>> LoadFeatureRendersFromHapi(string file, IDictionary<string, IList<FeatureRecord>> objectMap)
+        {
+            using (HpiReader h = new HpiReader(file))
+            {
+                foreach (var item in LoadFeatureRendersFromHapi(h, objectMap))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        private static IEnumerable<KeyValuePair<string, OffsetBitmap>> LoadFeatureRendersFromHapi(HpiReader h, IDictionary<string, IList<FeatureRecord>> objectMap)
+        {
+            foreach (var objPath in h.GetFilesRecursive("objects3d").Select(x => x.Name))
+            {
+                Debug.Assert(objPath != null, "Null path in HPI listing.");
+
+                var objName = Path.GetFileNameWithoutExtension(objPath).ToLowerInvariant();
+
+                IList<FeatureRecord> records;
+                if (!objectMap.TryGetValue(objName, out records))
+                {
+                    continue;
+                }
+
+                using (var b = h.ReadFile(objPath))
+                {
+                    var r = new ModelEdgeReader();
+                    r.Read(b);
+                    var wire = Util.RenderWireframe(r.Edges);
+                    foreach (var record in records)
                     {
-                        Debug.Assert(objPath != null, "Null path in HPI listing.");
-
-                        var objName = Path.GetFileNameWithoutExtension(objPath).ToLowerInvariant();
-
-                        IList<FeatureRecord> records;
-                        if (!objectMap.TryGetValue(objName, out records))
-                        {
-                            continue;
-                        }
-
-                        using (var b = h.ReadFile(objPath))
-                        {
-                            var r = new ModelEdgeReader();
-                            r.Read(b);
-                            var wire = Util.RenderWireframe(r.Edges);
-                            foreach (var record in records)
-                            {
-                                yield return new KeyValuePair<string, OffsetBitmap>(record.Name, wire);
-                            }
-                        }
+                        yield return new KeyValuePair<string, OffsetBitmap>(record.Name, wire);
                     }
                 }
             }
