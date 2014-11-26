@@ -126,12 +126,9 @@
 
             foreach (string file in LoadingUtils.EnumerateSearchHpis())
             {
-                using (HpiReader h = new HpiReader(file))
+                foreach (var e in LoadFeatureBitmapsFromHapi(file, filenameMap))
                 {
-                    foreach (var e in LoadFeatureBitmapsFromHapi(h, filenameMap))
-                    {
-                        yield return e;
-                    }
+                    yield return e;
                 }
             }
         }
@@ -174,6 +171,19 @@
                             }
                         }
                     }
+                }
+            }
+        }
+
+        private static IEnumerable<KeyValuePair<string, GafFrame>> LoadFeatureBitmapsFromHapi(
+            string hapi,
+            IDictionary<string, IList<FeatureRecord>> filenameFeatureMap)
+        {
+            using (HpiReader h = new HpiReader(hapi))
+            {
+                foreach (var e in LoadFeatureBitmapsFromHapi(h, filenameFeatureMap))
+                {
+                    yield return e;
                 }
             }
         }
