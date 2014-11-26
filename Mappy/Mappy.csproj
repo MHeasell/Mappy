@@ -98,6 +98,7 @@
     <Compile Include="IO\PaletteFactory.cs" />
     <Compile Include="IO\PaletteReader.cs" />
     <Compile Include="IO\SectionFactory.cs" />
+    <Compile Include="IO\SectionLoadingUtils.cs" />
     <Compile Include="MappySettings.cs" />
     <Compile Include="Minimap\IMinimapModel.cs" />
     <Compile Include="Minimap\IMinimapService.cs" />
