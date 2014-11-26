@@ -252,37 +252,5 @@
                 }
             }
         }
-
-        private static IDictionary<string, IList<TdfNode>> GroupByField(IDictionary<string, TdfNode> features, string field)
-        {
-            Dictionary<string, IList<TdfNode>> map = new Dictionary<string, IList<TdfNode>>();
-            foreach (var e in features)
-            {
-                string fieldValue;
-
-                // skip features with no filename entry
-                if (!e.Value.Entries.TryGetValue(field, out fieldValue))
-                {
-                    continue;
-                }
-
-                // normalize filenames
-                fieldValue = fieldValue.ToLower();
-
-                // try to retrieve existing list
-                IList<TdfNode> l;
-                if (!map.TryGetValue(fieldValue, out l))
-                {
-                    // create one if it doesn't exist
-                    l = new List<TdfNode>();
-                    map[fieldValue] = l;
-                }
-
-                // add this feature to the list for that filename
-                l.Add(e.Value);
-            }
-
-            return map;
-        }
     }
 }
