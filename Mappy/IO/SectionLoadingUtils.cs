@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
 
@@ -85,7 +86,9 @@
                         section.DataWidth = s.DataWidth;
                         section.DataHeight = s.DataHeight;
 
-                        string[] directories = Path.GetDirectoryName(sect).Split(Path.DirectorySeparatorChar);
+                        string directoryString = Path.GetDirectoryName(sect);
+                        Debug.Assert(directoryString != null, "Null directory for section in HPI.");
+                        string[] directories = directoryString.Split(Path.DirectorySeparatorChar);
 
                         section.World = directories[1];
                         section.Category = directories[2];
