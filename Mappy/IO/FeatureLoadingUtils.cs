@@ -239,12 +239,20 @@
         {
             foreach (string file in LoadingUtils.EnumerateSearchHpis())
             {
-                using (HpiReader h = new HpiReader(file))
+                foreach (var featureRecord in LoadFeatureTdfsFromHapi(file))
                 {
-                    foreach (var e in LoadFeaturesFromHapi(h))
-                    {
-                        yield return e;
-                    }
+                    yield return featureRecord;
+                }
+            }
+        }
+
+        private static IEnumerable<FeatureRecord> LoadFeatureTdfsFromHapi(string file)
+        {
+            using (HpiReader h = new HpiReader(file))
+            {
+                foreach (var e in LoadFeaturesFromHapi(h))
+                {
+                    yield return e;
                 }
             }
         }
