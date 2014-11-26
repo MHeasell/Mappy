@@ -1,6 +1,7 @@
 ﻿namespace Mappy.IO
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.IO;
     using System.Linq;
 
@@ -12,6 +13,21 @@
 
     public class SectionLoadingUtils
     {
+        public static BackgroundWorker LoadSectionsBackgroundWorker()
+        {
+            var bg = new BackgroundWorker();
+            bg.DoWork += delegate(object sender, DoWorkEventArgs args)
+                {
+                    var p = (IPalette)args.Argument;
+                    args.Result = LoadSections(p);
+                };
+
+            bg.WorkerSupportsCancellation = false;
+            bg.WorkerReportsProgress = false;
+
+            return bg;
+        }
+
         public static IList<Section> LoadSections(IPalette palette)
         {
             IList<Section> sections = new List<Section>();

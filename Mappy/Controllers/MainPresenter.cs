@@ -52,25 +52,35 @@
 
         public void Initialize()
         {
-            // load sections
-            var sections = SectionLoadingUtils.LoadSections(Globals.Palette);
-            foreach (var s in sections)
-            {
-                this.model.Sections.Add(s);
-            }
-
-            this.view.Sections = this.model.Sections;
-
-            // load features in background
-            var worker = FeatureLoadingUtils.LoadFeaturesBackgroundWorker();
-
             var dlg = this.view.CreateProgressView();
             dlg.Title = "Loading Mappy";
-            dlg.MessageText = "Loading features...";
             dlg.ShowProgress = false;
             dlg.CancelEnabled = false;
 
-            worker.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage;
+            var sectionWorker = SectionLoadingUtils.LoadSectionsBackgroundWorker();
+            var worker = FeatureLoadingUtils.LoadFeaturesBackgroundWorker();
+
+            sectionWorker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+                {
+                    if (!args.Cancelled)
+                    {
+                        var sections = (IList<Section>)args.Result;
+                        foreach (var s in sections)
+                        {
+                            this.model.Sections.Add(s);
+                        }
+
+                        this.view.Sections = this.model.Sections;
+
+                        dlg.MessageText = "Loading features...";
+                        worker.RunWorkerAsync(Globals.Palette);
+                    }
+                    else
+                    {
+                        dlg.Close();
+                    }
+                };
+
             worker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
                 {
                     if (!args.Cancelled)
@@ -87,7 +97,9 @@
                     dlg.Close();
                 };
 
-            worker.RunWorkerAsync(Globals.Palette);
+            dlg.MessageText = "Loading sections...";
+            sectionWorker.RunWorkerAsync(Globals.Palette);
+
             dlg.Display();
         }
 
