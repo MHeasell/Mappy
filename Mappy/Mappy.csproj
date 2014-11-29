@@ -80,6 +80,7 @@
     <Compile Include="Database\IFeatureDatabase.cs" />
     <Compile Include="Data\BindingMapTile.cs" />
     <Compile Include="Data\Feature.cs" />
+    <Compile Include="Data\FeatureRecord.cs" />
     <Compile Include="Data\IMapTile.cs" />
     <Compile Include="Data\MapAttributes.cs" />
     <Compile Include="Data\MapTile.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="IO\PaletteFactory.cs" />
     <Compile Include="IO\PaletteReader.cs" />
     <Compile Include="IO\SectionFactory.cs" />
+    <Compile Include="IO\SectionLoadingUtils.cs" />
     <Compile Include="MappySettings.cs" />
     <Compile Include="Minimap\IMinimapModel.cs" />
     <Compile Include="Minimap\IMinimapService.cs" />

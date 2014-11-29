@@ -12,6 +12,10 @@
 
         int Progress { get; set; }
 
+        bool ShowProgress { get; set; }
+
+        bool CancelEnabled { get; set; }
+
         void Display();
 
         void Close();

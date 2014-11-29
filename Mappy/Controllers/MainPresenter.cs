@@ -8,6 +8,8 @@
     using System.Linq;
     using System.Windows.Forms;
 
+    using Mappy.Data;
+    using Mappy.IO;
     using Mappy.Minimap;
 
     using Models;
@@ -37,10 +39,6 @@
             this.model = model;
             this.minimapModel = model;
 
-            this.view.Features = this.model.FeatureRecords.EnumerateAll().ToList();
-
-            this.view.Sections = this.model.Sections;
-
             this.view.UndoEnabled = this.model.CanUndo;
             this.view.RedoEnabled = this.model.CanRedo;
 
@@ -50,6 +48,77 @@
 
             this.model.PropertyChanged += this.CoreModelPropertyChanged;
             this.minimapModel.PropertyChanged += this.MinimapModelPropertyChanged;
+        }
+
+        public void Initialize()
+        {
+            var dlg = this.view.CreateProgressView();
+            dlg.Title = "Loading Mappy";
+            dlg.ShowProgress = true;
+            dlg.CancelEnabled = true;
+
+            var sectionWorker = SectionLoadingUtils.LoadSectionsBackgroundWorker();
+            var worker = FeatureLoadingUtils.LoadFeaturesBackgroundWorker();
+
+            sectionWorker.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage / 2;
+            sectionWorker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+                {
+                    if (!args.Cancelled)
+                    {
+                        var sections = (IList<Section>)args.Result;
+                        foreach (var s in sections)
+                        {
+                            this.model.Sections.Add(s);
+                        }
+
+                        this.view.Sections = this.model.Sections;
+
+                        dlg.MessageText = "Loading features...";
+                        worker.RunWorkerAsync(Globals.Palette);
+                    }
+                    else
+                    {
+                        Application.Exit();
+                    }
+                };
+
+            worker.ProgressChanged += (sender, args) => dlg.Progress = 50 + (args.ProgressPercentage / 2);
+            worker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+                {
+                    if (!args.Cancelled)
+                    {
+                        var records = (IEnumerable<Feature>)args.Result;
+                        foreach (var r in records)
+                        {
+                            this.model.FeatureRecords.AddFeature(r);
+                        }
+
+                        this.view.Features = this.model.FeatureRecords.EnumerateAll().ToList();
+                        dlg.Close();
+                    }
+                    else
+                    {
+                        Application.Exit();
+                    }
+                };
+
+            dlg.CancelPressed += delegate
+                {
+                    if (sectionWorker.IsBusy)
+                    {
+                        sectionWorker.CancelAsync();
+                    }
+
+                    if (worker.IsBusy)
+                    {
+                        worker.CancelAsync();
+                    }
+                };
+
+            dlg.MessageText = "Loading sections...";
+            sectionWorker.RunWorkerAsync(Globals.Palette);
+
+            dlg.Display();
         }
 
         public bool Open()

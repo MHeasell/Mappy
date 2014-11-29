@@ -3,6 +3,12 @@
     using System;
     using System.IO;
     using System.Windows.Forms;
+
+    using Mappy.Controllers;
+    using Mappy.Minimap;
+    using Mappy.Models;
+    using Mappy.Presentation;
+
     using UI.Forms;
 
     public static class Program
@@ -29,7 +35,21 @@
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            var mainForm = new MainForm();
+            var model = new CoreModel();
+            var presenter = new MainPresenter(mainForm, model);
+            mainForm.Presenter = presenter;
+
+            var mapPresenter = new MapPresenter(mainForm.imageLayerView1, model);
+            new MapViewEventAdapter(mainForm.imageLayerView1, mapPresenter);
+
+            var minimapForm = new MinimapForm();
+            minimapForm.Owner = mainForm;
+            var minimapPresenter = new MinimapPresenter(minimapForm, mainForm, model);
+            minimapForm.Presenter = minimapPresenter;
+
+            Application.Run(mainForm);
         }
 
         private static void UnhandledException(object sender, UnhandledExceptionEventArgs e)

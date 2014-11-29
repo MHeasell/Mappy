@@ -55,6 +55,34 @@
             }
         }
 
+        public bool ShowProgress
+        {
+            get
+            {
+                return this.progressBar1.Style != ProgressBarStyle.Marquee;
+            }
+
+            set
+            {
+                this.progressBar1.Style = value
+                    ? ProgressBarStyle.Blocks
+                    : ProgressBarStyle.Marquee;
+            }
+        }
+
+        public bool CancelEnabled
+        {
+            get
+            {
+                return this.button1.Enabled;
+            }
+
+            set
+            {
+                this.button1.Enabled = value;
+            }
+        }
+
         public void Display()
         {
             this.ShowDialog();

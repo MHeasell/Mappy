@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -20,11 +21,87 @@
         public static BackgroundWorker LoadFeaturesBackgroundWorker()
         {
             var bg = new BackgroundWorker();
+
             bg.DoWork += delegate(object sender, DoWorkEventArgs args)
                 {
                     var p = (IPalette)args.Argument;
-                    args.Result = LoadFeatures(p);
+                    var worker = (BackgroundWorker)sender;
+                    var hpis = LoadingUtils.EnumerateSearchHpis().ToList();
+
+                    var records = new List<FeatureRecord>();
+                    var bitmaps = new Dictionary<string, GafFrame>();
+                    var renders = new Dictionary<string, OffsetBitmap>();
+
+                    // load records
+                    int fileCount = 0;
+                    foreach (string file in hpis)
+                    {
+                        if (worker.CancellationPending)
+                        {
+                            args.Cancel = true;
+                            return;
+                        }
+
+                        records.AddRange(LoadFeatureTdfsFromHapi(file));
+                        int progress = (++fileCount * 100) / hpis.Count;
+                        worker.ReportProgress((progress * 33) / 100);
+                    }
+
+                    // load bitmaps
+                    var filenameMap = records
+                        .GroupBy(x => x.AnimFileName.ToLower())
+                        .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList());
+                    fileCount = 0;
+                    foreach (string file in hpis)
+                    {
+                        if (worker.CancellationPending)
+                        {
+                            args.Cancel = true;
+                            return;
+                        }
+
+                        foreach (var e in LoadFeatureBitmapsFromHapi(file, filenameMap))
+                        {
+                            bitmaps[e.Key] = e.Value;
+                        }
+
+                        int progress = (++fileCount * 100) / hpis.Count;
+                        worker.ReportProgress(33 + ((progress * 33) / 100));
+                    }
+
+                    // load renders
+                    var objectMap = records
+                        .GroupBy(x => x.ObjectName.ToLower())
+                        .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList());
+                    fileCount = 0;
+                    foreach (string file in hpis)
+                    {
+                        if (worker.CancellationPending)
+                        {
+                            args.Cancel = true;
+                            return;
+                        }
+
+                        foreach (var item in LoadFeatureRendersFromHapi(file, objectMap))
+                        {
+                            renders[item.Key] = item.Value;
+                        }
+
+                        int progress = (++fileCount * 100) / hpis.Count;
+                        worker.ReportProgress(66 + ((progress * 33) / 100));
+                    }
+
+                    // last 1%, create the feature objects
+                    var features = LoadFeatureObjects(records, bitmaps, renders, p);
+
+                    worker.ReportProgress(100);
+
+                    args.Result = features.ToList();
                 };
+
+            bg.WorkerReportsProgress = true;
+            bg.WorkerSupportsCancellation = true;
+
             return bg;
         }
 
@@ -33,17 +110,31 @@
         /// </summary>
         /// <param name="palette"></param>
         /// <returns></returns>
-        public static IDictionary<string, Feature> LoadFeatures(IPalette palette)
+        public static IEnumerable<Feature> LoadFeatures(IPalette palette)
         {
-            IDictionary<string, TdfNode> tdfs = LoadFeatureTdfs();
-            IDictionary<string, GafFrame> frames = LoadFeatureBitmaps(tdfs);
-            IDictionary<string, OffsetBitmap> renders = LoadFeatureRenders(tdfs);
+            var records = new Dictionary<string, FeatureRecord>();
+            foreach (var r in LoadFeatureTdfs())
+            {
+                records[r.Name] = r;
+            }
 
-            return LoadFeatureObjects(tdfs, frames, renders, palette);
+            var frames = new Dictionary<string, GafFrame>();
+            foreach (var f in LoadFeatureBitmaps(records.Values))
+            {
+                frames[f.Key] = f.Value;
+            }
+
+            var renders = new Dictionary<string, OffsetBitmap>();
+            foreach (var r in LoadFeatureRenders(records.Values))
+            {
+                renders[r.Key] = r.Value;
+            }
+
+            return LoadFeatureObjects(records.Values, frames, renders, palette);
         }
 
-        private static Dictionary<string, Feature> LoadFeatureObjects(
-            IDictionary<string, TdfNode> tdfs,
+        private static IEnumerable<Feature> LoadFeatureObjects(
+            IEnumerable<FeatureRecord> records,
             IDictionary<string, GafFrame> frames,
             IDictionary<string, OffsetBitmap> objects,
             IPalette palette)
@@ -51,16 +142,15 @@
             var maskedPalette = new TransparencyMaskedPalette(palette);
             var deserializer = new BitmapDeserializer(maskedPalette);
 
-            Dictionary<string, Feature> features = new Dictionary<string, Feature>();
-            foreach (var e in tdfs)
+            foreach (var record in records)
             {
-                GafFrame frame;
-                OffsetBitmap render;
-                if (frames.TryGetValue(e.Key, out frame))
+                Bitmap image = null;
+                int offsetX = 0;
+                int offsetY = 0;
+
+                if (frames.ContainsKey(record.Name))
                 {
-                    int footX = Convert.ToInt32(e.Value.Entries["footprintx"]);
-                    int footY = Convert.ToInt32(e.Value.Entries["footprintz"]);
-                    Bitmap image;
+                    var frame = frames[record.Name];
                     if (frame.Width == 0 || frame.Height == 0)
                     {
                         image = new Bitmap(50, 50);
@@ -71,37 +161,27 @@
                         image = deserializer.Deserialize(frame.Data, frame.Width, frame.Height);
                     }
 
-                    Feature f = new Feature
-                        {
-                            Name = e.Key,
-                            Image = image,
-                            Offset = new Point(frame.OffsetX, frame.OffsetY),
-                            Footprint = new Size(footX, footY),
-                            World = e.Value.Entries["world"],
-                            Category = e.Value.Entries["category"],
-                        };
-
-                    features[e.Key] = f;
+                    offsetX = frame.OffsetX;
+                    offsetY = frame.OffsetY;
                 }
-                else if (objects.TryGetValue(e.Key, out render))
+                else if (objects.ContainsKey(record.Name))
                 {
-                    int footX = Convert.ToInt32(e.Value.Entries["footprintx"]);
-                    int footY = Convert.ToInt32(e.Value.Entries["footprintz"]);
-                    Feature f = new Feature
-                        {
-                            Name = e.Key,
-                            Image = render.Bitmap,
-                            Offset = new Point(-render.OffsetX, -render.OffsetY),
-                            Footprint = new Size(footX, footY),
-                            World = e.Value.Entries["world"],
-                            Category = e.Value.Entries["category"],
-                        };
-
-                    features[e.Key] = f;
+                    var render = objects[record.Name];
+                    image = render.Bitmap;
+                    offsetX = -render.OffsetX;
+                    offsetY = -render.OffsetY;
                 }
-            }
 
-            return features;
+                yield return new Feature
+                {
+                    Name = record.Name,
+                    Image = image,
+                    Offset = new Point(offsetX, offsetY),
+                    Footprint = new Size(record.FootprintX, record.FootprintY),
+                    World = record.World,
+                    Category = record.Category
+                };
+            }
         }
 
         /// <summary>
@@ -109,132 +189,152 @@
         /// </summary>
         /// <param name="features"></param>
         /// <returns>A mapping of feature name to image</returns>
-        private static IDictionary<string, GafFrame> LoadFeatureBitmaps(IDictionary<string, TdfNode> features)
+        private static IEnumerable<KeyValuePair<string, GafFrame>> LoadFeatureBitmaps(IEnumerable<FeatureRecord> features)
         {
-            IDictionary<string, IList<TdfNode>> filenameFeatureMap = GroupByField(features, "filename");
-
-            Dictionary<string, GafFrame> bitmaps = new Dictionary<string, GafFrame>();
-
-            if (MappySettings.Settings.SearchPaths == null)
-            {
-                return bitmaps;
-            }
+            var filenameMap = features
+                .GroupBy(x => x.AnimFileName.ToLower())
+                .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList());
 
             foreach (string file in LoadingUtils.EnumerateSearchHpis())
             {
-                using (HpiReader h = new HpiReader(file))
+                foreach (var e in LoadFeatureBitmapsFromHapi(file, filenameMap))
                 {
-                    foreach (var e in LoadFeatureBitmapsFromHapi(h, filenameFeatureMap))
-                    {
-                        bitmaps[e.Key] = e.Value;
-                    }
+                    yield return e;
                 }
             }
-
-            return bitmaps;
         }
 
-        private static IDictionary<string, OffsetBitmap> LoadFeatureRenders(IDictionary<string, TdfNode> tdfs)
+        private static IEnumerable<KeyValuePair<string, OffsetBitmap>> LoadFeatureRenders(IEnumerable<FeatureRecord> features)
         {
-            var renders = new Dictionary<string, OffsetBitmap>();
-
-            var objectFeatureMap = GroupByField(tdfs, "object");
-
-            if (MappySettings.Settings.SearchPaths == null)
-            {
-                return renders;
-            }
+            var objectMap = features
+                .GroupBy(x => x.ObjectName.ToLower())
+                .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList());
 
             foreach (string file in LoadingUtils.EnumerateSearchHpis())
             {
-                using (HpiReader h = new HpiReader(file))
+                foreach (var item in LoadFeatureRendersFromHapi(file, objectMap))
                 {
-                    foreach (var objPath in h.GetFilesRecursive("objects3d").Select(x => x.Name))
-                    {
-                        var objName = Path.GetFileNameWithoutExtension(objPath).ToLowerInvariant();
+                    yield return item;
+                }
+            }
+        }
 
-                        IList<TdfNode> val;
-                        if (objectFeatureMap.TryGetValue(objName, out val))
-                        {
-                            using (var b = h.ReadFile(objPath))
-                            {
-                                var r = new ModelEdgeReader();
-                                r.Read(b);
-                                var wire = Util.RenderWireframe(r.Edges);
-                                foreach (var item in val)
-                                {
-                                    renders[item.Name] = wire;
-                                }
-                            }
-                        }
+        private static IEnumerable<KeyValuePair<string, OffsetBitmap>> LoadFeatureRendersFromHapi(string file, IDictionary<string, IList<FeatureRecord>> objectMap)
+        {
+            using (HpiReader h = new HpiReader(file))
+            {
+                foreach (var item in LoadFeatureRendersFromHapi(h, objectMap))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        private static IEnumerable<KeyValuePair<string, OffsetBitmap>> LoadFeatureRendersFromHapi(HpiReader h, IDictionary<string, IList<FeatureRecord>> objectMap)
+        {
+            foreach (var objPath in h.GetFilesRecursive("objects3d").Select(x => x.Name))
+            {
+                Debug.Assert(objPath != null, "Null path in HPI listing.");
+
+                var objName = Path.GetFileNameWithoutExtension(objPath).ToLowerInvariant();
+
+                IList<FeatureRecord> records;
+                if (!objectMap.TryGetValue(objName, out records))
+                {
+                    continue;
+                }
+
+                using (var b = h.ReadFile(objPath))
+                {
+                    var r = new ModelEdgeReader();
+                    r.Read(b);
+                    var wire = Util.RenderWireframe(r.Edges);
+                    foreach (var record in records)
+                    {
+                        yield return new KeyValuePair<string, OffsetBitmap>(record.Name, wire);
                     }
                 }
             }
-
-            return renders;
         }
 
-        private static IDictionary<string, GafFrame> LoadFeatureBitmapsFromHapi(HpiReader hapi, IDictionary<string, IList<TdfNode>> filenameFeatureMap)
+        private static IEnumerable<KeyValuePair<string, GafFrame>> LoadFeatureBitmapsFromHapi(
+            string hapi,
+            IDictionary<string, IList<FeatureRecord>> filenameFeatureMap)
         {
-            Dictionary<string, GafFrame> bitmaps = new Dictionary<string, GafFrame>();
+            using (HpiReader h = new HpiReader(hapi))
+            {
+                foreach (var e in LoadFeatureBitmapsFromHapi(h, filenameFeatureMap))
+                {
+                    yield return e;
+                }
+            }
+        }
 
+        private static IEnumerable<KeyValuePair<string, GafFrame>> LoadFeatureBitmapsFromHapi(HpiReader hapi, IDictionary<string, IList<FeatureRecord>> filenameFeatureMap)
+        {
             // for each anim file in the HPI
             foreach (string anim in hapi.GetFilesRecursive("anims").Select(x => x.Name))
             {
-                // if we require anims from this file
-                IList<TdfNode> val;
-                if (filenameFeatureMap.TryGetValue(Path.GetFileNameWithoutExtension(anim).ToLower(), out val))
+                Debug.Assert(anim != null, "Null path in HPI listing.");
+
+                IList<FeatureRecord> records;
+                if (!filenameFeatureMap.TryGetValue(Path.GetFileNameWithoutExtension(anim).ToLower(), out records))
                 {
-                    // extract and read the file
-                    GafEntry[] gaf;
-                    using (var b = new GafReader(hapi.ReadFile(anim)))
+                    // Skip if no anims needed from this file.
+                    continue;
+                }
+
+                // extract and read the file
+                GafEntry[] gaf;
+                using (var b = new GafReader(hapi.ReadFile(anim)))
+                {
+                    gaf = b.Read();
+                }
+
+                // retrieve the anim for each record
+                foreach (var record in records)
+                {
+                    var sequenceName = record.SequenceName;
+                    if (string.IsNullOrEmpty(sequenceName))
                     {
-                        gaf = b.Read();
+                        // Skip if this record has no sequence name.
+                        continue;
                     }
 
-                    // retrieve all required entries
-                    foreach (TdfNode n in val)
+                    var entry = gaf.FirstOrDefault(
+                        x => string.Equals(x.Name, sequenceName, StringComparison.OrdinalIgnoreCase));
+                    if (entry != null)
                     {
-                        string seq;
-                        if (n.Entries.TryGetValue("seqname", out seq))
-                        {
-                            foreach (GafEntry gafEntry in gaf)
-                            {
-                                if (gafEntry.Name.Equals(seq, StringComparison.OrdinalIgnoreCase))
-                                {
-                                    bitmaps[n.Name] = gafEntry.Frames[0];
-                                    break;
-                                }
-                            }
-                        }
+                        yield return new KeyValuePair<string, GafFrame>(record.Name, entry.Frames[0]);
                     }
                 }
             }
-
-            return bitmaps;
         }
 
-        private static Dictionary<string, TdfNode> LoadFeatureTdfs()
+        private static IEnumerable<FeatureRecord> LoadFeatureTdfs()
         {
-            Dictionary<string, TdfNode> features = new Dictionary<string, TdfNode>();
-
             foreach (string file in LoadingUtils.EnumerateSearchHpis())
             {
-                using (HpiReader h = new HpiReader(file))
+                foreach (var featureRecord in LoadFeatureTdfsFromHapi(file))
                 {
-                    foreach (var e in LoadFeaturesFromHapi(h))
-                    {
-                        features[e.Key] = e.Value;
-                    }
+                    yield return featureRecord;
                 }
             }
-
-            return features;
         }
 
-        private static Dictionary<string, TdfNode> LoadFeaturesFromHapi(HpiReader hapi)
+        private static IEnumerable<FeatureRecord> LoadFeatureTdfsFromHapi(string file)
         {
-            Dictionary<string, TdfNode> features = new Dictionary<string, TdfNode>();
+            using (HpiReader h = new HpiReader(file))
+            {
+                foreach (var e in LoadFeaturesFromHapi(h))
+                {
+                    yield return e;
+                }
+            }
+        }
+
+        private static IEnumerable<FeatureRecord> LoadFeaturesFromHapi(HpiReader hapi)
+        {
             foreach (string feature in hapi.GetFilesRecursive("features").Select(x => x.Name))
             {
                 if (feature.EndsWith(".tdf", StringComparison.OrdinalIgnoreCase))
@@ -245,46 +345,12 @@
                         n = TdfNode.LoadTdf(sr);
                     }
 
-                    foreach (var e in n.Keys)
+                    foreach (var e in n.Keys.Values)
                     {
-                        features[e.Key] = e.Value;
+                        yield return FeatureRecord.FromTdfNode(e);
                     }
                 }
             }
-
-            return features;
-        }
-
-        private static IDictionary<string, IList<TdfNode>> GroupByField(IDictionary<string, TdfNode> features, string field)
-        {
-            Dictionary<string, IList<TdfNode>> map = new Dictionary<string, IList<TdfNode>>();
-            foreach (var e in features)
-            {
-                string fieldValue;
-
-                // skip features with no filename entry
-                if (!e.Value.Entries.TryGetValue(field, out fieldValue))
-                {
-                    continue;
-                }
-
-                // normalize filenames
-                fieldValue = fieldValue.ToLower();
-
-                // try to retrieve existing list
-                IList<TdfNode> l;
-                if (!map.TryGetValue(fieldValue, out l))
-                {
-                    // create one if it doesn't exist
-                    l = new List<TdfNode>();
-                    map[fieldValue] = l;
-                }
-
-                // add this feature to the list for that filename
-                l.Add(e.Value);
-            }
-
-            return map;
         }
     }
 }
