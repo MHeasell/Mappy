@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Drawing.Imaging;
     using System.Globalization;
     using System.Windows.Forms;
     using Data;
@@ -239,6 +240,19 @@
             }
         }
 
+        public bool ExportMinimapEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem17.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem17.Enabled = value;
+            }
+        }
+
         public string AskUserToChooseMap(IList<string> maps)
         {
             MapSelectionForm f = new MapSelectionForm();
@@ -294,6 +308,21 @@
         {
             SaveFileDialog d = new SaveFileDialog();
             d.Filter = "HPI files|*.hpi;*.ufo;*.ccx;*.gpf;*.gp3|TNT files|*.tnt|All files|*.*";
+            d.AddExtension = true;
+            DialogResult result = d.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                return d.FileName;
+            }
+
+            return null;
+        }
+
+        public string AskUserToSaveMinimap()
+        {
+            SaveFileDialog d = new SaveFileDialog();
+            d.Title = "Export Minimap";
+            d.Filter = "PNG files|*.png|All files|*.*";
             d.AddExtension = true;
             DialogResult result = d.ShowDialog(this);
             if (result == DialogResult.OK)
@@ -534,6 +563,11 @@
         private void MainForm_Load(object sender, EventArgs e)
         {
             this.Presenter.Initialize();
+        }
+
+        private void toolStripMenuItem17_Click(object sender, EventArgs e)
+        {
+            this.Presenter.ExportMinimap();
         }
     }
 }

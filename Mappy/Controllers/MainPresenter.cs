@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
+    using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
@@ -302,6 +303,27 @@
             }
         }
 
+        public void ExportMinimap()
+        {
+            var loc = this.view.AskUserToSaveMinimap();
+            if (loc == null)
+            {
+                return;
+            }
+
+            try
+            {
+                using (var s = File.Create(loc))
+                {
+                    this.model.Map.Minimap.Save(s, ImageFormat.Png);
+                }
+            }
+            catch (Exception)
+            {
+                this.view.ShowError("There was a problem saving the minimap.");
+            }
+        }
+
         public void OpenMapAttributes()
         {
             MapAttributesResult r = this.view.AskUserForMapAttributes(this.model.GetAttributes());
@@ -519,6 +541,7 @@
                     this.view.SeaLevelEditEnabled = this.model.MapOpen;
                     this.view.RefreshMinimapEnabled = this.model.MapOpen;
                     this.view.RefreshMinimapHighQualityEnabled = this.model.MapOpen;
+                    this.view.ExportMinimapEnabled = this.model.MapOpen;
                     break;
                 case "IsFileOpen":
                     this.view.SaveAsEnabled = this.model.IsFileOpen;

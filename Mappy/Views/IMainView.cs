@@ -45,11 +45,15 @@
 
         bool CloseEnabled { get; set; }
 
+        bool ExportMinimapEnabled { get; set; }
+
         string AskUserToChooseMap(IList<string> maps);
 
         string AskUserToOpenFile();
 
         string AskUserToSaveFile();
+
+        string AskUserToSaveMinimap();
 
         void CapturePreferences();
 
