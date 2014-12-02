@@ -38,16 +38,17 @@ Mappy stores its settings in %LocalAppData%/ArmouredFish/Mappy/settings.xml. If,
 Known Issues
 ------------
 
-* No copy/paste support yet
-* High quality minimap renderer is slow and makes Mappy appear frozen while running
+* None, but there are probably lots :)
 
 Future Improvements
 -------------------
 
 In no particular order, here's a list of features that Mappy might one day support:
 
-* Copying and pasting sections and features
+* Void display and editing
 * Bandbox select/move for features
+* Minimap import/export
+* Map resizing
 * Anything Annihilator already does that's cool
 
 and possibly more.
