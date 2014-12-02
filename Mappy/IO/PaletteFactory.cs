@@ -14,23 +14,17 @@ namespace Mappy.IO
     {
         private const int TAPaletteColorCount = 256;
 
-        public static IPalette FromPal(Stream file)
+        public static IPalette FromBinaryPal(Stream file)
         {
-            var palette = new ArrayPalette(TAPaletteColorCount);
+            var p = new ArrayPalette(TAPaletteColorCount);
+            var r = new BinaryPaletteReader(new BinaryReader(file));
 
-            PaletteReader r = new PaletteReader(new StreamReader(file));
-
-            if (r.ColorsCount != TAPaletteColorCount)
+            for (int i = 0; i < TAPaletteColorCount; i++)
             {
-                throw new ArgumentException("Palette is not " + TAPaletteColorCount + " colors");
+                p[i] = r.ReadColor();
             }
 
-            for (int i = 0; i < r.ColorsCount; i++)
-            {
-                palette[i] = r.ReadColor();
-            }
-
-            return palette;
+            return p;
         }
     }
 }

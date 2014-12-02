@@ -97,7 +97,7 @@
     <Compile Include="IO\MapSaver.cs" />
     <Compile Include="IO\ModelEdgeReader.cs" />
     <Compile Include="IO\PaletteFactory.cs" />
-    <Compile Include="IO\PaletteReader.cs" />
+    <Compile Include="IO\BinaryPaletteReader.cs" />
     <Compile Include="IO\SectionFactory.cs" />
     <Compile Include="IO\SectionLoadingUtils.cs" />
     <Compile Include="MappySettings.cs" />
@@ -300,6 +300,7 @@
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="Assets\PALETTE.PAL" />
     <None Include="Properties\AssemblyInfo.cs.tmpl" />
     <None Include="Properties\DataSources\Mappy.Models.MapAttributesResult.datasource" />
   </ItemGroup>
@@ -314,7 +315,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\ta.pal" />
     <None Include="Assets\nofeature.png" />
     <None Include="Assets\number_1.png" />
     <None Include="Assets\number_10.png" />

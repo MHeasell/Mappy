@@ -16,9 +16,9 @@ namespace Mappy
 
         static Globals()
         {
-            using (Stream s = new MemoryStream(Mappy.Properties.Resources.TAPalette))
+            using (var s = new MemoryStream(Mappy.Properties.Resources.PALETTE))
             {
-                Palette = PaletteFactory.FromPal(s);
+                Palette = PaletteFactory.FromBinaryPal(s);
             }
 
             TileCache = new BitmapCache();
