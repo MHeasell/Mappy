@@ -12,6 +12,7 @@
     using Mappy.Data;
     using Mappy.IO;
     using Mappy.Minimap;
+    using Mappy.Palette;
 
     using Models;
 
@@ -58,39 +59,51 @@
             dlg.ShowProgress = true;
             dlg.CancelEnabled = true;
 
-            var sectionWorker = SectionLoadingUtils.LoadSectionsBackgroundWorker();
-            var worker = FeatureLoadingUtils.LoadFeaturesBackgroundWorker();
-
-            sectionWorker.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage / 2;
-            sectionWorker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+            var worker = new BackgroundWorker();
+            worker.WorkerReportsProgress = true;
+            worker.WorkerSupportsCancellation = true;
+            worker.DoWork += delegate(object sender, DoWorkEventArgs args)
                 {
-                    if (args.Error != null)
+                    var w = (BackgroundWorker)sender;
+                    var p = (IPalette)args.Argument;
+                    LoadResult<Section> result;
+                    if (!SectionLoadingUtils.LoadSections(
+                            p,
+                            i => w.ReportProgress((50 * i) / 100),
+                            () => w.CancellationPending,
+                            out result))
                     {
-                        Program.HandleUnexpectedException(args.Error);
-                        Application.Exit();
+                        args.Cancel = true;
                         return;
                     }
 
-                    if (!args.Cancelled)
+                    LoadResult<Feature> featureResult;
+                    if (!FeatureLoadingUtils.LoadFeatures(
+                        p,
+                        i => w.ReportProgress(50 + ((50 * i) / 100)),
+                        () => w.CancellationPending,
+                        out featureResult))
                     {
-                        var sections = (IList<Section>)args.Result;
-                        foreach (var s in sections)
+                        args.Cancel = true;
+                        return;
+                    }
+
+                    args.Result = new SectionFeatureLoadResult
                         {
-                            this.model.Sections.Add(s);
-                        }
-
-                        this.view.Sections = this.model.Sections;
-
-                        dlg.MessageText = "Loading features...";
-                        worker.RunWorkerAsync(Globals.Palette);
-                    }
-                    else
-                    {
-                        Application.Exit();
-                    }
+                            Sections = result.Records,
+                            Features = featureResult.Records,
+                            Errors = result.Errors
+                                .Concat(featureResult.Errors)
+                                .GroupBy(x => x.HpiPath)
+                                .Select(x => x.First())
+                                .ToList(),
+                            FileErrors = result.FileErrors
+                                .Concat(featureResult.FileErrors)
+                                .ToList(),
+                        };
                 };
 
-            worker.ProgressChanged += (sender, args) => dlg.Progress = 50 + (args.ProgressPercentage / 2);
+            worker.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage;
             worker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
                 {
                     if (args.Error != null)
@@ -100,38 +113,46 @@
                         return;
                     }
 
-                    if (!args.Cancelled)
-                    {
-                        var records = (IEnumerable<Feature>)args.Result;
-                        foreach (var r in records)
-                        {
-                            this.model.FeatureRecords.AddFeature(r);
-                        }
-
-                        this.view.Features = this.model.FeatureRecords.EnumerateAll().ToList();
-                        dlg.Close();
-                    }
-                    else
+                    if (args.Cancelled)
                     {
                         Application.Exit();
+                        return;
                     }
+
+                    var sectionResult = (SectionFeatureLoadResult)args.Result;
+
+                    int nextId = 0;
+                    foreach (var s in sectionResult.Sections)
+                    {
+                        s.Id = nextId++;
+                        this.model.Sections.Add(s);
+                    }
+
+                    this.view.Sections = sectionResult.Sections;
+
+                    foreach (var f in sectionResult.Features)
+                    {
+                        this.model.FeatureRecords.AddFeature(f);
+                    }
+
+                    this.view.Features = this.model.FeatureRecords.EnumerateAll().ToList();
+
+                    if (sectionResult.Errors.Count > 0 || sectionResult.FileErrors.Count > 0)
+                    {
+                        var hpisList = sectionResult.Errors.Select(x => x.HpiPath);
+                        var filesList = sectionResult.FileErrors.Select(x => x.HpiPath + "\\" + x.FeaturePath);
+                        this.view.ShowError("Failed to load the following files:\n\n"
+                            + string.Join("\n", hpisList) + "\n"
+                            + string.Join("\n", filesList));
+                    }
+
+                    dlg.Close();
                 };
 
-            dlg.CancelPressed += delegate
-                {
-                    if (sectionWorker.IsBusy)
-                    {
-                        sectionWorker.CancelAsync();
-                    }
+            dlg.CancelPressed += (sender, args) => worker.CancelAsync();
 
-                    if (worker.IsBusy)
-                    {
-                        worker.CancelAsync();
-                    }
-                };
-
-            dlg.MessageText = "Loading sections...";
-            sectionWorker.RunWorkerAsync(Globals.Palette);
+            dlg.MessageText = "Loading sections and features ...";
+            worker.RunWorkerAsync(Globals.Palette);
 
             dlg.Display();
         }
@@ -624,6 +645,17 @@
             }
 
             return filename + " - " + ProgramName;
+        }
+
+        public class SectionFeatureLoadResult
+        {
+            public IList<Section> Sections { get; set; }
+
+            public IList<Feature> Features { get; set; }
+
+            public List<HpiErrorInfo> Errors { get; set; }
+
+            public List<HpiInnerFileErrorInfo> FileErrors { get; set; }
         }
     }
 }

@@ -88,10 +88,17 @@
     <Compile Include="Data\Section.cs" />
     <Compile Include="Data\StartPositionChangedEventArgs.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="IO\AbstractHpiLoader.cs" />
     <Compile Include="IO\BitmapDeserializer.cs" />
     <Compile Include="IO\BitmapCache.cs" />
     <Compile Include="IO\BitmapSerializer.cs" />
+    <Compile Include="IO\FeatureBitmapLoader.cs" />
+    <Compile Include="IO\FeatureRenderLoader.cs" />
+    <Compile Include="IO\FeatureTdfLoader.cs" />
     <Compile Include="IO\FeatureLoadingUtils.cs" />
+    <Compile Include="IO\HpiErrorInfo.cs" />
+    <Compile Include="IO\HpiInnerFileErrorInfo.cs" />
+    <Compile Include="IO\LoadResult.cs" />
     <Compile Include="IO\MapModelFactory.cs" />
     <Compile Include="IO\MapModelTntAdapter.cs" />
     <Compile Include="IO\MapSaver.cs" />
@@ -99,6 +106,7 @@
     <Compile Include="IO\PaletteFactory.cs" />
     <Compile Include="IO\BinaryPaletteReader.cs" />
     <Compile Include="IO\SectionFactory.cs" />
+    <Compile Include="IO\SectionLoader.cs" />
     <Compile Include="IO\SectionLoadingUtils.cs" />
     <Compile Include="MappySettings.cs" />
     <Compile Include="Minimap\IMinimapModel.cs" />
