@@ -64,6 +64,13 @@
             sectionWorker.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage / 2;
             sectionWorker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
                 {
+                    if (args.Error != null)
+                    {
+                        Program.HandleUnexpectedException(args.Error);
+                        Application.Exit();
+                        return;
+                    }
+
                     if (!args.Cancelled)
                     {
                         var sections = (IList<Section>)args.Result;
@@ -86,6 +93,13 @@
             worker.ProgressChanged += (sender, args) => dlg.Progress = 50 + (args.ProgressPercentage / 2);
             worker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
                 {
+                    if (args.Error != null)
+                    {
+                        Program.HandleUnexpectedException(args.Error);
+                        Application.Exit();
+                        return;
+                    }
+
                     if (!args.Cancelled)
                     {
                         var records = (IEnumerable<Feature>)args.Result;
@@ -268,6 +282,13 @@
             worker.ProgressChanged += (o, args) => dlg.Progress = args.ProgressPercentage;
             worker.RunWorkerCompleted += delegate(object o, RunWorkerCompletedEventArgs args)
                 {
+                    if (args.Error != null)
+                    {
+                        Program.HandleUnexpectedException(args.Error);
+                        Application.Exit();
+                        return;
+                    }
+
                     if (!args.Cancelled)
                     {
                         var img = (Bitmap)args.Result;

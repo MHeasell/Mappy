@@ -52,12 +52,7 @@
             Application.Run(mainForm);
         }
 
-        private static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
-        {
-            HandleUnexpectedException((Exception)e.ExceptionObject);
-        }
-
-        private static void HandleUnexpectedException(Exception ex)
+        public static void HandleUnexpectedException(Exception ex)
         {
             string fileName = string.Format(
                 "{0}Crash_{1}.log",
@@ -113,6 +108,11 @@
                 "Fatal Error",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
+        }
+
+        private static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            HandleUnexpectedException((Exception)e.ExceptionObject);
         }
 
         private static void RemoveOldVersionSettings()
