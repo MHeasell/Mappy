@@ -478,7 +478,7 @@
         private bool OpenMap(string filename)
         {
             string ext = Path.GetExtension(filename) ?? string.Empty;
-            ext = ext.ToLower();
+            ext = ext.ToLowerInvariant();
 
             try
             {
