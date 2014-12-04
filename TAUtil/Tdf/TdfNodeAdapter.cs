@@ -16,7 +16,6 @@
 
         public void BeginBlock(string name)
         {
-            name = name.ToLowerInvariant();
             TdfNode n = new TdfNode(name);
             this.nodeStack.Peek().Keys[name] = n;
             this.nodeStack.Push(n);
@@ -24,8 +23,6 @@
 
         public void AddProperty(string name, string value)
         {
-            name = name.ToLowerInvariant();
-            value = value.ToLowerInvariant();
             this.nodeStack.Peek().Entries[name] = value;
         }
 

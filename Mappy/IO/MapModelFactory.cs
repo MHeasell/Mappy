@@ -31,16 +31,16 @@
             var attrs = MapAttributes.Load(ota);
             var model = new MapModel(tnt.DataWidth, tnt.DataHeight, attrs);
 
-            var schemaData = ota.Keys["globalheader"].Keys["schema 0"];
+            var schemaData = ota.Keys["GlobalHeader"].Keys["Schema 0"];
             if (schemaData.Keys.ContainsKey("features"))
             {
                 var featureData = schemaData.Keys["features"];
                 foreach (var data in featureData.Keys)
                 {
                     TdfNode node = data.Value;
-                    var x = TdfConvert.ToInt32(node.Entries["xpos"]);
-                    var y = TdfConvert.ToInt32(node.Entries["zpos"]);
-                    var name = node.Entries["featurename"];
+                    var x = TdfConvert.ToInt32(node.Entries["XPos"]);
+                    var y = TdfConvert.ToInt32(node.Entries["ZPos"]);
+                    var name = node.Entries["Featurename"];
 
                     var inst = new FeatureInstance(Guid.NewGuid(), name, x, y);
                     model.AddFeatureInstance(inst);
@@ -105,7 +105,7 @@
             ReadData(tnt, model, tiles);
 
             List<string> features = new List<string>(tnt.AnimCount);
-            features.AddRange(tnt.EnumerateAnims().Select(x => x.ToLowerInvariant()));
+            features.AddRange(tnt.EnumerateAnims());
 
             ReadFeatures(tnt, model, features);
 
