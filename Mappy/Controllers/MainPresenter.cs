@@ -552,7 +552,7 @@
                 return false;
             }
 
-            this.model.OpenHapi(filename, Path.Combine("maps", mapName + ".tnt"), readOnly);
+            this.model.OpenHapi(filename, HpiPath.Combine("maps", mapName + ".tnt"), readOnly);
             return true;
         }
 

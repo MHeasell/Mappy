@@ -39,7 +39,10 @@
         }
 
         /// <param name="directory">The directory to enumerate</param>
-        /// <returns>An enumeration of all files in the given dir, full path relative to HPI root</returns>
+        /// <returns>An enumeration of all files in the given dir, full path relative to HPI root.
+        /// Beware that paths inside HPIs can contain characters that are usually forbidden in Windows,
+        /// such as ">", so you should not use OS path routines that will complain about them.
+        /// Use HpiPath instead.</returns>
         public IEnumerable<HpiEntry> GetFilesRecursive(string directory)
         {
             IEnumerable<HpiEntry> en = this.GetFilesAndDirectories(directory);
@@ -48,11 +51,11 @@
             {
                 if (e.Type == HpiEntry.FileType.File)
                 {
-                    yield return new HpiEntry(Path.Combine(directory, e.Name), e.Type, e.Size);
+                    yield return new HpiEntry(HpiPath.Combine(directory, e.Name), e.Type, e.Size);
                 }
                 else
                 {
-                    var recEn = this.GetFilesRecursive(Path.Combine(directory, e.Name));
+                    var recEn = this.GetFilesRecursive(HpiPath.Combine(directory, e.Name));
                     foreach (HpiEntry f in recEn)
                     {
                         yield return f;
@@ -70,7 +73,10 @@
 
         /// <param name="directory">The directory to enumerate, relative to the HPI root</param>
         /// <returns>An enumeration of all the files in the given directory inside the HPI file,
-        /// relative to that directory</returns>
+        /// relative to that directory.
+        /// Beware that paths inside HPIs can contain characters that are usually forbidden in Windows,
+        /// such as ">", so you should not use OS path routines that will complain about them.
+        /// Use HpiPath instead.</returns>
         public IEnumerable<HpiEntry> GetFiles(string directory)
         {
             return this.GetFilesAndDirectories(directory).Where(x => x.Type == HpiEntry.FileType.File);

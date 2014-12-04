@@ -48,6 +48,7 @@
     <Compile Include="3do\PrimitiveHeader.cs" />
     <Compile Include="3do\Vector.cs" />
     <Compile Include="Gaf\CompressedFrameReader.cs" />
+    <Compile Include="Hpi\HpiPath.cs" />
     <Compile Include="MapConstants.cs" />
     <Compile Include="Gaf\GafEntry.cs" />
     <Compile Include="Gaf\Structures\GafEntry.cs" />

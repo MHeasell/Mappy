@@ -26,13 +26,13 @@
                 .Select(x => x.Name)
                 .Where(x =>
                     x.EndsWith(".3do", StringComparison.OrdinalIgnoreCase)
-                    && this.objectMap.ContainsKey(Path.GetFileNameWithoutExtension(x).ToLower()));
+                    && this.objectMap.ContainsKey(HpiPath.GetFileNameWithoutExtension(x).ToLower()));
         }
 
         protected override void LoadFile(HpiReader r, string file)
         {
             Debug.Assert(file != null, "Null filename");
-            var records = this.objectMap[Path.GetFileNameWithoutExtension(file).ToLower()];
+            var records = this.objectMap[HpiPath.GetFileNameWithoutExtension(file).ToLower()];
 
             using (var b = r.ReadFile(file))
             {

@@ -500,7 +500,7 @@
 
             using (HpiReader hpi = new HpiReader(hpipath))
             {
-                string otaPath = Path.ChangeExtension(mappath, ".ota");
+                string otaPath = HpiPath.ChangeExtension(mappath, ".ota");
 
                 TdfNode n;
 

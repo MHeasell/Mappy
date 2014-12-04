@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
 
     using Mappy.Data;
@@ -26,14 +25,14 @@
             using (var s = new SctReader(h.ReadFile(sect)))
             {
                 var section = new Section(h.FileName, sect);
-                section.Name = Path.GetFileNameWithoutExtension(sect);
+                section.Name = HpiPath.GetFileNameWithoutExtension(sect);
                 section.Minimap = this.factory.MinimapFromSct(s);
                 section.DataWidth = s.DataWidth;
                 section.DataHeight = s.DataHeight;
 
-                string directoryString = Path.GetDirectoryName(sect);
+                string directoryString = HpiPath.GetDirectoryName(sect);
                 Debug.Assert(directoryString != null, "Null directory for section in HPI.");
-                string[] directories = directoryString.Split(Path.DirectorySeparatorChar);
+                string[] directories = directoryString.Split('\\');
 
                 section.World = directories[1];
                 section.Category = directories[2];
