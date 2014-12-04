@@ -6,7 +6,7 @@
     using System.Text;
     using System.Text.RegularExpressions;
 
-    public class TdfRecursiveParser
+    public class TdfParser
     {
         private readonly TextReader reader;
 
@@ -16,7 +16,7 @@
 
         private int currentColumn = 1;
 
-        public TdfRecursiveParser(TextReader reader, ITdfNodeAdapter adapter)
+        public TdfParser(TextReader reader, ITdfNodeAdapter adapter)
         {
             this.reader = new TdfTextReader(reader);
             this.adapter = adapter;
