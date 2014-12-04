@@ -2,7 +2,6 @@ namespace Mappy.Operations
 {
     using System;
 
-    using Mappy.Collections;
     using Mappy.Models;
 
     public class RemoveFeatureOperation : IReplayableOperation

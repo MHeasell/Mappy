@@ -1,9 +1,9 @@
 namespace Mappy.Operations
 {
     using System;
-    using Data;
 
     using Mappy.Collections;
+    using Mappy.Data;
 
     public class MoveFeatureOperation : IReplayableOperation
     {

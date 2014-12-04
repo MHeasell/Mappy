@@ -2,7 +2,8 @@
 {
     using System;
     using System.Drawing;
-    using Data;
+
+    using Mappy.Data;
 
     public class MoveTileOperation : IReplayableOperation
     {

@@ -3,8 +3,6 @@
     using System;
     using System.Collections.ObjectModel;
 
-    using Mappy.Collections;
-
     public interface ISelectionModel : IBindingMapModel
     {
         event EventHandler SelectedTileChanged;

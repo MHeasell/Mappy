@@ -5,11 +5,10 @@ namespace Mappy.UI.Controls
     using System.Collections.Specialized;
     using System.Drawing;
     using System.Linq;
-    using Drawables;
 
     using Mappy.Collections;
-
-    using Util;
+    using Mappy.UI.Drawables;
+    using Mappy.Util;
 
     public class ImageLayerCollection : ICollection<ImageLayerCollection.Item>, INotifyCollectionChanged
     {

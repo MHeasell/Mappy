@@ -1,7 +1,6 @@
 ﻿namespace Mappy
 {
     using System;
-    using System.Globalization;
 
     public static class TdfConvert
     {

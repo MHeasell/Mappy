@@ -5,7 +5,8 @@
     using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
-    using Data;
+
+    using Mappy.Data;
 
     public partial class SectionView : UserControl
     {

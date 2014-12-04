@@ -1,7 +1,8 @@
 ﻿namespace Mappy.UI.Painters
 {
     using System.Drawing;
-    using Util;
+
+    using Mappy.Util;
 
     public class GridPainter : IPainter
     {

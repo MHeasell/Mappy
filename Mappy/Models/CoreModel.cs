@@ -9,24 +9,21 @@
     using System.Linq;
     using System.Windows.Forms;
 
-    using Data;
-
     using Mappy.Collections;
+    using Mappy.Data;
     using Mappy.Database;
     using Mappy.IO;
     using Mappy.Minimap;
     using Mappy.Models.BandboxBehaviours;
+    using Mappy.Operations;
     using Mappy.Operations.SelectionModel;
+    using Mappy.Util;
     using Mappy.Util.ImageSampling;
-
-    using Operations;
 
     using TAUtil.Hpi;
     using TAUtil.Sct;
     using TAUtil.Tdf;
     using TAUtil.Tnt;
-
-    using Util;
 
     public class CoreModel : Notifier, IMinimapModel, IMainModel
     {

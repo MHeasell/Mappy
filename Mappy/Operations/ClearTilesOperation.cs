@@ -1,7 +1,8 @@
 ﻿namespace Mappy.Operations
 {
     using System.Collections.Generic;
-    using Data;
+
+    using Mappy.Data;
     using Mappy.Models;
 
     public class ClearTilesOperation : IReplayableOperation

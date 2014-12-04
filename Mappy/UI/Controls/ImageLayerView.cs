@@ -8,8 +8,7 @@
     using System.Windows.Forms;
 
     using Mappy.Presentation;
-
-    using Painters;
+    using Mappy.UI.Painters;
 
     public class ImageLayerView : ScrollableControl, IMapView
     {

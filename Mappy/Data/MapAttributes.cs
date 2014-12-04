@@ -4,9 +4,9 @@
     using System.Drawing;
     using System.IO;
 
-    using TAUtil.Tdf;
+    using Mappy.Util;
 
-    using Util;
+    using TAUtil.Tdf;
 
     /// <summary>
     /// Contains all the metadata about a map.

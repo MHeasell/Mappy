@@ -12,14 +12,12 @@
     using Mappy.Data;
     using Mappy.IO;
     using Mappy.Minimap;
+    using Mappy.Models;
     using Mappy.Palette;
-
-    using Models;
+    using Mappy.Views;
 
     using TAUtil;
     using TAUtil.Hpi;
-
-    using Views;
 
     /// <summary>
     /// Presenter for Mappy's main form.

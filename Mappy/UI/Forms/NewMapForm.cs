@@ -2,7 +2,6 @@
 {
     using System;
     using System.ComponentModel;
-    using System.Globalization;
     using System.Windows.Forms;
 
     public partial class NewMapForm : Form

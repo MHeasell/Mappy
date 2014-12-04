@@ -6,15 +6,13 @@ namespace Mappy.Util
     using System.Drawing;
     using System.Linq;
 
-    using Data;
     using Geometry;
 
     using Mappy.Collections;
+    using Mappy.Data;
     using Mappy.Models;
     using Mappy.Properties;
     using Mappy.Util.ImageSampling;
-
-    using Point = System.Drawing.Point;
 
     public static class Util
     {

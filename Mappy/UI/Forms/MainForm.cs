@@ -3,11 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.Drawing.Imaging;
     using System.Globalization;
     using System.Windows.Forms;
-    using Data;
+
     using Mappy.Controllers;
+    using Mappy.Data;
     using Mappy.Minimap;
     using Mappy.Models;
     using Mappy.Views;

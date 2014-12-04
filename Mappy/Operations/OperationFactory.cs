@@ -1,9 +1,9 @@
 ﻿namespace Mappy.Operations
 {
     using System.Drawing;
-    using Data;
 
     using Mappy.Collections;
+    using Mappy.Data;
     using Mappy.Models;
     using Mappy.Operations.SelectionModel;
 

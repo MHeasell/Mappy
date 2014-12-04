@@ -1,7 +1,8 @@
 ﻿namespace Mappy.Operations
 {
     using System.Collections.Generic;
-    using Data;
+
+    using Mappy.Data;
 
     public class RemoveTileOperation : IReplayableOperation
     {

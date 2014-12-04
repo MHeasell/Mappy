@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
-    using Data;
 
     using Mappy.Collections;
+    using Mappy.Data;
     using Mappy.Util;
 
     public class BindingMapModel : Notifier, IBindingMapModel

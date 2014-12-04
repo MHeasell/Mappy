@@ -1,11 +1,11 @@
 ﻿namespace Mappy.Views
 {
-    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
-    using Data;
-    using Models;
+
+    using Mappy.Data;
+    using Mappy.Models;
 
     public interface IMainView
     {

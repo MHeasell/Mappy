@@ -2,9 +2,9 @@
 {
     using System;
     using System.ComponentModel;
-    using Data;
 
     using Mappy.Collections;
+    using Mappy.Data;
 
     public interface IBindingMapModel : IMapModel, INotifyPropertyChanged
     {
