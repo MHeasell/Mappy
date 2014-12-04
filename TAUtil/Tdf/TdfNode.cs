@@ -1,5 +1,6 @@
 ﻿namespace TAUtil.Tdf
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
 
@@ -15,8 +16,8 @@
         public TdfNode(string name)
         {
             this.Name = name;
-            this.Keys = new Dictionary<string, TdfNode>();
-            this.Entries = new Dictionary<string, string>();
+            this.Keys = new Dictionary<string, TdfNode>(StringComparer.OrdinalIgnoreCase);
+            this.Entries = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
         public string Name { get; set; }

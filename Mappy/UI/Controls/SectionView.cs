@@ -42,14 +42,20 @@
                 return;
             }
 
-            foreach (var world in this.Sections.GroupBy(x => x.World.ToLowerInvariant()).OrderBy(x => x.Key))
+            var orderedWorlds = this.Sections
+                .GroupBy(x => x.World, StringComparer.InvariantCultureIgnoreCase)
+                .OrderBy(x => x.Key, StringComparer.InvariantCultureIgnoreCase);
+            foreach (var world in orderedWorlds)
             {
                 this.comboBox1.Items.Add(world.Key);
 
                 TabControl tabs = new TabControl();
                 tabs.Dock = DockStyle.Fill;
 
-                foreach (var group in world.GroupBy(x => x.Category.ToLowerInvariant()).OrderBy(x => x.Key))
+                var orderedGroups = world
+                    .GroupBy(x => x.Category, StringComparer.InvariantCultureIgnoreCase)
+                    .OrderBy(x => x.Key, StringComparer.InvariantCultureIgnoreCase);
+                foreach (var group in orderedGroups)
                 {
                     ListView view = this.CreateViewFor(group);
                     view.MultiSelect = false;

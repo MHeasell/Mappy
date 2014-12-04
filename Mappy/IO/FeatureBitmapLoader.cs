@@ -47,7 +47,7 @@
 
             Debug.Assert(file != null, "Null path in HPI listing.");
 
-            var records = this.filenameFeatureMap[HpiPath.GetFileNameWithoutExtension(file).ToLower()];
+            var records = this.filenameFeatureMap[HpiPath.GetFileNameWithoutExtension(file)];
 
             // retrieve the anim for each record
             foreach (var record in records)
@@ -89,7 +89,7 @@
         {
             return file.EndsWith(".gaf", StringComparison.OrdinalIgnoreCase)
                 && this.filenameFeatureMap.ContainsKey(
-                    HpiPath.GetFileNameWithoutExtension(file).ToLower());
+                    HpiPath.GetFileNameWithoutExtension(file));
         }
     }
 }

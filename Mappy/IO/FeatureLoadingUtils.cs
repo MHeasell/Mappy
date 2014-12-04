@@ -31,8 +31,8 @@
             }
 
             var filenameMap = records.Values
-                .GroupBy(x => x.AnimFileName.ToLower())
-                .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList());
+                .GroupBy(x => x.AnimFileName, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList(), StringComparer.OrdinalIgnoreCase);
 
             var bitmapLoader = new FeatureBitmapLoader(palette, filenameMap);
             if (!bitmapLoader.LoadFiles(i => progressCallback(33 + ((i * 33) / 100)), cancelCallback))
@@ -48,8 +48,8 @@
             }
 
             var objectMap = records.Values
-                .GroupBy(x => x.ObjectName.ToLower())
-                .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList());
+                .GroupBy(x => x.ObjectName, StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList(), StringComparer.OrdinalIgnoreCase);
 
             var renderLoader = new FeatureRenderLoader(objectMap);
             if (!renderLoader.LoadFiles(i => progressCallback(66 + ((i * 33) / 100)), cancelCallback))
