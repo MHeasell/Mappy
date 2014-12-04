@@ -503,12 +503,12 @@
             }
             catch (IOException e)
             {
-                this.view.ShowError(string.Format("IO error opening map: " + e.Message));
+                this.view.ShowError("IO error opening map: " + e.Message);
                 return false;
             }
             catch (ParseException e)
             {
-                this.view.ShowError(string.Format("Cannot open map: " + e.Message));
+                this.view.ShowError("Cannot open map: " + e.Message);
                 return false;
             }
         }
