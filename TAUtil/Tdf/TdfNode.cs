@@ -28,7 +28,7 @@
         public static TdfNode LoadTdf(TextReader reader)
         {
             var adapter = new TdfNodeAdapter();
-            var parser = new TdfParser(reader, adapter);
+            var parser = new TdfRecursiveParser(reader, adapter);
             parser.Load();
             return adapter.RootNode;
         }

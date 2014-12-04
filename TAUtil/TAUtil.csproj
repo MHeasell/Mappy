@@ -71,6 +71,8 @@
     <Compile Include="Tdf\TdfNode.cs" />
     <Compile Include="Tdf\TdfNodeAdapter.cs" />
     <Compile Include="Tdf\TdfParser.cs" />
+    <Compile Include="Tdf\TdfRecursiveParser.cs" />
+    <Compile Include="Tdf\TdfTextReader.cs" />
     <Compile Include="Tnt\ITntSource.cs" />
     <Compile Include="Tnt\MinimapInfo.cs" />
     <Compile Include="Tnt\TileAttr.cs" />
