@@ -5,6 +5,11 @@
     public struct SctHeader
     {
         /// <summary>
+        /// Length of the header in bytes.
+        /// </summary>
+        public const int HeaderLength = 28;
+
+        /// <summary>
         /// SCT version. Usually set to  2 or 3.
         /// </summary>
         public uint Version;
