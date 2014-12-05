@@ -67,9 +67,13 @@
             header.PtrData = b.ReadUInt32();
         }
 
-        public void Write(Stream file)
+        public void Write(Stream s)
         {
-            BinaryWriter b = new BinaryWriter(file);
+            this.Write(new BinaryWriter(s));
+        }
+
+        public void Write(BinaryWriter b)
+        {
             b.Write(this.Version);
             b.Write(this.PtrMiniMap);
             b.Write(this.Tiles);
