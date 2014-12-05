@@ -8,6 +8,8 @@
         public const ushort FeatureVoid = 0xFFFC;
         public const ushort FeatureUnknown = 0xFFFE;
         public const int AttrLength = 4;
+        public const int SctVersion2AttrLength = 8;
+        public const int SctVersion3AttrLength = 4;
 
         public byte Height;
 
@@ -70,6 +72,19 @@
             b.Write(this.Height);
             b.Write(this.Feature);
             b.Write(this.Pad1);
+        }
+
+        public void WriteToSct(BinaryWriter b, int version)
+        {
+            b.Write(this.Height);
+            b.Write((short)0); // padding
+            b.Write((byte)0); // more padding
+
+            if (version == 2)
+            {
+                // write some more padding present in V2
+                b.Write(0);
+            }
         }
     }
 }
