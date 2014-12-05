@@ -1,10 +1,11 @@
 ﻿namespace TAUtil.Sct
 {
+    using System;
     using System.IO;
 
     using TAUtil.Tnt;
 
-    public class SctWriter
+    public class SctWriter : IDisposable
     {
         private readonly BinaryWriter writer;
 
@@ -41,6 +42,20 @@
             this.WriteHeights(adapter);
             this.WriteTiles(adapter);
             this.WriteMinimap(adapter);
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.writer.Dispose();
+            }
         }
 
         private void WriteMinimap(ISctSource adapter)
