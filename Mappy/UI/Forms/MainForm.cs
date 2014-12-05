@@ -253,6 +253,19 @@
             }
         }
 
+        public bool ExportHeightmapEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem18.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem18.Enabled = value;
+            }
+        }
+
         public string AskUserToChooseMap(IList<string> maps)
         {
             MapSelectionForm f = new MapSelectionForm();
@@ -322,6 +335,21 @@
         {
             SaveFileDialog d = new SaveFileDialog();
             d.Title = "Export Minimap";
+            d.Filter = "PNG files|*.png|All files|*.*";
+            d.AddExtension = true;
+            DialogResult result = d.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                return d.FileName;
+            }
+
+            return null;
+        }
+
+        public string AskUserToSaveHeightmap()
+        {
+            SaveFileDialog d = new SaveFileDialog();
+            d.Title = "Export Heightmap";
             d.Filter = "PNG files|*.png|All files|*.*";
             d.AddExtension = true;
             DialogResult result = d.ShowDialog(this);
@@ -568,6 +596,11 @@
         private void toolStripMenuItem17_Click(object sender, EventArgs e)
         {
             this.Presenter.ExportMinimap();
+        }
+
+        private void toolStripMenuItem18_Click(object sender, EventArgs e)
+        {
+            this.Presenter.ExportHeightmap();
         }
     }
 }

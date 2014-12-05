@@ -16,6 +16,22 @@ namespace Mappy.Util
 
     public static class Util
     {
+        public static Bitmap ExportHeightmap(IGrid<int> heights)
+        {
+            var bmp = new Bitmap(heights.Width, heights.Height);
+            for (int y = 0; y < heights.Height; y++)
+            {
+                for (int x = 0; x < heights.Width; x++)
+                {
+                    var val = heights[x, y];
+                    var c = Color.FromArgb(val, val, val);
+                    bmp.SetPixel(x, y, c);
+                }
+            }
+
+            return bmp;
+        }
+
         public static HashSet<Bitmap> GetUsedTiles(IMapTile tile)
         {
             HashSet<Bitmap> set = new HashSet<Bitmap>();

@@ -9,6 +9,7 @@
     using System.Linq;
     using System.Windows.Forms;
 
+    using Mappy.Collections;
     using Mappy.Data;
     using Mappy.IO;
     using Mappy.Minimap;
@@ -343,6 +344,28 @@
             }
         }
 
+        public void ExportHeightmap()
+        {
+            var loc = this.view.AskUserToSaveHeightmap();
+            if (loc == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var b = Mappy.Util.Util.ExportHeightmap(this.model.Map.Tile.HeightGrid);
+                using (var s = File.Create(loc))
+                {
+                    b.Save(s, ImageFormat.Png);
+                }
+            }
+            catch (Exception)
+            {
+                this.view.ShowError("There was a problem saving the heightmap.");
+            }
+        }
+
         public void ExportMinimap()
         {
             var loc = this.view.AskUserToSaveMinimap();
@@ -582,6 +605,7 @@
                     this.view.RefreshMinimapEnabled = this.model.MapOpen;
                     this.view.RefreshMinimapHighQualityEnabled = this.model.MapOpen;
                     this.view.ExportMinimapEnabled = this.model.MapOpen;
+                    this.view.ExportHeightmapEnabled = this.model.MapOpen;
                     break;
                 case "IsFileOpen":
                     this.view.SaveAsEnabled = this.model.IsFileOpen;

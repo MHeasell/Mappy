@@ -47,6 +47,8 @@
 
         bool ExportMinimapEnabled { get; set; }
 
+        bool ExportHeightmapEnabled { get; set; }
+
         string AskUserToChooseMap(IList<string> maps);
 
         string AskUserToOpenFile();
@@ -54,6 +56,8 @@
         string AskUserToSaveFile();
 
         string AskUserToSaveMinimap();
+
+        string AskUserToSaveHeightmap();
 
         void CapturePreferences();
 
