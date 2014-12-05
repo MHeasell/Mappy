@@ -9,6 +9,11 @@
     {
         private readonly BinaryWriter writer;
 
+        public SctWriter(Stream s)
+            : this(new BinaryWriter(s))
+        {
+        }
+
         public SctWriter(BinaryWriter writer)
         {
             this.writer = writer;
