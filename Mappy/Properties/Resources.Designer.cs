@@ -186,15 +186,5 @@ namespace Mappy.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] PALETTE {
-            get {
-                object obj = ResourceManager.GetObject("PALETTE", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

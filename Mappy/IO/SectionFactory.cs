@@ -8,7 +8,6 @@
 
     using TAUtil;
     using TAUtil.Gdi.Bitmap;
-    using TAUtil.Gdi.Palette;
     using TAUtil.Sct;
 
     /// <summary>
@@ -17,13 +16,6 @@
     /// </summary>
     public class SectionFactory
     {
-        private readonly BitmapDeserializer bitmapDeserializer;
-
-        public SectionFactory(IPalette palette)
-        {
-            this.bitmapDeserializer = new BitmapDeserializer(palette);
-        }
-
         public MapTile TileFromSct(ISctSource sct)
         {
             MapTile tile = new MapTile(sct.DataWidth, sct.DataHeight);
@@ -71,7 +63,7 @@
 
         private Bitmap MinimapToBitmap(byte[] minimap)
         {
-            return this.bitmapDeserializer.Deserialize(
+            return BitmapConvert.ToBitmap(
                 minimap,
                 SctReader.MinimapWidth,
                 SctReader.MinimapHeight);
@@ -79,7 +71,7 @@
 
         private Bitmap TileToBitmap(byte[] tile)
         {
-            Bitmap bmp = this.bitmapDeserializer.Deserialize(
+            Bitmap bmp = BitmapConvert.ToBitmap(
                 tile,
                 MapConstants.TileWidth,
                 MapConstants.TileHeight);

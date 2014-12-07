@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using System.Drawing;
 
+    using TAUtil.Gdi.Palette;
+
     public class BilinearWrapper : IPixelImage
     {
         private readonly IPixelImage source;
@@ -24,7 +26,7 @@
             {
                 var rect = this.GetRect(x, y);
                 var sampledColor = this.SampleArea(rect.X, rect.Y, rect.Width, rect.Height);
-                var nearestNeighbour = NearestNeighbour(sampledColor, Globals.Palette);
+                var nearestNeighbour = NearestNeighbour(sampledColor, PaletteFactory.TAPalette);
 
                 return nearestNeighbour;
             }

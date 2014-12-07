@@ -11,22 +11,15 @@
 
     using TAUtil.Gaf;
     using TAUtil.Gdi.Bitmap;
-    using TAUtil.Gdi.Palette;
     using TAUtil.Hpi;
 
     public class FeatureBitmapLoader : AbstractHpiLoader<KeyValuePair<string, OffsetBitmap>>
     {
         private readonly IDictionary<string, IList<FeatureRecord>> filenameFeatureMap;
 
-        private readonly BitmapDeserializer deserializer;
-
-        private readonly TransparencyMaskedPalette palette;
-
-        public FeatureBitmapLoader(IPalette palette, IDictionary<string, IList<FeatureRecord>> filenameFeatureMap)
+        public FeatureBitmapLoader(IDictionary<string, IList<FeatureRecord>> filenameFeatureMap)
         {
             this.filenameFeatureMap = filenameFeatureMap;
-            this.palette = new TransparencyMaskedPalette(palette);
-            this.deserializer = new BitmapDeserializer(this.palette);
         }
 
         protected override IEnumerable<string> EnumerateFiles(HpiReader r)
@@ -68,7 +61,6 @@
                 }
 
                 var frame = entry.Frames[0];
-                this.palette.TransparencyIndex = frame.TransparencyIndex;
 
                 Bitmap bmp;
                 if (frame.Width == 0 || frame.Height == 0)
@@ -77,7 +69,11 @@
                 }
                 else
                 {
-                    bmp = this.deserializer.Deserialize(frame.Data, frame.Width, frame.Height);
+                    bmp = BitmapConvert.ToBitmap(
+                        frame.Data,
+                        frame.Width,
+                        frame.Height,
+                        frame.TransparencyIndex);
                 }
 
                 var offsetImage = new OffsetBitmap(-frame.OffsetX, -frame.OffsetY, bmp);

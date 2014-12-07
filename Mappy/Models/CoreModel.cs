@@ -79,10 +79,10 @@
             this.featureRecords = new FeatureDictionary();
             this.sections = new List<Section>();
 
-            this.sectionFactory = new SectionFactory(Globals.Palette);
-            this.mapModelFactory = new MapModelFactory(Globals.Palette);
+            this.sectionFactory = new SectionFactory();
+            this.mapModelFactory = new MapModelFactory();
 
-            this.mapSaver = new MapSaver(Globals.Palette);
+            this.mapSaver = new MapSaver();
 
             // hook up undoManager
             this.undoManager.CanUndoChanged += this.CanUndoChanged;

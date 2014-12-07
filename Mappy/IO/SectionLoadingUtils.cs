@@ -9,12 +9,11 @@
     public static class SectionLoadingUtils
     {
         public static bool LoadSections(
-            IPalette palette,
             Action<int> progressCallback,
             Func<bool> cancelCallback,
             out LoadResult<Section> result)
         {
-            var loader = new SectionLoader(palette);
+            var loader = new SectionLoader();
             if (!loader.LoadFiles(progressCallback, cancelCallback))
             {
                 result = null;

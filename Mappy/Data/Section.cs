@@ -75,7 +75,7 @@ namespace Mappy.Data
 
             using (var s = new SctReader(File.OpenRead(outpath)))
             {
-                SectionFactory factory = new SectionFactory(Globals.Palette);
+                SectionFactory factory = new SectionFactory();
                 this.cachedTile = factory.TileFromSct(s);
             }
 

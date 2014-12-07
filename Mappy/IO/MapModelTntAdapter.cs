@@ -2,14 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Drawing;
-    using System.IO;
     using System.Linq;
 
     using Mappy.Models;
     using Mappy.Util;
 
     using TAUtil.Gdi.Bitmap;
-    using TAUtil.Gdi.Palette;
     using TAUtil.Tnt;
 
     /// <summary>
@@ -28,16 +26,13 @@
 
         private readonly IDictionary<string, int> reverseFeatures;
 
-        private readonly BitmapSerializer bitmapSerializer;
-
-        public MapModelTntAdapter(IMapModel model, IPalette palette)
+        public MapModelTntAdapter(IMapModel model)
         {
             this.model = model;
             this.tiles = Util.GetUsedTiles(model.Tile).ToArray();
             this.reverseTiles = Util.ReverseMapping(this.tiles);
             this.features = model.EnumerateFeatureInstances().Select(x => x.FeatureName).Distinct().ToArray();
             this.reverseFeatures = Util.ReverseMapping(this.features);
-            this.bitmapSerializer = new BitmapSerializer(palette);
         }
 
         public int DataWidth
@@ -116,10 +111,7 @@
 
         private byte[] ToBytes(Bitmap tile)
         {
-            byte[] bytes = new byte[tile.Width * tile.Height];
-            MemoryStream s = new MemoryStream(bytes, true);
-            this.bitmapSerializer.Serialize(s, tile);
-            return bytes;
+            return BitmapConvert.ToBytes(tile);
         }
 
         private TileAttr GetAttr(int x, int y)

@@ -7,7 +7,17 @@ namespace TAUtil.Gdi.Palette
     /// </summary>
     public static class PaletteFactory
     {
+        public static readonly IPalette TAPalette;
+
         private const int TAPaletteColorCount = 256;
+
+        static PaletteFactory()
+        {
+            using (var r = new MemoryStream(TAUtil.Gdi.Properties.Resources.PALETTE))
+            {
+                TAPalette = PaletteFactory.FromBinaryPal(r);
+            }
+        }
 
         public static IPalette FromBinaryPal(Stream file)
         {

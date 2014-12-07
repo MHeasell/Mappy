@@ -13,7 +13,6 @@
     public class FeatureLoadingUtils
     {
         public static bool LoadFeatures(
-            IPalette palette,
             Action<int> progressCallback,
             Func<bool> cancelCallback,
             out LoadResult<Feature> result)
@@ -35,7 +34,7 @@
                 .GroupBy(x => x.AnimFileName, StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList(), StringComparer.OrdinalIgnoreCase);
 
-            var bitmapLoader = new FeatureBitmapLoader(palette, filenameMap);
+            var bitmapLoader = new FeatureBitmapLoader(filenameMap);
             if (!bitmapLoader.LoadFiles(i => progressCallback(33 + ((i * 33) / 100)), cancelCallback))
             {
                 result = null;

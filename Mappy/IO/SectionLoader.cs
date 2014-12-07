@@ -15,9 +15,9 @@
     {
         private readonly SectionFactory factory;
 
-        public SectionLoader(IPalette palette)
+        public SectionLoader()
         {
-            this.factory = new SectionFactory(palette);
+            this.factory = new SectionFactory();
         }
 
         protected override void LoadFile(HpiReader h, string sect)

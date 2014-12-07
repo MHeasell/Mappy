@@ -10,7 +10,6 @@
 
     using TAUtil;
     using TAUtil.Gdi.Bitmap;
-    using TAUtil.Gdi.Palette;
     using TAUtil.Tdf;
     using TAUtil.Tnt;
 
@@ -20,13 +19,6 @@
     /// </summary>
     public class MapModelFactory
     {
-        private readonly BitmapDeserializer bitmapDeserializer;
-
-        public MapModelFactory(IPalette palette)
-        {
-            this.bitmapDeserializer = new BitmapDeserializer(palette);
-        }
-
         public MapModel FromTntAndOta(ITntSource tnt, TdfNode ota)
         {
             var attrs = MapAttributes.Load(ota);
@@ -119,13 +111,13 @@
 
         private Bitmap ToBitmap(byte[] tile)
         {
-            Bitmap bmp = this.bitmapDeserializer.Deserialize(tile, MapConstants.TileWidth, MapConstants.TileHeight);
+            Bitmap bmp = BitmapConvert.ToBitmap(tile, MapConstants.TileWidth, MapConstants.TileHeight);
             return Globals.TileCache.GetOrAddBitmap(bmp);
         }
 
         private Bitmap ToBitmap(MinimapInfo minimap)
         {
-            return this.bitmapDeserializer.Deserialize(minimap.Data, minimap.Width, minimap.Height);
+            return BitmapConvert.ToBitmap(minimap.Data, minimap.Width, minimap.Height);
         }
     }
 }

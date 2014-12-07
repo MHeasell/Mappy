@@ -5,7 +5,6 @@
     using Mappy.Data;
     using Mappy.Models;
 
-    using TAUtil.Gdi.Palette;
     using TAUtil.Hpi;
     using TAUtil.Tnt;
 
@@ -15,18 +14,11 @@
     /// </summary>
     public class MapSaver
     {
-        private readonly IPalette palette;
-
-        public MapSaver(IPalette palette)
-        {
-            this.palette = palette;
-        }
-
         public void SaveTnt(IMapModel map, string filename)
         {
             using (var s = new TntWriter(File.Create(filename)))
             {
-                s.WriteTnt(new MapModelTntAdapter(map, this.palette));
+                s.WriteTnt(new MapModelTntAdapter(map));
             }
         }
 
@@ -47,7 +39,7 @@
             {
                 using (var s = new TntWriter(File.Create(tmpTntName)))
                 {
-                    s.WriteTnt(new MapModelTntAdapter(map, this.palette));
+                    s.WriteTnt(new MapModelTntAdapter(map));
                 }
 
                 using (Stream s = File.Create(tmpOtaName))

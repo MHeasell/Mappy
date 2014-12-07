@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bitmap\BitmapConvert.cs" />
     <Compile Include="Bitmap\BitmapDeserializer.cs" />
     <Compile Include="Bitmap\BitmapSerializer.cs" />
     <Compile Include="Palette\ArrayPalette.cs" />
@@ -49,6 +50,12 @@
     <Compile Include="Palette\IPalette.cs" />
     <Compile Include="Palette\PaletteFactory.cs" />
     <Compile Include="Palette\TransparencyMaskedPalette.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Assets\PALETTE.PAL" />
     <None Include="Properties\AssemblyInfo.cs.tmpl" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -57,6 +64,12 @@
       <Project>{71ae8770-7794-4cf8-88f1-1d7429f24eb4}</Project>
       <Name>TAUtil</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -16,7 +16,6 @@
     using Mappy.Views;
 
     using TAUtil;
-    using TAUtil.Gdi.Palette;
     using TAUtil.Hpi;
 
     /// <summary>
@@ -63,10 +62,9 @@
             worker.DoWork += delegate(object sender, DoWorkEventArgs args)
                 {
                     var w = (BackgroundWorker)sender;
-                    var p = (IPalette)args.Argument;
+
                     LoadResult<Section> result;
                     if (!SectionLoadingUtils.LoadSections(
-                            p,
                             i => w.ReportProgress((50 * i) / 100),
                             () => w.CancellationPending,
                             out result))
@@ -77,7 +75,6 @@
 
                     LoadResult<Feature> featureResult;
                     if (!FeatureLoadingUtils.LoadFeatures(
-                        p,
                         i => w.ReportProgress(50 + ((50 * i) / 100)),
                         () => w.CancellationPending,
                         out featureResult))
@@ -150,7 +147,7 @@
             dlg.CancelPressed += (sender, args) => worker.CancelAsync();
 
             dlg.MessageText = "Loading sections and features ...";
-            worker.RunWorkerAsync(Globals.Palette);
+            worker.RunWorkerAsync();
 
             dlg.Display();
         }
