@@ -469,7 +469,7 @@
             if (File.Exists(otaFileName))
             {
                 TdfNode attrs;
-                using (var ota = new StreamReader(File.OpenRead(otaFileName)))
+                using (var ota = File.OpenRead(otaFileName))
                 {
                     attrs = TdfNode.LoadTdf(ota);
                 }
@@ -501,9 +501,9 @@
 
                 TdfNode n;
 
-                using (StreamReader sr = new StreamReader(hpi.ReadTextFile(otaPath)))
+                using (var ota = hpi.ReadTextFile(otaPath))
                 {
-                    n = TdfNode.LoadTdf(sr);
+                    n = TdfNode.LoadTdf(ota);
                 }
 
                 using (var s = new TntReader(hpi.ReadFile(mappath)))

@@ -26,6 +26,11 @@
 
         public Dictionary<string, string> Entries { get; private set; }
 
+        public static TdfNode LoadTdf(Stream s)
+        {
+            return LoadTdf(new StreamReader(s));
+        }
+
         public static TdfNode LoadTdf(TextReader reader)
         {
             var adapter = new TdfNodeAdapter();

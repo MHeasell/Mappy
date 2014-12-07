@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
 
     using Mappy.Data;
@@ -15,9 +14,9 @@
         protected override void LoadFile(HpiReader r, string file)
         {
             TdfNode n;
-            using (StreamReader sr = new StreamReader(r.ReadTextFile(file)))
+            using (var tdf = r.ReadTextFile(file))
             {
-                n = TdfNode.LoadTdf(sr);
+                n = TdfNode.LoadTdf(tdf);
             }
 
             this.Records.AddRange(
