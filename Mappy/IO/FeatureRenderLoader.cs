@@ -9,6 +9,7 @@
     using Mappy.Util;
 
     using TAUtil.Hpi;
+    using TAUtil._3do;
 
     public class FeatureRenderLoader : AbstractHpiLoader<KeyValuePair<string, OffsetBitmap>>
     {
@@ -35,9 +36,10 @@
 
             using (var b = r.ReadFile(file))
             {
-                var reader = new ModelEdgeReader();
-                reader.Read(b);
-                var wire = Util.RenderWireframe(reader.Edges);
+                var adapter = new ModelEdgeReaderAdapter();
+                var reader = new ModelReader(b, adapter);
+                reader.Read();
+                var wire = Util.RenderWireframe(adapter.Edges);
                 foreach (var record in records)
                 {
                     this.Records.Add(new KeyValuePair<string, OffsetBitmap>(record.Name, wire));

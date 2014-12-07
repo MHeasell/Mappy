@@ -6,7 +6,7 @@
 
     using TAUtil._3do;
 
-    public class ModelEdgeReader : Abstract3doReader
+    public class ModelEdgeReaderAdapter : IModelReaderAdapter
     {
         private readonly List<Vector3D> vertices = new List<Vector3D>(); 
 
@@ -22,26 +22,26 @@
             }
         }
 
-        protected override void CreateChild(string name, Vector position)
+        public void CreateChild(string name, Vector position)
         {
             this.PushNewOffset(position);
             this.vertices.Clear();
         }
 
-        protected override void BackToParent()
+        public void BackToParent()
         {
             this.positions.Pop();
             this.vertices.Clear();
         }
 
-        protected override void AddVertex(Vector v)
+        public void AddVertex(Vector v)
         {
             var basePos = this.positions.Peek();
             var vec = new Vector3D(v.X, v.Y, v.Z);
             this.vertices.Add(basePos + vec);
         }
 
-        protected override void AddPrimitive(int color, string texture, int[] vertexIndices, bool isSelectionPrimitive)
+        public void AddPrimitive(int color, string texture, int[] vertexIndices, bool isSelectionPrimitive)
         {
             if (vertexIndices.Length <= 1 || isSelectionPrimitive)
             {

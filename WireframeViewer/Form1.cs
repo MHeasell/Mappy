@@ -7,6 +7,8 @@
     using Mappy.IO;
     using Mappy.Util;
 
+    using TAUtil._3do;
+
     public partial class Form1 : Form
     {
         public Form1()
@@ -23,14 +25,16 @@
             if (result == DialogResult.OK)
             {
                 var path = dlg.FileName;
-                var loader = new ModelEdgeReader();
+
+                var adapter = new ModelEdgeReaderAdapter();
 
                 using (var s = File.OpenRead(path))
                 {
-                    loader.Read(s);
+                    var loader = new ModelReader(s, adapter);
+                    loader.Read();
                 }
 
-                var bmp = Util.RenderWireframe(loader.Edges);
+                var bmp = Util.RenderWireframe(adapter.Edges);
 
                 this.pictureBox1.Image = bmp.Bitmap;
             }

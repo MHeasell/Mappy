@@ -100,7 +100,7 @@
     <Compile Include="IO\MapModelFactory.cs" />
     <Compile Include="IO\MapModelTntAdapter.cs" />
     <Compile Include="IO\MapSaver.cs" />
-    <Compile Include="IO\ModelEdgeReader.cs" />
+    <Compile Include="IO\ModelEdgeReaderAdapter.cs" />
     <Compile Include="IO\SectionFactory.cs" />
     <Compile Include="IO\SectionLoader.cs" />
     <Compile Include="IO\SectionLoadingUtils.cs" />
