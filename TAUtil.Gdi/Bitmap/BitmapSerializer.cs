@@ -34,7 +34,7 @@ namespace TAUtil.Gdi.Bitmap
         public void Serialize(Stream output, Bitmap bitmap)
         {
             Rectangle r = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-            BitmapData data = bitmap.LockBits(r, ImageLockMode.ReadOnly, bitmap.PixelFormat);
+            BitmapData data = bitmap.LockBits(r, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             int length = bitmap.Width * bitmap.Height;
 
