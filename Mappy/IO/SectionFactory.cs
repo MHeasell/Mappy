@@ -5,9 +5,10 @@
     using System.Linq;
 
     using Mappy.Data;
-    using Mappy.Palette;
 
     using TAUtil;
+    using TAUtil.Gdi.Bitmap;
+    using TAUtil.Gdi.Palette;
     using TAUtil.Sct;
 
     /// <summary>

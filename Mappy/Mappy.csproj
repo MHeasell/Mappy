@@ -89,9 +89,7 @@
     <Compile Include="Data\StartPositionChangedEventArgs.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IO\AbstractHpiLoader.cs" />
-    <Compile Include="IO\BitmapDeserializer.cs" />
     <Compile Include="IO\BitmapCache.cs" />
-    <Compile Include="IO\BitmapSerializer.cs" />
     <Compile Include="IO\FeatureBitmapLoader.cs" />
     <Compile Include="IO\FeatureRenderLoader.cs" />
     <Compile Include="IO\FeatureTdfLoader.cs" />
@@ -103,8 +101,6 @@
     <Compile Include="IO\MapModelTntAdapter.cs" />
     <Compile Include="IO\MapSaver.cs" />
     <Compile Include="IO\ModelEdgeReader.cs" />
-    <Compile Include="IO\PaletteFactory.cs" />
-    <Compile Include="IO\BinaryPaletteReader.cs" />
     <Compile Include="IO\SectionFactory.cs" />
     <Compile Include="IO\SectionLoader.cs" />
     <Compile Include="IO\SectionLoadingUtils.cs" />
@@ -137,9 +133,6 @@
     <Compile Include="Operations\SelectionModel\SelectTileOperation.cs" />
     <Compile Include="Operations\SelectionModel\UpdateMinimapOperation.cs" />
     <Compile Include="Operations\SetSealevelOperation.cs" />
-    <Compile Include="Palette\IPalette.cs" />
-    <Compile Include="Palette\ArrayPalette.cs" />
-    <Compile Include="Palette\TransparencyMaskedPalette.cs" />
     <Compile Include="Presentation\IMapView.cs" />
     <Compile Include="Presentation\MapPresenter.cs" />
     <Compile Include="Presentation\MapViewEventAdapter.cs" />
@@ -316,6 +309,10 @@
     <ProjectReference Include="..\Geometry\Geometry.csproj">
       <Project>{896df25e-8ee5-4dbd-85d2-249045dc9631}</Project>
       <Name>Geometry</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TAUtil.Gdi\TAUtil.Gdi.csproj">
+      <Project>{cbf5cec6-3710-4f40-8a8e-ef57870b7793}</Project>
+      <Name>TAUtil.Gdi</Name>
     </ProjectReference>
     <ProjectReference Include="..\TAUtil\TAUtil.csproj">
       <Project>{71AE8770-7794-4CF8-88F1-1D7429F24EB4}</Project>

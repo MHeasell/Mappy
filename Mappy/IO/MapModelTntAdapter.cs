@@ -6,9 +6,10 @@
     using System.Linq;
 
     using Mappy.Models;
-    using Mappy.Palette;
     using Mappy.Util;
 
+    using TAUtil.Gdi.Bitmap;
+    using TAUtil.Gdi.Palette;
     using TAUtil.Tnt;
 
     /// <summary>

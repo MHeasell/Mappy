@@ -6,8 +6,9 @@
     using System.Linq;
 
     using Mappy.Data;
-    using Mappy.Palette;
     using Mappy.Util;
+
+    using TAUtil.Gdi.Palette;
 
     public class FeatureLoadingUtils
     {

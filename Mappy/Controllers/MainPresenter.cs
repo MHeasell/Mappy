@@ -9,15 +9,14 @@
     using System.Linq;
     using System.Windows.Forms;
 
-    using Mappy.Collections;
     using Mappy.Data;
     using Mappy.IO;
     using Mappy.Minimap;
     using Mappy.Models;
-    using Mappy.Palette;
     using Mappy.Views;
 
     using TAUtil;
+    using TAUtil.Gdi.Palette;
     using TAUtil.Hpi;
 
     /// <summary>

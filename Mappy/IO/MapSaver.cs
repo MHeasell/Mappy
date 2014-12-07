@@ -4,8 +4,8 @@
 
     using Mappy.Data;
     using Mappy.Models;
-    using Mappy.Palette;
 
+    using TAUtil.Gdi.Palette;
     using TAUtil.Hpi;
     using TAUtil.Tnt;
 

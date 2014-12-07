@@ -4,7 +4,8 @@ namespace Mappy
     using System.IO;
 
     using Mappy.IO;
-    using Mappy.Palette;
+
+    using TAUtil.Gdi.Palette;
 
     public static class Globals
     {

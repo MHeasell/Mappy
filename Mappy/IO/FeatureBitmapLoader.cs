@@ -7,10 +7,11 @@
     using System.Linq;
 
     using Mappy.Data;
-    using Mappy.Palette;
     using Mappy.Util;
 
     using TAUtil.Gaf;
+    using TAUtil.Gdi.Bitmap;
+    using TAUtil.Gdi.Palette;
     using TAUtil.Hpi;
 
     public class FeatureBitmapLoader : AbstractHpiLoader<KeyValuePair<string, OffsetBitmap>>

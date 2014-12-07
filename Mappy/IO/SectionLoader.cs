@@ -6,8 +6,8 @@
     using System.Linq;
 
     using Mappy.Data;
-    using Mappy.Palette;
 
+    using TAUtil.Gdi.Palette;
     using TAUtil.Hpi;
     using TAUtil.Sct;
 

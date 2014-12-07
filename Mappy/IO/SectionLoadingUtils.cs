@@ -3,7 +3,8 @@
     using System;
 
     using Mappy.Data;
-    using Mappy.Palette;
+
+    using TAUtil.Gdi.Palette;
 
     public static class SectionLoadingUtils
     {
