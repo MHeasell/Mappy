@@ -12,14 +12,25 @@
 
         private int outputChar;
 
+        private int internalCurrentLine;
+
+        private int internalCurrentColumn;
+
         public TdfLexingReader(TextReader reader)
         {
             this.reader = reader;
             this.nextChar = this.reader.Read();
             this.nextNextChar = this.reader.Read();
 
+            this.internalCurrentLine = 1;
+            this.internalCurrentColumn = 1;
+
             this.GetNextOutputChar();
         }
+
+        public int CurrentLine { get; set; }
+
+        public int CurrentColumn { get; set; }
 
         public override int Peek()
         {
@@ -40,6 +51,10 @@
                 // keep consuming comments
             }
 
+            // take a snapshot of our internal position here
+            this.CurrentColumn = this.internalCurrentColumn;
+            this.CurrentLine = this.internalCurrentLine;
+
             // Try to accept newline and output a normalized version.
             if (this.AcceptNewline())
             {
@@ -55,12 +70,16 @@
         {
             if (this.Accept('\n'))
             {
+                this.internalCurrentColumn = 1;
+                this.internalCurrentLine++;
                 return true;
             }
 
             if (this.Accept('\r'))
             {
                 this.Accept('\n');
+                this.internalCurrentColumn = 1;
+                this.internalCurrentLine++;
                 return true;
             }
 
@@ -101,6 +120,12 @@
         {
             while (this.nextChar != -1)
             {
+                // explicitly accept newlines for line counting
+                if (this.AcceptNewline())
+                {
+                    continue;
+                }
+
                 if (this.nextChar == '*' && this.nextNextChar == '/')
                 {
                     this.Consume();
@@ -122,6 +147,7 @@
 
         private void Consume()
         {
+            this.internalCurrentColumn++;
             this.nextChar = this.nextNextChar;
             this.nextNextChar = this.reader.Read();
         }

@@ -10,13 +10,9 @@
     {
         private const int EofSignal = -1;
 
-        private readonly TextReader reader;
+        private readonly TdfLexingReader reader;
 
         private readonly ITdfNodeAdapter adapter;
-
-        private int currentLine = 1;
-
-        private int currentColumn = 1;
 
         public TdfParser(Stream s, ITdfNodeAdapter adapter)
             : this(new StreamReader(s), adapter)
@@ -27,6 +23,22 @@
         {
             this.reader = new TdfLexingReader(reader);
             this.adapter = adapter;
+        }
+
+        public int CurrentLine
+        {
+            get
+            {
+                return this.reader.CurrentLine;
+            }
+        }
+
+        public int CurrentColumn
+        {
+            get
+            {
+                return this.reader.CurrentColumn;
+            }
         }
 
         public void Load()
@@ -174,14 +186,6 @@
 
         private void Consume()
         {
-            this.currentColumn++;
-
-            if (this.Next() == '\n')
-            {
-                this.currentLine++;
-                this.currentColumn = 1;
-            }
-
             this.reader.Read();
         }
 
@@ -190,8 +194,8 @@
             var msg = string.Format(
                 "Unexpected character '{0}' on line {1} column {2}.",
                 this.PrintableNextChar(),
-                this.currentLine,
-                this.currentColumn);
+                this.CurrentLine,
+                this.CurrentColumn);
             throw new ParseException(msg);
         }
 
