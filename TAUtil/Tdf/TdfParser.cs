@@ -8,6 +8,8 @@
 
     public class TdfParser
     {
+        private const int EofSignal = -1;
+
         private readonly TextReader reader;
 
         private readonly ITdfNodeAdapter adapter;
@@ -26,7 +28,7 @@
         {
             this.OptionalWhitespace();
 
-            while (!this.Accept(-1))
+            while (!this.Accept(EofSignal))
             {
                 this.Block();
                 this.OptionalWhitespace();
