@@ -194,11 +194,12 @@
         private void Error()
         {
             var msg = string.Format(
-                "Unexpected character '{0}' on line {1} column {2}.",
-                this.PrintableNextChar(),
+                "Unexpected character '{0}'",
+                this.PrintableNextChar());
+            throw new TdfParseException(
+                msg,
                 this.CurrentLine,
                 this.CurrentColumn);
-            throw new ParseException(msg);
         }
 
         private string PrintableNextChar()
