@@ -122,7 +122,7 @@
             var sb = new StringBuilder();
             char next = (char)this.Next();
 
-            if (!this.AcceptNotAny('=', '\n', ';'))
+            if (!this.AcceptNotAny('=', '\n', ';', EofSignal))
             {
                 this.Error();
             }
@@ -130,7 +130,7 @@
             sb.Append(next);
             next = (char)this.Next();
 
-            while (this.AcceptNotAny('=', '\n', ';'))
+            while (this.AcceptNotAny('=', '\n', ';', EofSignal))
             {
                 sb.Append(next);
                 next = (char)this.Next();
@@ -145,7 +145,7 @@
 
             char next = (char)this.Next();
 
-            while (this.AcceptNotAny('\n', ';'))
+            while (this.AcceptNotAny('\n', ';', EofSignal))
             {
                 sb.Append(next);
                 next = (char)this.Next();
@@ -187,13 +187,23 @@
 
         private void Error()
         {
-            char badChar = (char)this.Next();
             var msg = string.Format(
                 "Unexpected character '{0}' on line {1} column {2}.",
-                Regex.Escape(badChar.ToString(CultureInfo.InvariantCulture)),
+                this.PrintableNextChar(),
                 this.currentLine,
                 this.currentColumn);
             throw new ParseException(msg);
+        }
+
+        private string PrintableNextChar()
+        {
+            var next = this.Next();
+            if (next == EofSignal)
+            {
+                return "EOF";
+            }
+
+            return Regex.Escape(((char)next).ToString(CultureInfo.InvariantCulture));
         }
 
         private void Expect(int token)
