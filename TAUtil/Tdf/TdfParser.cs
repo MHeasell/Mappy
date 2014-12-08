@@ -111,7 +111,7 @@
 
         private void Terminator()
         {
-            if (!this.AcceptAny(';', '\n'))
+            if (!this.Accept(';'))
             {
                 this.Error();
             }
@@ -145,7 +145,7 @@
 
             char next = (char)this.Next();
 
-            while (this.AcceptNotAny('\n', ';', EofSignal))
+            while (this.AcceptNotAny(';', EofSignal))
             {
                 sb.Append(next);
                 next = (char)this.Next();
