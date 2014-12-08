@@ -25,7 +25,7 @@
 
         public TdfParser(TextReader reader, ITdfNodeAdapter adapter)
         {
-            this.reader = new TdfTextReader(reader);
+            this.reader = new TdfLexingReader(reader);
             this.adapter = adapter;
         }
 
