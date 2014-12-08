@@ -14,6 +14,53 @@
         public static readonly char AltDirectorySeparatorChar = '/';
 
         /// <summary>
+        /// Returns the extension of the specified HPI path string.
+        /// </summary>
+        ///
+        /// <param name="path">
+        /// The HPI path string from which to get the extension.
+        /// </param>
+        ///
+        /// <returns>
+        /// The extension of the specified HPI path (including the period "."),
+        /// or null, or string.Empty.
+        /// If path is null, returns null.
+        /// If path does not have extension information,
+        /// returns string.Empty.
+        /// </returns>
+        public static string GetExtension(string path)
+        {
+            if (path == null)
+            {
+                return null;
+            }
+
+            int length = path.Length;
+            int startIndex = length;
+            while (--startIndex >= 0)
+            {
+                char ch = path[startIndex];
+                if (ch == '.')
+                {
+                    if (startIndex == length - 1)
+                    {
+                        return string.Empty;
+                    }
+
+                    return path.Substring(startIndex, length - startIndex);
+                }
+
+                if (ch == DirectorySeparatorChar
+                    || ch == AltDirectorySeparatorChar)
+                {
+                    break;
+                }
+            }
+
+            return string.Empty;
+        }
+
+        /// <summary>
         /// Returns the file name of the specified HPI path string
         /// without the extension.
         /// </summary>
