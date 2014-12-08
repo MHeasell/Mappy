@@ -43,6 +43,8 @@
 
         public void Load()
         {
+            this.adapter.Initialize(this);
+
             this.OptionalWhitespace();
 
             while (!this.Accept(EofSignal))

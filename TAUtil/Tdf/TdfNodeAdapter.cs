@@ -14,6 +14,10 @@
 
         public TdfNode RootNode { get; private set; }
 
+        public void Initialize(TdfParser parser)
+        {
+        }
+
         public void BeginBlock(string name)
         {
             TdfNode n = new TdfNode(name);

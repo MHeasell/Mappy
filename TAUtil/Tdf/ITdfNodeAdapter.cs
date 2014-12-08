@@ -7,5 +7,7 @@
         void AddProperty(string name, string value);
 
         void EndBlock();
+
+        void Initialize(TdfParser parser);
     }
 }
