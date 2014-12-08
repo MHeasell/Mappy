@@ -66,7 +66,7 @@
             StringBuilder s = new StringBuilder();
 
             char next = (char)this.Next();
-            while (this.AcceptNot(']'))
+            while (this.AcceptNotAny(']', EofSignal))
             {
                 s.Append(next);
                 next = (char)this.Next();
