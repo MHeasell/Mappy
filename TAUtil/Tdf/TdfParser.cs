@@ -18,6 +18,11 @@
 
         private int currentColumn = 1;
 
+        public TdfParser(Stream s, ITdfNodeAdapter adapter)
+            : this(new StreamReader(s), adapter)
+        {
+        }
+
         public TdfParser(TextReader reader, ITdfNodeAdapter adapter)
         {
             this.reader = new TdfTextReader(reader);
