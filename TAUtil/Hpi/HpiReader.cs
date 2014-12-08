@@ -38,6 +38,11 @@
             GC.SuppressFinalize(this);
         }
 
+        public IEnumerable<HpiEntry> GetFilesRecursive()
+        {
+            return this.GetFilesRecursive(string.Empty);
+        }
+
         /// <param name="directory">The directory to enumerate</param>
         /// <returns>An enumeration of all files in the given dir, full path relative to HPI root.
         /// Beware that paths inside HPIs can contain characters that are usually forbidden in Windows,
