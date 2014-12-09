@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mappy", "Mappy\Mappy.csproj
 		{71AE8770-7794-4CF8-88F1-1D7429F24EB4} = {71AE8770-7794-4CF8-88F1-1D7429F24EB4}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAUtil", "TAUtil\TAUtil.csproj", "{71AE8770-7794-4CF8-88F1-1D7429F24EB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAUtil", "TAUtil\TAUtil\TAUtil.csproj", "{71AE8770-7794-4CF8-88F1-1D7429F24EB4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geometry", "Geometry\Geometry.csproj", "{896DF25E-8EE5-4DBD-85D2-249045DC9631}"
 EndProject
@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MappyTest", "MappyTest\Mapp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireframeViewer", "WireframeViewer\WireframeViewer.csproj", "{EBF5749B-A0A7-4891-A121-1CD5A105EB75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAUtil.Gdi", "TAUtil.Gdi\TAUtil.Gdi.csproj", "{CBF5CEC6-3710-4F40-8A8E-EF57870B7793}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAUtil.Gdi", "TAUtil\TAUtil.Gdi\TAUtil.Gdi.csproj", "{CBF5CEC6-3710-4F40-8A8E-EF57870B7793}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

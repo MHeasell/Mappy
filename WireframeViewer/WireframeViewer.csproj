@@ -83,7 +83,7 @@
       <Project>{ea26a863-f126-4809-8b32-09829d21b4ce}</Project>
       <Name>Mappy</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TAUtil\TAUtil.csproj">
+    <ProjectReference Include="..\TAUtil\TAUtil\TAUtil.csproj">
       <Project>{71AE8770-7794-4CF8-88F1-1D7429F24EB4}</Project>
       <Name>TAUtil</Name>
     </ProjectReference>

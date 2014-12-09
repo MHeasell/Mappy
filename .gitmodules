@@ -1,0 +1,3 @@
+[submodule "TAUtil"]
+	path = TAUtil
+	url = https://github.com/ArmouredFish/TAUtil.git
