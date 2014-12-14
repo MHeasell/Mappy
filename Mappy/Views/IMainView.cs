@@ -74,5 +74,7 @@
         void ShowError(string message);
 
         IProgressView CreateProgressView();
+
+        void SetViewportPosition(int x, int y);
     }
 }

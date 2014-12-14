@@ -8,25 +8,17 @@
 
     using Mappy.Controllers;
     using Mappy.Data;
-    using Mappy.Minimap;
     using Mappy.Models;
     using Mappy.Views;
 
-    public partial class MainForm : Form, IMainView, IMinimapService
+    public partial class MainForm : Form, IMainView
     {
-        private Point oldAutoScrollPos;
-
         private IList<Section> sections;
         private IList<Feature> features;
 
         public MainForm()
         {
             this.InitializeComponent();
-
-            // paint events don't seem to fire from mapPanel1 when it is scrolled,
-            // so we also listen for paint events from the child mapcontrol
-            // to tell us when it was scrolled
-            this.imageLayerView1.Paint += this.MapPanel1Paint;
         }
 
         public MainPresenter Presenter { get; set; }
@@ -295,20 +287,9 @@
             return null;
         }
 
-        public void SetViewportCenter(Point p)
+        public void SetViewportPosition(int x, int y)
         {
-            p.X -= this.imageLayerView1.ClientSize.Width / 2;
-            p.Y -= this.imageLayerView1.ClientSize.Height / 2;
-            this.imageLayerView1.AutoScrollPosition = p;
-        }
-
-        public void SetViewportCenterNormalized(PointF location)
-        {
-            var size = this.imageLayerView1.CanvasSize;
-            var p = new Point(
-                (int)(location.X * size.Width),
-                (int)(location.Y * size.Height));
-            this.SetViewportCenter(p);
+            this.imageLayerView1.AutoScrollPosition = new Point(x, y);
         }
 
         public void CapturePreferences()
@@ -436,16 +417,6 @@
         private void HeightmapToolStripMenuItemCheckedChanged(object sender, EventArgs e)
         {
             this.Presenter.ToggleHeightmap();
-        }
-
-        private void MapPanel1Paint(object sender, PaintEventArgs e)
-        {
-            Point p = this.imageLayerView1.AutoScrollPosition;
-            if (p != this.oldAutoScrollPos)
-            {
-                this.oldAutoScrollPos = p;
-                this.Presenter.UpdateMinimapViewport();
-            }
         }
 
         private void MapPanel1SizeChanged(object sender, EventArgs e)
@@ -601,6 +572,11 @@
         private void toolStripMenuItem18_Click(object sender, EventArgs e)
         {
             this.Presenter.ExportHeightmap();
+        }
+
+        private void imageLayerView1_Scroll(object sender, ScrollEventArgs e)
+        {
+            this.Presenter.UpdateMinimapViewport();
         }
     }
 }

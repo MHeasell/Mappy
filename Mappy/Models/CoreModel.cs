@@ -9,6 +9,8 @@
     using System.Linq;
     using System.Windows.Forms;
 
+    using Geometry;
+
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.Database;
@@ -54,7 +56,7 @@
 
         private bool previousTranslationOpen;
 
-        private RectangleF viewportRectangle;
+        private Rectangle2D viewportRectangle;
 
         private Bitmap minimapImage;
 
@@ -371,7 +373,7 @@
             }
         }
 
-        public RectangleF ViewportRectangle
+        public Rectangle2D ViewportRectangle
         {
             get
             {
@@ -854,6 +856,24 @@
         public void FlushSeaLevel()
         {
             this.previousSeaLevelOpen = false;
+        }
+
+        public void SetViewportCenterNormalized(double x, double y)
+        {
+            double extraX = 1.0 / (this.MapWidth - 1);
+            double extraY = 4.0 / (this.MapHeight - 4);
+
+            var rect = this.ViewportRectangle;
+
+            double cornerX = x - (rect.Width / 2.0);
+            double cornerY = y - (rect.Height / 2.0);
+
+            cornerX = Util.Clamp(cornerX, 0.0f, 1.0 + extraX - rect.Width);
+            cornerY = Util.Clamp(cornerY, 0.0f, 1.0 + extraY - rect.Height);
+
+            rect.X = cornerX;
+            rect.Y = cornerY;
+            this.ViewportRectangle = rect;
         }
 
         private static void DeduplicateTiles(IGrid<Bitmap> tiles)

@@ -9,9 +9,10 @@
     using System.Linq;
     using System.Windows.Forms;
 
+    using Geometry;
+
     using Mappy.Data;
     using Mappy.IO;
-    using Mappy.Minimap;
     using Mappy.Models;
     using Mappy.Views;
 
@@ -30,13 +31,10 @@
 
         private readonly IMainModel model;
 
-        private readonly IMinimapModel minimapModel;
-
-        public MainPresenter(IMainView view, CoreModel model)
+        public MainPresenter(IMainView view, IMainModel model)
         {
             this.view = view;
             this.model = model;
-            this.minimapModel = model;
 
             this.view.UndoEnabled = this.model.CanUndo;
             this.view.RedoEnabled = this.model.CanRedo;
@@ -46,7 +44,6 @@
             this.view.PasteEnabled = this.model.CanPaste;
 
             this.model.PropertyChanged += this.CoreModelPropertyChanged;
-            this.minimapModel.PropertyChanged += this.MinimapModelPropertyChanged;
         }
 
         public void Initialize()
@@ -395,12 +392,12 @@
 
         public void ToggleMinimap()
         {
-            this.minimapModel.MinimapVisible = !this.minimapModel.MinimapVisible;
+            this.model.MinimapVisible = !this.model.MinimapVisible;
         }
 
         public void UpdateMinimapViewport()
         {
-            this.minimapModel.ViewportRectangle = this.ConvertToNormalizedViewport(this.view.ViewportRect);
+            this.model.ViewportRectangle = this.ConvertToNormalizedViewport(this.view.ViewportRect);
         }
 
         public void SetSeaLevel(int value)
@@ -439,22 +436,40 @@
             this.model.PasteFromClipboard();
         }
 
-        private RectangleF ConvertToNormalizedViewport(Rectangle rect)
+        private Rectangle2D ConvertToNormalizedViewport(Rectangle rect)
         {
             if (!this.model.MapOpen)
             {
-                return RectangleF.Empty;
+                return Rectangle2D.Empty;
             }
 
-            var widthScale = (float)((this.model.MapWidth * 32) - 32);
-            var heightScale = (float)((this.model.MapHeight * 32) - 128);
+            int widthScale = (this.model.MapWidth * 32) - 32;
+            int heightScale = (this.model.MapHeight * 32) - 128;
 
-            var x = rect.X / widthScale;
-            var y = rect.Y / heightScale;
-            var w = rect.Width / widthScale;
-            var h = rect.Height / heightScale;
+            double x = rect.X / (double)widthScale;
+            double y = rect.Y / (double)heightScale;
+            double w = rect.Width / (double)widthScale;
+            double h = rect.Height / (double)heightScale;
 
-            return new RectangleF(x, y, w, h);
+            return new Rectangle2D(x, y, w, h);
+        }
+
+        private Rectangle ConvertToClientViewport(Rectangle2D rect)
+        {
+            if (!this.model.MapOpen)
+            {
+                return Rectangle.Empty;
+            }
+
+            int widthScale = (this.model.MapWidth * 32) - 32;
+            int heightScale = (this.model.MapHeight * 32) - 128;
+
+            int x = (int)Math.Round(rect.X * widthScale);
+            int y = (int)Math.Round(rect.Y * heightScale);
+            int w = (int)Math.Round(rect.Width * widthScale);
+            int h = (int)Math.Round(rect.Height * heightScale);
+
+            return new Rectangle(x, y, w, h);
         }
 
         private bool SaveHelper(string filename)
@@ -621,17 +636,20 @@
                 case "SeaLevel":
                     this.view.SeaLevel = this.model.SeaLevel;
                     break;
+                case "MinimapVisible":
+                    this.view.MinimapVisibleChecked = this.model.MinimapVisible;
+                    break;
+                case "ViewportRectangle":
+                    this.UpdateViewViewportRect();
+                    break;
             }
         }
 
-        private void MinimapModelPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        private void UpdateViewViewportRect()
         {
-            switch (propertyChangedEventArgs.PropertyName)
-            {
-                case "MinimapVisible":
-                    this.view.MinimapVisibleChecked = this.minimapModel.MinimapVisible;
-                    break;
-            }
+            var rect = this.model.ViewportRectangle;
+            var clientRect = this.ConvertToClientViewport(rect);
+            this.view.SetViewportPosition(clientRect.X, clientRect.Y);
         }
 
         private void UpdateSave()

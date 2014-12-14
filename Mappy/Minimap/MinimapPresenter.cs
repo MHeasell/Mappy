@@ -3,6 +3,10 @@
     using System.ComponentModel;
     using System.Drawing;
 
+    using Geometry;
+
+    using Mappy.Data;
+
     /// <summary>
     /// Presenter for the minimap viewport.
     /// Keeps the viewport in sync with the currently displayed map
@@ -14,14 +18,11 @@
 
         private readonly IMinimapModel model;
 
-        private readonly IMinimapService service;
-
         private bool mouseDown;
 
-        public MinimapPresenter(IMinimapView mini, IMinimapService service, IMinimapModel model)
+        public MinimapPresenter(IMinimapView mini, IMinimapModel model)
         {
             this.minimap = mini;
-            this.service = service;
             this.model = model;
 
             this.model.PropertyChanged += this.ModelOnPropertyChanged;
@@ -34,16 +35,14 @@
         public void MinimapClick(Point location)
         {
             this.mouseDown = true;
-            var normalizedLocation = this.ToNormalizedPosition(location);
-            this.service.SetViewportCenterNormalized(normalizedLocation);
+            this.SetModelViewportCenter(location);
         }
 
         public void MinimapMouseMove(Point location)
         {
             if (this.mouseDown)
             {
-                var normalizedLocation = this.ToNormalizedPosition(location);
-                this.service.SetViewportCenterNormalized(normalizedLocation);
+                this.SetModelViewportCenter(location);
             }
         }
 
@@ -55,6 +54,19 @@
         public void MinimapClose()
         {
             this.model.MinimapVisible = false;
+        }
+
+        private void SetModelViewportCenter(Point loc)
+        {
+            if (this.model.MinimapImage == null)
+            {
+                return;
+            }
+
+            double x = loc.X / (double)this.model.MinimapImage.Width;
+            double y = loc.Y / (double)this.model.MinimapImage.Height;
+
+            this.model.SetViewportCenterNormalized(x, y);
         }
 
         private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -79,7 +91,7 @@
             this.minimap.ViewportRectangle = this.ConvertToMinimapRect(this.model.ViewportRectangle);
         }
 
-        private Rectangle ConvertToMinimapRect(RectangleF rectangle)
+        private Rectangle ConvertToMinimapRect(Rectangle2D rectangle)
         {
             if (this.model.MinimapImage == null)
             {
@@ -94,18 +106,6 @@
                 (int)(rectangle.Y * h),
                 (int)(rectangle.Width * w),
                 (int)(rectangle.Height * h));
-        }
-
-        private PointF ToNormalizedPosition(Point location)
-        {
-            if (this.minimap.MinimapImage == null)
-            {
-                return PointF.Empty;
-            }
-
-            return new PointF(
-                location.X / (float)this.minimap.MinimapImage.Width,
-                location.Y / (float)this.minimap.MinimapImage.Height);
         }
     }
 }

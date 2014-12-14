@@ -46,6 +46,7 @@
     <Compile Include="Plane3D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ray3D.cs" />
+    <Compile Include="Rectangle2D.cs" />
     <Compile Include="Triangle3D.cs" />
     <Compile Include="Vector3D.cs" />
   </ItemGroup>

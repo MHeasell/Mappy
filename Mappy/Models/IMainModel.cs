@@ -5,6 +5,8 @@ namespace Mappy.Models
     using System.ComponentModel;
     using System.Drawing;
 
+    using Geometry;
+
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.Database;
@@ -53,6 +55,8 @@ namespace Mappy.Models
 
         bool FeaturesVisible { get; set; }
 
+        bool MinimapVisible { get; set; }
+
         int? SelectedTile { get; }
 
         int? SelectedStartPosition { get; }
@@ -70,6 +74,8 @@ namespace Mappy.Models
         int MapHeight { get; }
 
         int SeaLevel { get; set; }
+
+        Rectangle2D ViewportRectangle { get; set; }
 
         void DragDropStartPosition(int index, int x, int y);
 

@@ -599,7 +599,8 @@
             this.imageLayerView1.Size = new System.Drawing.Size(569, 538);
             this.imageLayerView1.TabIndex = 5;
             this.imageLayerView1.Text = "imageLayerView1";
-            this.imageLayerView1.SizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
+            this.imageLayerView1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.imageLayerView1_Scroll);
+            this.imageLayerView1.ClientSizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
             // 
             // sectionView1
             // 

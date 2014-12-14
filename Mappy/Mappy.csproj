@@ -106,7 +106,6 @@
     <Compile Include="IO\SectionLoadingUtils.cs" />
     <Compile Include="MappySettings.cs" />
     <Compile Include="Minimap\IMinimapModel.cs" />
-    <Compile Include="Minimap\IMinimapService.cs" />
     <Compile Include="Minimap\IMinimapView.cs" />
     <Compile Include="Models\BandboxBehaviours\FeatureBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxBehaviours\IBandboxBehaviour.cs" />
