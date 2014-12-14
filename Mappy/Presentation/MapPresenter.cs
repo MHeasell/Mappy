@@ -87,6 +87,11 @@
 
         public void DragDrop(IDataObject data, int virtualX, int virtualY)
         {
+            if (!this.model.MapOpen)
+            {
+                return;
+            }
+
             if (data.GetDataPresent(typeof(StartPositionDragData)))
             {
                 StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
@@ -112,6 +117,11 @@
             this.mouseDown = true;
             this.lastMousePos = new Point(virtualX, virtualY);
 
+            if (!this.model.MapOpen)
+            {
+                return;
+            }
+
             if (!this.view.IsInSelection(virtualX, virtualY))
             {
                 var hit = this.view.HitTest(virtualX, virtualY);
@@ -132,6 +142,11 @@
         {
             try
             {
+                if (!this.model.MapOpen)
+                {
+                    return;
+                }
+
                 if (!this.mouseDown)
                 {
                     return;
@@ -158,6 +173,13 @@
 
         public void MouseUp(int virtualX, int virtualY)
         {
+            this.mouseDown = false;
+
+            if (!this.model.MapOpen)
+            {
+                return;
+            }
+
             if (this.bandboxMode)
             {
                 this.model.CommitBandbox();
@@ -167,12 +189,15 @@
             {
                 this.model.FlushTranslation();
             }
-
-            this.mouseDown = false;
         }
 
         public void KeyDown(KeyEventArgs e)
         {
+            if (!this.model.MapOpen)
+            {
+                return;
+            }
+
             if (e.KeyCode == Keys.Delete)
             {
                 this.model.DeleteSelection();
@@ -181,6 +206,11 @@
 
         public void LostFocus()
         {
+            if (!this.model.MapOpen)
+            {
+                return;
+            }
+
             this.model.ClearSelection();
         }
 
