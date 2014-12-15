@@ -102,8 +102,8 @@
             int h = this.model.MinimapImage.Height;
 
             return new Rectangle(
-                (int)(rectangle.X * w),
-                (int)(rectangle.Y * h),
+                (int)(rectangle.MinX * w),
+                (int)(rectangle.MinY * h),
                 (int)(rectangle.Width * w),
                 (int)(rectangle.Height * h));
         }

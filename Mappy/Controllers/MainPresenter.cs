@@ -451,7 +451,7 @@
             double w = rect.Width / (double)widthScale;
             double h = rect.Height / (double)heightScale;
 
-            return new Rectangle2D(x, y, w, h);
+            return Rectangle2D.FromCorner(x, y, w, h);
         }
 
         private Rectangle ConvertToClientViewport(Rectangle2D rect)
@@ -464,8 +464,8 @@
             int widthScale = (this.model.MapWidth * 32) - 32;
             int heightScale = (this.model.MapHeight * 32) - 128;
 
-            int x = (int)Math.Round(rect.X * widthScale);
-            int y = (int)Math.Round(rect.Y * heightScale);
+            int x = (int)Math.Round(rect.MinX * widthScale);
+            int y = (int)Math.Round(rect.MinY * heightScale);
             int w = (int)Math.Round(rect.Width * widthScale);
             int h = (int)Math.Round(rect.Height * heightScale);
 

@@ -865,14 +865,10 @@
 
             var rect = this.ViewportRectangle;
 
-            double cornerX = x - (rect.Width / 2.0);
-            double cornerY = y - (rect.Height / 2.0);
+            x = Util.Clamp(x, rect.ExtentX, 1.0 + extraX - rect.ExtentX);
+            y = Util.Clamp(y, rect.ExtentY, 1.0 + extraY - rect.ExtentY);
 
-            cornerX = Util.Clamp(cornerX, 0.0f, 1.0 + extraX - rect.Width);
-            cornerY = Util.Clamp(cornerY, 0.0f, 1.0 + extraY - rect.Height);
-
-            rect.X = cornerX;
-            rect.Y = cornerY;
+            rect.Center = new Vector2D(x, y);
             this.ViewportRectangle = rect;
         }
 
@@ -913,8 +909,8 @@
 
         private void PasteFeature(FeatureClipboardRecord feature)
         {
-            var normX = this.ViewportRectangle.X + (this.ViewportRectangle.Width / 2.0);
-            var normY = this.ViewportRectangle.Y + (this.ViewportRectangle.Height / 2.0);
+            var normX = this.ViewportRectangle.CenterX;
+            var normY = this.ViewportRectangle.CenterY;
             int x = (int)(this.MapWidth * 32 * normX);
             int y = (int)(this.MapHeight * 32 * normY);
 
@@ -925,8 +921,8 @@
         {
             DeduplicateTiles(tile.TileGrid);
 
-            var normX = this.ViewportRectangle.X + (this.ViewportRectangle.Width / 2.0);
-            var normY = this.ViewportRectangle.Y + (this.ViewportRectangle.Height / 2.0);
+            var normX = this.ViewportRectangle.CenterX;
+            var normY = this.ViewportRectangle.CenterY;
             int x = (int)(this.MapWidth * normX);
             int y = (int)(this.MapHeight * normY);
 
