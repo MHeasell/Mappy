@@ -4,6 +4,7 @@ namespace Mappy.Util
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
+    using System.Drawing.Imaging;
     using System.Linq;
 
     using Geometry;
@@ -18,16 +19,23 @@ namespace Mappy.Util
     {
         public static Bitmap ExportHeightmap(IGrid<int> heights)
         {
-            var bmp = new Bitmap(heights.Width, heights.Height);
-            for (int y = 0; y < heights.Height; y++)
+            var bmp = new Bitmap(heights.Width, heights.Height, PixelFormat.Format32bppArgb);
+            var data = bmp.LockBits(
+                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                ImageLockMode.WriteOnly,
+                PixelFormat.Format32bppArgb);
+
+            unsafe
             {
-                for (int x = 0; x < heights.Width; x++)
+                int* pointer = (int*)data.Scan0;
+                int i = 0;
+                foreach (int h in heights)
                 {
-                    var val = heights[x, y];
-                    var c = Color.FromArgb(val, val, val);
-                    bmp.SetPixel(x, y, c);
+                    pointer[i++] = Color.FromArgb(h, h, h).ToArgb();
                 }
             }
+
+            bmp.UnlockBits(data);
 
             return bmp;
         }
