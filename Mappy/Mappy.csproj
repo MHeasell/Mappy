@@ -334,7 +334,6 @@
   <ItemGroup>
     <None Include="Assets\AboutText.txt" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>python $(SolutionDir)GenerateAssemblyInfo.py $(ProjectDir)</PreBuildEvent>
