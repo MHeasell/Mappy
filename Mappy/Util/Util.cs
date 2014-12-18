@@ -298,6 +298,31 @@ namespace Mappy.Util
                 b);
         }
 
+        public static Grid<int> ReadHeightmap(Bitmap bmp)
+        {
+            var data = bmp.LockBits(
+                new Rectangle(0, 0, bmp.Width, bmp.Height),
+                ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb);
+
+            var grid = new Grid<int>(bmp.Width, bmp.Height);
+            var len = bmp.Width * bmp.Height;
+
+            unsafe
+            {
+                int* ptr = (int*)data.Scan0;
+                for (int i = 0; i < len; i++)
+                {
+                    var c = Color.FromArgb(ptr[i]);
+                    grid[i] = c.R;
+                }
+            }
+
+            bmp.UnlockBits(data);
+
+            return grid;
+        }
+
         private static AxisRectangle3D ComputeBoundingBox(IEnumerable<Line3D> lines)
         {
             return ComputeBoundingBox(ToPoints(lines));

@@ -51,6 +51,8 @@
 
         bool ExportHeightmapEnabled { get; set; }
 
+        bool ImportHeightmapEnabled { get; set; }
+
         string AskUserToChooseMap(IList<string> maps);
 
         string AskUserToOpenFile();
@@ -62,6 +64,8 @@
         string AskUserToChooseMinimap();
 
         string AskUserToSaveHeightmap();
+
+        string AskUserToChooseHeightmap(int width, int height);
 
         void CapturePreferences();
 

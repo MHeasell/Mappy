@@ -382,6 +382,43 @@
             }
         }
 
+        public void ImportHeightmap()
+        {
+            var w = this.model.Map.Tile.HeightGrid.Width;
+            var h = this.model.Map.Tile.HeightGrid.Height;
+
+            var loc = this.view.AskUserToChooseHeightmap(w, h);
+            if (loc == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Bitmap bmp;
+                using (var s = File.OpenRead(loc))
+                {
+                    bmp = (Bitmap)Image.FromStream(s);
+                }
+
+                if (bmp.Width != w || bmp.Height != h)
+                {
+                    var msg = string.Format(
+                        "Heightmap has incorrect dimensions. The required dimensions are {0}x{1}.",
+                        w,
+                        h);
+                    this.view.ShowError(msg);
+                    return;
+                }
+
+                this.model.ReplaceHeightmap(Mappy.Util.Util.ReadHeightmap(bmp));
+            }
+            catch (Exception)
+            {
+                this.view.ShowError("There was a problem importing the selected heightmap");
+            }
+        }
+
         public void ImportMinimap()
         {
             var loc = this.view.AskUserToChooseMinimap();
@@ -657,6 +694,7 @@
                     this.view.ImportMinimapEnabled = this.model.MapOpen;
                     this.view.ExportMinimapEnabled = this.model.MapOpen;
                     this.view.ExportHeightmapEnabled = this.model.MapOpen;
+                    this.view.ImportHeightmapEnabled = this.model.MapOpen;
                     break;
                 case "IsFileOpen":
                     this.view.SaveAsEnabled = this.model.IsFileOpen;

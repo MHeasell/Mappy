@@ -872,6 +872,33 @@
             this.ViewportRectangle = rect;
         }
 
+        public void ReplaceHeightmap(Grid<int> heightmap)
+        {
+            if (this.Map == null)
+            {
+                return;
+            }
+
+            if (heightmap.Width != this.Map.Tile.HeightGrid.Width
+                || heightmap.Height != this.Map.Tile.HeightGrid.Height)
+            {
+                throw new ArgumentException(
+                    "Dimensions do not match map heightmap",
+                    "heightmap");
+            }
+
+            var op = new CopyAreaOperation<int>(
+                heightmap,
+                this.Map.Tile.HeightGrid,
+                0,
+                0,
+                0,
+                0,
+                heightmap.Width,
+                heightmap.Height);
+            this.undoManager.Execute(op);
+        }
+
         private static void DeduplicateTiles(IGrid<Bitmap> tiles)
         {
             var len = tiles.Width * tiles.Height;

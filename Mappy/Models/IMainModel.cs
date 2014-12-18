@@ -142,5 +142,7 @@ namespace Mappy.Models
         void CopySelectionToClipboard();
 
         void PasteFromClipboard();
+
+        void ReplaceHeightmap(Grid<int> heightmap);
     }
 }

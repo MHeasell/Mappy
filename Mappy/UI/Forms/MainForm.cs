@@ -271,6 +271,19 @@
             }
         }
 
+        public bool ImportHeightmapEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem20.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem20.Enabled = value;
+            }
+        }
+
         public string AskUserToChooseMap(IList<string> maps)
         {
             MapSelectionForm f = new MapSelectionForm();
@@ -360,6 +373,19 @@
             d.AddExtension = true;
             DialogResult result = d.ShowDialog(this);
             if (result == DialogResult.OK)
+            {
+                return d.FileName;
+            }
+
+            return null;
+        }
+
+        public string AskUserToChooseHeightmap(int width, int height)
+        {
+            OpenFileDialog d = new OpenFileDialog();
+            d.Title = string.Format("Import Heightmap ({0}x{1} image)", width, height);
+            d.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.gif;*.bmp|All files|*.*";
+            if (d.ShowDialog(this) == DialogResult.OK)
             {
                 return d.FileName;
             }
@@ -607,6 +633,11 @@
         private void toolStripMenuItem19_Click(object sender, EventArgs e)
         {
             this.Presenter.ImportMinimap();
+        }
+
+        private void toolStripMenuItem20_Click(object sender, EventArgs e)
+        {
+            this.Presenter.ImportHeightmap();
         }
     }
 }
