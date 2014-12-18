@@ -41,6 +41,7 @@
             this.toolStripMenuItem12 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItem17 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem18 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -83,7 +84,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.toolStripMenuItem18 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem19 = new System.Windows.Forms.ToolStripMenuItem();
             this.imageLayerView1 = new Mappy.UI.Controls.ImageLayerView();
             this.sectionView1 = new Mappy.UI.Controls.SectionView();
             this.featureview1 = new Mappy.UI.Controls.FeatureView();
@@ -121,6 +122,7 @@
             this.toolStripSeparator2,
             this.toolStripMenuItem12,
             this.toolStripSeparator8,
+            this.toolStripMenuItem19,
             this.toolStripMenuItem17,
             this.toolStripMenuItem18,
             this.toolStripSeparator10,
@@ -194,6 +196,14 @@
             this.toolStripMenuItem17.Size = new System.Drawing.Size(179, 22);
             this.toolStripMenuItem17.Text = "Export Minimap...";
             this.toolStripMenuItem17.Click += new System.EventHandler(this.toolStripMenuItem17_Click);
+            // 
+            // toolStripMenuItem18
+            // 
+            this.toolStripMenuItem18.Enabled = false;
+            this.toolStripMenuItem18.Name = "toolStripMenuItem18";
+            this.toolStripMenuItem18.Size = new System.Drawing.Size(179, 22);
+            this.toolStripMenuItem18.Text = "Export Heightmap...";
+            this.toolStripMenuItem18.Click += new System.EventHandler(this.toolStripMenuItem18_Click);
             // 
             // toolStripSeparator10
             // 
@@ -577,13 +587,13 @@
             this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar1ValueChanged);
             this.trackBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar1_MouseUp);
             // 
-            // toolStripMenuItem18
+            // toolStripMenuItem19
             // 
-            this.toolStripMenuItem18.Enabled = false;
-            this.toolStripMenuItem18.Name = "toolStripMenuItem18";
-            this.toolStripMenuItem18.Size = new System.Drawing.Size(179, 22);
-            this.toolStripMenuItem18.Text = "Export Heightmap...";
-            this.toolStripMenuItem18.Click += new System.EventHandler(this.toolStripMenuItem18_Click);
+            this.toolStripMenuItem19.Enabled = false;
+            this.toolStripMenuItem19.Name = "toolStripMenuItem19";
+            this.toolStripMenuItem19.Size = new System.Drawing.Size(179, 22);
+            this.toolStripMenuItem19.Text = "Import Minimap...";
+            this.toolStripMenuItem19.Click += new System.EventHandler(this.toolStripMenuItem19_Click);
             // 
             // imageLayerView1
             // 
@@ -718,6 +728,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem17;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem18;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem19;
     }
 }
 

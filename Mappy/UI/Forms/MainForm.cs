@@ -232,6 +232,19 @@
             }
         }
 
+        public bool ImportMinimapEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem19.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem19.Enabled = value;
+            }
+        }
+
         public bool ExportMinimapEnabled
         {
             get
@@ -279,6 +292,18 @@
         {
             OpenFileDialog d = new OpenFileDialog();
             d.Filter = "TA Map Files|*.hpi;*.ufo;*.ccx;*.gpf;*.gp3;*.tnt|All files|*.*";
+            if (d.ShowDialog(this) == DialogResult.OK)
+            {
+                return d.FileName;
+            }
+
+            return null;
+        }
+
+        public string AskUserToChooseMinimap()
+        {
+            OpenFileDialog d = new OpenFileDialog();
+            d.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.gif;*.bmp|All files|*.*";
             if (d.ShowDialog(this) == DialogResult.OK)
             {
                 return d.FileName;
@@ -577,6 +602,11 @@
         private void imageLayerView1_Scroll(object sender, ScrollEventArgs e)
         {
             this.Presenter.UpdateMinimapViewport();
+        }
+
+        private void toolStripMenuItem19_Click(object sender, EventArgs e)
+        {
+            this.Presenter.ImportMinimap();
         }
     }
 }

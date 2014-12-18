@@ -45,6 +45,8 @@
 
         bool CloseEnabled { get; set; }
 
+        bool ImportMinimapEnabled { get; set; }
+
         bool ExportMinimapEnabled { get; set; }
 
         bool ExportHeightmapEnabled { get; set; }
@@ -56,6 +58,8 @@
         string AskUserToSaveFile();
 
         string AskUserToSaveMinimap();
+
+        string AskUserToChooseMinimap();
 
         string AskUserToSaveHeightmap();
 

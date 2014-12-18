@@ -17,7 +17,9 @@
     using Mappy.Views;
 
     using TAUtil;
+    using TAUtil.Gdi.Palette;
     using TAUtil.Hpi;
+    using TAUtil.Tnt;
 
     /// <summary>
     /// Presenter for Mappy's main form.
@@ -380,6 +382,43 @@
             }
         }
 
+        public void ImportMinimap()
+        {
+            var loc = this.view.AskUserToChooseMinimap();
+            if (loc == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Bitmap bmp;
+                using (var s = File.OpenRead(loc))
+                {
+                    bmp = (Bitmap)Image.FromStream(s);
+                }
+
+                if (bmp.Width > TntConstants.MaxMinimapWidth
+                    || bmp.Height > TntConstants.MaxMinimapHeight)
+                {
+                    var msg = string.Format(
+                        "Minimap dimensions too large. The maximum size is {0}x{1}.",
+                        TntConstants.MaxMinimapWidth,
+                        TntConstants.MaxMinimapHeight);
+
+                    this.view.ShowError(msg);
+                    return;
+                }
+
+                Quantization.ToTAPalette(bmp);
+                this.model.SetMinimap(bmp);
+            }
+            catch (Exception)
+            {
+                this.view.ShowError("There was a problem importing the selected minimap.");
+            }
+        }
+
         public void OpenMapAttributes()
         {
             MapAttributesResult r = this.view.AskUserForMapAttributes(this.model.GetAttributes());
@@ -615,6 +654,7 @@
                     this.view.SeaLevelEditEnabled = this.model.MapOpen;
                     this.view.RefreshMinimapEnabled = this.model.MapOpen;
                     this.view.RefreshMinimapHighQualityEnabled = this.model.MapOpen;
+                    this.view.ImportMinimapEnabled = this.model.MapOpen;
                     this.view.ExportMinimapEnabled = this.model.MapOpen;
                     this.view.ExportHeightmapEnabled = this.model.MapOpen;
                     break;
