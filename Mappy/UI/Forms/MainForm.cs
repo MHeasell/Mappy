@@ -271,6 +271,19 @@
             }
         }
 
+        public bool ExportMapImageEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem21.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem21.Enabled = value;
+            }
+        }
+
         public bool ImportHeightmapEnabled
         {
             get
@@ -372,6 +385,21 @@
             d.Filter = "PNG files|*.png|All files|*.*";
             d.AddExtension = true;
             DialogResult result = d.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                return d.FileName;
+            }
+
+            return null;
+        }
+
+        public string AskUserToSaveMapImage()
+        {
+            var d = new SaveFileDialog();
+            d.Title = "Export Map Image";
+            d.Filter = "PNG files|*.png|All files|*.*";
+            d.AddExtension = true;
+            var result = d.ShowDialog(this);
             if (result == DialogResult.OK)
             {
                 return d.FileName;
@@ -638,6 +666,11 @@
         private void toolStripMenuItem20_Click(object sender, EventArgs e)
         {
             this.Presenter.ImportHeightmap();
+        }
+
+        private void toolStripMenuItem21_Click(object sender, EventArgs e)
+        {
+            this.Presenter.ExportMapImage();
         }
     }
 }

@@ -5,9 +5,12 @@ namespace Mappy.Util
     using System.ComponentModel;
     using System.Drawing;
     using System.Drawing.Imaging;
+    using System.IO;
     using System.Linq;
 
     using Geometry;
+
+    using Hjg.Pngcs;
 
     using Mappy.Collections;
     using Mappy.Data;
@@ -243,6 +246,48 @@ namespace Mappy.Util
 
             var wrapper = new BilinearWrapper(map, width, height);
             return ToBitmap(wrapper);
+        }
+
+        public static bool WriteMapImage(Stream s, IGrid<Bitmap> map, Action<int> reportProgress, Func<bool> shouldCancel)
+        {
+            using (var adapter = new MapPixelImageAdapter(map))
+            {
+                return WritePixelImageAsPng(s, adapter, reportProgress, shouldCancel);
+            }
+        }
+
+        public static bool WritePixelImageAsPng(Stream s, IPixelImage img, Action<int> reportProgress, Func<bool> shouldCancel)
+        {
+            var imgInfo = new ImageInfo(img.Width, img.Height, 8, true);
+
+            var writer = new PngWriter(s, imgInfo);
+
+            for (int y = 0; y < img.Height; y++)
+            {
+                if (shouldCancel())
+                {
+                    return false;
+                }
+
+                var line = new ImageLine(imgInfo);
+                for (int x = 0; x < img.Width; x++)
+                {
+                    var c = img[x, y];
+                    var offset = x * 4;
+                    line.Scanline[offset] = c.R;
+                    line.Scanline[offset + 1] = c.G;
+                    line.Scanline[offset + 2] = c.B;
+                    line.Scanline[offset + 3] = c.A;
+                }
+
+                writer.WriteRow(line, y);
+
+                reportProgress((y * 100) / img.Height);
+            }
+
+            writer.End();
+
+            return true;
         }
 
         public static Point ToPoint(GridCoordinates g)

@@ -382,6 +382,73 @@
             }
         }
 
+        public void ExportMapImage()
+        {
+            var loc = this.view.AskUserToSaveMapImage();
+            if (loc == null)
+            {
+                return;
+            }
+
+            var pv = this.view.CreateProgressView();
+
+            var tempLoc = loc + ".mappy-partial";
+
+            var bg = new BackgroundWorker();
+            bg.WorkerReportsProgress = true;
+            bg.WorkerSupportsCancellation = true;
+            bg.DoWork += delegate(object sender, DoWorkEventArgs args)
+                {
+                    var worker = (BackgroundWorker)sender;
+                    using (var s = File.Create(tempLoc))
+                    {
+                        var success = Mappy.Util.Util.WriteMapImage(s, this.model.Map.Tile.TileGrid, worker.ReportProgress, () => worker.CancellationPending);
+                        args.Cancel = !success;
+                    }
+                };
+
+            bg.ProgressChanged += (sender, args) => pv.Progress = args.ProgressPercentage;
+            pv.CancelPressed += (sender, args) => bg.CancelAsync();
+
+            bg.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+                {
+                    try
+                    {
+                        pv.Close();
+
+                        if (args.Cancelled)
+                        {
+                            return;
+                        }
+
+                        if (args.Error != null)
+                        {
+                            this.view.ShowError("There was a problem saving the map image.");
+                            return;
+                        }
+
+                        if (File.Exists(loc))
+                        {
+                            File.Replace(tempLoc, loc, null);
+                        }
+                        else
+                        {
+                            File.Move(tempLoc, loc);
+                        }
+                    }
+                    finally
+                    {
+                        if (File.Exists(tempLoc))
+                        {
+                            File.Delete(tempLoc);
+                        }
+                    }
+                };
+
+            bg.RunWorkerAsync();
+            pv.Display();
+        }
+
         public void ImportHeightmap()
         {
             var w = this.model.Map.Tile.HeightGrid.Width;
@@ -695,6 +762,7 @@
                     this.view.ExportMinimapEnabled = this.model.MapOpen;
                     this.view.ExportHeightmapEnabled = this.model.MapOpen;
                     this.view.ImportHeightmapEnabled = this.model.MapOpen;
+                    this.view.ExportMapImageEnabled = this.model.MapOpen;
                     break;
                 case "IsFileOpen":
                     this.view.SaveAsEnabled = this.model.IsFileOpen;
