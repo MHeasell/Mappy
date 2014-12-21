@@ -250,7 +250,7 @@ namespace Mappy.Util
 
         public static bool WriteMapImage(Stream s, IGrid<Bitmap> map, Action<int> reportProgress, Func<bool> shouldCancel)
         {
-            using (var adapter = new MapPixelImageAdapter(map))
+            using (var adapter = new NonTrimmedMapPixelImageAdapter(map))
             {
                 return WritePixelImageAsPng(s, adapter, reportProgress, shouldCancel);
             }
