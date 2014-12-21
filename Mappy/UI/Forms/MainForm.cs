@@ -297,6 +297,35 @@
             }
         }
 
+        public bool ImportCustomSectionEnabled
+        {
+            get
+            {
+                return this.toolStripMenuItem22.Enabled;
+            }
+
+            set
+            {
+                this.toolStripMenuItem22.Enabled = value;
+            }
+        }
+
+        public SectionImportPaths AskUserToChooseSectionImportPaths()
+        {
+            var dlg = new ImportCustomSectionForm();
+            var result = dlg.ShowDialog(this);
+            if (result != DialogResult.OK)
+            {
+                return null;
+            }
+
+            return new SectionImportPaths
+                {
+                    GraphicPath = dlg.GraphicPath,
+                    HeightmapPath = dlg.HeightmapPath
+                };
+        }
+
         public string AskUserToChooseMap(IList<string> maps)
         {
             MapSelectionForm f = new MapSelectionForm();
@@ -671,6 +700,11 @@
         private void toolStripMenuItem21_Click(object sender, EventArgs e)
         {
             this.Presenter.ExportMapImage();
+        }
+
+        private void toolStripMenuItem22_Click(object sender, EventArgs e)
+        {
+            this.Presenter.ImportCustomSection();
         }
     }
 }

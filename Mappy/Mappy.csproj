@@ -181,6 +181,12 @@
     <Compile Include="UI\Forms\AboutForm.Designer.cs">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Forms\ImportCustomSectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\ImportCustomSectionForm.Designer.cs">
+      <DependentUpon>ImportCustomSectionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Forms\MapAttributesForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -214,6 +220,7 @@
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Painters\GridPainter.cs" />
+    <Compile Include="Util\ImageImport.cs" />
     <Compile Include="Util\ImageSampling\BilinearWrapper.cs" />
     <Compile Include="Util\ImageSampling\IPixelImage.cs" />
     <Compile Include="Util\ImageSampling\NonTrimmedMapPixelImageAdapter.cs" />
@@ -274,6 +281,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Forms\ImportCustomSectionForm.resx">
+      <DependentUpon>ImportCustomSectionForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

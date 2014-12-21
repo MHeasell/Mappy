@@ -25,6 +25,12 @@ namespace Mappy.Data
             this.HeightGrid = new Grid<int>(width * 2, height * 2);
         }
 
+        public MapTile(Grid<Bitmap> grid, Grid<int> heightmap)
+        {
+            this.TileGrid = grid;
+            this.HeightGrid = heightmap;
+        }
+
         public IGrid<Bitmap> TileGrid { get; private set; }
 
         public IGrid<int> HeightGrid { get; private set; }

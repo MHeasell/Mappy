@@ -55,6 +55,8 @@
 
         bool ExportMapImageEnabled { get; set; }
 
+        bool ImportCustomSectionEnabled { get; set; }
+
         string AskUserToChooseMap(IList<string> maps);
 
         string AskUserToOpenFile();
@@ -70,6 +72,8 @@
         string AskUserToSaveHeightmap();
 
         string AskUserToChooseHeightmap(int width, int height);
+
+        SectionImportPaths AskUserToChooseSectionImportPaths();
 
         void CapturePreferences();
 
@@ -88,5 +92,12 @@
         IProgressView CreateProgressView();
 
         void SetViewportPosition(int x, int y);
+    }
+
+    public class SectionImportPaths
+    {
+        public string GraphicPath { get; set; }
+
+        public string HeightmapPath { get; set; }
     }
 }

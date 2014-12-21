@@ -899,6 +899,25 @@
             this.undoManager.Execute(op);
         }
 
+        public void PasteMapTileNoDeduplicate(IMapTile tile)
+        {
+            var normX = this.ViewportRectangle.CenterX;
+            var normY = this.ViewportRectangle.CenterY;
+            int x = (int)(this.MapWidth * normX);
+            int y = (int)(this.MapHeight * normY);
+
+            x -= tile.TileGrid.Width / 2;
+            y -= tile.TileGrid.Height / 2;
+
+            this.AddAndSelectTile(tile, x, y);
+        }
+
+        public void PasteMapTile(IMapTile tile)
+        {
+            DeduplicateTiles(tile.TileGrid);
+            this.PasteMapTileNoDeduplicate(tile);
+        }
+
         private static void DeduplicateTiles(IGrid<Bitmap> tiles)
         {
             var len = tiles.Width * tiles.Height;
@@ -942,21 +961,6 @@
             int y = (int)(this.MapHeight * 32 * normY);
 
             this.DragDropFeature(feature.FeatureName, x, y);
-        }
-
-        private void PasteMapTile(IMapTile tile)
-        {
-            DeduplicateTiles(tile.TileGrid);
-
-            var normX = this.ViewportRectangle.CenterX;
-            var normY = this.ViewportRectangle.CenterY;
-            int x = (int)(this.MapWidth * normX);
-            int y = (int)(this.MapHeight * normY);
-
-            x -= tile.TileGrid.Width / 2;
-            y -= tile.TileGrid.Height / 2;
-
-            this.AddAndSelectTile(tile, x, y);
         }
 
         private void AddAndSelectTile(IMapTile tile, int x, int y)

@@ -14,6 +14,7 @@
     using Mappy.Data;
     using Mappy.IO;
     using Mappy.Models;
+    using Mappy.Util;
     using Mappy.Views;
 
     using TAUtil;
@@ -449,6 +450,63 @@
             pv.Display();
         }
 
+        public void ImportCustomSection()
+        {
+            var paths = this.view.AskUserToChooseSectionImportPaths();
+            if (paths == null)
+            {
+                return;
+            }
+
+            var dlg = this.view.CreateProgressView();
+
+            var bg = new BackgroundWorker();
+            bg.WorkerSupportsCancellation = true;
+            bg.WorkerReportsProgress = true;
+            bg.DoWork += delegate(object sender, DoWorkEventArgs args)
+                {
+                    var w = (BackgroundWorker)sender;
+                    var sect = ImageImport.ImportSection(
+                        paths.GraphicPath,
+                        paths.HeightmapPath,
+                        w.ReportProgress,
+                        () => w.CancellationPending);
+                    if (sect == null)
+                    {
+                        args.Cancel = true;
+                        return;
+                    }
+
+                    args.Result = sect;
+                };
+
+            bg.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage;
+            dlg.CancelPressed += (sender, args) => bg.CancelAsync();
+
+            bg.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+                {
+                    dlg.Close();
+
+                    if (args.Error != null)
+                    {
+                        this.view.ShowError(
+                            "There was a problem importing the section: " + args.Error.Message);
+                        return;
+                    }
+
+                    if (args.Cancelled)
+                    {
+                        return;
+                    }
+
+                    this.model.PasteMapTileNoDeduplicate((IMapTile)args.Result);
+                };
+
+            bg.RunWorkerAsync();
+
+            dlg.Display();
+        }
+
         public void ImportHeightmap()
         {
             var w = this.model.Map.Tile.HeightGrid.Width;
@@ -763,6 +821,7 @@
                     this.view.ExportHeightmapEnabled = this.model.MapOpen;
                     this.view.ImportHeightmapEnabled = this.model.MapOpen;
                     this.view.ExportMapImageEnabled = this.model.MapOpen;
+                    this.view.ImportCustomSectionEnabled = this.model.MapOpen;
                     break;
                 case "IsFileOpen":
                     this.view.SaveAsEnabled = this.model.IsFileOpen;

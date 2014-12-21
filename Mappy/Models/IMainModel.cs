@@ -144,5 +144,9 @@ namespace Mappy.Models
         void PasteFromClipboard();
 
         void ReplaceHeightmap(Grid<int> heightmap);
+
+        void PasteMapTile(IMapTile tile);
+
+        void PasteMapTileNoDeduplicate(IMapTile tile);
     }
 }
