@@ -7,7 +7,6 @@
 
     using Mappy.Data;
 
-    using TAUtil.Gdi.Palette;
     using TAUtil.Hpi;
     using TAUtil.Sct;
 
