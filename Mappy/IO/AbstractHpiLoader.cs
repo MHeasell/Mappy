@@ -57,9 +57,9 @@
                 };
         } 
 
-        protected abstract IEnumerable<string> EnumerateFiles(HpiReader r);
+        protected abstract IEnumerable<HpiEntry> EnumerateFiles(HpiReader r);
 
-        protected abstract void LoadFile(HpiReader r, string file);
+        protected abstract void LoadFile(HpiEntry entry);
 
         private void OnHpiError(string hpi, Exception e)
         {
@@ -81,11 +81,11 @@
                     {
                         try
                         {
-                            this.LoadFile(s, file);
+                            this.LoadFile(file);
                         }
                         catch (Exception e)
                         {
-                            this.OnError(hpiFile, file, e);
+                            this.OnError(hpiFile, file.Name, e);
                         }
                     }
                 }

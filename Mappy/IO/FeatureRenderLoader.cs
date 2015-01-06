@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
 
     using Mappy.Data;
@@ -20,21 +19,19 @@
             this.objectMap = objectMap;
         }
 
-        protected override IEnumerable<string> EnumerateFiles(HpiReader r)
+        protected override IEnumerable<HpiEntry> EnumerateFiles(HpiReader r)
         {
             return r.GetFilesRecursive("objects3d")
-                .Select(x => x.Name)
                 .Where(x =>
-                    x.EndsWith(".3do", StringComparison.OrdinalIgnoreCase)
-                    && this.objectMap.ContainsKey(HpiPath.GetFileNameWithoutExtension(x)));
+                    x.Name.EndsWith(".3do", StringComparison.OrdinalIgnoreCase)
+                    && this.objectMap.ContainsKey(HpiPath.GetFileNameWithoutExtension(x.Name)));
         }
 
-        protected override void LoadFile(HpiReader r, string file)
+        protected override void LoadFile(HpiEntry file)
         {
-            Debug.Assert(file != null, "Null filename");
-            var records = this.objectMap[HpiPath.GetFileNameWithoutExtension(file)];
+            var records = this.objectMap[HpiPath.GetFileNameWithoutExtension(file.Name)];
 
-            using (var b = r.ReadFile(file))
+            using (var b = file.Open())
             {
                 var adapter = new ModelEdgeReaderAdapter();
                 var reader = new ModelReader(b, adapter);

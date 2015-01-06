@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Drawing;
     using System.Linq;
 
@@ -23,27 +22,23 @@
             this.filenameFeatureMap = filenameFeatureMap;
         }
 
-        protected override IEnumerable<string> EnumerateFiles(HpiReader r)
+        protected override IEnumerable<HpiEntry> EnumerateFiles(HpiReader r)
         {
-            return r.GetFilesRecursive("anims")
-                .Select(x => x.Name)
-                .Where(this.IsNeededFile);
+            return r.GetFilesRecursive("anims").Where(this.IsNeededFile);
         }
 
-        protected override void LoadFile(HpiReader r, string file)
+        protected override void LoadFile(HpiEntry file)
         {
             // extract and read the file
             var adapter = new GafEntryArrayAdapter();
-            using (var b = new GafReader(r.ReadFile(file), adapter))
+            using (var b = new GafReader(file.Open(), adapter))
             {
                 b.Read();
             }
 
             GafEntry[] gaf = adapter.Entries;
 
-            Debug.Assert(file != null, "Null path in HPI listing.");
-
-            var records = this.filenameFeatureMap[HpiPath.GetFileNameWithoutExtension(file)];
+            var records = this.filenameFeatureMap[HpiPath.GetFileNameWithoutExtension(file.Name)];
 
             // retrieve the anim for each record
             foreach (var record in records)
@@ -84,8 +79,9 @@
             }
         }
 
-        private bool IsNeededFile(string file)
+        private bool IsNeededFile(HpiEntry entry)
         {
+            var file = entry.Name;
             return file.EndsWith(".gaf", StringComparison.OrdinalIgnoreCase)
                 && this.filenameFeatureMap.ContainsKey(
                     HpiPath.GetFileNameWithoutExtension(file));

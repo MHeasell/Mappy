@@ -11,10 +11,10 @@
 
     public class FeatureTdfLoader : AbstractHpiLoader<FeatureRecord>
     {
-        protected override void LoadFile(HpiReader r, string file)
+        protected override void LoadFile(HpiEntry file)
         {
             TdfNode n;
-            using (var tdf = r.ReadTextFile(file))
+            using (var tdf = file.Open())
             {
                 n = TdfNode.LoadTdf(tdf);
             }
@@ -23,11 +23,10 @@
                 n.Keys.Values.Select(FeatureRecord.FromTdfNode));
         }
 
-        protected override IEnumerable<string> EnumerateFiles(HpiReader r)
+        protected override IEnumerable<HpiEntry> EnumerateFiles(HpiReader r)
         {
             return r.GetFilesRecursive("features")
-                .Select(x => x.Name)
-                .Where(x => x.EndsWith(".tdf", StringComparison.OrdinalIgnoreCase));
+                .Where(x => x.Name.EndsWith(".tdf", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

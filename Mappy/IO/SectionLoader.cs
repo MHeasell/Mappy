@@ -19,17 +19,17 @@
             this.factory = new SectionFactory();
         }
 
-        protected override void LoadFile(HpiReader h, string sect)
+        protected override void LoadFile(HpiEntry file)
         {
-            using (var s = new SctReader(h.ReadFile(sect)))
+            using (var s = new SctReader(file.Open()))
             {
-                var section = new Section(h.FileName, sect);
-                section.Name = HpiPath.GetFileNameWithoutExtension(sect);
+                var section = new Section(file.Reader.FileName, file.Name);
+                section.Name = HpiPath.GetFileNameWithoutExtension(file.Name);
                 section.Minimap = this.factory.MinimapFromSct(s);
                 section.DataWidth = s.DataWidth;
                 section.DataHeight = s.DataHeight;
 
-                string directoryString = HpiPath.GetDirectoryName(sect);
+                string directoryString = HpiPath.GetDirectoryName(file.Name);
                 Debug.Assert(directoryString != null, "Null directory for section in HPI.");
                 string[] directories = directoryString.Split('\\');
 
@@ -40,11 +40,10 @@
             }
         }
 
-        protected override IEnumerable<string> EnumerateFiles(HpiReader r)
+        protected override IEnumerable<HpiEntry> EnumerateFiles(HpiReader r)
         {
             return r.GetFilesRecursive("sections")
-                .Select(x => x.Name)
-                .Where(x => x.EndsWith(".sct", StringComparison.OrdinalIgnoreCase));
+                .Where(x => x.Name.EndsWith(".sct", StringComparison.OrdinalIgnoreCase));
         }
     }
 }
