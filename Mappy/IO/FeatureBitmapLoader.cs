@@ -7,6 +7,7 @@
     using System.Linq;
 
     using Mappy.Data;
+    using Mappy.IO.Gaf;
     using Mappy.Util;
 
     using TAUtil.Gaf;
@@ -32,11 +33,13 @@
         protected override void LoadFile(HpiReader r, string file)
         {
             // extract and read the file
-            GafEntry[] gaf;
-            using (var b = new GafReader(r.ReadFile(file)))
+            var adapter = new GafEntryArrayAdapter();
+            using (var b = new GafReader(r.ReadFile(file), adapter))
             {
-                gaf = b.Read();
+                b.Read();
             }
+
+            GafEntry[] gaf = adapter.Entries;
 
             Debug.Assert(file != null, "Null path in HPI listing.");
 
@@ -63,7 +66,7 @@
                 var frame = entry.Frames[0];
 
                 Bitmap bmp;
-                if (frame.Width == 0 || frame.Height == 0)
+                if (frame.Data == null || frame.Width == 0 || frame.Height == 0)
                 {
                     bmp = new Bitmap(50, 50);
                 }
