@@ -8,8 +8,8 @@
     using Mappy.Data;
     using Mappy.Util;
 
-    using TAUtil.Hpi;
     using TAUtil._3do;
+    using TAUtil.Hpi;
 
     public class FeatureRenderLoader : AbstractHpiLoader<KeyValuePair<string, OffsetBitmap>>
     {
