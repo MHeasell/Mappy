@@ -32,6 +32,8 @@
 
         public void SaveHpi(IMapModel map, string filename)
         {
+            string namePart = Path.GetFileNameWithoutExtension(filename);
+
             string tmpTntName = Path.GetTempFileName();
             string tmpOtaName = Path.GetTempFileName();
 
@@ -47,7 +49,7 @@
                     map.Attributes.WriteOta(s);
                 }
 
-                string fname = "maps\\" + map.Attributes.Name;
+                string fname = "maps\\" + namePart;
 
                 using (HpiWriter wr = new HpiWriter(filename, HpiWriter.CompressionMethod.ZLib))
                 {
