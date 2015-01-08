@@ -912,6 +912,16 @@
             this.AddAndSelectTile(tile, x, y);
         }
 
+        public void PasteMapTileNoDeduplicateTopLeft(IMapTile tile)
+        {
+            var normX = this.ViewportRectangle.MinX;
+            var normY = this.ViewportRectangle.MinY;
+            int x = (int)(this.MapWidth * normX);
+            int y = (int)(this.MapHeight * normY);
+
+            this.AddAndSelectTile(tile, x, y);
+        }
+
         public void PasteMapTile(IMapTile tile)
         {
             DeduplicateTiles(tile.TileGrid);

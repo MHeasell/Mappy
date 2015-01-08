@@ -148,5 +148,7 @@ namespace Mappy.Models
         void PasteMapTile(IMapTile tile);
 
         void PasteMapTileNoDeduplicate(IMapTile tile);
+
+        void PasteMapTileNoDeduplicateTopLeft(IMapTile tile);
     }
 }

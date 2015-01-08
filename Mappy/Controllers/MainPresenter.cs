@@ -499,7 +499,7 @@
                         return;
                     }
 
-                    this.model.PasteMapTileNoDeduplicate((IMapTile)args.Result);
+                    this.model.PasteMapTileNoDeduplicateTopLeft((IMapTile)args.Result);
                 };
 
             bg.RunWorkerAsync();
