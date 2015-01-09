@@ -30,45 +30,46 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+            System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+            this.topMenu = new System.Windows.Forms.MenuStrip();
             this.fileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.saveMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.closeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.importMinimapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importHeightmapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.importCustomSectionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.exportMinimapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportHeightmapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportMapImageMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.exitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.redoMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.cutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.mapAttributesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.generateMinimapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateMinimapHighQualityMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.preferencesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleHeightmapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleMinimapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridOffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.grid16MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grid32MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grid64MenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -76,64 +77,74 @@
             this.grid256MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grid512MenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grid1024MenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.gridColorMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleFeaturesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.imageLayerView1 = new Mappy.UI.Controls.ImageLayerView();
-            this.sectionView1 = new Mappy.UI.Controls.SectionView();
-            this.featureview1 = new Mappy.UI.Controls.FeatureView();
+            this.sidebarTabs = new System.Windows.Forms.TabControl();
+            this.sectionsTab = new System.Windows.Forms.TabPage();
+            this.sectionsView = new Mappy.UI.Controls.SectionView();
+            this.featuresTab = new System.Windows.Forms.TabPage();
+            this.featureView = new Mappy.UI.Controls.FeatureView();
+            this.startPositionsTab = new System.Windows.Forms.TabPage();
             this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
-            this.menuStrip1.SuspendLayout();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
-            this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
+            this.attributesTab = new System.Windows.Forms.TabPage();
+            this.seaLevelValueLabel = new System.Windows.Forms.Label();
+            this.seaLevelLabel = new System.Windows.Forms.Label();
+            this.seaLevelTrackbar = new System.Windows.Forms.TrackBar();
+            this.mapView = new Mappy.UI.Controls.ImageLayerView();
+            toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.topMenu.SuspendLayout();
+            this.sidebarTabs.SuspendLayout();
+            this.sectionsTab.SuspendLayout();
+            this.featuresTab.SuspendLayout();
+            this.startPositionsTab.SuspendLayout();
+            this.attributesTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.seaLevelTrackbar)).BeginInit();
             this.SuspendLayout();
             // 
-            // menuStrip1
+            // topMenu
             // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.topMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileMenuItem,
             this.editMenuItem,
             this.viewMenuItem,
             this.helpMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(784, 24);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            this.topMenu.Location = new System.Drawing.Point(0, 0);
+            this.topMenu.Name = "topMenu";
+            this.topMenu.Size = new System.Drawing.Size(784, 24);
+            this.topMenu.TabIndex = 1;
+            this.topMenu.Text = "menuStrip1";
             // 
             // fileMenuItem
             // 
             this.fileMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newMenuItem,
             this.openMenuItem,
-            this.toolStripSeparator1,
+            toolStripSeparator1,
             this.saveMenuItem,
             this.saveAsMenuItem,
-            this.toolStripSeparator2,
+            toolStripSeparator2,
             this.closeMenuItem,
-            this.toolStripSeparator8,
+            toolStripSeparator8,
             this.importMinimapMenuItem,
             this.importHeightmapMenuItem,
             this.importCustomSectionMenuItem,
-            this.toolStripSeparator11,
+            toolStripSeparator11,
             this.exportMinimapMenuItem,
             this.exportHeightmapMenuItem,
             this.exportMapImageMenuItem,
-            this.toolStripSeparator10,
+            toolStripSeparator10,
             this.exitMenuItem});
             this.fileMenuItem.Name = "fileMenuItem";
             this.fileMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -157,8 +168,8 @@
             // 
             // toolStripSeparator1
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(203, 6);
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new System.Drawing.Size(203, 6);
             // 
             // saveMenuItem
             // 
@@ -180,8 +191,8 @@
             // 
             // toolStripSeparator2
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(203, 6);
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new System.Drawing.Size(203, 6);
             // 
             // closeMenuItem
             // 
@@ -194,8 +205,8 @@
             // 
             // toolStripSeparator8
             // 
-            this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(203, 6);
+            toolStripSeparator8.Name = "toolStripSeparator8";
+            toolStripSeparator8.Size = new System.Drawing.Size(203, 6);
             // 
             // importMinimapMenuItem
             // 
@@ -223,8 +234,8 @@
             // 
             // toolStripSeparator11
             // 
-            this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(203, 6);
+            toolStripSeparator11.Name = "toolStripSeparator11";
+            toolStripSeparator11.Size = new System.Drawing.Size(203, 6);
             // 
             // exportMinimapMenuItem
             // 
@@ -252,8 +263,8 @@
             // 
             // toolStripSeparator10
             // 
-            this.toolStripSeparator10.Name = "toolStripSeparator10";
-            this.toolStripSeparator10.Size = new System.Drawing.Size(203, 6);
+            toolStripSeparator10.Name = "toolStripSeparator10";
+            toolStripSeparator10.Size = new System.Drawing.Size(203, 6);
             // 
             // exitMenuItem
             // 
@@ -267,16 +278,16 @@
             this.editMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.undoMenuItem,
             this.redoMenuItem,
-            this.toolStripSeparator7,
+            toolStripSeparator7,
             this.cutMenuItem,
             this.copyMenuItem,
             this.pasteMenuItem,
-            this.toolStripSeparator9,
+            toolStripSeparator9,
             this.mapAttributesMenuItem,
-            this.toolStripSeparator3,
+            toolStripSeparator3,
             this.generateMinimapMenuItem,
             this.generateMinimapHighQualityMenuItem,
-            this.toolStripSeparator4,
+            toolStripSeparator4,
             this.preferencesMenuItem});
             this.editMenuItem.Name = "editMenuItem";
             this.editMenuItem.Size = new System.Drawing.Size(39, 20);
@@ -302,8 +313,8 @@
             // 
             // toolStripSeparator7
             // 
-            this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(247, 6);
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new System.Drawing.Size(247, 6);
             // 
             // cutMenuItem
             // 
@@ -334,8 +345,8 @@
             // 
             // toolStripSeparator9
             // 
-            this.toolStripSeparator9.Name = "toolStripSeparator9";
-            this.toolStripSeparator9.Size = new System.Drawing.Size(247, 6);
+            toolStripSeparator9.Name = "toolStripSeparator9";
+            toolStripSeparator9.Size = new System.Drawing.Size(247, 6);
             // 
             // mapAttributesMenuItem
             // 
@@ -347,8 +358,8 @@
             // 
             // toolStripSeparator3
             // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(247, 6);
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new System.Drawing.Size(247, 6);
             // 
             // generateMinimapMenuItem
             // 
@@ -369,8 +380,8 @@
             // 
             // toolStripSeparator4
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(247, 6);
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new System.Drawing.Size(247, 6);
             // 
             // preferencesMenuItem
             // 
@@ -412,7 +423,7 @@
             // 
             this.gridMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gridOffMenuItem,
-            this.toolStripSeparator5,
+            toolStripSeparator5,
             this.grid16MenuItem,
             this.grid32MenuItem,
             this.grid64MenuItem,
@@ -420,7 +431,7 @@
             this.grid256MenuItem,
             this.grid512MenuItem,
             this.grid1024MenuItem,
-            this.toolStripSeparator6,
+            toolStripSeparator6,
             this.gridColorMenuItem});
             this.gridMenuItem.Name = "gridMenuItem";
             this.gridMenuItem.Size = new System.Drawing.Size(177, 22);
@@ -438,8 +449,8 @@
             // 
             // toolStripSeparator5
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(152, 6);
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new System.Drawing.Size(152, 6);
             // 
             // grid16MenuItem
             // 
@@ -499,8 +510,8 @@
             // 
             // toolStripSeparator6
             // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(152, 6);
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new System.Drawing.Size(152, 6);
             // 
             // gridColorMenuItem
             // 
@@ -530,144 +541,75 @@
             // aboutMenuItem
             // 
             this.aboutMenuItem.Name = "aboutMenuItem";
-            this.aboutMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutMenuItem.Text = "&About...";
             this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItemClick);
             // 
-            // tabControl1
+            // sidebarTabs
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.tabControl1.Location = new System.Drawing.Point(0, 24);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(215, 538);
-            this.tabControl1.TabIndex = 4;
+            this.sidebarTabs.Controls.Add(this.sectionsTab);
+            this.sidebarTabs.Controls.Add(this.featuresTab);
+            this.sidebarTabs.Controls.Add(this.startPositionsTab);
+            this.sidebarTabs.Controls.Add(this.attributesTab);
+            this.sidebarTabs.Dock = System.Windows.Forms.DockStyle.Left;
+            this.sidebarTabs.Location = new System.Drawing.Point(0, 24);
+            this.sidebarTabs.Name = "sidebarTabs";
+            this.sidebarTabs.SelectedIndex = 0;
+            this.sidebarTabs.Size = new System.Drawing.Size(215, 538);
+            this.sidebarTabs.TabIndex = 4;
             // 
-            // tabPage1
+            // sectionsTab
             // 
-            this.tabPage1.Controls.Add(this.sectionView1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage1.Size = new System.Drawing.Size(207, 512);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Sections";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            this.sectionsTab.Controls.Add(this.sectionsView);
+            this.sectionsTab.Location = new System.Drawing.Point(4, 22);
+            this.sectionsTab.Name = "sectionsTab";
+            this.sectionsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.sectionsTab.Size = new System.Drawing.Size(207, 512);
+            this.sectionsTab.TabIndex = 0;
+            this.sectionsTab.Text = "Sections";
+            this.sectionsTab.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // sectionsView
             // 
-            this.tabPage2.Controls.Add(this.featureview1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage2.Size = new System.Drawing.Size(207, 512);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Features";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.sectionsView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sectionsView.Location = new System.Drawing.Point(3, 3);
+            this.sectionsView.Margin = new System.Windows.Forms.Padding(4);
+            this.sectionsView.Name = "sectionsView";
+            this.sectionsView.Sections = null;
+            this.sectionsView.Size = new System.Drawing.Size(201, 506);
+            this.sectionsView.TabIndex = 3;
             // 
-            // tabPage3
+            // featuresTab
             // 
-            this.tabPage3.Controls.Add(this.startPositionsView1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabPage3.Size = new System.Drawing.Size(207, 512);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Starts";
-            this.tabPage3.UseVisualStyleBackColor = true;
+            this.featuresTab.Controls.Add(this.featureView);
+            this.featuresTab.Location = new System.Drawing.Point(4, 22);
+            this.featuresTab.Name = "featuresTab";
+            this.featuresTab.Padding = new System.Windows.Forms.Padding(3);
+            this.featuresTab.Size = new System.Drawing.Size(207, 512);
+            this.featuresTab.TabIndex = 1;
+            this.featuresTab.Text = "Features";
+            this.featuresTab.UseVisualStyleBackColor = true;
             // 
-            // tabPage4
+            // featureView
             // 
-            this.tabPage4.Controls.Add(this.label3);
-            this.tabPage4.Controls.Add(this.label2);
-            this.tabPage4.Controls.Add(this.trackBar1);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
-            this.tabPage4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.tabPage4.Size = new System.Drawing.Size(207, 512);
-            this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Attributes";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.featureView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.featureView.Features = null;
+            this.featureView.Location = new System.Drawing.Point(3, 3);
+            this.featureView.Margin = new System.Windows.Forms.Padding(4);
+            this.featureView.Name = "featureView";
+            this.featureView.Size = new System.Drawing.Size(201, 506);
+            this.featureView.TabIndex = 0;
             // 
-            // label3
+            // startPositionsTab
             // 
-            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label3.Enabled = false;
-            this.label3.Location = new System.Drawing.Point(173, 5);
-            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(32, 14);
-            this.label3.TabIndex = 10;
-            this.label3.Text = "0";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Enabled = false;
-            this.label2.Location = new System.Drawing.Point(4, 5);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(55, 13);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Sea Level";
-            // 
-            // trackBar1
-            // 
-            this.trackBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar1.Enabled = false;
-            this.trackBar1.Location = new System.Drawing.Point(62, 5);
-            this.trackBar1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.trackBar1.Maximum = 255;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Size = new System.Drawing.Size(106, 45);
-            this.trackBar1.TabIndex = 8;
-            this.trackBar1.TickFrequency = 16;
-            this.trackBar1.ValueChanged += new System.EventHandler(this.TrackBar1ValueChanged);
-            this.trackBar1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.trackBar1_MouseUp);
-            // 
-            // imageLayerView1
-            // 
-            this.imageLayerView1.AllowDrop = true;
-            this.imageLayerView1.CanvasColor = System.Drawing.Color.CornflowerBlue;
-            this.imageLayerView1.CanvasSize = new System.Drawing.Size(0, 0);
-            this.imageLayerView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageLayerView1.GridColor = System.Drawing.Color.Black;
-            this.imageLayerView1.GridSize = new System.Drawing.Size(16, 16);
-            this.imageLayerView1.GridVisible = false;
-            this.imageLayerView1.Location = new System.Drawing.Point(215, 24);
-            this.imageLayerView1.Name = "imageLayerView1";
-            this.imageLayerView1.Size = new System.Drawing.Size(569, 538);
-            this.imageLayerView1.TabIndex = 5;
-            this.imageLayerView1.Text = "imageLayerView1";
-            this.imageLayerView1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.imageLayerView1_Scroll);
-            this.imageLayerView1.ClientSizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
-            // 
-            // sectionView1
-            // 
-            this.sectionView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sectionView1.Location = new System.Drawing.Point(3, 3);
-            this.sectionView1.Margin = new System.Windows.Forms.Padding(4);
-            this.sectionView1.Name = "sectionView1";
-            this.sectionView1.Sections = null;
-            this.sectionView1.Size = new System.Drawing.Size(201, 506);
-            this.sectionView1.TabIndex = 3;
-            // 
-            // featureview1
-            // 
-            this.featureview1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.featureview1.Features = null;
-            this.featureview1.Location = new System.Drawing.Point(3, 3);
-            this.featureview1.Margin = new System.Windows.Forms.Padding(4);
-            this.featureview1.Name = "featureview1";
-            this.featureview1.Size = new System.Drawing.Size(201, 506);
-            this.featureview1.TabIndex = 0;
+            this.startPositionsTab.Controls.Add(this.startPositionsView1);
+            this.startPositionsTab.Location = new System.Drawing.Point(4, 22);
+            this.startPositionsTab.Name = "startPositionsTab";
+            this.startPositionsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.startPositionsTab.Size = new System.Drawing.Size(207, 512);
+            this.startPositionsTab.TabIndex = 2;
+            this.startPositionsTab.Text = "Starts";
+            this.startPositionsTab.UseVisualStyleBackColor = true;
             // 
             // startPositionsView1
             // 
@@ -678,28 +620,97 @@
             this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
             this.startPositionsView1.TabIndex = 0;
             // 
+            // attributesTab
+            // 
+            this.attributesTab.Controls.Add(this.seaLevelValueLabel);
+            this.attributesTab.Controls.Add(this.seaLevelLabel);
+            this.attributesTab.Controls.Add(this.seaLevelTrackbar);
+            this.attributesTab.Location = new System.Drawing.Point(4, 22);
+            this.attributesTab.Margin = new System.Windows.Forms.Padding(2);
+            this.attributesTab.Name = "attributesTab";
+            this.attributesTab.Padding = new System.Windows.Forms.Padding(2);
+            this.attributesTab.Size = new System.Drawing.Size(207, 512);
+            this.attributesTab.TabIndex = 3;
+            this.attributesTab.Text = "Attributes";
+            this.attributesTab.UseVisualStyleBackColor = true;
+            // 
+            // seaLevelValueLabel
+            // 
+            this.seaLevelValueLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.seaLevelValueLabel.Enabled = false;
+            this.seaLevelValueLabel.Location = new System.Drawing.Point(173, 5);
+            this.seaLevelValueLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.seaLevelValueLabel.Name = "seaLevelValueLabel";
+            this.seaLevelValueLabel.Size = new System.Drawing.Size(32, 14);
+            this.seaLevelValueLabel.TabIndex = 10;
+            this.seaLevelValueLabel.Text = "0";
+            this.seaLevelValueLabel.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // seaLevelLabel
+            // 
+            this.seaLevelLabel.AutoSize = true;
+            this.seaLevelLabel.Enabled = false;
+            this.seaLevelLabel.Location = new System.Drawing.Point(4, 5);
+            this.seaLevelLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.seaLevelLabel.Name = "seaLevelLabel";
+            this.seaLevelLabel.Size = new System.Drawing.Size(55, 13);
+            this.seaLevelLabel.TabIndex = 9;
+            this.seaLevelLabel.Text = "Sea Level";
+            // 
+            // seaLevelTrackbar
+            // 
+            this.seaLevelTrackbar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.seaLevelTrackbar.Enabled = false;
+            this.seaLevelTrackbar.Location = new System.Drawing.Point(62, 5);
+            this.seaLevelTrackbar.Margin = new System.Windows.Forms.Padding(2);
+            this.seaLevelTrackbar.Maximum = 255;
+            this.seaLevelTrackbar.Name = "seaLevelTrackbar";
+            this.seaLevelTrackbar.Size = new System.Drawing.Size(106, 45);
+            this.seaLevelTrackbar.TabIndex = 8;
+            this.seaLevelTrackbar.TickFrequency = 16;
+            this.seaLevelTrackbar.ValueChanged += new System.EventHandler(this.TrackBar1ValueChanged);
+            this.seaLevelTrackbar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SeaLevelTrackbarMouseUp);
+            // 
+            // mapView
+            // 
+            this.mapView.AllowDrop = true;
+            this.mapView.CanvasColor = System.Drawing.Color.CornflowerBlue;
+            this.mapView.CanvasSize = new System.Drawing.Size(0, 0);
+            this.mapView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapView.GridColor = System.Drawing.Color.Black;
+            this.mapView.GridSize = new System.Drawing.Size(16, 16);
+            this.mapView.GridVisible = false;
+            this.mapView.Location = new System.Drawing.Point(215, 24);
+            this.mapView.Name = "mapView";
+            this.mapView.Size = new System.Drawing.Size(569, 538);
+            this.mapView.TabIndex = 5;
+            this.mapView.Text = "imageLayerView1";
+            this.mapView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.MapViewScroll);
+            this.mapView.ClientSizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 562);
-            this.Controls.Add(this.imageLayerView1);
-            this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.menuStrip1);
-            this.MainMenuStrip = this.menuStrip1;
+            this.Controls.Add(this.mapView);
+            this.Controls.Add(this.sidebarTabs);
+            this.Controls.Add(this.topMenu);
+            this.MainMenuStrip = this.topMenu;
             this.Name = "MainForm";
             this.Text = "Mappy";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1FormClosing);
             this.Load += new System.EventHandler(this.MainFormLoad);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
+            this.topMenu.ResumeLayout(false);
+            this.topMenu.PerformLayout();
+            this.sidebarTabs.ResumeLayout(false);
+            this.sectionsTab.ResumeLayout(false);
+            this.featuresTab.ResumeLayout(false);
+            this.startPositionsTab.ResumeLayout(false);
+            this.attributesTab.ResumeLayout(false);
+            this.attributesTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.seaLevelTrackbar)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -707,12 +718,11 @@
 
         #endregion
 
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip topMenu;
         private System.Windows.Forms.ToolStripMenuItem fileMenuItem;
         private System.Windows.Forms.ToolStripMenuItem helpMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem exitMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toggleHeightmapMenuItem;
@@ -720,19 +730,16 @@
         private System.Windows.Forms.ToolStripMenuItem preferencesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem toggleMinimapMenuItem;
         private System.Windows.Forms.ToolStripMenuItem undoMenuItem;
         private System.Windows.Forms.ToolStripMenuItem redoMenuItem;
-        private SectionView sectionView1;
+        private SectionView sectionsView;
         private System.Windows.Forms.ToolStripMenuItem newMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem generateMinimapMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
-        private FeatureView featureview1;
+        private System.Windows.Forms.TabControl sidebarTabs;
+        private System.Windows.Forms.TabPage sectionsTab;
+        private System.Windows.Forms.TabPage featuresTab;
+        private FeatureView featureView;
         private System.Windows.Forms.ToolStripMenuItem gridMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gridOffMenuItem;
         private System.Windows.Forms.ToolStripMenuItem grid16MenuItem;
@@ -742,32 +749,25 @@
         private System.Windows.Forms.ToolStripMenuItem grid256MenuItem;
         private System.Windows.Forms.ToolStripMenuItem grid512MenuItem;
         private System.Windows.Forms.ToolStripMenuItem grid1024MenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripMenuItem gridColorMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toggleFeaturesMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem mapAttributesMenuItem;
-        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TabPage startPositionsTab;
         private StartPositionsView startPositionsView1;
-        private System.Windows.Forms.TabPage tabPage4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TrackBar trackBar1;
+        private System.Windows.Forms.TabPage attributesTab;
+        private System.Windows.Forms.Label seaLevelValueLabel;
+        private System.Windows.Forms.Label seaLevelLabel;
+        private System.Windows.Forms.TrackBar seaLevelTrackbar;
         private System.Windows.Forms.ToolStripMenuItem closeMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem generateMinimapHighQualityMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem cutMenuItem;
-        public ImageLayerView imageLayerView1;
+        public ImageLayerView mapView;
         private System.Windows.Forms.ToolStripMenuItem exportMinimapMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator10;
         private System.Windows.Forms.ToolStripMenuItem exportHeightmapMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importMinimapMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importHeightmapMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
         private System.Windows.Forms.ToolStripMenuItem exportMapImageMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importCustomSectionMenuItem;
     }

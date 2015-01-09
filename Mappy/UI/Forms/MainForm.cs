@@ -31,10 +31,10 @@
         {
             get
             {
-                Point loc = this.imageLayerView1.AutoScrollPosition;
+                Point loc = this.mapView.AutoScrollPosition;
                 loc.X *= -1;
                 loc.Y *= -1;
-                return new Rectangle(loc, this.imageLayerView1.ClientSize);
+                return new Rectangle(loc, this.mapView.ClientSize);
             }
         }
 
@@ -48,7 +48,7 @@
             set
             {
                 this.sections = value;
-                this.sectionView1.Sections = value;
+                this.sectionsView.Sections = value;
             }
         }
 
@@ -62,7 +62,7 @@
             set
             {
                 this.features = value;
-                this.featureview1.Features = value;
+                this.featureView.Features = value;
             }
         }
 
@@ -70,13 +70,13 @@
         {
             get
             {
-                return this.trackBar1.Value;
+                return this.seaLevelTrackbar.Value;
             }
 
             set
             {
-                this.trackBar1.Value = value;
-                this.label3.Text = value.ToString(CultureInfo.CurrentCulture);
+                this.seaLevelTrackbar.Value = value;
+                this.seaLevelValueLabel.Text = value.ToString(CultureInfo.CurrentCulture);
             }
         }
 
@@ -84,14 +84,14 @@
         {
             get
             {
-                return this.trackBar1.Enabled;
+                return this.seaLevelTrackbar.Enabled;
             }
 
             set
             {
-                this.label2.Enabled = value;
-                this.label3.Enabled = value;
-                this.trackBar1.Enabled = value;
+                this.seaLevelLabel.Enabled = value;
+                this.seaLevelValueLabel.Enabled = value;
+                this.seaLevelTrackbar.Enabled = value;
             }
         }
 
@@ -113,7 +113,7 @@
 
         public void SetViewportPosition(int x, int y)
         {
-            this.imageLayerView1.AutoScrollPosition = new Point(x, y);
+            this.mapView.AutoScrollPosition = new Point(x, y);
         }
 
         private void OpenMenuItemClick(object sender, EventArgs e)
@@ -229,7 +229,7 @@
 
         private void TrackBar1ValueChanged(object sender, EventArgs e)
         {
-            this.Model.SetSeaLevel(this.trackBar1.Value);
+            this.Model.SetSeaLevel(this.seaLevelTrackbar.Value);
         }
 
         private void CloseMenuItemClick(object sender, EventArgs e)
@@ -242,7 +242,7 @@
             this.Model.RefreshMinimapHighQualityWithProgress();
         }
 
-        private void trackBar1_MouseUp(object sender, MouseEventArgs e)
+        private void SeaLevelTrackbarMouseUp(object sender, MouseEventArgs e)
         {
             this.Model.FlushSeaLevel();
         }
@@ -277,7 +277,7 @@
             this.Model.ExportHeightmap();
         }
 
-        private void imageLayerView1_Scroll(object sender, ScrollEventArgs e)
+        private void MapViewScroll(object sender, ScrollEventArgs e)
         {
             this.UpdateMinimapViewport();
         }
