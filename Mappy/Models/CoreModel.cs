@@ -602,122 +602,6 @@
             }
         }
 
-        private bool SaveHelper(string filename)
-        {
-            if (filename == null)
-            {
-                throw new ArgumentNullException("filename");
-            }
-
-            string extension = Path.GetExtension(filename).ToLowerInvariant();
-
-            try
-            {
-                switch (extension)
-                {
-                    case ".tnt":
-                        this.Save(filename);
-                        return true;
-                    case ".hpi":
-                    case ".ufo":
-                    case ".ccx":
-                    case ".gpf":
-                    case ".gp3":
-                        this.SaveHpi(filename);
-                        return true;
-                    default:
-                        this.dialogService.ShowError("Unrecognized file extension: " + extension);
-                        return false;
-                }
-            }
-            catch (IOException e)
-            {
-                this.dialogService.ShowError("Error saving map: " + e.Message);
-                return false;
-            }
-        }
-
-        private bool OpenMap(string filename)
-        {
-            string ext = Path.GetExtension(filename) ?? string.Empty;
-            ext = ext.ToLowerInvariant();
-
-            try
-            {
-                switch (ext)
-                {
-                    case ".hpi":
-                    case ".ufo":
-                    case ".ccx":
-                    case ".gpf":
-                    case ".gp3":
-                        return this.OpenFromHapi(filename);
-                    case ".tnt":
-                        this.OpenTnt(filename);
-                        return true;
-                    case ".sct":
-                        this.OpenSct(filename);
-                        return true;
-                    default:
-                        this.dialogService.ShowError(string.Format("Mappy doesn't know how to open {0} files", ext));
-                        return false;
-                }
-            }
-            catch (IOException e)
-            {
-                this.dialogService.ShowError("IO error opening map: " + e.Message);
-                return false;
-            }
-            catch (ParseException e)
-            {
-                this.dialogService.ShowError("Cannot open map: " + e.Message);
-                return false;
-            }
-        }
-
-        private bool OpenFromHapi(string filename)
-        {
-            List<string> maps;
-            bool readOnly;
-
-            using (HpiReader h = new HpiReader(filename))
-            {
-                maps = this.GetMapNames(h).ToList();
-            }
-
-            string mapName;
-            switch (maps.Count)
-            {
-                case 0:
-                    this.dialogService.ShowError("No maps found in " + filename);
-                    return false;
-                case 1:
-                    mapName = maps.First();
-                    readOnly = false;
-                    break;
-                default:
-                    maps.Sort();
-                    mapName = this.dialogService.AskUserToChooseMap(maps);
-                    readOnly = true;
-                    break;
-            }
-
-            if (mapName == null)
-            {
-                return false;
-            }
-
-            this.OpenHapi(filename, HpiPath.Combine("maps", mapName + ".tnt"), readOnly);
-            return true;
-        }
-
-        private IEnumerable<string> GetMapNames(HpiReader hpi)
-        {
-            return hpi.GetFiles("maps")
-                .Where(x => x.Name.EndsWith(".tnt", StringComparison.OrdinalIgnoreCase))
-                .Select(x => x.Name.Substring(0, x.Name.Length - 4));
-        }
-
         public bool CheckOkayDiscard()
         {
             if (!this.IsDirty)
@@ -1579,6 +1463,122 @@
             {
                 tiles[i] = Globals.TileCache.GetOrAddBitmap(tiles[i]);
             }
+        }
+
+        private bool SaveHelper(string filename)
+        {
+            if (filename == null)
+            {
+                throw new ArgumentNullException("filename");
+            }
+
+            string extension = Path.GetExtension(filename).ToLowerInvariant();
+
+            try
+            {
+                switch (extension)
+                {
+                    case ".tnt":
+                        this.Save(filename);
+                        return true;
+                    case ".hpi":
+                    case ".ufo":
+                    case ".ccx":
+                    case ".gpf":
+                    case ".gp3":
+                        this.SaveHpi(filename);
+                        return true;
+                    default:
+                        this.dialogService.ShowError("Unrecognized file extension: " + extension);
+                        return false;
+                }
+            }
+            catch (IOException e)
+            {
+                this.dialogService.ShowError("Error saving map: " + e.Message);
+                return false;
+            }
+        }
+
+        private bool OpenMap(string filename)
+        {
+            string ext = Path.GetExtension(filename) ?? string.Empty;
+            ext = ext.ToLowerInvariant();
+
+            try
+            {
+                switch (ext)
+                {
+                    case ".hpi":
+                    case ".ufo":
+                    case ".ccx":
+                    case ".gpf":
+                    case ".gp3":
+                        return this.OpenFromHapi(filename);
+                    case ".tnt":
+                        this.OpenTnt(filename);
+                        return true;
+                    case ".sct":
+                        this.OpenSct(filename);
+                        return true;
+                    default:
+                        this.dialogService.ShowError(string.Format("Mappy doesn't know how to open {0} files", ext));
+                        return false;
+                }
+            }
+            catch (IOException e)
+            {
+                this.dialogService.ShowError("IO error opening map: " + e.Message);
+                return false;
+            }
+            catch (ParseException e)
+            {
+                this.dialogService.ShowError("Cannot open map: " + e.Message);
+                return false;
+            }
+        }
+
+        private bool OpenFromHapi(string filename)
+        {
+            List<string> maps;
+            bool readOnly;
+
+            using (HpiReader h = new HpiReader(filename))
+            {
+                maps = this.GetMapNames(h).ToList();
+            }
+
+            string mapName;
+            switch (maps.Count)
+            {
+                case 0:
+                    this.dialogService.ShowError("No maps found in " + filename);
+                    return false;
+                case 1:
+                    mapName = maps.First();
+                    readOnly = false;
+                    break;
+                default:
+                    maps.Sort();
+                    mapName = this.dialogService.AskUserToChooseMap(maps);
+                    readOnly = true;
+                    break;
+            }
+
+            if (mapName == null)
+            {
+                return false;
+            }
+
+            this.OpenHapi(filename, HpiPath.Combine("maps", mapName + ".tnt"), readOnly);
+            return true;
+        }
+
+        private IEnumerable<string> GetMapNames(HpiReader hpi)
+        {
+            return hpi.GetFiles("maps")
+                .Where(x => x.Name.EndsWith(".tnt", StringComparison.OrdinalIgnoreCase))
+                .Select(x => x.Name.Substring(0, x.Name.Length - 4));
         }
 
         private bool TryCopyToClipboard()
