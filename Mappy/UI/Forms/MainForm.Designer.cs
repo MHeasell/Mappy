@@ -113,6 +113,61 @@
             ((System.ComponentModel.ISupportInitialize)(this.seaLevelTrackbar)).BeginInit();
             this.SuspendLayout();
             // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new System.Drawing.Size(203, 6);
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new System.Drawing.Size(203, 6);
+            // 
+            // toolStripSeparator8
+            // 
+            toolStripSeparator8.Name = "toolStripSeparator8";
+            toolStripSeparator8.Size = new System.Drawing.Size(203, 6);
+            // 
+            // toolStripSeparator11
+            // 
+            toolStripSeparator11.Name = "toolStripSeparator11";
+            toolStripSeparator11.Size = new System.Drawing.Size(203, 6);
+            // 
+            // toolStripSeparator10
+            // 
+            toolStripSeparator10.Name = "toolStripSeparator10";
+            toolStripSeparator10.Size = new System.Drawing.Size(203, 6);
+            // 
+            // toolStripSeparator7
+            // 
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new System.Drawing.Size(247, 6);
+            // 
+            // toolStripSeparator9
+            // 
+            toolStripSeparator9.Name = "toolStripSeparator9";
+            toolStripSeparator9.Size = new System.Drawing.Size(247, 6);
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new System.Drawing.Size(247, 6);
+            // 
+            // toolStripSeparator4
+            // 
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new System.Drawing.Size(247, 6);
+            // 
+            // toolStripSeparator5
+            // 
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new System.Drawing.Size(152, 6);
+            // 
+            // toolStripSeparator6
+            // 
+            toolStripSeparator6.Name = "toolStripSeparator6";
+            toolStripSeparator6.Size = new System.Drawing.Size(152, 6);
+            // 
             // topMenu
             // 
             this.topMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -166,11 +221,6 @@
             this.openMenuItem.Text = "&Open...";
             this.openMenuItem.Click += new System.EventHandler(this.OpenMenuItemClick);
             // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new System.Drawing.Size(203, 6);
-            // 
             // saveMenuItem
             // 
             this.saveMenuItem.Enabled = false;
@@ -189,11 +239,6 @@
             this.saveAsMenuItem.Text = "Save &As...";
             this.saveAsMenuItem.Click += new System.EventHandler(this.SaveAsMenuItemClick);
             // 
-            // toolStripSeparator2
-            // 
-            toolStripSeparator2.Name = "toolStripSeparator2";
-            toolStripSeparator2.Size = new System.Drawing.Size(203, 6);
-            // 
             // closeMenuItem
             // 
             this.closeMenuItem.Enabled = false;
@@ -202,11 +247,6 @@
             this.closeMenuItem.Size = new System.Drawing.Size(206, 22);
             this.closeMenuItem.Text = "&Close";
             this.closeMenuItem.Click += new System.EventHandler(this.CloseMenuItemClick);
-            // 
-            // toolStripSeparator8
-            // 
-            toolStripSeparator8.Name = "toolStripSeparator8";
-            toolStripSeparator8.Size = new System.Drawing.Size(203, 6);
             // 
             // importMinimapMenuItem
             // 
@@ -232,11 +272,6 @@
             this.importCustomSectionMenuItem.Text = "Import Custom Section...";
             this.importCustomSectionMenuItem.Click += new System.EventHandler(this.ImportCustomSectionMenuItemClick);
             // 
-            // toolStripSeparator11
-            // 
-            toolStripSeparator11.Name = "toolStripSeparator11";
-            toolStripSeparator11.Size = new System.Drawing.Size(203, 6);
-            // 
             // exportMinimapMenuItem
             // 
             this.exportMinimapMenuItem.Enabled = false;
@@ -260,11 +295,6 @@
             this.exportMapImageMenuItem.Size = new System.Drawing.Size(206, 22);
             this.exportMapImageMenuItem.Text = "Export Map Image...";
             this.exportMapImageMenuItem.Click += new System.EventHandler(this.ExportMapImageMenuItemClick);
-            // 
-            // toolStripSeparator10
-            // 
-            toolStripSeparator10.Name = "toolStripSeparator10";
-            toolStripSeparator10.Size = new System.Drawing.Size(203, 6);
             // 
             // exitMenuItem
             // 
@@ -311,11 +341,6 @@
             this.redoMenuItem.Text = "&Redo";
             this.redoMenuItem.Click += new System.EventHandler(this.RedoMenuItemClick);
             // 
-            // toolStripSeparator7
-            // 
-            toolStripSeparator7.Name = "toolStripSeparator7";
-            toolStripSeparator7.Size = new System.Drawing.Size(247, 6);
-            // 
             // cutMenuItem
             // 
             this.cutMenuItem.Enabled = false;
@@ -343,11 +368,6 @@
             this.pasteMenuItem.Text = "Paste";
             this.pasteMenuItem.Click += new System.EventHandler(this.PasteMenuItemClick);
             // 
-            // toolStripSeparator9
-            // 
-            toolStripSeparator9.Name = "toolStripSeparator9";
-            toolStripSeparator9.Size = new System.Drawing.Size(247, 6);
-            // 
             // mapAttributesMenuItem
             // 
             this.mapAttributesMenuItem.Enabled = false;
@@ -355,11 +375,6 @@
             this.mapAttributesMenuItem.Size = new System.Drawing.Size(250, 22);
             this.mapAttributesMenuItem.Text = "Map Attributes...";
             this.mapAttributesMenuItem.Click += new System.EventHandler(this.MapAttributesMenuItemClick);
-            // 
-            // toolStripSeparator3
-            // 
-            toolStripSeparator3.Name = "toolStripSeparator3";
-            toolStripSeparator3.Size = new System.Drawing.Size(247, 6);
             // 
             // generateMinimapMenuItem
             // 
@@ -377,11 +392,6 @@
             this.generateMinimapHighQualityMenuItem.Size = new System.Drawing.Size(250, 22);
             this.generateMinimapHighQualityMenuItem.Text = "Generate Minimap (High Quality)";
             this.generateMinimapHighQualityMenuItem.Click += new System.EventHandler(this.GenerateMinimapHighQualityMenuItemClick);
-            // 
-            // toolStripSeparator4
-            // 
-            toolStripSeparator4.Name = "toolStripSeparator4";
-            toolStripSeparator4.Size = new System.Drawing.Size(247, 6);
             // 
             // preferencesMenuItem
             // 
@@ -447,11 +457,6 @@
             this.gridOffMenuItem.Text = "Off";
             this.gridOffMenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
             // 
-            // toolStripSeparator5
-            // 
-            toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new System.Drawing.Size(152, 6);
-            // 
             // grid16MenuItem
             // 
             this.grid16MenuItem.Name = "grid16MenuItem";
@@ -507,11 +512,6 @@
             this.grid1024MenuItem.Tag = "1024";
             this.grid1024MenuItem.Text = "1024x1024";
             this.grid1024MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
-            // 
-            // toolStripSeparator6
-            // 
-            toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new System.Drawing.Size(152, 6);
             // 
             // gridColorMenuItem
             // 
