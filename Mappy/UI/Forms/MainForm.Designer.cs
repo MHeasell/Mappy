@@ -418,7 +418,7 @@
             this.toggleHeightmapMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
             this.toggleHeightmapMenuItem.Size = new System.Drawing.Size(177, 22);
             this.toggleHeightmapMenuItem.Text = "&Heightmap";
-            this.toggleHeightmapMenuItem.CheckedChanged += new System.EventHandler(this.ToggleHeightmapMenuItemClick);
+            this.toggleHeightmapMenuItem.Click += new System.EventHandler(this.ToggleHeightmapMenuItemClick);
             // 
             // toggleMinimapMenuItem
             // 
