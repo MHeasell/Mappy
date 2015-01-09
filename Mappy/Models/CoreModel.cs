@@ -1334,16 +1334,6 @@
             this.undoManager.Execute(op);
         }
 
-        public void UpdateAttributes(MapAttributesResult newAttrs)
-        {
-            this.undoManager.Execute(new ChangeAttributesOperation(this.Map, newAttrs));
-        }
-
-        public MapAttributesResult GetAttributes()
-        {
-            return MapAttributesResult.FromModel(this.Map);
-        }
-
         public void CloseMap()
         {
             if (this.CheckOkayDiscard())
@@ -1400,7 +1390,45 @@
             this.ViewportRectangle = rect;
         }
 
-        public void ReplaceHeightmap(Grid<int> heightmap)
+        private static void DeduplicateTiles(IGrid<Bitmap> tiles)
+        {
+            var len = tiles.Width * tiles.Height;
+            for (int i = 0; i < len; i++)
+            {
+                tiles[i] = Globals.TileCache.GetOrAddBitmap(tiles[i]);
+            }
+        }
+
+        private void PasteMapTile(IMapTile tile)
+        {
+            DeduplicateTiles(tile.TileGrid);
+            this.PasteMapTileNoDeduplicate(tile);
+        }
+
+        private void PasteMapTileNoDeduplicate(IMapTile tile)
+        {
+            var normX = this.ViewportRectangle.CenterX;
+            var normY = this.ViewportRectangle.CenterY;
+            int x = (int)(this.MapWidth * normX);
+            int y = (int)(this.MapHeight * normY);
+
+            x -= tile.TileGrid.Width / 2;
+            y -= tile.TileGrid.Height / 2;
+
+            this.AddAndSelectTile(tile, x, y);
+        }
+
+        private void PasteMapTileNoDeduplicateTopLeft(IMapTile tile)
+        {
+            var normX = this.ViewportRectangle.MinX;
+            var normY = this.ViewportRectangle.MinY;
+            int x = (int)(this.MapWidth * normX);
+            int y = (int)(this.MapHeight * normY);
+
+            this.AddAndSelectTile(tile, x, y);
+        }
+
+        private void ReplaceHeightmap(Grid<int> heightmap)
         {
             if (this.Map == null)
             {
@@ -1427,42 +1455,14 @@
             this.undoManager.Execute(op);
         }
 
-        public void PasteMapTileNoDeduplicate(IMapTile tile)
+        private void UpdateAttributes(MapAttributesResult newAttrs)
         {
-            var normX = this.ViewportRectangle.CenterX;
-            var normY = this.ViewportRectangle.CenterY;
-            int x = (int)(this.MapWidth * normX);
-            int y = (int)(this.MapHeight * normY);
-
-            x -= tile.TileGrid.Width / 2;
-            y -= tile.TileGrid.Height / 2;
-
-            this.AddAndSelectTile(tile, x, y);
+            this.undoManager.Execute(new ChangeAttributesOperation(this.Map, newAttrs));
         }
 
-        public void PasteMapTileNoDeduplicateTopLeft(IMapTile tile)
+        private MapAttributesResult GetAttributes()
         {
-            var normX = this.ViewportRectangle.MinX;
-            var normY = this.ViewportRectangle.MinY;
-            int x = (int)(this.MapWidth * normX);
-            int y = (int)(this.MapHeight * normY);
-
-            this.AddAndSelectTile(tile, x, y);
-        }
-
-        public void PasteMapTile(IMapTile tile)
-        {
-            DeduplicateTiles(tile.TileGrid);
-            this.PasteMapTileNoDeduplicate(tile);
-        }
-
-        private static void DeduplicateTiles(IGrid<Bitmap> tiles)
-        {
-            var len = tiles.Width * tiles.Height;
-            for (int i = 0; i < len; i++)
-            {
-                tiles[i] = Globals.TileCache.GetOrAddBitmap(tiles[i]);
-            }
+            return MapAttributesResult.FromModel(this.Map);
         }
 
         private bool SaveHelper(string filename)

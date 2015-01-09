@@ -143,10 +143,6 @@ namespace Mappy.Models
 
         void OpenPreferences();
 
-        MapAttributesResult GetAttributes();
-
-        void UpdateAttributes(MapAttributesResult attributes);
-
         void CloseMap();
 
         void SetSeaLevel(int value);
@@ -158,14 +154,6 @@ namespace Mappy.Models
         void CopySelectionToClipboard();
 
         void PasteFromClipboard();
-
-        void ReplaceHeightmap(Grid<int> heightmap);
-
-        void PasteMapTile(IMapTile tile);
-
-        void PasteMapTileNoDeduplicate(IMapTile tile);
-
-        void PasteMapTileNoDeduplicateTopLeft(IMapTile tile);
 
         void ExportMinimap();
 
