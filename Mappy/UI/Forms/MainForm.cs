@@ -1,7 +1,6 @@
 ﻿namespace Mappy.UI.Forms
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
     using System.Globalization;
@@ -10,7 +9,6 @@
 
     using Geometry;
 
-    using Mappy.Data;
     using Mappy.Models;
 
     public partial class MainForm : Form
