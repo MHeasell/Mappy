@@ -897,19 +897,6 @@
             dlg.Display();
         }
 
-        public void SetGridSize(int size)
-        {
-            if (size == 0)
-            {
-                this.GridVisible = false;
-            }
-            else
-            {
-                this.GridVisible = true;
-                this.GridSize = new Size(size, size);
-            }
-        }
-
         public void ChooseColor()
         {
             Color? c = this.dialogService.AskUserGridColor(this.GridColor);

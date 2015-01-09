@@ -454,7 +454,7 @@
             this.gridOffMenuItem.Size = new System.Drawing.Size(155, 22);
             this.gridOffMenuItem.Tag = "0";
             this.gridOffMenuItem.Text = "Off";
-            this.gridOffMenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
+            this.gridOffMenuItem.Click += new System.EventHandler(this.GridOffMenuItemClick);
             // 
             // grid16MenuItem
             // 

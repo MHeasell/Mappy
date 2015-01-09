@@ -55,8 +55,6 @@
 
         void Initialize();
 
-        void SetGridSize(int size);
-
         void ChooseColor();
 
         void OpenMapAttributes();

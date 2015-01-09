@@ -169,14 +169,61 @@
             grid1024MenuItem.Checked = false;
         }
 
+        private void GridOffMenuItemClick(object sender, EventArgs e)
+        {
+            this.Model.GridVisible = false;
+        }
+
         private void GridMenuItemClick(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            this.ClearGridCheckboxes();
-            item.Checked = true;
             int size = Convert.ToInt32(item.Tag);
 
-            this.Model.SetGridSize(size);
+            this.Model.GridSize = new Size(size, size);
+            this.Model.GridVisible = true;
+        }
+
+        private void UpdateGridCheckboxes()
+        {
+            this.ClearGridCheckboxes();
+
+            var size = this.Model.GridSize;
+
+            if (!this.Model.GridVisible)
+            {
+                gridOffMenuItem.Checked = true;
+                return;
+            }
+
+            if (size.Width != size.Height)
+            {
+                return;
+            }
+
+            switch (size.Width)
+            {
+                case 16:
+                    this.grid16MenuItem.Checked = true;
+                    break;
+                case 32:
+                    this.grid32MenuItem.Checked = true;
+                    break;
+                case 64:
+                    this.grid64MenuItem.Checked = true;
+                    break;
+                case 128:
+                    this.grid128MenuItem.Checked = true;
+                    break;
+                case 256:
+                    this.grid256MenuItem.Checked = true;
+                    break;
+                case 512:
+                    this.grid512MenuItem.Checked = true;
+                    break;
+                case 1024:
+                    this.grid1024MenuItem.Checked = true;
+                    break;
+            }
         }
 
         private void GridColorMenuItemClick(object sender, EventArgs e)
@@ -338,6 +385,10 @@
                     break;
                 case "ViewportRectangle":
                     this.UpdateViewViewportRect();
+                    break;
+                case "GridVisible":
+                case "GridSize":
+                    this.UpdateGridCheckboxes();
                     break;
             }
         }
