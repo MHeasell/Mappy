@@ -262,7 +262,7 @@
             this.Model.CutSelectionToClipboard();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void MainFormLoad(object sender, EventArgs e)
         {
             this.Model.Initialize();
         }
