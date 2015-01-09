@@ -17,9 +17,6 @@
     {
         private const string ProgramName = "Mappy";
 
-        private IList<Section> sections;
-        private IList<Feature> features;
-
         public MainForm()
         {
             this.InitializeComponent();
@@ -42,12 +39,11 @@
         {
             get
             {
-                return this.sections;
+                return this.sectionsView.Sections;
             }
 
             set
             {
-                this.sections = value;
                 this.sectionsView.Sections = value;
             }
         }
@@ -56,12 +52,11 @@
         {
             get
             {
-                return this.features;
+                return this.featureView.Features;
             }
 
             set
             {
-                this.features = value;
                 this.featureView.Features = value;
             }
         }
