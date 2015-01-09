@@ -77,6 +77,8 @@ namespace Mappy.Models
 
         Rectangle2D ViewportRectangle { get; set; }
 
+        void Initialize();
+
         void DragDropStartPosition(int index, int x, int y);
 
         void DragDropTile(int id, int x, int y);
@@ -105,27 +107,41 @@ namespace Mappy.Models
 
         void SelectStartPosition(int index);
 
+        void SetGridSize(int size);
+
+        void ChooseColor();
+
+        void OpenMapAttributes();
+
         void Undo();
 
         void Redo();
 
-        void New(int width, int height);
+        bool New();
 
-        void Save(string filename);
+        bool Save();
 
-        void SaveHpi(string filename);
+        bool SaveAs();
 
-        void OpenTnt(string filename);
+        bool Open();
 
-        void OpenSct(string filename);
+        void Close();
 
-        void OpenHapi(string archivePath, string filename, bool readOnly = false);
+        void ShowAbout();
 
-        void SetMinimap(Bitmap minimap);
+        void ToggleHeightmap();
+
+        void ToggleMinimap();
+
+        void ToggleFeatures();
 
         void RefreshMinimap();
 
         void RefreshMinimapHighQuality();
+
+        void RefreshMinimapHighQualityWithProgress();
+
+        void OpenPreferences();
 
         MapAttributesResult GetAttributes();
 
@@ -150,5 +166,17 @@ namespace Mappy.Models
         void PasteMapTileNoDeduplicate(IMapTile tile);
 
         void PasteMapTileNoDeduplicateTopLeft(IMapTile tile);
+
+        void ExportMinimap();
+
+        void ExportHeightmap();
+
+        void ImportMinimap();
+
+        void ImportHeightmap();
+
+        void ImportCustomSection();
+
+        void ExportMapImage();
     }
 }

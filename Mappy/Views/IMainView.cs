@@ -2,10 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Drawing;
-    using System.Windows.Forms;
 
     using Mappy.Data;
-    using Mappy.Models;
 
     public interface IMainView
     {
@@ -57,47 +55,6 @@
 
         bool ImportCustomSectionEnabled { get; set; }
 
-        string AskUserToChooseMap(IList<string> maps);
-
-        string AskUserToOpenFile();
-
-        string AskUserToSaveFile();
-
-        string AskUserToSaveMinimap();
-
-        string AskUserToSaveMapImage();
-
-        string AskUserToChooseMinimap();
-
-        string AskUserToSaveHeightmap();
-
-        string AskUserToChooseHeightmap(int width, int height);
-
-        SectionImportPaths AskUserToChooseSectionImportPaths();
-
-        void CapturePreferences();
-
-        Size AskUserNewMapSize();
-
-        Color? AskUserGridColor(Color previousColor);
-
-        DialogResult AskUserToDiscardChanges();
-
-        MapAttributesResult AskUserForMapAttributes(MapAttributesResult r);
-
-        void Close();
-
-        void ShowError(string message);
-
-        IProgressView CreateProgressView();
-
         void SetViewportPosition(int x, int y);
-    }
-
-    public class SectionImportPaths
-    {
-        public string GraphicPath { get; set; }
-
-        public string HeightmapPath { get; set; }
     }
 }

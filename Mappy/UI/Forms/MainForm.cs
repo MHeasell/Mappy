@@ -2,9 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Drawing;
     using System.Globalization;
+    using System.Linq;
     using System.Windows.Forms;
+
+    using Geometry;
 
     using Mappy.Controllers;
     using Mappy.Data;
@@ -13,6 +17,8 @@
 
     public partial class MainForm : Form, IMainView
     {
+        private const string ProgramName = "Mappy";
+
         private IList<Section> sections;
         private IList<Feature> features;
 
@@ -21,7 +27,164 @@
             this.InitializeComponent();
         }
 
-        public MainPresenter Presenter { get; set; }
+        public IMainModel Model { get; private set; }
+
+        public void SetModel(IMainModel model)
+        {
+            model.PropertyChanged += this.ModelOnPropertyChanged;
+            this.Model = model;
+        }
+
+        private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "Sections":
+                    this.Sections = this.Model.Sections;
+                    break;
+                case "FeatureRecords":
+                    this.Features = this.Model.FeatureRecords.EnumerateAll().ToList();
+                    break;
+                case "CanUndo":
+                    this.UndoEnabled = this.Model.CanUndo;
+                    break;
+                case "CanRedo":
+                    this.RedoEnabled = this.Model.CanRedo;
+                    break;
+                case "CanCopy":
+                    this.CopyEnabled = this.Model.CanCopy;
+                    break;
+                case "CanCut":
+                    this.CutEnabled = this.Model.CanCut;
+                    break;
+                case "CanPaste":
+                    this.PasteEnabled = this.Model.CanPaste;
+                    break;
+                case "MapOpen":
+                    this.UpdateSave();
+                    this.OpenAttributesEnabled = this.Model.MapOpen;
+                    this.UpdateMinimapViewport();
+                    this.CloseEnabled = this.Model.MapOpen;
+                    this.SeaLevelEditEnabled = this.Model.MapOpen;
+                    this.RefreshMinimapEnabled = this.Model.MapOpen;
+                    this.RefreshMinimapHighQualityEnabled = this.Model.MapOpen;
+                    this.ImportMinimapEnabled = this.Model.MapOpen;
+                    this.ExportMinimapEnabled = this.Model.MapOpen;
+                    this.ExportHeightmapEnabled = this.Model.MapOpen;
+                    this.ImportHeightmapEnabled = this.Model.MapOpen;
+                    this.ExportMapImageEnabled = this.Model.MapOpen;
+                    this.ImportCustomSectionEnabled = this.Model.MapOpen;
+                    break;
+                case "IsFileOpen":
+                    this.SaveAsEnabled = this.Model.IsFileOpen;
+                    this.UpdateTitleText();
+                    break;
+                case "FilePath":
+                    this.UpdateSave();
+                    this.UpdateTitleText();
+                    break;
+                case "IsDirty":
+                    this.UpdateTitleText();
+                    break;
+                case "IsFileReadOnly":
+                    this.UpdateSave();
+                    this.UpdateTitleText();
+                    break;
+                case "SeaLevel":
+                    this.SeaLevel = this.Model.SeaLevel;
+                    break;
+                case "MinimapVisible":
+                    this.MinimapVisibleChecked = this.Model.MinimapVisible;
+                    break;
+                case "ViewportRectangle":
+                    this.UpdateViewViewportRect();
+                    break;
+            }
+        }
+
+        public void UpdateMinimapViewport()
+        {
+            if (this.Model == null)
+            {
+                return;
+            }
+
+            this.Model.ViewportRectangle = this.ConvertToNormalizedViewport(this.ViewportRect);
+        }
+
+        private Rectangle2D ConvertToNormalizedViewport(Rectangle rect)
+        {
+            if (!this.Model.MapOpen)
+            {
+                return Rectangle2D.Empty;
+            }
+
+            int widthScale = (this.Model.MapWidth * 32) - 32;
+            int heightScale = (this.Model.MapHeight * 32) - 128;
+
+            double x = rect.X / (double)widthScale;
+            double y = rect.Y / (double)heightScale;
+            double w = rect.Width / (double)widthScale;
+            double h = rect.Height / (double)heightScale;
+
+            return Rectangle2D.FromCorner(x, y, w, h);
+        }
+
+        private Rectangle ConvertToClientViewport(Rectangle2D rect)
+        {
+            if (!this.Model.MapOpen)
+            {
+                return Rectangle.Empty;
+            }
+
+            int widthScale = (this.Model.MapWidth * 32) - 32;
+            int heightScale = (this.Model.MapHeight * 32) - 128;
+
+            int x = (int)Math.Round(rect.MinX * widthScale);
+            int y = (int)Math.Round(rect.MinY * heightScale);
+            int w = (int)Math.Round(rect.Width * widthScale);
+            int h = (int)Math.Round(rect.Height * heightScale);
+
+            return new Rectangle(x, y, w, h);
+        }
+
+        private void UpdateViewViewportRect()
+        {
+            var rect = this.Model.ViewportRectangle;
+            var clientRect = this.ConvertToClientViewport(rect);
+            this.SetViewportPosition(clientRect.X, clientRect.Y);
+        }
+
+        private void UpdateSave()
+        {
+            this.SaveEnabled = this.Model.MapOpen && this.Model.FilePath != null && !this.Model.IsFileReadOnly;
+        }
+
+        private void UpdateTitleText()
+        {
+            this.TitleText = this.GenerateTitleText();
+        }
+
+        private string GenerateTitleText()
+        {
+            if (!this.Model.IsFileOpen)
+            {
+                return ProgramName;
+            }
+
+            string filename = this.Model.FilePath ?? "Untitled";
+            if (this.Model.IsDirty)
+            {
+                filename += "*";
+            }
+
+            if (this.Model.IsFileReadOnly)
+            {
+                filename += " [read only]";
+            }
+
+            return filename + " - " + ProgramName;
+        }
 
         public string TitleText
         {
@@ -310,289 +473,83 @@
             }
         }
 
-        public SectionImportPaths AskUserToChooseSectionImportPaths()
-        {
-            var dlg = new ImportCustomSectionForm();
-            var result = dlg.ShowDialog(this);
-            if (result != DialogResult.OK)
-            {
-                return null;
-            }
-
-            return new SectionImportPaths
-                {
-                    GraphicPath = dlg.GraphicPath,
-                    HeightmapPath = dlg.HeightmapPath
-                };
-        }
-
-        public string AskUserToChooseMap(IList<string> maps)
-        {
-            MapSelectionForm f = new MapSelectionForm();
-            foreach (string n in maps)
-            {
-                f.Items.Add(n);
-            }
-
-            DialogResult r = f.ShowDialog(this);
-            if (r == DialogResult.OK)
-            {
-                return (string)f.SelectedItem;
-            }
-
-            return null;
-        }
-
-        public string AskUserToOpenFile()
-        {
-            OpenFileDialog d = new OpenFileDialog();
-            d.Filter = "TA Map Files|*.hpi;*.ufo;*.ccx;*.gpf;*.gp3;*.tnt|All files|*.*";
-            if (d.ShowDialog(this) == DialogResult.OK)
-            {
-                return d.FileName;
-            }
-
-            return null;
-        }
-
-        public string AskUserToChooseMinimap()
-        {
-            OpenFileDialog d = new OpenFileDialog();
-            d.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.gif;*.bmp|All files|*.*";
-            if (d.ShowDialog(this) == DialogResult.OK)
-            {
-                return d.FileName;
-            }
-
-            return null;
-        }
-
         public void SetViewportPosition(int x, int y)
         {
             this.imageLayerView1.AutoScrollPosition = new Point(x, y);
         }
 
-        public void CapturePreferences()
-        {
-            PreferencesForm f = new PreferencesForm();
-            f.ShowDialog();
-        }
-
-        public string AskUserToSaveFile()
-        {
-            SaveFileDialog d = new SaveFileDialog();
-            d.Filter = "HPI files|*.hpi;*.ufo;*.ccx;*.gpf;*.gp3|TNT files|*.tnt|All files|*.*";
-            d.AddExtension = true;
-            DialogResult result = d.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                return d.FileName;
-            }
-
-            return null;
-        }
-
-        public string AskUserToSaveMinimap()
-        {
-            SaveFileDialog d = new SaveFileDialog();
-            d.Title = "Export Minimap";
-            d.Filter = "PNG files|*.png|All files|*.*";
-            d.AddExtension = true;
-            DialogResult result = d.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                return d.FileName;
-            }
-
-            return null;
-        }
-
-        public string AskUserToSaveHeightmap()
-        {
-            SaveFileDialog d = new SaveFileDialog();
-            d.Title = "Export Heightmap";
-            d.Filter = "PNG files|*.png|All files|*.*";
-            d.AddExtension = true;
-            DialogResult result = d.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                return d.FileName;
-            }
-
-            return null;
-        }
-
-        public string AskUserToSaveMapImage()
-        {
-            var d = new SaveFileDialog();
-            d.Title = "Export Map Image";
-            d.Filter = "PNG files|*.png|All files|*.*";
-            d.AddExtension = true;
-            var result = d.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                return d.FileName;
-            }
-
-            return null;
-        }
-
-        public string AskUserToChooseHeightmap(int width, int height)
-        {
-            OpenFileDialog d = new OpenFileDialog();
-            d.Title = string.Format("Import Heightmap ({0}x{1} image)", width, height);
-            d.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.gif;*.bmp|All files|*.*";
-            if (d.ShowDialog(this) == DialogResult.OK)
-            {
-                return d.FileName;
-            }
-
-            return null;
-        }
-
-        void IMainView.Close()
-        {
-            Application.Exit();
-        }
-
-        public DialogResult AskUserToDiscardChanges()
-        {
-            return MessageBox.Show("There are unsaved changes. Save before closing?", "Save", MessageBoxButtons.YesNoCancel);
-        }
-
-        public Size AskUserNewMapSize()
-        {
-            NewMapForm dialog = new NewMapForm();
-            DialogResult result = dialog.ShowDialog(this);
-
-            switch (result)
-            {
-                case DialogResult.OK:
-                    return new Size(dialog.MapWidth, dialog.MapHeight);
-                case DialogResult.Cancel:
-                    return new Size();
-                default:
-                    throw new ArgumentException("bad dialogresult");
-            }
-        }
-
-        public Color? AskUserGridColor(Color previousColor)
-        {
-            ColorDialog colorDialog = new ColorDialog();
-            colorDialog.Color = previousColor;
-            DialogResult result = colorDialog.ShowDialog(this);
-
-            if (result == DialogResult.OK)
-            {
-                return colorDialog.Color;
-            }
-
-            return null;
-        }
-
-        public MapAttributesResult AskUserForMapAttributes(MapAttributesResult r)
-        {
-            MapAttributesForm f = new MapAttributesForm();
-
-            f.mapAttributesResultBindingSource.Add(r);
-
-            DialogResult result = f.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                return r;
-            }
-
-            return null;
-        }
-
-        public void ShowError(string message)
-        {
-            MessageBox.Show(this, message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        public IProgressView CreateProgressView()
-        {
-            var dlg = new ProgressForm();
-            dlg.Owner = this;
-            return dlg;
-        }
-
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.Presenter.Open();
+            this.Model.Open();
         }
 
         private void HeightmapToolStripMenuItemCheckedChanged(object sender, EventArgs e)
         {
-            this.Presenter.ToggleHeightmap();
+            this.Model.ToggleHeightmap();
         }
 
         private void MapPanel1SizeChanged(object sender, EventArgs e)
         {
-            if (this.Presenter != null)
-            {
-                this.Presenter.UpdateMinimapViewport();
-            }
+            this.UpdateMinimapViewport();
         }
 
         private void PreferencesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.Presenter.PreferencesPressed(this, e);
+            this.Model.OpenPreferences();
         }
 
         private void ToolStripMenuItem4Click(object sender, EventArgs e)
         {
-            this.Presenter.SaveAs();
+            this.Model.SaveAs();
         }
 
         private void ToolStripMenuItem5Click(object sender, EventArgs e)
         {
-            this.Presenter.Save();
+            this.Model.Save();
         }
 
         private void MinimapToolStripMenuItem1Click(object sender, EventArgs e)
         {
-            this.Presenter.ToggleMinimap();
+            this.Model.ToggleMinimap();
         }
 
         private void UndoToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.Presenter.UndoPressed(this, e);
+            this.Model.Undo();
         }
 
         private void RedoToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.Presenter.RedoPressed(this, e);
+            this.Model.Redo();
         }
 
         private void Form1FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                this.Presenter.ClosePressed(this, EventArgs.Empty); 
+                this.Model.Close(); 
                 e.Cancel = true;
             }
         }
 
         private void ExitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.Presenter.ClosePressed(this, e);
+            this.Model.Close(); 
         }
 
         private void ToolStripMenuItem2Click(object sender, EventArgs e)
         {
-            this.Presenter.New();
+            this.Model.New();
         }
 
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
         {
-            AboutForm f = new AboutForm();
-            f.ShowDialog(this);
+            this.Model.ShowAbout();
         }
 
         private void ToolStripMenuItem6Click(object sender, EventArgs e)
         {
-            this.Presenter.GenerateMinimapPressed(this, e);
+            this.Model.RefreshMinimap();
         }
 
         private void ClearGridCheckboxes()
@@ -614,97 +571,97 @@
             item.Checked = true;
             int size = Convert.ToInt32(item.Tag);
 
-            this.Presenter.SetGridSize(size);
+            this.Model.SetGridSize(size);
         }
 
         private void ChooseColorToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.Presenter.ChooseColor();
+            this.Model.ChooseColor();
         }
 
         private void FeaturesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.Presenter.ToggleFeatures();
+            this.Model.ToggleFeatures();
         }
 
         private void ToolStripMenuItem11Click(object sender, EventArgs e)
         {
-            this.Presenter.OpenMapAttributes();
+            this.Model.OpenMapAttributes();
         }
 
         private void TrackBar1ValueChanged(object sender, EventArgs e)
         {
-            this.Presenter.SetSeaLevel(this.trackBar1.Value);
+            this.Model.SetSeaLevel(this.trackBar1.Value);
         }
 
         private void toolStripMenuItem12_Click(object sender, EventArgs e)
         {
-            this.Presenter.CloseMap();
+            this.Model.CloseMap();
         }
 
         private void toolStripMenuItem13_Click(object sender, EventArgs e)
         {
-            this.Presenter.GenerateMinimapHiqhQualityPressed(sender, e);
+            this.Model.RefreshMinimapHighQualityWithProgress();
         }
 
         private void trackBar1_MouseUp(object sender, MouseEventArgs e)
         {
-            this.Presenter.FlushSeaLevel();
+            this.Model.FlushSeaLevel();
         }
 
         private void toolStripMenuItem14_Click(object sender, EventArgs e)
         {
-            this.Presenter.CopyToClipboard();
+            this.Model.CopySelectionToClipboard();
         }
 
         private void toolStripMenuItem15_Click(object sender, EventArgs e)
         {
-            this.Presenter.PasteFromClipboard();
+            this.Model.PasteFromClipboard();
         }
 
         private void toolStripMenuItem16_Click(object sender, EventArgs e)
         {
-            this.Presenter.CutToClipboard();
+            this.Model.CutSelectionToClipboard();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            this.Presenter.Initialize();
+            this.Model.Initialize();
         }
 
         private void toolStripMenuItem17_Click(object sender, EventArgs e)
         {
-            this.Presenter.ExportMinimap();
+            this.Model.ExportMinimap();
         }
 
         private void toolStripMenuItem18_Click(object sender, EventArgs e)
         {
-            this.Presenter.ExportHeightmap();
+            this.Model.ExportHeightmap();
         }
 
         private void imageLayerView1_Scroll(object sender, ScrollEventArgs e)
         {
-            this.Presenter.UpdateMinimapViewport();
+            this.UpdateMinimapViewport();
         }
 
         private void toolStripMenuItem19_Click(object sender, EventArgs e)
         {
-            this.Presenter.ImportMinimap();
+            this.Model.ImportMinimap();
         }
 
         private void toolStripMenuItem20_Click(object sender, EventArgs e)
         {
-            this.Presenter.ImportHeightmap();
+            this.Model.ImportHeightmap();
         }
 
         private void toolStripMenuItem21_Click(object sender, EventArgs e)
         {
-            this.Presenter.ExportMapImage();
+            this.Model.ExportMapImage();
         }
 
         private void toolStripMenuItem22_Click(object sender, EventArgs e)
         {
-            this.Presenter.ImportCustomSection();
+            this.Model.ImportCustomSection();
         }
     }
 }

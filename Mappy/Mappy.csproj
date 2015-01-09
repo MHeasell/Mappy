@@ -75,6 +75,7 @@
     <Compile Include="Collections\SparseGrid.cs" />
     <Compile Include="Collections\SparseGridEventArgs.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="Controllers\SectionFeatureLoadResult.cs" />
     <Compile Include="Controllers\Tags\FeatureTag.cs" />
     <Compile Include="Controllers\Tags\IMapItemTag.cs" />
     <Compile Include="Controllers\Tags\SectionTag.cs" />
@@ -119,8 +120,10 @@
     <Compile Include="Models\BandboxBehaviours\TileBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxMode.cs" />
     <Compile Include="Models\CoreModel.cs" />
+    <Compile Include="Models\DialogService.cs" />
     <Compile Include="Models\FeatureClipboardRecord.cs" />
     <Compile Include="Models\FeatureInstance.cs" />
+    <Compile Include="Models\IDialogService.cs" />
     <Compile Include="Models\IMainModel.cs" />
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
@@ -230,7 +233,6 @@
     <Compile Include="Util\OffsetBitmap.cs" />
     <Compile Include="Util\Util.cs" />
     <Compile Include="Views\IMainView.cs" />
-    <Compile Include="Controllers\MainPresenter.cs" />
     <Compile Include="UI\Painters\ContourHeightPainter.cs" />
     <Compile Include="Models\MapModel.cs" />
     <Compile Include="UI\Forms\MainForm.cs">
@@ -273,6 +275,7 @@
     <Compile Include="Operations\OperationManager.cs" />
     <Compile Include="Views\IProgressView.cs" />
     <Compile Include="Views\MinimapMoveEventArgs.cs" />
+    <Compile Include="Views\SectionImportPaths.cs" />
     <EmbeddedResource Include="UI\Controls\FeatureView.resx">
       <DependentUpon>FeatureView.cs</DependentUpon>
     </EmbeddedResource>

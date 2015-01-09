@@ -36,9 +36,9 @@
             Application.SetCompatibleTextRenderingDefault(false);
 
             var mainForm = new MainForm();
-            var model = new CoreModel();
-            var presenter = new MainPresenter(mainForm, model);
-            mainForm.Presenter = presenter;
+            var svc = new DialogService(mainForm);
+            var model = new CoreModel(svc);
+            mainForm.SetModel(model);
 
             var mapPresenter = new MapPresenter(mainForm.imageLayerView1, model);
             new MapViewEventAdapter(mainForm.imageLayerView1, mapPresenter);
