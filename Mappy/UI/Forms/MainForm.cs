@@ -10,7 +10,6 @@
 
     using Geometry;
 
-    using Mappy.Controllers;
     using Mappy.Data;
     using Mappy.Models;
     using Mappy.Views;
