@@ -35,32 +35,6 @@
             }
         }
 
-        public IList<Section> Sections
-        {
-            get
-            {
-                return this.sectionsView.Sections;
-            }
-
-            set
-            {
-                this.sectionsView.Sections = value;
-            }
-        }
-
-        public IList<Feature> Features
-        {
-            get
-            {
-                return this.featureView.Features;
-            }
-
-            set
-            {
-                this.featureView.Features = value;
-            }
-        }
-
         public int SeaLevel
         {
             get
@@ -302,10 +276,10 @@
             switch (e.PropertyName)
             {
                 case "Sections":
-                    this.Sections = this.Model.Sections;
+                    this.sectionsView.Sections = this.Model.Sections;
                     break;
                 case "FeatureRecords":
-                    this.Features = this.Model.FeatureRecords.EnumerateAll().ToList();
+                    this.featureView.Features = this.Model.FeatureRecords.EnumerateAll().ToList();
                     break;
                 case "CanUndo":
                     this.undoMenuItem.Enabled = this.Model.CanUndo;
