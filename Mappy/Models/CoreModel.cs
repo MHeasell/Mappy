@@ -525,15 +525,6 @@
             this.undoManager.Redo();
         }
 
-        public void New(int width, int height)
-        {
-            var map = new SelectionMapModel(new BindingMapModel(new MapModel(width, height)));
-            GridMethods.Fill(map.Tile.TileGrid, Globals.DefaultTile);
-            this.Map = map;
-            this.FilePath = null;
-            this.IsFileReadOnly = false;
-        }
-
         public bool New()
         {
             if (!this.CheckOkayDiscard())
@@ -600,128 +591,6 @@
             {
                 Application.Exit();
             }
-        }
-
-        public bool CheckOkayDiscard()
-        {
-            if (!this.IsDirty)
-            {
-                return true;
-            }
-
-            DialogResult r = this.dialogService.AskUserToDiscardChanges();
-            switch (r)
-            {
-                case DialogResult.Yes:
-                    return this.Save();
-                case DialogResult.Cancel:
-                    return false;
-                case DialogResult.No:
-                    return true;
-                default:
-                    throw new InvalidOperationException("unexpected dialog result: " + r);
-            }
-        }
-
-        public void SaveHpi(string filename)
-        {
-            // flatten before save --- only the base tile is written to disk
-            IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.Map);
-            flatten.Execute();
-
-            this.mapSaver.SaveHpi(this.Map, filename);
-
-            flatten.Undo();
-
-            this.undoManager.SetNowAsMark();
-
-            this.FilePath = filename;
-            this.IsFileReadOnly = false;
-        }
-
-        public void Save(string filename)
-        {
-            // flatten before save --- only the base tile is written to disk
-            IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.Map);
-            flatten.Execute();
-
-            var otaName = filename.Substring(0, filename.Length - 4) + ".ota";
-            this.mapSaver.SaveTnt(this.Map, filename);
-            this.mapSaver.SaveOta(this.Map.Attributes, otaName);
-
-            flatten.Undo();
-
-            this.undoManager.SetNowAsMark();
-
-            this.FilePath = filename;
-            this.IsFileReadOnly = false;
-        }
-
-        public void OpenSct(string filename)
-        {
-            MapTile t;
-            using (var s = new SctReader(filename))
-            {
-                t = this.sectionFactory.TileFromSct(s);
-            }
-
-            this.Map = new SelectionMapModel(new BindingMapModel(new MapModel(t)));
-        }
-
-        public void OpenTnt(string filename)
-        {
-            MapModel m;
-
-            var otaFileName = filename.Substring(0, filename.Length - 4) + ".ota";
-            if (File.Exists(otaFileName))
-            {
-                TdfNode attrs;
-                using (var ota = File.OpenRead(otaFileName))
-                {
-                    attrs = TdfNode.LoadTdf(ota);
-                }
-
-                using (var s = new TntReader(filename))
-                {
-                    m = this.mapModelFactory.FromTntAndOta(s, attrs);
-                }
-            }
-            else
-            {
-                using (var s = new TntReader(filename))
-                {
-                    m = this.mapModelFactory.FromTnt(s);
-                }
-            }
-
-            this.Map = new SelectionMapModel(new BindingMapModel(m));
-            this.FilePath = filename;
-        }
-
-        public void OpenHapi(string hpipath, string mappath, bool readOnly = false)
-        {
-            MapModel m;
-
-            using (HpiReader hpi = new HpiReader(hpipath))
-            {
-                string otaPath = HpiPath.ChangeExtension(mappath, ".ota");
-
-                TdfNode n;
-
-                using (var ota = hpi.ReadTextFile(otaPath))
-                {
-                    n = TdfNode.LoadTdf(ota);
-                }
-
-                using (var s = new TntReader(hpi.ReadFile(mappath)))
-                {
-                    m = this.mapModelFactory.FromTntAndOta(s, n);
-                }
-            }
-
-            this.Map = new SelectionMapModel(new BindingMapModel(m));
-            this.FilePath = hpipath;
-            this.IsFileReadOnly = readOnly;
         }
 
         public void DragDropStartPosition(int index, int x, int y)
@@ -982,12 +851,6 @@
             {
                 this.undoManager.Execute(deselectOp);
             }
-        }
-
-        public void SetMinimap(Bitmap minimap)
-        {
-            var op = new UpdateMinimapOperation(this.Map, minimap);
-            this.undoManager.Execute(op);
         }
 
         public void RefreshMinimap()
@@ -1387,6 +1250,128 @@
             }
         }
 
+        private bool CheckOkayDiscard()
+        {
+            if (!this.IsDirty)
+            {
+                return true;
+            }
+
+            DialogResult r = this.dialogService.AskUserToDiscardChanges();
+            switch (r)
+            {
+                case DialogResult.Yes:
+                    return this.Save();
+                case DialogResult.Cancel:
+                    return false;
+                case DialogResult.No:
+                    return true;
+                default:
+                    throw new InvalidOperationException("unexpected dialog result: " + r);
+            }
+        }
+
+        private void SaveHpi(string filename)
+        {
+            // flatten before save --- only the base tile is written to disk
+            IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.Map);
+            flatten.Execute();
+
+            this.mapSaver.SaveHpi(this.Map, filename);
+
+            flatten.Undo();
+
+            this.undoManager.SetNowAsMark();
+
+            this.FilePath = filename;
+            this.IsFileReadOnly = false;
+        }
+
+        private void Save(string filename)
+        {
+            // flatten before save --- only the base tile is written to disk
+            IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.Map);
+            flatten.Execute();
+
+            var otaName = filename.Substring(0, filename.Length - 4) + ".ota";
+            this.mapSaver.SaveTnt(this.Map, filename);
+            this.mapSaver.SaveOta(this.Map.Attributes, otaName);
+
+            flatten.Undo();
+
+            this.undoManager.SetNowAsMark();
+
+            this.FilePath = filename;
+            this.IsFileReadOnly = false;
+        }
+
+        private void OpenSct(string filename)
+        {
+            MapTile t;
+            using (var s = new SctReader(filename))
+            {
+                t = this.sectionFactory.TileFromSct(s);
+            }
+
+            this.Map = new SelectionMapModel(new BindingMapModel(new MapModel(t)));
+        }
+
+        private void OpenTnt(string filename)
+        {
+            MapModel m;
+
+            var otaFileName = filename.Substring(0, filename.Length - 4) + ".ota";
+            if (File.Exists(otaFileName))
+            {
+                TdfNode attrs;
+                using (var ota = File.OpenRead(otaFileName))
+                {
+                    attrs = TdfNode.LoadTdf(ota);
+                }
+
+                using (var s = new TntReader(filename))
+                {
+                    m = this.mapModelFactory.FromTntAndOta(s, attrs);
+                }
+            }
+            else
+            {
+                using (var s = new TntReader(filename))
+                {
+                    m = this.mapModelFactory.FromTnt(s);
+                }
+            }
+
+            this.Map = new SelectionMapModel(new BindingMapModel(m));
+            this.FilePath = filename;
+        }
+
+        private void OpenHapi(string hpipath, string mappath, bool readOnly = false)
+        {
+            MapModel m;
+
+            using (HpiReader hpi = new HpiReader(hpipath))
+            {
+                string otaPath = HpiPath.ChangeExtension(mappath, ".ota");
+
+                TdfNode n;
+
+                using (var ota = hpi.ReadTextFile(otaPath))
+                {
+                    n = TdfNode.LoadTdf(ota);
+                }
+
+                using (var s = new TntReader(hpi.ReadFile(mappath)))
+                {
+                    m = this.mapModelFactory.FromTntAndOta(s, n);
+                }
+            }
+
+            this.Map = new SelectionMapModel(new BindingMapModel(m));
+            this.FilePath = hpipath;
+            this.IsFileReadOnly = readOnly;
+        }
+
         private void PasteMapTile(IMapTile tile)
         {
             DeduplicateTiles(tile.TileGrid);
@@ -1451,6 +1436,15 @@
         private MapAttributesResult GetAttributes()
         {
             return MapAttributesResult.FromModel(this.Map);
+        }
+
+        private void New(int width, int height)
+        {
+            var map = new SelectionMapModel(new BindingMapModel(new MapModel(width, height)));
+            GridMethods.Fill(map.Tile.TileGrid, Globals.DefaultTile);
+            this.Map = map;
+            this.FilePath = null;
+            this.IsFileReadOnly = false;
         }
 
         private bool SaveHelper(string filename)
@@ -1560,6 +1554,12 @@
 
             this.OpenHapi(filename, HpiPath.Combine("maps", mapName + ".tnt"), readOnly);
             return true;
+        }
+
+        private void SetMinimap(Bitmap minimap)
+        {
+            var op = new UpdateMinimapOperation(this.Map, minimap);
+            this.undoManager.Execute(op);
         }
 
         private IEnumerable<string> GetMapNames(HpiReader hpi)
