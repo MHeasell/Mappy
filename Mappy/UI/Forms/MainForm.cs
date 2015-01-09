@@ -15,12 +15,12 @@
     {
         private const string ProgramName = "Mappy";
 
+        private IMainFormModel model;
+
         public MainForm()
         {
             this.InitializeComponent();
         }
-
-        public IMainFormModel Model { get; private set; }
 
         public Rectangle ViewportRect
         {
@@ -65,17 +65,17 @@
         public void SetModel(IMainFormModel model)
         {
             model.PropertyChanged += this.ModelOnPropertyChanged;
-            this.Model = model;
+            this.model = model;
         }
 
         public void UpdateMinimapViewport()
         {
-            if (this.Model == null)
+            if (this.model == null)
             {
                 return;
             }
 
-            this.Model.ViewportRectangle = this.ConvertToNormalizedViewport(this.ViewportRect);
+            this.model.ViewportRectangle = this.ConvertToNormalizedViewport(this.ViewportRect);
         }
 
         public void SetViewportPosition(int x, int y)
@@ -85,12 +85,12 @@
 
         private void OpenMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.Open();
+            this.model.Open();
         }
 
         private void ToggleHeightmapMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ToggleHeightmap();
+            this.model.ToggleHeightmap();
         }
 
         private void MapPanel1SizeChanged(object sender, EventArgs e)
@@ -100,61 +100,61 @@
 
         private void PreferencesMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.OpenPreferences();
+            this.model.OpenPreferences();
         }
 
         private void SaveAsMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.SaveAs();
+            this.model.SaveAs();
         }
 
         private void SaveMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.Save();
+            this.model.Save();
         }
 
         private void ToggleMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ToggleMinimap();
+            this.model.ToggleMinimap();
         }
 
         private void UndoMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.Undo();
+            this.model.Undo();
         }
 
         private void RedoMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.Redo();
+            this.model.Redo();
         }
 
         private void MainFormFormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                this.Model.Close(); 
+                this.model.Close(); 
                 e.Cancel = true;
             }
         }
 
         private void ExitMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.Close(); 
+            this.model.Close(); 
         }
 
         private void NewMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.New();
+            this.model.New();
         }
 
         private void AboutMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ShowAbout();
+            this.model.ShowAbout();
         }
 
         private void GenerateMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.RefreshMinimap();
+            this.model.RefreshMinimap();
         }
 
         private void ClearGridCheckboxes()
@@ -171,7 +171,7 @@
 
         private void GridOffMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.GridVisible = false;
+            this.model.GridVisible = false;
         }
 
         private void GridMenuItemClick(object sender, EventArgs e)
@@ -179,17 +179,17 @@
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             int size = Convert.ToInt32(item.Tag);
 
-            this.Model.GridSize = new Size(size, size);
-            this.Model.GridVisible = true;
+            this.model.GridSize = new Size(size, size);
+            this.model.GridVisible = true;
         }
 
         private void UpdateGridCheckboxes()
         {
             this.ClearGridCheckboxes();
 
-            var size = this.Model.GridSize;
+            var size = this.model.GridSize;
 
-            if (!this.Model.GridVisible)
+            if (!this.model.GridVisible)
             {
                 gridOffMenuItem.Checked = true;
                 return;
@@ -228,67 +228,67 @@
 
         private void GridColorMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ChooseColor();
+            this.model.ChooseColor();
         }
 
         private void ToggleFeaturesMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ToggleFeatures();
+            this.model.ToggleFeatures();
         }
 
         private void MapAttributesMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.OpenMapAttributes();
+            this.model.OpenMapAttributes();
         }
 
         private void TrackBar1ValueChanged(object sender, EventArgs e)
         {
-            this.Model.SetSeaLevel(this.seaLevelTrackbar.Value);
+            this.model.SetSeaLevel(this.seaLevelTrackbar.Value);
         }
 
         private void CloseMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.CloseMap();
+            this.model.CloseMap();
         }
 
         private void GenerateMinimapHighQualityMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.RefreshMinimapHighQualityWithProgress();
+            this.model.RefreshMinimapHighQualityWithProgress();
         }
 
         private void SeaLevelTrackbarMouseUp(object sender, MouseEventArgs e)
         {
-            this.Model.FlushSeaLevel();
+            this.model.FlushSeaLevel();
         }
 
         private void CopyMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.CopySelectionToClipboard();
+            this.model.CopySelectionToClipboard();
         }
 
         private void PasteMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.PasteFromClipboard();
+            this.model.PasteFromClipboard();
         }
 
         private void CutMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.CutSelectionToClipboard();
+            this.model.CutSelectionToClipboard();
         }
 
         private void MainFormLoad(object sender, EventArgs e)
         {
-            this.Model.Initialize();
+            this.model.Initialize();
         }
 
         private void ExportMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ExportMinimap();
+            this.model.ExportMinimap();
         }
 
         private void ExportHeightmapMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ExportHeightmap();
+            this.model.ExportHeightmap();
         }
 
         private void MapViewScroll(object sender, ScrollEventArgs e)
@@ -298,22 +298,22 @@
 
         private void ImportMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ImportMinimap();
+            this.model.ImportMinimap();
         }
 
         private void ImportHeightmapMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ImportHeightmap();
+            this.model.ImportHeightmap();
         }
 
         private void ExportMapImageMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ExportMapImage();
+            this.model.ExportMapImage();
         }
 
         private void ImportCustomSectionMenuItemClick(object sender, EventArgs e)
         {
-            this.Model.ImportCustomSection();
+            this.model.ImportCustomSection();
         }
 
         private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -321,43 +321,43 @@
             switch (e.PropertyName)
             {
                 case "Sections":
-                    this.sectionsView.Sections = this.Model.Sections;
+                    this.sectionsView.Sections = this.model.Sections;
                     break;
                 case "FeatureRecords":
-                    this.featureView.Features = this.Model.FeatureRecords.EnumerateAll().ToList();
+                    this.featureView.Features = this.model.FeatureRecords.EnumerateAll().ToList();
                     break;
                 case "CanUndo":
-                    this.undoMenuItem.Enabled = this.Model.CanUndo;
+                    this.undoMenuItem.Enabled = this.model.CanUndo;
                     break;
                 case "CanRedo":
-                    this.redoMenuItem.Enabled = this.Model.CanRedo;
+                    this.redoMenuItem.Enabled = this.model.CanRedo;
                     break;
                 case "CanCopy":
-                    this.copyMenuItem.Enabled = this.Model.CanCopy;
+                    this.copyMenuItem.Enabled = this.model.CanCopy;
                     break;
                 case "CanCut":
-                    this.cutMenuItem.Enabled = this.Model.CanCut;
+                    this.cutMenuItem.Enabled = this.model.CanCut;
                     break;
                 case "CanPaste":
-                    this.pasteMenuItem.Enabled = this.Model.CanPaste;
+                    this.pasteMenuItem.Enabled = this.model.CanPaste;
                     break;
                 case "MapOpen":
                     this.UpdateSave();
-                    this.mapAttributesMenuItem.Enabled = this.Model.MapOpen;
+                    this.mapAttributesMenuItem.Enabled = this.model.MapOpen;
                     this.UpdateMinimapViewport();
-                    this.closeMenuItem.Enabled = this.Model.MapOpen;
-                    this.SeaLevelEditEnabled = this.Model.MapOpen;
-                    this.generateMinimapMenuItem.Enabled = this.Model.MapOpen;
-                    this.generateMinimapHighQualityMenuItem.Enabled = this.Model.MapOpen;
-                    this.importMinimapMenuItem.Enabled = this.Model.MapOpen;
-                    this.exportMinimapMenuItem.Enabled = this.Model.MapOpen;
-                    this.exportHeightmapMenuItem.Enabled = this.Model.MapOpen;
-                    this.importHeightmapMenuItem.Enabled = this.Model.MapOpen;
-                    this.exportMapImageMenuItem.Enabled = this.Model.MapOpen;
-                    this.importCustomSectionMenuItem.Enabled = this.Model.MapOpen;
+                    this.closeMenuItem.Enabled = this.model.MapOpen;
+                    this.SeaLevelEditEnabled = this.model.MapOpen;
+                    this.generateMinimapMenuItem.Enabled = this.model.MapOpen;
+                    this.generateMinimapHighQualityMenuItem.Enabled = this.model.MapOpen;
+                    this.importMinimapMenuItem.Enabled = this.model.MapOpen;
+                    this.exportMinimapMenuItem.Enabled = this.model.MapOpen;
+                    this.exportHeightmapMenuItem.Enabled = this.model.MapOpen;
+                    this.importHeightmapMenuItem.Enabled = this.model.MapOpen;
+                    this.exportMapImageMenuItem.Enabled = this.model.MapOpen;
+                    this.importCustomSectionMenuItem.Enabled = this.model.MapOpen;
                     break;
                 case "IsFileOpen":
-                    this.saveAsMenuItem.Enabled = this.Model.IsFileOpen;
+                    this.saveAsMenuItem.Enabled = this.model.IsFileOpen;
                     this.UpdateTitleText();
                     break;
                 case "FilePath":
@@ -372,16 +372,16 @@
                     this.UpdateTitleText();
                     break;
                 case "SeaLevel":
-                    this.SeaLevel = this.Model.SeaLevel;
+                    this.SeaLevel = this.model.SeaLevel;
                     break;
                 case "MinimapVisible":
-                    this.toggleMinimapMenuItem.Checked = this.Model.MinimapVisible;
+                    this.toggleMinimapMenuItem.Checked = this.model.MinimapVisible;
                     break;
                 case "HeightmapVisible":
-                    this.toggleHeightmapMenuItem.Checked = this.Model.HeightmapVisible;
+                    this.toggleHeightmapMenuItem.Checked = this.model.HeightmapVisible;
                     break;
                 case "FeaturesVisible":
-                    this.toggleFeaturesMenuItem.Checked = this.Model.FeaturesVisible;
+                    this.toggleFeaturesMenuItem.Checked = this.model.FeaturesVisible;
                     break;
                 case "ViewportRectangle":
                     this.UpdateViewViewportRect();
@@ -395,13 +395,13 @@
 
         private Rectangle2D ConvertToNormalizedViewport(Rectangle rect)
         {
-            if (!this.Model.MapOpen)
+            if (!this.model.MapOpen)
             {
                 return Rectangle2D.Empty;
             }
 
-            int widthScale = (this.Model.MapWidth * 32) - 32;
-            int heightScale = (this.Model.MapHeight * 32) - 128;
+            int widthScale = (this.model.MapWidth * 32) - 32;
+            int heightScale = (this.model.MapHeight * 32) - 128;
 
             double x = rect.X / (double)widthScale;
             double y = rect.Y / (double)heightScale;
@@ -413,13 +413,13 @@
 
         private Rectangle ConvertToClientViewport(Rectangle2D rect)
         {
-            if (!this.Model.MapOpen)
+            if (!this.model.MapOpen)
             {
                 return Rectangle.Empty;
             }
 
-            int widthScale = (this.Model.MapWidth * 32) - 32;
-            int heightScale = (this.Model.MapHeight * 32) - 128;
+            int widthScale = (this.model.MapWidth * 32) - 32;
+            int heightScale = (this.model.MapHeight * 32) - 128;
 
             int x = (int)Math.Round(rect.MinX * widthScale);
             int y = (int)Math.Round(rect.MinY * heightScale);
@@ -431,14 +431,14 @@
 
         private void UpdateViewViewportRect()
         {
-            var rect = this.Model.ViewportRectangle;
+            var rect = this.model.ViewportRectangle;
             var clientRect = this.ConvertToClientViewport(rect);
             this.SetViewportPosition(clientRect.X, clientRect.Y);
         }
 
         private void UpdateSave()
         {
-            this.saveMenuItem.Enabled = this.Model.MapOpen && this.Model.FilePath != null && !this.Model.IsFileReadOnly;
+            this.saveMenuItem.Enabled = this.model.MapOpen && this.model.FilePath != null && !this.model.IsFileReadOnly;
         }
 
         private void UpdateTitleText()
@@ -448,18 +448,18 @@
 
         private string GenerateTitleText()
         {
-            if (!this.Model.IsFileOpen)
+            if (!this.model.IsFileOpen)
             {
                 return ProgramName;
             }
 
-            string filename = this.Model.FilePath ?? "Untitled";
-            if (this.Model.IsDirty)
+            string filename = this.model.FilePath ?? "Untitled";
+            if (this.model.IsDirty)
             {
                 filename += "*";
             }
 
-            if (this.Model.IsFileReadOnly)
+            if (this.model.IsFileReadOnly)
             {
                 filename += " [read only]";
             }
