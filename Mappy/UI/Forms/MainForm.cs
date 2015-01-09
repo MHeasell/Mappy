@@ -20,7 +20,7 @@
             this.InitializeComponent();
         }
 
-        public IMainModel Model { get; private set; }
+        public IMainFormModel Model { get; private set; }
 
         public Rectangle ViewportRect
         {
@@ -62,7 +62,7 @@
             }
         }
 
-        public void SetModel(IMainModel model)
+        public void SetModel(IMainFormModel model)
         {
             model.PropertyChanged += this.ModelOnPropertyChanged;
             this.Model = model;

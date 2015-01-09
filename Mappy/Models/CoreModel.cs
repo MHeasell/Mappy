@@ -31,7 +31,7 @@
     using TAUtil.Tdf;
     using TAUtil.Tnt;
 
-    public class CoreModel : Notifier, IMinimapModel, IMainModel
+    public class CoreModel : Notifier, IMinimapModel, IMainModel, IMainFormModel
     {
         private readonly OperationManager undoManager = new OperationManager();
 

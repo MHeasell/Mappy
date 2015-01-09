@@ -124,6 +124,7 @@
     <Compile Include="Models\FeatureClipboardRecord.cs" />
     <Compile Include="Models\FeatureInstance.cs" />
     <Compile Include="Models\IDialogService.cs" />
+    <Compile Include="Models\IMainFormModel.cs" />
     <Compile Include="Models\IMainModel.cs" />
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
