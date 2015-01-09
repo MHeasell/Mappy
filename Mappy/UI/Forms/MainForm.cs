@@ -192,14 +192,14 @@
 
         private void ClearGridCheckboxes()
         {
-            offToolStripMenuItem.Checked = false;
-            toolStripMenuItem10.Checked = false;
-            toolStripMenuItem9.Checked = false;
-            toolStripMenuItem8.Checked = false;
-            toolStripMenuItem7.Checked = false;
-            x256ToolStripMenuItem.Checked = false;
-            x512ToolStripMenuItem.Checked = false;
-            x1024ToolStripMenuItem.Checked = false;
+            gridOffMenuItem.Checked = false;
+            grid16MenuItem.Checked = false;
+            grid32MenuItem.Checked = false;
+            grid64MenuItem.Checked = false;
+            grid128MenuItem.Checked = false;
+            grid256MenuItem.Checked = false;
+            grid512MenuItem.Checked = false;
+            grid1024MenuItem.Checked = false;
         }
 
         private void OffToolStripMenuItemClick(object sender, EventArgs e)
@@ -313,37 +313,37 @@
                     this.Features = this.Model.FeatureRecords.EnumerateAll().ToList();
                     break;
                 case "CanUndo":
-                    this.undoToolStripMenuItem.Enabled = this.Model.CanUndo;
+                    this.undoMenuItem.Enabled = this.Model.CanUndo;
                     break;
                 case "CanRedo":
-                    this.redoToolStripMenuItem.Enabled = this.Model.CanRedo;
+                    this.redoMenuItem.Enabled = this.Model.CanRedo;
                     break;
                 case "CanCopy":
-                    this.toolStripMenuItem14.Enabled = this.Model.CanCopy;
+                    this.copyMenuItem.Enabled = this.Model.CanCopy;
                     break;
                 case "CanCut":
-                    this.toolStripMenuItem16.Enabled = this.Model.CanCut;
+                    this.cutMenuItem.Enabled = this.Model.CanCut;
                     break;
                 case "CanPaste":
-                    this.toolStripMenuItem15.Enabled = this.Model.CanPaste;
+                    this.pasteMenuItem.Enabled = this.Model.CanPaste;
                     break;
                 case "MapOpen":
                     this.UpdateSave();
-                    this.toolStripMenuItem11.Enabled = this.Model.MapOpen;
+                    this.mapAttributesMenuItem.Enabled = this.Model.MapOpen;
                     this.UpdateMinimapViewport();
-                    this.toolStripMenuItem12.Enabled = this.Model.MapOpen;
+                    this.closeMenuItem.Enabled = this.Model.MapOpen;
                     this.SeaLevelEditEnabled = this.Model.MapOpen;
-                    this.toolStripMenuItem6.Enabled = this.Model.MapOpen;
-                    this.toolStripMenuItem13.Enabled = this.Model.MapOpen;
-                    this.toolStripMenuItem19.Enabled = this.Model.MapOpen;
-                    this.toolStripMenuItem17.Enabled = this.Model.MapOpen;
-                    this.toolStripMenuItem18.Enabled = this.Model.MapOpen;
-                    this.toolStripMenuItem20.Enabled = this.Model.MapOpen;
-                    this.toolStripMenuItem21.Enabled = this.Model.MapOpen;
-                    this.toolStripMenuItem22.Enabled = this.Model.MapOpen;
+                    this.generateMinimapMenuItem.Enabled = this.Model.MapOpen;
+                    this.generateMinimapHighQualityMenuItem.Enabled = this.Model.MapOpen;
+                    this.importMinimapMenuItem.Enabled = this.Model.MapOpen;
+                    this.exportMinimapMenuItem.Enabled = this.Model.MapOpen;
+                    this.exportHeightmapMenuItem.Enabled = this.Model.MapOpen;
+                    this.importHeightmapMenuItem.Enabled = this.Model.MapOpen;
+                    this.exportMapImageMenuItem.Enabled = this.Model.MapOpen;
+                    this.importCustomSectionMenuItem.Enabled = this.Model.MapOpen;
                     break;
                 case "IsFileOpen":
-                    this.toolStripMenuItem4.Enabled = this.Model.IsFileOpen;
+                    this.saveAsMenuItem.Enabled = this.Model.IsFileOpen;
                     this.UpdateTitleText();
                     break;
                 case "FilePath":
@@ -361,7 +361,7 @@
                     this.SeaLevel = this.Model.SeaLevel;
                     break;
                 case "MinimapVisible":
-                    this.minimapToolStripMenuItem1.Checked = this.Model.MinimapVisible;
+                    this.toggleMinimapMenuItem.Checked = this.Model.MinimapVisible;
                     break;
                 case "ViewportRectangle":
                     this.UpdateViewViewportRect();
@@ -414,7 +414,7 @@
 
         private void UpdateSave()
         {
-            this.toolStripMenuItem5.Enabled = this.Model.MapOpen && this.Model.FilePath != null && !this.Model.IsFileReadOnly;
+            this.saveMenuItem.Enabled = this.Model.MapOpen && this.Model.FilePath != null && !this.Model.IsFileReadOnly;
         }
 
         private void UpdateTitleText()
