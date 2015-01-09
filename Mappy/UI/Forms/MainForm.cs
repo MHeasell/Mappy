@@ -27,102 +27,6 @@
 
         public IMainModel Model { get; private set; }
 
-        public string TitleText
-        {
-            get { return this.Text; }
-            set { this.Text = value; }
-        }
-
-        public bool UndoEnabled
-        {
-            get { return this.undoToolStripMenuItem.Enabled; }
-            set { this.undoToolStripMenuItem.Enabled = value; }
-        }
-
-        public bool RedoEnabled
-        {
-            get { return this.redoToolStripMenuItem.Enabled; }
-            set { this.redoToolStripMenuItem.Enabled = value; }
-        }
-
-        public bool CutEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem16.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem16.Enabled = value;
-            }
-        }
-
-        public bool CopyEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem14.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem14.Enabled = value;
-            }
-        }
-
-        public bool PasteEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem15.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem15.Enabled = value;
-            }
-        }
-
-        public bool SaveEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem5.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem5.Enabled = value;
-            }
-        }
-
-        public bool SaveAsEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem4.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem4.Enabled = value;
-            }
-        }
-
-        public bool CloseEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem12.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem12.Enabled = value;
-            }
-        }
-
         public Rectangle ViewportRect
         {
             get
@@ -162,51 +66,6 @@
             }
         }
 
-        public bool OpenAttributesEnabled
-        {
-            get { return this.toolStripMenuItem11.Enabled; }
-            set { this.toolStripMenuItem11.Enabled = value; }
-        }
-
-        public bool MinimapVisibleChecked
-        {
-            get
-            {
-                return this.minimapToolStripMenuItem1.Checked;
-            }
-
-            set
-            {
-                this.minimapToolStripMenuItem1.Checked = value;
-            }
-        }
-
-        public bool RefreshMinimapEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem6.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem6.Enabled = value;
-            }
-        }
-
-        public bool RefreshMinimapHighQualityEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem13.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem13.Enabled = value;
-            }
-        }
-
         public int SeaLevel
         {
             get
@@ -233,84 +92,6 @@
                 this.label2.Enabled = value;
                 this.label3.Enabled = value;
                 this.trackBar1.Enabled = value;
-            }
-        }
-
-        public bool ImportMinimapEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem19.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem19.Enabled = value;
-            }
-        }
-
-        public bool ExportMinimapEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem17.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem17.Enabled = value;
-            }
-        }
-
-        public bool ExportHeightmapEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem18.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem18.Enabled = value;
-            }
-        }
-
-        public bool ExportMapImageEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem21.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem21.Enabled = value;
-            }
-        }
-
-        public bool ImportHeightmapEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem20.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem20.Enabled = value;
-            }
-        }
-
-        public bool ImportCustomSectionEnabled
-        {
-            get
-            {
-                return this.toolStripMenuItem22.Enabled;
-            }
-
-            set
-            {
-                this.toolStripMenuItem22.Enabled = value;
             }
         }
 
@@ -532,37 +313,37 @@
                     this.Features = this.Model.FeatureRecords.EnumerateAll().ToList();
                     break;
                 case "CanUndo":
-                    this.UndoEnabled = this.Model.CanUndo;
+                    this.undoToolStripMenuItem.Enabled = this.Model.CanUndo;
                     break;
                 case "CanRedo":
-                    this.RedoEnabled = this.Model.CanRedo;
+                    this.redoToolStripMenuItem.Enabled = this.Model.CanRedo;
                     break;
                 case "CanCopy":
-                    this.CopyEnabled = this.Model.CanCopy;
+                    this.toolStripMenuItem14.Enabled = this.Model.CanCopy;
                     break;
                 case "CanCut":
-                    this.CutEnabled = this.Model.CanCut;
+                    this.toolStripMenuItem16.Enabled = this.Model.CanCut;
                     break;
                 case "CanPaste":
-                    this.PasteEnabled = this.Model.CanPaste;
+                    this.toolStripMenuItem15.Enabled = this.Model.CanPaste;
                     break;
                 case "MapOpen":
                     this.UpdateSave();
-                    this.OpenAttributesEnabled = this.Model.MapOpen;
+                    this.toolStripMenuItem11.Enabled = this.Model.MapOpen;
                     this.UpdateMinimapViewport();
-                    this.CloseEnabled = this.Model.MapOpen;
+                    this.toolStripMenuItem12.Enabled = this.Model.MapOpen;
                     this.SeaLevelEditEnabled = this.Model.MapOpen;
-                    this.RefreshMinimapEnabled = this.Model.MapOpen;
-                    this.RefreshMinimapHighQualityEnabled = this.Model.MapOpen;
-                    this.ImportMinimapEnabled = this.Model.MapOpen;
-                    this.ExportMinimapEnabled = this.Model.MapOpen;
-                    this.ExportHeightmapEnabled = this.Model.MapOpen;
-                    this.ImportHeightmapEnabled = this.Model.MapOpen;
-                    this.ExportMapImageEnabled = this.Model.MapOpen;
-                    this.ImportCustomSectionEnabled = this.Model.MapOpen;
+                    this.toolStripMenuItem6.Enabled = this.Model.MapOpen;
+                    this.toolStripMenuItem13.Enabled = this.Model.MapOpen;
+                    this.toolStripMenuItem19.Enabled = this.Model.MapOpen;
+                    this.toolStripMenuItem17.Enabled = this.Model.MapOpen;
+                    this.toolStripMenuItem18.Enabled = this.Model.MapOpen;
+                    this.toolStripMenuItem20.Enabled = this.Model.MapOpen;
+                    this.toolStripMenuItem21.Enabled = this.Model.MapOpen;
+                    this.toolStripMenuItem22.Enabled = this.Model.MapOpen;
                     break;
                 case "IsFileOpen":
-                    this.SaveAsEnabled = this.Model.IsFileOpen;
+                    this.toolStripMenuItem4.Enabled = this.Model.IsFileOpen;
                     this.UpdateTitleText();
                     break;
                 case "FilePath":
@@ -580,7 +361,7 @@
                     this.SeaLevel = this.Model.SeaLevel;
                     break;
                 case "MinimapVisible":
-                    this.MinimapVisibleChecked = this.Model.MinimapVisible;
+                    this.minimapToolStripMenuItem1.Checked = this.Model.MinimapVisible;
                     break;
                 case "ViewportRectangle":
                     this.UpdateViewViewportRect();
@@ -633,12 +414,12 @@
 
         private void UpdateSave()
         {
-            this.SaveEnabled = this.Model.MapOpen && this.Model.FilePath != null && !this.Model.IsFileReadOnly;
+            this.toolStripMenuItem5.Enabled = this.Model.MapOpen && this.Model.FilePath != null && !this.Model.IsFileReadOnly;
         }
 
         private void UpdateTitleText()
         {
-            this.TitleText = this.GenerateTitleText();
+            this.Text = this.GenerateTitleText();
         }
 
         private string GenerateTitleText()
