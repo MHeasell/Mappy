@@ -116,12 +116,12 @@
             this.imageLayerView1.AutoScrollPosition = new Point(x, y);
         }
 
-        private void OpenToolStripMenuItemClick(object sender, EventArgs e)
+        private void OpenMenuItemClick(object sender, EventArgs e)
         {
             this.Model.Open();
         }
 
-        private void HeightmapToolStripMenuItemCheckedChanged(object sender, EventArgs e)
+        private void ToggleHeightmapMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ToggleHeightmap();
         }
@@ -131,32 +131,32 @@
             this.UpdateMinimapViewport();
         }
 
-        private void PreferencesToolStripMenuItemClick(object sender, EventArgs e)
+        private void PreferencesMenuItemClick(object sender, EventArgs e)
         {
             this.Model.OpenPreferences();
         }
 
-        private void ToolStripMenuItem4Click(object sender, EventArgs e)
+        private void SaveAsMenuItemClick(object sender, EventArgs e)
         {
             this.Model.SaveAs();
         }
 
-        private void ToolStripMenuItem5Click(object sender, EventArgs e)
+        private void SaveMenuItemClick(object sender, EventArgs e)
         {
             this.Model.Save();
         }
 
-        private void MinimapToolStripMenuItem1Click(object sender, EventArgs e)
+        private void ToggleMinimapMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ToggleMinimap();
         }
 
-        private void UndoToolStripMenuItemClick(object sender, EventArgs e)
+        private void UndoMenuItemClick(object sender, EventArgs e)
         {
             this.Model.Undo();
         }
 
-        private void RedoToolStripMenuItemClick(object sender, EventArgs e)
+        private void RedoMenuItemClick(object sender, EventArgs e)
         {
             this.Model.Redo();
         }
@@ -170,22 +170,22 @@
             }
         }
 
-        private void ExitToolStripMenuItemClick(object sender, EventArgs e)
+        private void ExitMenuItemClick(object sender, EventArgs e)
         {
             this.Model.Close(); 
         }
 
-        private void ToolStripMenuItem2Click(object sender, EventArgs e)
+        private void NewMenuItemClick(object sender, EventArgs e)
         {
             this.Model.New();
         }
 
-        private void AboutToolStripMenuItemClick(object sender, EventArgs e)
+        private void AboutMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ShowAbout();
         }
 
-        private void ToolStripMenuItem6Click(object sender, EventArgs e)
+        private void GenerateMinimapMenuItemClick(object sender, EventArgs e)
         {
             this.Model.RefreshMinimap();
         }
@@ -202,7 +202,7 @@
             grid1024MenuItem.Checked = false;
         }
 
-        private void OffToolStripMenuItemClick(object sender, EventArgs e)
+        private void GridMenuItemClick(object sender, EventArgs e)
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             this.ClearGridCheckboxes();
@@ -212,17 +212,17 @@
             this.Model.SetGridSize(size);
         }
 
-        private void ChooseColorToolStripMenuItemClick(object sender, EventArgs e)
+        private void GridColorMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ChooseColor();
         }
 
-        private void FeaturesToolStripMenuItemClick(object sender, EventArgs e)
+        private void ToggleFeaturesMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ToggleFeatures();
         }
 
-        private void ToolStripMenuItem11Click(object sender, EventArgs e)
+        private void MapAttributesMenuItemClick(object sender, EventArgs e)
         {
             this.Model.OpenMapAttributes();
         }
@@ -232,12 +232,12 @@
             this.Model.SetSeaLevel(this.trackBar1.Value);
         }
 
-        private void toolStripMenuItem12_Click(object sender, EventArgs e)
+        private void CloseMenuItemClick(object sender, EventArgs e)
         {
             this.Model.CloseMap();
         }
 
-        private void toolStripMenuItem13_Click(object sender, EventArgs e)
+        private void GenerateMinimapHighQualityMenuItemClick(object sender, EventArgs e)
         {
             this.Model.RefreshMinimapHighQualityWithProgress();
         }
@@ -247,17 +247,17 @@
             this.Model.FlushSeaLevel();
         }
 
-        private void toolStripMenuItem14_Click(object sender, EventArgs e)
+        private void CopyMenuItemClick(object sender, EventArgs e)
         {
             this.Model.CopySelectionToClipboard();
         }
 
-        private void toolStripMenuItem15_Click(object sender, EventArgs e)
+        private void PasteMenuItemClick(object sender, EventArgs e)
         {
             this.Model.PasteFromClipboard();
         }
 
-        private void toolStripMenuItem16_Click(object sender, EventArgs e)
+        private void CutMenuItemClick(object sender, EventArgs e)
         {
             this.Model.CutSelectionToClipboard();
         }
@@ -267,12 +267,12 @@
             this.Model.Initialize();
         }
 
-        private void toolStripMenuItem17_Click(object sender, EventArgs e)
+        private void ExportMinimapMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ExportMinimap();
         }
 
-        private void toolStripMenuItem18_Click(object sender, EventArgs e)
+        private void ExportHeightmapMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ExportHeightmap();
         }
@@ -282,22 +282,22 @@
             this.UpdateMinimapViewport();
         }
 
-        private void toolStripMenuItem19_Click(object sender, EventArgs e)
+        private void ImportMinimapMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ImportMinimap();
         }
 
-        private void toolStripMenuItem20_Click(object sender, EventArgs e)
+        private void ImportHeightmapMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ImportHeightmap();
         }
 
-        private void toolStripMenuItem21_Click(object sender, EventArgs e)
+        private void ExportMapImageMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ExportMapImage();
         }
 
-        private void toolStripMenuItem22_Click(object sender, EventArgs e)
+        private void ImportCustomSectionMenuItemClick(object sender, EventArgs e)
         {
             this.Model.ImportCustomSection();
         }

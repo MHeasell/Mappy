@@ -145,7 +145,7 @@
             this.newMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
             this.newMenuItem.Size = new System.Drawing.Size(206, 22);
             this.newMenuItem.Text = "&New...";
-            this.newMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem2Click);
+            this.newMenuItem.Click += new System.EventHandler(this.NewMenuItemClick);
             // 
             // openMenuItem
             // 
@@ -153,7 +153,7 @@
             this.openMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openMenuItem.Size = new System.Drawing.Size(206, 22);
             this.openMenuItem.Text = "&Open...";
-            this.openMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);
+            this.openMenuItem.Click += new System.EventHandler(this.OpenMenuItemClick);
             // 
             // toolStripSeparator1
             // 
@@ -167,7 +167,7 @@
             this.saveMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveMenuItem.Size = new System.Drawing.Size(206, 22);
             this.saveMenuItem.Text = "&Save";
-            this.saveMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem5Click);
+            this.saveMenuItem.Click += new System.EventHandler(this.SaveMenuItemClick);
             // 
             // saveAsMenuItem
             // 
@@ -176,7 +176,7 @@
             this.saveAsMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
             this.saveAsMenuItem.Size = new System.Drawing.Size(206, 22);
             this.saveAsMenuItem.Text = "Save &As...";
-            this.saveAsMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem4Click);
+            this.saveAsMenuItem.Click += new System.EventHandler(this.SaveAsMenuItemClick);
             // 
             // toolStripSeparator2
             // 
@@ -190,7 +190,7 @@
             this.closeMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
             this.closeMenuItem.Size = new System.Drawing.Size(206, 22);
             this.closeMenuItem.Text = "&Close";
-            this.closeMenuItem.Click += new System.EventHandler(this.toolStripMenuItem12_Click);
+            this.closeMenuItem.Click += new System.EventHandler(this.CloseMenuItemClick);
             // 
             // toolStripSeparator8
             // 
@@ -203,7 +203,7 @@
             this.importMinimapMenuItem.Name = "importMinimapMenuItem";
             this.importMinimapMenuItem.Size = new System.Drawing.Size(206, 22);
             this.importMinimapMenuItem.Text = "Import Minimap...";
-            this.importMinimapMenuItem.Click += new System.EventHandler(this.toolStripMenuItem19_Click);
+            this.importMinimapMenuItem.Click += new System.EventHandler(this.ImportMinimapMenuItemClick);
             // 
             // importHeightmapMenuItem
             // 
@@ -211,7 +211,7 @@
             this.importHeightmapMenuItem.Name = "importHeightmapMenuItem";
             this.importHeightmapMenuItem.Size = new System.Drawing.Size(206, 22);
             this.importHeightmapMenuItem.Text = "Import Heightmap...";
-            this.importHeightmapMenuItem.Click += new System.EventHandler(this.toolStripMenuItem20_Click);
+            this.importHeightmapMenuItem.Click += new System.EventHandler(this.ImportHeightmapMenuItemClick);
             // 
             // importCustomSectionMenuItem
             // 
@@ -219,7 +219,7 @@
             this.importCustomSectionMenuItem.Name = "importCustomSectionMenuItem";
             this.importCustomSectionMenuItem.Size = new System.Drawing.Size(206, 22);
             this.importCustomSectionMenuItem.Text = "Import Custom Section...";
-            this.importCustomSectionMenuItem.Click += new System.EventHandler(this.toolStripMenuItem22_Click);
+            this.importCustomSectionMenuItem.Click += new System.EventHandler(this.ImportCustomSectionMenuItemClick);
             // 
             // toolStripSeparator11
             // 
@@ -232,7 +232,7 @@
             this.exportMinimapMenuItem.Name = "exportMinimapMenuItem";
             this.exportMinimapMenuItem.Size = new System.Drawing.Size(206, 22);
             this.exportMinimapMenuItem.Text = "Export Minimap...";
-            this.exportMinimapMenuItem.Click += new System.EventHandler(this.toolStripMenuItem17_Click);
+            this.exportMinimapMenuItem.Click += new System.EventHandler(this.ExportMinimapMenuItemClick);
             // 
             // exportHeightmapMenuItem
             // 
@@ -240,7 +240,7 @@
             this.exportHeightmapMenuItem.Name = "exportHeightmapMenuItem";
             this.exportHeightmapMenuItem.Size = new System.Drawing.Size(206, 22);
             this.exportHeightmapMenuItem.Text = "Export Heightmap...";
-            this.exportHeightmapMenuItem.Click += new System.EventHandler(this.toolStripMenuItem18_Click);
+            this.exportHeightmapMenuItem.Click += new System.EventHandler(this.ExportHeightmapMenuItemClick);
             // 
             // exportMapImageMenuItem
             // 
@@ -248,7 +248,7 @@
             this.exportMapImageMenuItem.Name = "exportMapImageMenuItem";
             this.exportMapImageMenuItem.Size = new System.Drawing.Size(206, 22);
             this.exportMapImageMenuItem.Text = "Export Map Image...";
-            this.exportMapImageMenuItem.Click += new System.EventHandler(this.toolStripMenuItem21_Click);
+            this.exportMapImageMenuItem.Click += new System.EventHandler(this.ExportMapImageMenuItemClick);
             // 
             // toolStripSeparator10
             // 
@@ -260,7 +260,7 @@
             this.exitMenuItem.Name = "exitMenuItem";
             this.exitMenuItem.Size = new System.Drawing.Size(206, 22);
             this.exitMenuItem.Text = "E&xit";
-            this.exitMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
+            this.exitMenuItem.Click += new System.EventHandler(this.ExitMenuItemClick);
             // 
             // editMenuItem
             // 
@@ -289,7 +289,7 @@
             this.undoMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.undoMenuItem.Size = new System.Drawing.Size(250, 22);
             this.undoMenuItem.Text = "&Undo";
-            this.undoMenuItem.Click += new System.EventHandler(this.UndoToolStripMenuItemClick);
+            this.undoMenuItem.Click += new System.EventHandler(this.UndoMenuItemClick);
             // 
             // redoMenuItem
             // 
@@ -298,7 +298,7 @@
             this.redoMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
             this.redoMenuItem.Size = new System.Drawing.Size(250, 22);
             this.redoMenuItem.Text = "&Redo";
-            this.redoMenuItem.Click += new System.EventHandler(this.RedoToolStripMenuItemClick);
+            this.redoMenuItem.Click += new System.EventHandler(this.RedoMenuItemClick);
             // 
             // toolStripSeparator7
             // 
@@ -312,7 +312,7 @@
             this.cutMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
             this.cutMenuItem.Size = new System.Drawing.Size(250, 22);
             this.cutMenuItem.Text = "Cut";
-            this.cutMenuItem.Click += new System.EventHandler(this.toolStripMenuItem16_Click);
+            this.cutMenuItem.Click += new System.EventHandler(this.CutMenuItemClick);
             // 
             // copyMenuItem
             // 
@@ -321,7 +321,7 @@
             this.copyMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyMenuItem.Size = new System.Drawing.Size(250, 22);
             this.copyMenuItem.Text = "Copy";
-            this.copyMenuItem.Click += new System.EventHandler(this.toolStripMenuItem14_Click);
+            this.copyMenuItem.Click += new System.EventHandler(this.CopyMenuItemClick);
             // 
             // pasteMenuItem
             // 
@@ -330,7 +330,7 @@
             this.pasteMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
             this.pasteMenuItem.Size = new System.Drawing.Size(250, 22);
             this.pasteMenuItem.Text = "Paste";
-            this.pasteMenuItem.Click += new System.EventHandler(this.toolStripMenuItem15_Click);
+            this.pasteMenuItem.Click += new System.EventHandler(this.PasteMenuItemClick);
             // 
             // toolStripSeparator9
             // 
@@ -343,7 +343,7 @@
             this.mapAttributesMenuItem.Name = "mapAttributesMenuItem";
             this.mapAttributesMenuItem.Size = new System.Drawing.Size(250, 22);
             this.mapAttributesMenuItem.Text = "Map Attributes...";
-            this.mapAttributesMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem11Click);
+            this.mapAttributesMenuItem.Click += new System.EventHandler(this.MapAttributesMenuItemClick);
             // 
             // toolStripSeparator3
             // 
@@ -357,7 +357,7 @@
             this.generateMinimapMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
             this.generateMinimapMenuItem.Size = new System.Drawing.Size(250, 22);
             this.generateMinimapMenuItem.Text = "&Generate Minimap";
-            this.generateMinimapMenuItem.Click += new System.EventHandler(this.ToolStripMenuItem6Click);
+            this.generateMinimapMenuItem.Click += new System.EventHandler(this.GenerateMinimapMenuItemClick);
             // 
             // generateMinimapHighQualityMenuItem
             // 
@@ -365,7 +365,7 @@
             this.generateMinimapHighQualityMenuItem.Name = "generateMinimapHighQualityMenuItem";
             this.generateMinimapHighQualityMenuItem.Size = new System.Drawing.Size(250, 22);
             this.generateMinimapHighQualityMenuItem.Text = "Generate Minimap (High Quality)";
-            this.generateMinimapHighQualityMenuItem.Click += new System.EventHandler(this.toolStripMenuItem13_Click);
+            this.generateMinimapHighQualityMenuItem.Click += new System.EventHandler(this.GenerateMinimapHighQualityMenuItemClick);
             // 
             // toolStripSeparator4
             // 
@@ -378,7 +378,7 @@
             this.preferencesMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
             this.preferencesMenuItem.Size = new System.Drawing.Size(250, 22);
             this.preferencesMenuItem.Text = "&Preferences...";
-            this.preferencesMenuItem.Click += new System.EventHandler(this.PreferencesToolStripMenuItemClick);
+            this.preferencesMenuItem.Click += new System.EventHandler(this.PreferencesMenuItemClick);
             // 
             // viewMenuItem
             // 
@@ -398,7 +398,7 @@
             this.toggleHeightmapMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
             this.toggleHeightmapMenuItem.Size = new System.Drawing.Size(177, 22);
             this.toggleHeightmapMenuItem.Text = "&Heightmap";
-            this.toggleHeightmapMenuItem.CheckedChanged += new System.EventHandler(this.HeightmapToolStripMenuItemCheckedChanged);
+            this.toggleHeightmapMenuItem.CheckedChanged += new System.EventHandler(this.ToggleHeightmapMenuItemClick);
             // 
             // toggleMinimapMenuItem
             // 
@@ -406,7 +406,7 @@
             this.toggleMinimapMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
             this.toggleMinimapMenuItem.Size = new System.Drawing.Size(177, 22);
             this.toggleMinimapMenuItem.Text = "&Minimap";
-            this.toggleMinimapMenuItem.Click += new System.EventHandler(this.MinimapToolStripMenuItem1Click);
+            this.toggleMinimapMenuItem.Click += new System.EventHandler(this.ToggleMinimapMenuItemClick);
             // 
             // gridMenuItem
             // 
@@ -434,7 +434,7 @@
             this.gridOffMenuItem.Size = new System.Drawing.Size(155, 22);
             this.gridOffMenuItem.Tag = "0";
             this.gridOffMenuItem.Text = "Off";
-            this.gridOffMenuItem.Click += new System.EventHandler(this.OffToolStripMenuItemClick);
+            this.gridOffMenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
             // 
             // toolStripSeparator5
             // 
@@ -447,7 +447,7 @@
             this.grid16MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid16MenuItem.Tag = "16";
             this.grid16MenuItem.Text = "16x16";
-            this.grid16MenuItem.Click += new System.EventHandler(this.OffToolStripMenuItemClick);
+            this.grid16MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
             // 
             // grid32MenuItem
             // 
@@ -455,7 +455,7 @@
             this.grid32MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid32MenuItem.Tag = "32";
             this.grid32MenuItem.Text = "32x32";
-            this.grid32MenuItem.Click += new System.EventHandler(this.OffToolStripMenuItemClick);
+            this.grid32MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
             // 
             // grid64MenuItem
             // 
@@ -463,7 +463,7 @@
             this.grid64MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid64MenuItem.Tag = "64";
             this.grid64MenuItem.Text = "64x64";
-            this.grid64MenuItem.Click += new System.EventHandler(this.OffToolStripMenuItemClick);
+            this.grid64MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
             // 
             // grid128MenuItem
             // 
@@ -471,7 +471,7 @@
             this.grid128MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid128MenuItem.Tag = "128";
             this.grid128MenuItem.Text = "128x128";
-            this.grid128MenuItem.Click += new System.EventHandler(this.OffToolStripMenuItemClick);
+            this.grid128MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
             // 
             // grid256MenuItem
             // 
@@ -479,7 +479,7 @@
             this.grid256MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid256MenuItem.Tag = "256";
             this.grid256MenuItem.Text = "256x256";
-            this.grid256MenuItem.Click += new System.EventHandler(this.OffToolStripMenuItemClick);
+            this.grid256MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
             // 
             // grid512MenuItem
             // 
@@ -487,7 +487,7 @@
             this.grid512MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid512MenuItem.Tag = "512";
             this.grid512MenuItem.Text = "512x512";
-            this.grid512MenuItem.Click += new System.EventHandler(this.OffToolStripMenuItemClick);
+            this.grid512MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
             // 
             // grid1024MenuItem
             // 
@@ -495,7 +495,7 @@
             this.grid1024MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid1024MenuItem.Tag = "1024";
             this.grid1024MenuItem.Text = "1024x1024";
-            this.grid1024MenuItem.Click += new System.EventHandler(this.OffToolStripMenuItemClick);
+            this.grid1024MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
             // 
             // toolStripSeparator6
             // 
@@ -507,7 +507,7 @@
             this.gridColorMenuItem.Name = "gridColorMenuItem";
             this.gridColorMenuItem.Size = new System.Drawing.Size(155, 22);
             this.gridColorMenuItem.Text = "Choose Color...";
-            this.gridColorMenuItem.Click += new System.EventHandler(this.ChooseColorToolStripMenuItemClick);
+            this.gridColorMenuItem.Click += new System.EventHandler(this.GridColorMenuItemClick);
             // 
             // toggleFeaturesMenuItem
             // 
@@ -517,7 +517,7 @@
             this.toggleFeaturesMenuItem.Name = "toggleFeaturesMenuItem";
             this.toggleFeaturesMenuItem.Size = new System.Drawing.Size(177, 22);
             this.toggleFeaturesMenuItem.Text = "Features";
-            this.toggleFeaturesMenuItem.Click += new System.EventHandler(this.FeaturesToolStripMenuItemClick);
+            this.toggleFeaturesMenuItem.Click += new System.EventHandler(this.ToggleFeaturesMenuItemClick);
             // 
             // helpMenuItem
             // 
@@ -532,7 +532,7 @@
             this.aboutMenuItem.Name = "aboutMenuItem";
             this.aboutMenuItem.Size = new System.Drawing.Size(152, 22);
             this.aboutMenuItem.Text = "&About...";
-            this.aboutMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
+            this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItemClick);
             // 
             // tabControl1
             // 
