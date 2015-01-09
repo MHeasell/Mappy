@@ -242,12 +242,6 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Painters\BitmapGridPainter.cs" />
-    <Compile Include="UI\Controls\MapPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\Controls\MapPanel.Designer.cs">
-      <DependentUpon>MapPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Forms\MapSelectionForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -290,9 +284,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Controls\MapPanel.resx">
-      <DependentUpon>MapPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\MapAttributesForm.resx">
       <DependentUpon>MapAttributesForm.cs</DependentUpon>
