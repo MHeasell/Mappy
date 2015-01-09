@@ -137,8 +137,6 @@ namespace Mappy.Models
 
         void RefreshMinimap();
 
-        void RefreshMinimapHighQuality();
-
         void RefreshMinimapHighQualityWithProgress();
 
         void OpenPreferences();
