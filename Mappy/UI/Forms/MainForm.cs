@@ -39,7 +39,7 @@
             this.model = model;
         }
 
-        public void UpdateMinimapViewport()
+        private void UpdateMinimapViewport()
         {
             if (this.model == null)
             {
@@ -49,7 +49,7 @@
             this.model.ViewportRectangle = this.ConvertToNormalizedViewport(this.ViewportRect);
         }
 
-        public void SetViewportPosition(int x, int y)
+        private void SetViewportPosition(int x, int y)
         {
             this.mapView.AutoScrollPosition = new Point(x, y);
         }
