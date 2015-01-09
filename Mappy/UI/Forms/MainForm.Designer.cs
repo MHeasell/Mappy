@@ -698,7 +698,7 @@
             this.MainMenuStrip = this.topMenu;
             this.Name = "MainForm";
             this.Text = "Mappy";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormFormClosing);
             this.Load += new System.EventHandler(this.MainFormLoad);
             this.topMenu.ResumeLayout(false);
             this.topMenu.PerformLayout();

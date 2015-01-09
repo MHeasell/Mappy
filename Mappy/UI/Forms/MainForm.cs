@@ -128,7 +128,7 @@
             this.Model.Redo();
         }
 
-        private void Form1FormClosing(object sender, FormClosingEventArgs e)
+        private void MainFormFormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
