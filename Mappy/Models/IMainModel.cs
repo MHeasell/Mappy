@@ -2,6 +2,7 @@ namespace Mappy.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Drawing;
 
@@ -9,7 +10,6 @@ namespace Mappy.Models
 
     using Mappy.Collections;
     using Mappy.Data;
-    using Mappy.Database;
 
     public interface IMainModel : INotifyPropertyChanged
     {
@@ -19,29 +19,17 @@ namespace Mappy.Models
 
         event EventHandler<GridEventArgs> BaseTileHeightChanged;
 
+        event EventHandler<FeatureInstanceEventArgs> FeatureInstanceChanged;
+
         event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
-
-        IFeatureDatabase FeatureRecords { get; }
-
-        bool MapOpen { get; }
-
-        bool GridVisible { get; }
-
-        Color GridColor { get; }
-
-        Size GridSize { get; }
-
-        bool HeightmapVisible { get; }
-
-        bool FeaturesVisible { get; }
 
         int? SelectedTile { get; }
 
         int? SelectedStartPosition { get; }
 
-        Rectangle BandboxRectangle { get; }
+        ObservableCollection<Guid> SelectedFeatures { get; }
 
-        ISelectionModel Map { get; }
+        Rectangle BandboxRectangle { get; }
 
         IList<Positioned<IMapTile>> FloatingTiles { get; }
 
@@ -51,11 +39,21 @@ namespace Mappy.Models
 
         int MapHeight { get; }
 
+        int FeatureGridWidth { get; }
+
+        int FeatureGridHeight { get; }
+
         int SeaLevel { get; }
+
+        Rectangle2D ViewportRectangle { get; set; }
+
+        FeatureInstance GetFeatureInstance(Guid id);
+
+        IEnumerable<FeatureInstance> EnumerateFeatureInstances(); 
 
         void DragDropStartPosition(int index, int x, int y);
 
-        void DragDropTile(int id, int x, int y);
+        void DragDropTile(IMapTile tile, int x, int y);
 
         void DragDropFeature(string name, int x, int y);
 

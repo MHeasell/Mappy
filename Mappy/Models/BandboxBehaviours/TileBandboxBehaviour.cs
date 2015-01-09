@@ -12,7 +12,7 @@
     /// </summary>
     public class TileBandboxBehaviour : Notifier, IBandboxBehaviour
     {
-        private readonly CoreModel model;
+        private readonly IBandboxModel model;
 
         private Rectangle bandboxRectangle;
 
@@ -24,7 +24,7 @@
 
         private int bufferY;
 
-        public TileBandboxBehaviour(CoreModel model)
+        public TileBandboxBehaviour(IBandboxModel model)
         {
             this.model = model;
         }
@@ -121,5 +121,10 @@
 
             this.BandboxRectangle = new Rectangle(minX * 32, minY * 32, width * 32, height * 32);
         }
+    }
+
+    public interface IBandboxModel
+    {
+        void LiftAndSelectArea(int x, int y, int width, int height);
     }
 }

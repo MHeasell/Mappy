@@ -5,10 +5,6 @@
 
     public interface ISelectionModel : IBindingMapModel
     {
-        event EventHandler SelectedTileChanged;
-
-        event EventHandler SelectedStartPositionChanged;
-
         int? SelectedTile { get; }
 
         int? SelectedStartPosition { get; }

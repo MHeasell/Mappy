@@ -126,6 +126,7 @@
     <Compile Include="Models\IDialogService.cs" />
     <Compile Include="Models\IMainFormModel.cs" />
     <Compile Include="Models\IMainModel.cs" />
+    <Compile Include="Models\IMapViewSettingsModel.cs" />
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
     <Compile Include="Models\SelectionMapModel.cs" />
@@ -144,8 +145,6 @@
     <Compile Include="Operations\SelectionModel\UpdateMinimapOperation.cs" />
     <Compile Include="Operations\SetSealevelOperation.cs" />
     <Compile Include="Presentation\IMapView.cs" />
-    <Compile Include="Presentation\MapPresenter.cs" />
-    <Compile Include="Presentation\MapViewEventAdapter.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -161,6 +160,12 @@
     <Compile Include="UI\Controls\ImageLayerCollection.cs" />
     <Compile Include="UI\Controls\ImageLayerView.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\MapViewPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\MapViewPanel.Designer.cs">
+      <DependentUpon>MapViewPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Controls\SectionView.cs">
       <SubType>UserControl</SubType>
@@ -272,6 +277,9 @@
     <Compile Include="Views\SectionImportPaths.cs" />
     <EmbeddedResource Include="UI\Controls\FeatureView.resx">
       <DependentUpon>FeatureView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\MapViewPanel.resx">
+      <DependentUpon>MapViewPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Controls\StartPositionsView.resx">
       <DependentUpon>StartPositionsView.cs</DependentUpon>

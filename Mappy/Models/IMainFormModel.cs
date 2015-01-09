@@ -31,8 +31,6 @@
 
         string FilePath { get; }
 
-        bool IsFileOpen { get; }
-
         bool IsFileReadOnly { get; }
 
         bool GridVisible { get; set; }
@@ -45,13 +43,7 @@
 
         bool MinimapVisible { get; }
 
-        int MapWidth { get; }
-
-        int MapHeight { get; }
-
         int SeaLevel { get; }
-
-        Rectangle2D ViewportRectangle { get; set; }
 
         void Initialize();
 

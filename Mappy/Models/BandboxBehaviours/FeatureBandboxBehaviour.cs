@@ -1,6 +1,8 @@
 namespace Mappy.Models.BandboxBehaviours
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
 
@@ -12,7 +14,7 @@ namespace Mappy.Models.BandboxBehaviours
     {
         private readonly ImageLayerView view;
 
-        private readonly CoreModel model;
+        private readonly IFeatureBandboxModel model;
 
         private Point bandboxStartPoint;
 
@@ -20,7 +22,7 @@ namespace Mappy.Models.BandboxBehaviours
 
         private Rectangle bandboxRectangle;
 
-        public FeatureBandboxBehaviour(ImageLayerView view, CoreModel model)
+        public FeatureBandboxBehaviour(ImageLayerView view, IFeatureBandboxModel model)
         {
             this.view = view;
             this.model = model;
@@ -56,7 +58,7 @@ namespace Mappy.Models.BandboxBehaviours
 
         public void CommitBandbox()
         {
-            var items = this.view.Items.EnumerateIntersecting(this.model.BandboxRectangle);
+            var items = this.view.Items.EnumerateIntersecting(this.BandboxRectangle);
             var filteredItems = items.Where(x => x.Visible && !x.Locked && x.Tag is FeatureTag);
 
             var indices = filteredItems.Select(x => ((FeatureTag)x.Tag).FeatureId);
@@ -79,5 +81,10 @@ namespace Mappy.Models.BandboxBehaviours
 
             this.BandboxRectangle = new Rectangle(minX, minY, width, height);
         }
+    }
+
+    public interface IFeatureBandboxModel
+    {
+        void SelectFeatures(IEnumerable<Guid> indices);
     }
 }

@@ -40,8 +40,7 @@
             var model = new CoreModel(svc);
             mainForm.SetModel(model);
 
-            var mapPresenter = new MapPresenter(mainForm.mapView, model);
-            new MapViewEventAdapter(mainForm.mapView, mapPresenter);
+            mainForm.mapPanelView.SetSettingsModel(model);
 
             var minimapForm = new MinimapForm();
             minimapForm.Owner = mainForm;

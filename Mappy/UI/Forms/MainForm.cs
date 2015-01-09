@@ -7,8 +7,6 @@
     using System.Linq;
     using System.Windows.Forms;
 
-    using Geometry;
-
     using Mappy.Models;
 
     public partial class MainForm : Form
@@ -22,36 +20,10 @@
             this.InitializeComponent();
         }
 
-        public Rectangle ViewportRect
-        {
-            get
-            {
-                Point loc = this.mapView.AutoScrollPosition;
-                loc.X *= -1;
-                loc.Y *= -1;
-                return new Rectangle(loc, this.mapView.ClientSize);
-            }
-        }
-
         public void SetModel(IMainFormModel model)
         {
             model.PropertyChanged += this.ModelOnPropertyChanged;
             this.model = model;
-        }
-
-        private void UpdateMinimapViewport()
-        {
-            if (this.model == null)
-            {
-                return;
-            }
-
-            this.model.ViewportRectangle = this.ConvertToNormalizedViewport(this.ViewportRect);
-        }
-
-        private void SetViewportPosition(int x, int y)
-        {
-            this.mapView.AutoScrollPosition = new Point(x, y);
         }
 
         private void OpenMenuItemClick(object sender, EventArgs e)
@@ -62,11 +34,6 @@
         private void ToggleHeightmapMenuItemClick(object sender, EventArgs e)
         {
             this.model.ToggleHeightmap();
-        }
-
-        private void MapPanel1SizeChanged(object sender, EventArgs e)
-        {
-            this.UpdateMinimapViewport();
         }
 
         private void PreferencesMenuItemClick(object sender, EventArgs e)
@@ -262,11 +229,6 @@
             this.model.ExportHeightmap();
         }
 
-        private void MapViewScroll(object sender, ScrollEventArgs e)
-        {
-            this.UpdateMinimapViewport();
-        }
-
         private void ImportMinimapMenuItemClick(object sender, EventArgs e)
         {
             this.model.ImportMinimap();
@@ -315,7 +277,6 @@
                 case "MapOpen":
                     this.UpdateSave();
                     this.mapAttributesMenuItem.Enabled = this.model.MapOpen;
-                    this.UpdateMinimapViewport();
                     this.closeMenuItem.Enabled = this.model.MapOpen;
                     this.seaLevelLabel.Enabled = this.model.MapOpen;
                     this.seaLevelValueLabel.Enabled = this.model.MapOpen;
@@ -330,7 +291,7 @@
                     this.importCustomSectionMenuItem.Enabled = this.model.MapOpen;
                     break;
                 case "IsFileOpen":
-                    this.saveAsMenuItem.Enabled = this.model.IsFileOpen;
+                    this.saveAsMenuItem.Enabled = this.model.MapOpen;
                     this.UpdateTitleText();
                     break;
                 case "FilePath":
@@ -358,57 +319,11 @@
                 case "FeaturesVisible":
                     this.toggleFeaturesMenuItem.Checked = this.model.FeaturesVisible;
                     break;
-                case "ViewportRectangle":
-                    this.UpdateViewViewportRect();
-                    break;
                 case "GridVisible":
                 case "GridSize":
                     this.UpdateGridCheckboxes();
                     break;
             }
-        }
-
-        private Rectangle2D ConvertToNormalizedViewport(Rectangle rect)
-        {
-            if (!this.model.MapOpen)
-            {
-                return Rectangle2D.Empty;
-            }
-
-            int widthScale = (this.model.MapWidth * 32) - 32;
-            int heightScale = (this.model.MapHeight * 32) - 128;
-
-            double x = rect.X / (double)widthScale;
-            double y = rect.Y / (double)heightScale;
-            double w = rect.Width / (double)widthScale;
-            double h = rect.Height / (double)heightScale;
-
-            return Rectangle2D.FromCorner(x, y, w, h);
-        }
-
-        private Rectangle ConvertToClientViewport(Rectangle2D rect)
-        {
-            if (!this.model.MapOpen)
-            {
-                return Rectangle.Empty;
-            }
-
-            int widthScale = (this.model.MapWidth * 32) - 32;
-            int heightScale = (this.model.MapHeight * 32) - 128;
-
-            int x = (int)Math.Round(rect.MinX * widthScale);
-            int y = (int)Math.Round(rect.MinY * heightScale);
-            int w = (int)Math.Round(rect.Width * widthScale);
-            int h = (int)Math.Round(rect.Height * heightScale);
-
-            return new Rectangle(x, y, w, h);
-        }
-
-        private void UpdateViewViewportRect()
-        {
-            var rect = this.model.ViewportRectangle;
-            var clientRect = this.ConvertToClientViewport(rect);
-            this.SetViewportPosition(clientRect.X, clientRect.Y);
         }
 
         private void UpdateSave()
@@ -423,7 +338,7 @@
 
         private string GenerateTitleText()
         {
-            if (!this.model.IsFileOpen)
+            if (!this.model.MapOpen)
             {
                 return ProgramName;
             }

@@ -83,16 +83,16 @@
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sidebarTabs = new System.Windows.Forms.TabControl();
             this.sectionsTab = new System.Windows.Forms.TabPage();
-            this.sectionsView = new Mappy.UI.Controls.SectionView();
             this.featuresTab = new System.Windows.Forms.TabPage();
-            this.featureView = new Mappy.UI.Controls.FeatureView();
             this.startPositionsTab = new System.Windows.Forms.TabPage();
-            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             this.attributesTab = new System.Windows.Forms.TabPage();
             this.seaLevelValueLabel = new System.Windows.Forms.Label();
             this.seaLevelLabel = new System.Windows.Forms.Label();
             this.seaLevelTrackbar = new System.Windows.Forms.TrackBar();
-            this.mapView = new Mappy.UI.Controls.ImageLayerView();
+            this.sectionsView = new Mappy.UI.Controls.SectionView();
+            this.featureView = new Mappy.UI.Controls.FeatureView();
+            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
+            this.mapPanelView = new Mappy.UI.Controls.MapViewPanel();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -539,7 +539,7 @@
             // aboutMenuItem
             // 
             this.aboutMenuItem.Name = "aboutMenuItem";
-            this.aboutMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutMenuItem.Text = "&About...";
             this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItemClick);
             // 
@@ -567,16 +567,6 @@
             this.sectionsTab.Text = "Sections";
             this.sectionsTab.UseVisualStyleBackColor = true;
             // 
-            // sectionsView
-            // 
-            this.sectionsView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sectionsView.Location = new System.Drawing.Point(3, 3);
-            this.sectionsView.Margin = new System.Windows.Forms.Padding(4);
-            this.sectionsView.Name = "sectionsView";
-            this.sectionsView.Sections = null;
-            this.sectionsView.Size = new System.Drawing.Size(201, 506);
-            this.sectionsView.TabIndex = 3;
-            // 
             // featuresTab
             // 
             this.featuresTab.Controls.Add(this.featureView);
@@ -588,16 +578,6 @@
             this.featuresTab.Text = "Features";
             this.featuresTab.UseVisualStyleBackColor = true;
             // 
-            // featureView
-            // 
-            this.featureView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.featureView.Features = null;
-            this.featureView.Location = new System.Drawing.Point(3, 3);
-            this.featureView.Margin = new System.Windows.Forms.Padding(4);
-            this.featureView.Name = "featureView";
-            this.featureView.Size = new System.Drawing.Size(201, 506);
-            this.featureView.TabIndex = 0;
-            // 
             // startPositionsTab
             // 
             this.startPositionsTab.Controls.Add(this.startPositionsView1);
@@ -608,15 +588,6 @@
             this.startPositionsTab.TabIndex = 2;
             this.startPositionsTab.Text = "Starts";
             this.startPositionsTab.UseVisualStyleBackColor = true;
-            // 
-            // startPositionsView1
-            // 
-            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
-            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
-            this.startPositionsView1.Name = "startPositionsView1";
-            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
-            this.startPositionsView1.TabIndex = 0;
             // 
             // attributesTab
             // 
@@ -670,29 +641,49 @@
             this.seaLevelTrackbar.ValueChanged += new System.EventHandler(this.TrackBar1ValueChanged);
             this.seaLevelTrackbar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SeaLevelTrackbarMouseUp);
             // 
-            // mapView
+            // sectionsView
             // 
-            this.mapView.AllowDrop = true;
-            this.mapView.CanvasColor = System.Drawing.Color.CornflowerBlue;
-            this.mapView.CanvasSize = new System.Drawing.Size(0, 0);
-            this.mapView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapView.GridColor = System.Drawing.Color.Black;
-            this.mapView.GridSize = new System.Drawing.Size(16, 16);
-            this.mapView.GridVisible = false;
-            this.mapView.Location = new System.Drawing.Point(215, 24);
-            this.mapView.Name = "mapView";
-            this.mapView.Size = new System.Drawing.Size(569, 538);
-            this.mapView.TabIndex = 5;
-            this.mapView.Text = "imageLayerView1";
-            this.mapView.Scroll += new System.Windows.Forms.ScrollEventHandler(this.MapViewScroll);
-            this.mapView.ClientSizeChanged += new System.EventHandler(this.MapPanel1SizeChanged);
+            this.sectionsView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sectionsView.Location = new System.Drawing.Point(3, 3);
+            this.sectionsView.Margin = new System.Windows.Forms.Padding(4);
+            this.sectionsView.Name = "sectionsView";
+            this.sectionsView.Sections = null;
+            this.sectionsView.Size = new System.Drawing.Size(201, 506);
+            this.sectionsView.TabIndex = 3;
+            // 
+            // featureView
+            // 
+            this.featureView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.featureView.Features = null;
+            this.featureView.Location = new System.Drawing.Point(3, 3);
+            this.featureView.Margin = new System.Windows.Forms.Padding(4);
+            this.featureView.Name = "featureView";
+            this.featureView.Size = new System.Drawing.Size(201, 506);
+            this.featureView.TabIndex = 0;
+            // 
+            // startPositionsView1
+            // 
+            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
+            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
+            this.startPositionsView1.Name = "startPositionsView1";
+            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
+            this.startPositionsView1.TabIndex = 0;
+            // 
+            // mapPanelView
+            // 
+            this.mapPanelView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mapPanelView.Location = new System.Drawing.Point(215, 24);
+            this.mapPanelView.Name = "mapPanelView";
+            this.mapPanelView.Size = new System.Drawing.Size(569, 538);
+            this.mapPanelView.TabIndex = 5;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 562);
-            this.Controls.Add(this.mapView);
+            this.Controls.Add(this.mapPanelView);
             this.Controls.Add(this.sidebarTabs);
             this.Controls.Add(this.topMenu);
             this.MainMenuStrip = this.topMenu;
@@ -761,13 +752,13 @@
         private System.Windows.Forms.ToolStripMenuItem copyMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pasteMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cutMenuItem;
-        public ImageLayerView mapView;
         private System.Windows.Forms.ToolStripMenuItem exportMinimapMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportHeightmapMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importMinimapMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importHeightmapMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportMapImageMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importCustomSectionMenuItem;
+        public MapViewPanel mapPanelView;
     }
 }
 
