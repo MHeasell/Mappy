@@ -33,35 +33,6 @@
             }
         }
 
-        public int SeaLevel
-        {
-            get
-            {
-                return this.seaLevelTrackbar.Value;
-            }
-
-            set
-            {
-                this.seaLevelTrackbar.Value = value;
-                this.seaLevelValueLabel.Text = value.ToString(CultureInfo.CurrentCulture);
-            }
-        }
-
-        public bool SeaLevelEditEnabled
-        {
-            get
-            {
-                return this.seaLevelTrackbar.Enabled;
-            }
-
-            set
-            {
-                this.seaLevelLabel.Enabled = value;
-                this.seaLevelValueLabel.Enabled = value;
-                this.seaLevelTrackbar.Enabled = value;
-            }
-        }
-
         public void SetModel(IMainFormModel model)
         {
             model.PropertyChanged += this.ModelOnPropertyChanged;
@@ -346,7 +317,9 @@
                     this.mapAttributesMenuItem.Enabled = this.model.MapOpen;
                     this.UpdateMinimapViewport();
                     this.closeMenuItem.Enabled = this.model.MapOpen;
-                    this.SeaLevelEditEnabled = this.model.MapOpen;
+                    this.seaLevelLabel.Enabled = this.model.MapOpen;
+                    this.seaLevelValueLabel.Enabled = this.model.MapOpen;
+                    this.seaLevelTrackbar.Enabled = this.model.MapOpen;
                     this.generateMinimapMenuItem.Enabled = this.model.MapOpen;
                     this.generateMinimapHighQualityMenuItem.Enabled = this.model.MapOpen;
                     this.importMinimapMenuItem.Enabled = this.model.MapOpen;
@@ -372,7 +345,9 @@
                     this.UpdateTitleText();
                     break;
                 case "SeaLevel":
-                    this.SeaLevel = this.model.SeaLevel;
+                    int val = this.model.SeaLevel;
+                    this.seaLevelTrackbar.Value = val;
+                    this.seaLevelValueLabel.Text = val.ToString(CultureInfo.CurrentCulture);
                     break;
                 case "MinimapVisible":
                     this.toggleMinimapMenuItem.Checked = this.model.MinimapVisible;
