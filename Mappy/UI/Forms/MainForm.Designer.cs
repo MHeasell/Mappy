@@ -414,7 +414,6 @@
             // 
             // toggleHeightmapMenuItem
             // 
-            this.toggleHeightmapMenuItem.CheckOnClick = true;
             this.toggleHeightmapMenuItem.Name = "toggleHeightmapMenuItem";
             this.toggleHeightmapMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
             this.toggleHeightmapMenuItem.Size = new System.Drawing.Size(177, 22);
@@ -523,7 +522,6 @@
             // toggleFeaturesMenuItem
             // 
             this.toggleFeaturesMenuItem.Checked = true;
-            this.toggleFeaturesMenuItem.CheckOnClick = true;
             this.toggleFeaturesMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toggleFeaturesMenuItem.Name = "toggleFeaturesMenuItem";
             this.toggleFeaturesMenuItem.Size = new System.Drawing.Size(177, 22);

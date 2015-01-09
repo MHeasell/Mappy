@@ -330,6 +330,12 @@
                 case "MinimapVisible":
                     this.toggleMinimapMenuItem.Checked = this.Model.MinimapVisible;
                     break;
+                case "HeightmapVisible":
+                    this.toggleHeightmapMenuItem.Checked = this.Model.HeightmapVisible;
+                    break;
+                case "FeaturesVisible":
+                    this.toggleFeaturesMenuItem.Checked = this.Model.FeaturesVisible;
+                    break;
                 case "ViewportRectangle":
                     this.UpdateViewViewportRect();
                     break;
