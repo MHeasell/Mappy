@@ -12,9 +12,8 @@
 
     using Mappy.Data;
     using Mappy.Models;
-    using Mappy.Views;
 
-    public partial class MainForm : Form, IMainView
+    public partial class MainForm : Form
     {
         private const string ProgramName = "Mappy";
 
