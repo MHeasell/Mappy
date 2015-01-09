@@ -28,163 +28,6 @@
 
         public IMainModel Model { get; private set; }
 
-        public void SetModel(IMainModel model)
-        {
-            model.PropertyChanged += this.ModelOnPropertyChanged;
-            this.Model = model;
-        }
-
-        private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "Sections":
-                    this.Sections = this.Model.Sections;
-                    break;
-                case "FeatureRecords":
-                    this.Features = this.Model.FeatureRecords.EnumerateAll().ToList();
-                    break;
-                case "CanUndo":
-                    this.UndoEnabled = this.Model.CanUndo;
-                    break;
-                case "CanRedo":
-                    this.RedoEnabled = this.Model.CanRedo;
-                    break;
-                case "CanCopy":
-                    this.CopyEnabled = this.Model.CanCopy;
-                    break;
-                case "CanCut":
-                    this.CutEnabled = this.Model.CanCut;
-                    break;
-                case "CanPaste":
-                    this.PasteEnabled = this.Model.CanPaste;
-                    break;
-                case "MapOpen":
-                    this.UpdateSave();
-                    this.OpenAttributesEnabled = this.Model.MapOpen;
-                    this.UpdateMinimapViewport();
-                    this.CloseEnabled = this.Model.MapOpen;
-                    this.SeaLevelEditEnabled = this.Model.MapOpen;
-                    this.RefreshMinimapEnabled = this.Model.MapOpen;
-                    this.RefreshMinimapHighQualityEnabled = this.Model.MapOpen;
-                    this.ImportMinimapEnabled = this.Model.MapOpen;
-                    this.ExportMinimapEnabled = this.Model.MapOpen;
-                    this.ExportHeightmapEnabled = this.Model.MapOpen;
-                    this.ImportHeightmapEnabled = this.Model.MapOpen;
-                    this.ExportMapImageEnabled = this.Model.MapOpen;
-                    this.ImportCustomSectionEnabled = this.Model.MapOpen;
-                    break;
-                case "IsFileOpen":
-                    this.SaveAsEnabled = this.Model.IsFileOpen;
-                    this.UpdateTitleText();
-                    break;
-                case "FilePath":
-                    this.UpdateSave();
-                    this.UpdateTitleText();
-                    break;
-                case "IsDirty":
-                    this.UpdateTitleText();
-                    break;
-                case "IsFileReadOnly":
-                    this.UpdateSave();
-                    this.UpdateTitleText();
-                    break;
-                case "SeaLevel":
-                    this.SeaLevel = this.Model.SeaLevel;
-                    break;
-                case "MinimapVisible":
-                    this.MinimapVisibleChecked = this.Model.MinimapVisible;
-                    break;
-                case "ViewportRectangle":
-                    this.UpdateViewViewportRect();
-                    break;
-            }
-        }
-
-        public void UpdateMinimapViewport()
-        {
-            if (this.Model == null)
-            {
-                return;
-            }
-
-            this.Model.ViewportRectangle = this.ConvertToNormalizedViewport(this.ViewportRect);
-        }
-
-        private Rectangle2D ConvertToNormalizedViewport(Rectangle rect)
-        {
-            if (!this.Model.MapOpen)
-            {
-                return Rectangle2D.Empty;
-            }
-
-            int widthScale = (this.Model.MapWidth * 32) - 32;
-            int heightScale = (this.Model.MapHeight * 32) - 128;
-
-            double x = rect.X / (double)widthScale;
-            double y = rect.Y / (double)heightScale;
-            double w = rect.Width / (double)widthScale;
-            double h = rect.Height / (double)heightScale;
-
-            return Rectangle2D.FromCorner(x, y, w, h);
-        }
-
-        private Rectangle ConvertToClientViewport(Rectangle2D rect)
-        {
-            if (!this.Model.MapOpen)
-            {
-                return Rectangle.Empty;
-            }
-
-            int widthScale = (this.Model.MapWidth * 32) - 32;
-            int heightScale = (this.Model.MapHeight * 32) - 128;
-
-            int x = (int)Math.Round(rect.MinX * widthScale);
-            int y = (int)Math.Round(rect.MinY * heightScale);
-            int w = (int)Math.Round(rect.Width * widthScale);
-            int h = (int)Math.Round(rect.Height * heightScale);
-
-            return new Rectangle(x, y, w, h);
-        }
-
-        private void UpdateViewViewportRect()
-        {
-            var rect = this.Model.ViewportRectangle;
-            var clientRect = this.ConvertToClientViewport(rect);
-            this.SetViewportPosition(clientRect.X, clientRect.Y);
-        }
-
-        private void UpdateSave()
-        {
-            this.SaveEnabled = this.Model.MapOpen && this.Model.FilePath != null && !this.Model.IsFileReadOnly;
-        }
-
-        private void UpdateTitleText()
-        {
-            this.TitleText = this.GenerateTitleText();
-        }
-
-        private string GenerateTitleText()
-        {
-            if (!this.Model.IsFileOpen)
-            {
-                return ProgramName;
-            }
-
-            string filename = this.Model.FilePath ?? "Untitled";
-            if (this.Model.IsDirty)
-            {
-                filename += "*";
-            }
-
-            if (this.Model.IsFileReadOnly)
-            {
-                filename += " [read only]";
-            }
-
-            return filename + " - " + ProgramName;
-        }
-
         public string TitleText
         {
             get { return this.Text; }
@@ -472,6 +315,22 @@
             }
         }
 
+        public void SetModel(IMainModel model)
+        {
+            model.PropertyChanged += this.ModelOnPropertyChanged;
+            this.Model = model;
+        }
+
+        public void UpdateMinimapViewport()
+        {
+            if (this.Model == null)
+            {
+                return;
+            }
+
+            this.Model.ViewportRectangle = this.ConvertToNormalizedViewport(this.ViewportRect);
+        }
+
         public void SetViewportPosition(int x, int y)
         {
             this.imageLayerView1.AutoScrollPosition = new Point(x, y);
@@ -661,6 +520,147 @@
         private void toolStripMenuItem22_Click(object sender, EventArgs e)
         {
             this.Model.ImportCustomSection();
+        }
+
+        private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "Sections":
+                    this.Sections = this.Model.Sections;
+                    break;
+                case "FeatureRecords":
+                    this.Features = this.Model.FeatureRecords.EnumerateAll().ToList();
+                    break;
+                case "CanUndo":
+                    this.UndoEnabled = this.Model.CanUndo;
+                    break;
+                case "CanRedo":
+                    this.RedoEnabled = this.Model.CanRedo;
+                    break;
+                case "CanCopy":
+                    this.CopyEnabled = this.Model.CanCopy;
+                    break;
+                case "CanCut":
+                    this.CutEnabled = this.Model.CanCut;
+                    break;
+                case "CanPaste":
+                    this.PasteEnabled = this.Model.CanPaste;
+                    break;
+                case "MapOpen":
+                    this.UpdateSave();
+                    this.OpenAttributesEnabled = this.Model.MapOpen;
+                    this.UpdateMinimapViewport();
+                    this.CloseEnabled = this.Model.MapOpen;
+                    this.SeaLevelEditEnabled = this.Model.MapOpen;
+                    this.RefreshMinimapEnabled = this.Model.MapOpen;
+                    this.RefreshMinimapHighQualityEnabled = this.Model.MapOpen;
+                    this.ImportMinimapEnabled = this.Model.MapOpen;
+                    this.ExportMinimapEnabled = this.Model.MapOpen;
+                    this.ExportHeightmapEnabled = this.Model.MapOpen;
+                    this.ImportHeightmapEnabled = this.Model.MapOpen;
+                    this.ExportMapImageEnabled = this.Model.MapOpen;
+                    this.ImportCustomSectionEnabled = this.Model.MapOpen;
+                    break;
+                case "IsFileOpen":
+                    this.SaveAsEnabled = this.Model.IsFileOpen;
+                    this.UpdateTitleText();
+                    break;
+                case "FilePath":
+                    this.UpdateSave();
+                    this.UpdateTitleText();
+                    break;
+                case "IsDirty":
+                    this.UpdateTitleText();
+                    break;
+                case "IsFileReadOnly":
+                    this.UpdateSave();
+                    this.UpdateTitleText();
+                    break;
+                case "SeaLevel":
+                    this.SeaLevel = this.Model.SeaLevel;
+                    break;
+                case "MinimapVisible":
+                    this.MinimapVisibleChecked = this.Model.MinimapVisible;
+                    break;
+                case "ViewportRectangle":
+                    this.UpdateViewViewportRect();
+                    break;
+            }
+        }
+
+        private Rectangle2D ConvertToNormalizedViewport(Rectangle rect)
+        {
+            if (!this.Model.MapOpen)
+            {
+                return Rectangle2D.Empty;
+            }
+
+            int widthScale = (this.Model.MapWidth * 32) - 32;
+            int heightScale = (this.Model.MapHeight * 32) - 128;
+
+            double x = rect.X / (double)widthScale;
+            double y = rect.Y / (double)heightScale;
+            double w = rect.Width / (double)widthScale;
+            double h = rect.Height / (double)heightScale;
+
+            return Rectangle2D.FromCorner(x, y, w, h);
+        }
+
+        private Rectangle ConvertToClientViewport(Rectangle2D rect)
+        {
+            if (!this.Model.MapOpen)
+            {
+                return Rectangle.Empty;
+            }
+
+            int widthScale = (this.Model.MapWidth * 32) - 32;
+            int heightScale = (this.Model.MapHeight * 32) - 128;
+
+            int x = (int)Math.Round(rect.MinX * widthScale);
+            int y = (int)Math.Round(rect.MinY * heightScale);
+            int w = (int)Math.Round(rect.Width * widthScale);
+            int h = (int)Math.Round(rect.Height * heightScale);
+
+            return new Rectangle(x, y, w, h);
+        }
+
+        private void UpdateViewViewportRect()
+        {
+            var rect = this.Model.ViewportRectangle;
+            var clientRect = this.ConvertToClientViewport(rect);
+            this.SetViewportPosition(clientRect.X, clientRect.Y);
+        }
+
+        private void UpdateSave()
+        {
+            this.SaveEnabled = this.Model.MapOpen && this.Model.FilePath != null && !this.Model.IsFileReadOnly;
+        }
+
+        private void UpdateTitleText()
+        {
+            this.TitleText = this.GenerateTitleText();
+        }
+
+        private string GenerateTitleText()
+        {
+            if (!this.Model.IsFileOpen)
+            {
+                return ProgramName;
+            }
+
+            string filename = this.Model.FilePath ?? "Untitled";
+            if (this.Model.IsDirty)
+            {
+                filename += "*";
+            }
+
+            if (this.Model.IsFileReadOnly)
+            {
+                filename += " [read only]";
+            }
+
+            return filename + " - " + ProgramName;
         }
     }
 }
