@@ -25,7 +25,7 @@
     using TAUtil.Gdi.Palette;
     using TAUtil.Tnt;
 
-    public class SelectionMapModel : Notifier, ISelectionModel, IMainModel, IBandboxModel
+    public class UndoableMapModel : Notifier, ISelectionModel, IMainModel, IBandboxModel
     {
         private readonly OperationManager undoManager = new OperationManager();
 
@@ -61,7 +61,7 @@
 
         private bool canCopy;
 
-        public SelectionMapModel(IBindingMapModel model, IDialogService svc, string path, bool readOnly)
+        public UndoableMapModel(IBindingMapModel model, IDialogService svc, string path, bool readOnly)
         {
             this.FilePath = path;
             this.IsFileReadOnly = readOnly;

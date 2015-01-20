@@ -36,7 +36,7 @@
 
         private readonly IDialogService dialogService;
 
-        private SelectionMapModel map;
+        private UndoableMapModel map;
 
         private bool heightmapVisible;
         private bool featuresVisible = true;
@@ -74,7 +74,7 @@
             }
         }
 
-        public SelectionMapModel Map
+        public UndoableMapModel Map
         {
             get
             {
@@ -738,7 +738,7 @@
 
         private void SetMapModel(MapModel model, string path, bool readOnly)
         {
-            this.Map = new SelectionMapModel(new BindingMapModel(model), this.dialogService, path, readOnly);
+            this.Map = new UndoableMapModel(new BindingMapModel(model), this.dialogService, path, readOnly);
         }
 
         private void New(int width, int height)
