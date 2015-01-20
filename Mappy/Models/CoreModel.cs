@@ -196,7 +196,7 @@
         {
             get
             {
-                return this.Map == null ? 0 : this.Map.Tile.TileGrid.Width;
+                return this.Map == null ? 0 : this.Map.BaseTile.TileGrid.Width;
             }
         }
 
@@ -204,7 +204,7 @@
         {
             get
             {
-                return this.Map == null ? 0 : this.Map.Tile.TileGrid.Height;
+                return this.Map == null ? 0 : this.Map.BaseTile.TileGrid.Height;
             }
         }
 
@@ -738,7 +738,7 @@
 
         private void SetMapModel(MapModel model, string path, bool readOnly)
         {
-            this.Map = new UndoableMapModel(new BindingMapModel(model), this.dialogService, path, readOnly);
+            this.Map = new UndoableMapModel(model, this.dialogService, path, readOnly);
         }
 
         private void New(int width, int height)

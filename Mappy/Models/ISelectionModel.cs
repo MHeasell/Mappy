@@ -2,9 +2,22 @@
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
 
-    public interface ISelectionModel : IBindingMapModel
+    using Mappy.Collections;
+
+    public interface ISelectionModel : IMapModel, INotifyPropertyChanged
     {
+        event EventHandler<FeatureInstanceEventArgs> FeatureInstanceChanged;
+
+        event EventHandler<GridEventArgs> TileGridChanged;
+
+        event EventHandler<GridEventArgs> HeightGridChanged;
+
+        event ListChangedEventHandler FloatingTilesChanged;
+
+        event EventHandler<SparseGridEventArgs> VoidsChanged;
+
         int? SelectedTile { get; }
 
         int? SelectedStartPosition { get; }

@@ -25,13 +25,9 @@
     using TAUtil.Gdi.Palette;
     using TAUtil.Tnt;
 
-    public class UndoableMapModel : Notifier, ISelectionModel, IMainModel, IBandboxModel
+    public class UndoableMapModel : Notifier, IMainModel, IBandboxModel
     {
         private readonly OperationManager undoManager = new OperationManager();
-
-        private readonly IBindingMapModel model;
-
-        private readonly ObservableCollection<Guid> selectedFeatures = new ObservableCollection<Guid>();
 
         private readonly IDialogService dialogService;
 
@@ -39,15 +35,13 @@
 
         private readonly IBandboxBehaviour bandboxBehaviour;
 
-        private int? selectedTile;
+        private readonly ISelectionModel model;
 
-        private int? selectedStartPosition;
+        private Rectangle2D viewportRectangle;
 
         private int deltaX;
 
         private int deltaY;
-
-        private Rectangle2D viewportRectangle;
 
         private bool previousTranslationOpen;
 
@@ -61,7 +55,7 @@
 
         private bool canCopy;
 
-        public UndoableMapModel(IBindingMapModel model, IDialogService svc, string path, bool readOnly)
+        public UndoableMapModel(ISelectionModel model, IDialogService svc, string path, bool readOnly)
         {
             this.FilePath = path;
             this.IsFileReadOnly = readOnly;
@@ -72,17 +66,14 @@
 
             this.model = model;
 
-            model.PropertyChanged += this.ModelPropertyChanged;
+            model.PropertyChanged += this.ModelOnPropertyChanged;
 
-            model.FloatingTiles.ListChanged += this.FloatingTilesOnListChanged;
-            model.FloatingTiles.ListChanged += this.FloatingTilesListChanged;
+            model.FloatingTilesChanged += this.FloatingTilesOnListChanged;
 
-            model.Tile.TileGridChanged += this.TileOnTileGridChanged;
+            model.TileGridChanged += this.TileOnTileGridChanged;
 
-            model.Tile.HeightGridChanged += this.TileOnHeightGridChanged;
+            model.HeightGridChanged += this.TileOnHeightGridChanged;
             model.Attributes.StartPositionChanged += this.AttributesOnStartPositionChanged;
-
-            model.FeatureInstanceChanged += this.OnFeatureInstanceChanged;
 
             this.bandboxBehaviour = new TileBandboxBehaviour(this);
             this.bandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
@@ -91,7 +82,7 @@
             this.undoManager.CanRedoChanged += this.UndoManagerOnCanRedoChanged;
             this.undoManager.IsMarkedChanged += this.UndoManagerOnIsMarkedChanged;
 
-            this.selectedFeatures.CollectionChanged += this.SelectedFeaturesCollectionChanged;
+            this.model.SelectedFeatures.CollectionChanged += this.SelectedFeaturesCollectionChanged;
         }
 
         public event EventHandler<ListChangedEventArgs> TilesChanged;
@@ -183,11 +174,6 @@
             {
                 return this.model.Minimap;
             }
-
-            set
-            {
-                this.model.Minimap = value;
-            }
         }
 
         public int SeaLevel
@@ -196,43 +182,6 @@
             {
                 return this.model.SeaLevel;
             }
-
-            set
-            {
-                this.model.SeaLevel = value;
-            }
-        }
-
-        public MapAttributes Attributes
-        {
-            get
-            {
-                return this.model.Attributes;
-            }
-        }
-
-        public BindingMapTile Tile
-        {
-            get
-            {
-                return this.model.Tile;
-            }
-        }
-
-        public BindingList<Positioned<IMapTile>> FloatingTiles
-        {
-            get
-            {
-                return this.model.FloatingTiles;
-            }
-        }
-
-        public BindingSparseGrid<bool> Voids
-        {
-            get
-            {
-                return this.model.Voids;
-            }
         }
 
         public Rectangle BandboxRectangle
@@ -240,14 +189,6 @@
             get
             {
                 return this.bandboxBehaviour.BandboxRectangle;
-            }
-        }
-
-        IMapTile IMapModel.Tile
-        {
-            get
-            {
-                return this.Tile;
             }
         }
 
@@ -291,27 +232,11 @@
             }
         }
 
-        IList<Positioned<IMapTile>> IMainModel.FloatingTiles
+        public IList<Positioned<IMapTile>> FloatingTiles
         {
             get
             {
-                return this.FloatingTiles;
-            }
-        }
-
-        IList<Positioned<IMapTile>> IMapModel.FloatingTiles
-        {
-            get
-            {
-                return this.FloatingTiles;
-            }
-        }
-
-        ISparseGrid<bool> IMapModel.Voids
-        {
-            get
-            {
-                return this.Voids;
+                return this.model.FloatingTiles;
             }
         }
 
@@ -319,12 +244,7 @@
         {
             get
             {
-                return this.selectedStartPosition;
-            }
-
-            private set
-            {
-                this.SetField(ref this.selectedStartPosition, value, "SelectedStartPosition");
+                return this.model.SelectedStartPosition;
             }
         }
 
@@ -345,7 +265,7 @@
         {
             get
             {
-                return this.selectedFeatures;
+                return this.model.SelectedFeatures;
             }
         }
 
@@ -353,16 +273,7 @@
         {
             get
             {
-                return this.selectedTile;
-            }
-
-            private set
-            {
-                if (this.SetField(ref this.selectedTile, value, "SelectedTile"))
-                {
-                    this.UpdateCanCut();
-                    this.UpdateCanCopy();
-                }
+                return this.model.SelectedTile;
             }
         }
 
@@ -432,13 +343,8 @@
         {
             this.undoManager.Execute(
                 new CompositeOperation(
-                    OperationFactory.CreateDeselectAndMergeOperation(this),
-                    new SelectTileOperation(this, index)));
-        }
-
-        void ISelectionModel.SelectTile(int index)
-        {
-            this.SelectedTile = index;
+                    OperationFactory.CreateDeselectAndMergeOperation(this.model),
+                    new SelectTileOperation(this.model, index)));
         }
 
         public void OpenMapAttributes()
@@ -451,138 +357,25 @@
             }
         }
 
-        void ISelectionModel.DeselectTile()
-        {
-            this.SelectedTile = null;
-        }
-
-        void ISelectionModel.TranslateSelectedTile(int x, int y)
-        {
-            if (!this.SelectedTile.HasValue)
-            {
-                throw new InvalidOperationException("No tile selected.");
-            }
-
-            var tile = this.model.FloatingTiles[this.SelectedTile.Value];
-            var loc = tile.Location;
-            loc.X += x;
-            loc.Y += y;
-            tile.Location = loc;
-        }
-
-        void ISelectionModel.DeleteSelectedTile()
-        {
-            if (!this.SelectedTile.HasValue)
-            {
-                throw new InvalidOperationException("No tile selected.");
-            }
-
-            this.model.FloatingTiles.RemoveAt(this.SelectedTile.Value);
-        }
-
-        void ISelectionModel.MergeSelectedTile()
-        {
-            if (!this.SelectedTile.HasValue)
-            {
-                throw new InvalidOperationException("No tile selected.");
-            }
-
-            this.MergeTile(this.SelectedTile.Value);
-        }
-
         public void SelectFeature(Guid id)
         {
             this.undoManager.Execute(
                 new CompositeOperation(
-                    OperationFactory.CreateDeselectAndMergeOperation(this),
-                    new SelectFeatureOperation(this, id)));
-        }
-
-        void ISelectionModel.SelectFeature(Guid id)
-        {
-            this.SelectedFeatures.Add(id);
-        }
-
-        void ISelectionModel.DeselectFeature(Guid id)
-        {
-            this.SelectedFeatures.Remove(id);
-        }
-
-        void ISelectionModel.DeselectFeatures()
-        {
-            this.SelectedFeatures.Clear();
-        }
-
-        void ISelectionModel.DeletedSelectedFeatures()
-        {
-            // take a copy, since the selected list will change
-            // during deletion.
-            var features = new List<Guid>(this.SelectedFeatures);
-
-            foreach (var f in features)
-            {
-                this.model.RemoveFeatureInstance(f);
-            }
+                    OperationFactory.CreateDeselectAndMergeOperation(this.model),
+                    new SelectFeatureOperation(this.model, id)));
         }
 
         public void SelectStartPosition(int index)
         {
             this.undoManager.Execute(new CompositeOperation(
-                OperationFactory.CreateDeselectAndMergeOperation(this),
-                new SelectStartPositionOperation(this, index)));
-        }
-
-        void ISelectionModel.SelectStartPosition(int index)
-        {
-            this.SelectedStartPosition = index;
-        }
-
-        void ISelectionModel.DeselectStartPosition()
-        {
-            this.SelectedStartPosition = null;
-        }
-
-        void ISelectionModel.TranslateSelectedStartPosition(int x, int y)
-        {
-            if (!this.SelectedStartPosition.HasValue)
-            {
-                throw new InvalidOperationException("No start position selected.");
-            }
-
-            var pos = this.model.Attributes.GetStartPosition(this.SelectedStartPosition.Value);
-
-            if (!pos.HasValue)
-            {
-                throw new InvalidOperationException("Selected start position has not been placed.");
-            }
-
-            var newPos = pos.Value;
-            newPos.X += x;
-            newPos.Y += y;
-            this.model.Attributes.SetStartPosition(this.SelectedStartPosition.Value, newPos);
-        }
-
-        void ISelectionModel.DeleteSelectedStartPosition()
-        {
-            if (!this.SelectedStartPosition.HasValue)
-            {
-                throw new InvalidOperationException("No start position selected.");
-            }
-
-            this.model.Attributes.SetStartPosition(this.SelectedStartPosition.Value, null);
-        }
-
-        void ISelectionModel.DeselectAll()
-        {
-            ((ISelectionModel)this).DeselectFeatures();
-            ((ISelectionModel)this).DeselectStartPosition();
-            ((ISelectionModel)this).DeselectTile();
+                OperationFactory.CreateDeselectAndMergeOperation(this.model),
+                new SelectStartPositionOperation(this.model, index)));
         }
 
         public void ImportHeightmap()
         {
-            var w = this.Tile.HeightGrid.Width;
-            var h = this.Tile.HeightGrid.Height;
+            var w = this.model.Tile.HeightGrid.Width;
+            var h = this.model.Tile.HeightGrid.Height;
 
             var loc = this.dialogService.AskUserToChooseHeightmap(w, h);
             if (loc == null)
@@ -730,7 +523,7 @@
                 var worker = (BackgroundWorker)sender;
                 using (var s = File.Create(tempLoc))
                 {
-                    var success = Mappy.Util.Util.WriteMapImage(s, this.Tile.TileGrid, worker.ReportProgress, () => worker.CancellationPending);
+                    var success = Mappy.Util.Util.WriteMapImage(s, this.model.Tile.TileGrid, worker.ReportProgress, () => worker.CancellationPending);
                     args.Cancel = !success;
                 }
             };
@@ -787,7 +580,7 @@
 
             try
             {
-                var b = Mappy.Util.Util.ExportHeightmap(this.Tile.HeightGrid);
+                var b = Mappy.Util.Util.ExportHeightmap(this.model.Tile.HeightGrid);
                 using (var s = File.Create(loc))
                 {
                     b.Save(s, ImageFormat.Png);
@@ -802,12 +595,12 @@
         public void RefreshMinimap()
         {
             Bitmap minimap;
-            using (var adapter = new MapPixelImageAdapter(this.Tile.TileGrid))
+            using (var adapter = new MapPixelImageAdapter(this.model.Tile.TileGrid))
             {
                 minimap = Util.GenerateMinimap(adapter);
             }
 
-            var op = new UpdateMinimapOperation(this, minimap);
+            var op = new UpdateMinimapOperation(this.model, minimap);
             this.undoManager.Execute(op);
         }
 
@@ -862,9 +655,9 @@
             var location = new Point(x, y);
 
             var op = new CompositeOperation(
-                OperationFactory.CreateDeselectAndMergeOperation(this),
-                new ChangeStartPositionOperation(this, index, location),
-                new SelectStartPositionOperation(this, index));
+                OperationFactory.CreateDeselectAndMergeOperation(this.model),
+                new ChangeStartPositionOperation(this.model, index, location),
+                new SelectStartPositionOperation(this.model, index));
 
             this.undoManager.Execute(op);
             this.previousTranslationOpen = false;
@@ -885,7 +678,7 @@
                 return;
             }
 
-            var op = new SetSealevelOperation(this, value);
+            var op = new SetSealevelOperation(this.model, value);
 
             SetSealevelOperation prevOp = null;
             if (this.undoManager.CanUndo && this.previousSeaLevelOpen)
@@ -959,10 +752,10 @@
             if (featurePos.HasValue && !this.HasFeatureInstanceAt(featurePos.Value.X, featurePos.Value.Y))
             {
                 var inst = new FeatureInstance(Guid.NewGuid(), name, featurePos.Value.X, featurePos.Value.Y);
-                var addOp = new AddFeatureOperation(this, inst);
-                var selectOp = new SelectFeatureOperation(this, inst.Id);
+                var addOp = new AddFeatureOperation(this.model, inst);
+                var selectOp = new SelectFeatureOperation(this.model, inst.Id);
                 var op = new CompositeOperation(
-                    OperationFactory.CreateDeselectAndMergeOperation(this),
+                    OperationFactory.CreateDeselectAndMergeOperation(this.model),
                     addOp,
                     selectOp);
                 this.undoManager.Execute(op);
@@ -1034,11 +827,11 @@
                 this.FlushTranslation();
             }
 
-            var deselectOp = new DeselectOperation(this);
+            var deselectOp = new DeselectOperation(this.model);
 
             if (this.SelectedTile.HasValue)
             {
-                var mergeOp = OperationFactory.CreateMergeSectionOperation(this, this.SelectedTile.Value);
+                var mergeOp = OperationFactory.CreateMergeSectionOperation(this.model, this.SelectedTile.Value);
                 this.undoManager.Execute(new CompositeOperation(deselectOp, mergeOp));
             }
             else
@@ -1052,36 +845,36 @@
             if (this.SelectedFeatures.Count > 0)
             {
                 var ops = new List<IReplayableOperation>();
-                ops.Add(new DeselectOperation(this));
-                ops.AddRange(this.SelectedFeatures.Select(x => new RemoveFeatureOperation(this, x)));
+                ops.Add(new DeselectOperation(this.model));
+                ops.AddRange(this.SelectedFeatures.Select(x => new RemoveFeatureOperation(this.model, x)));
                 this.undoManager.Execute(new CompositeOperation(ops));
             }
 
             if (this.SelectedTile.HasValue)
             {
-                var deSelectOp = new DeselectOperation(this);
+                var deSelectOp = new DeselectOperation(this.model);
                 var removeOp = new RemoveTileOperation(this.FloatingTiles, this.SelectedTile.Value);
                 this.undoManager.Execute(new CompositeOperation(deSelectOp, removeOp));
             }
 
             if (this.SelectedStartPosition.HasValue)
             {
-                var deSelectOp = new DeselectOperation(this);
-                var removeOp = new RemoveStartPositionOperation(this, this.SelectedStartPosition.Value);
+                var deSelectOp = new DeselectOperation(this.model);
+                var removeOp = new RemoveStartPositionOperation(this.model, this.SelectedStartPosition.Value);
                 this.undoManager.Execute(new CompositeOperation(deSelectOp, removeOp));
             }
         }
 
         public Point? GetStartPosition(int index)
         {
-            return this.Attributes.GetStartPosition(index);
+            return this.model.Attributes.GetStartPosition(index);
         }
 
         public void LiftAndSelectArea(int x, int y, int width, int height)
         {
-            var liftOp = OperationFactory.CreateClippedLiftAreaOperation(this, x, y, width, height);
+            var liftOp = OperationFactory.CreateClippedLiftAreaOperation(this.model, x, y, width, height);
             var index = this.FloatingTiles.Count;
-            var selectOp = new SelectTileOperation(this, index);
+            var selectOp = new SelectTileOperation(this.model, index);
             this.undoManager.Execute(new CompositeOperation(liftOp, selectOp));
         }
 
@@ -1121,7 +914,7 @@
 
         private void SetMinimap(Bitmap minimap)
         {
-            var op = new UpdateMinimapOperation(this, minimap);
+            var op = new UpdateMinimapOperation(this.model, minimap);
             this.undoManager.Execute(op);
         }
 
@@ -1162,8 +955,8 @@
 
         private void ReplaceHeightmap(Grid<int> heightmap)
         {
-            if (heightmap.Width != this.Tile.HeightGrid.Width
-                || heightmap.Height != this.Tile.HeightGrid.Height)
+            if (heightmap.Width != this.model.Tile.HeightGrid.Width
+                || heightmap.Height != this.model.Tile.HeightGrid.Height)
             {
                 throw new ArgumentException(
                     "Dimensions do not match map heightmap",
@@ -1172,7 +965,7 @@
 
             var op = new CopyAreaOperation<int>(
                 heightmap,
-                this.Tile.HeightGrid,
+                this.model.Tile.HeightGrid,
                 0,
                 0,
                 0,
@@ -1185,10 +978,10 @@
         private void SaveHpi(string filename)
         {
             // flatten before save --- only the base tile is written to disk
-            IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this);
+            IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.model);
             flatten.Execute();
 
-            this.mapSaver.SaveHpi(this, filename);
+            this.mapSaver.SaveHpi(this.model, filename);
 
             flatten.Undo();
 
@@ -1201,12 +994,12 @@
         private void Save(string filename)
         {
             // flatten before save --- only the base tile is written to disk
-            IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this);
+            IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.model);
             flatten.Execute();
 
             var otaName = filename.Substring(0, filename.Length - 4) + ".ota";
-            this.mapSaver.SaveTnt(this, filename);
-            this.mapSaver.SaveOta(this.Attributes, otaName);
+            this.mapSaver.SaveTnt(this.model, filename);
+            this.mapSaver.SaveOta(this.model.Attributes, otaName);
 
             flatten.Undo();
 
@@ -1266,107 +1059,6 @@
             return false;
         }
 
-        private void MergeTile(int index)
-        {
-            var tile = this.model.FloatingTiles[index];
-            var src = tile.Item;
-            var x = tile.Location.X;
-            var y = tile.Location.Y;
-
-            var dst = this.model.Tile;
-
-            // construct the destination target
-            Rectangle rect = new Rectangle(x, y, src.TileGrid.Width, src.TileGrid.Height);
-
-            // clip to boundaries
-            rect.Intersect(new Rectangle(0, 0, dst.TileGrid.Width, dst.TileGrid.Height));
-
-            int srcX = rect.X - x;
-            int srcY = rect.Y - y;
-
-            GridMethods.Copy(src.TileGrid, dst.TileGrid, srcX, srcY, rect.X, rect.Y, rect.Width, rect.Height);
-            GridMethods.Copy(src.HeightGrid, dst.HeightGrid, srcX * 2, srcY * 2, rect.X * 2, rect.Y * 2, rect.Width * 2, rect.Height * 2);
-        }
-        
-        private void FloatingTilesListChanged(object sender, ListChangedEventArgs e)
-        {
-            if (!this.SelectedTile.HasValue)
-            {
-                return;
-            }
-
-            // keep the index of the selected tile in sync with the list
-            switch (e.ListChangedType)
-            {
-                case ListChangedType.ItemAdded:
-                    if (e.NewIndex <= this.SelectedTile.Value)
-                    {
-                        // item was added before us, so bump our index
-                        this.SelectedTile++;
-                    }
-
-                    break;
-
-                case ListChangedType.ItemDeleted:
-                    if (e.NewIndex == this.SelectedTile.Value)
-                    {
-                        // we were deleted, remove selection
-                        this.SelectedTile = null;
-                    }
-                    else if (e.NewIndex < this.SelectedTile.Value)
-                    {
-                        // item was deleted before us, so decrement our index
-                        this.SelectedTile--;
-                    }
-
-                    break;
-
-                case ListChangedType.ItemMoved:
-                    if (e.OldIndex == this.SelectedTile.Value)
-                    {
-                        // we were moved, update to new index
-                        this.SelectedTile = e.NewIndex;
-                    }
-                    else
-                    {
-                        if (e.OldIndex < this.SelectedTile.Value)
-                        {
-                            // item was removed before us, decrement our index
-                            this.SelectedTile--;
-                        }
-
-                        if (e.NewIndex <= this.SelectedTile.Value)
-                        {
-                            // item was inserted before us, bump our index
-                            this.SelectedTile++;
-                        }
-                    }
-
-                    break;
-            }
-        }
-
-        private void OnFeatureInstanceChanged(object sender, FeatureInstanceEventArgs e)
-        {
-            switch (e.Action)
-            {
-                case FeatureInstanceEventArgs.ActionType.Remove:
-                    this.SelectedFeatures.Remove(e.FeatureInstanceId);
-                    break;
-            }
-        }
-
-        private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "Minimap":
-                case "SeaLevel":
-                    this.FireChange(e.PropertyName);
-                    break;
-            }
-        }
-
         private void FloatingTilesOnListChanged(object sender, ListChangedEventArgs e)
         {
             var h = this.TilesChanged;
@@ -1406,15 +1098,15 @@
         private void AddAndSelectTile(IMapTile tile, int x, int y)
         {
             var floatingSection = new Positioned<IMapTile>(tile, new Point(x, y));
-            var addOp = new AddFloatingTileOperation(this, floatingSection);
+            var addOp = new AddFloatingTileOperation(this.model, floatingSection);
 
             // Tile's index should always be 0,
             // because all other tiles are merged before adding this one.
             var index = 0;
 
-            var selectOp = new SelectTileOperation(this, index);
+            var selectOp = new SelectTileOperation(this.model, index);
             var op = new CompositeOperation(
-                OperationFactory.CreateDeselectAndMergeOperation(this),
+                OperationFactory.CreateDeselectAndMergeOperation(this.model),
                 addOp,
                 selectOp);
 
@@ -1423,7 +1115,7 @@
 
         private Point? ScreenToHeightIndex(int x, int y)
         {
-            return Util.ScreenToHeightIndex(this.Tile.HeightGrid, new Point(x, y));
+            return Util.ScreenToHeightIndex(this.model.Tile.HeightGrid, new Point(x, y));
         }
 
         private bool TranslateFeatureBatch(ICollection<Guid> ids, int x, int y)
@@ -1456,7 +1148,7 @@
                 }
             }
 
-            var newOp = new BatchMoveFeatureOperation(this, ids, x, y);
+            var newOp = new BatchMoveFeatureOperation(this.model, ids, x, y);
 
             BatchMoveFeatureOperation lastOp = null;
             if (this.undoManager.CanUndo)
@@ -1534,7 +1226,7 @@
 
         private void TranslateStartPosition(int i, int x, int y)
         {
-            var startPos = this.Attributes.GetStartPosition(i);
+            var startPos = this.model.Attributes.GetStartPosition(i);
 
             if (startPos == null)
             {
@@ -1546,7 +1238,7 @@
 
         private void TranslateStartPositionTo(int i, int x, int y)
         {
-            var newOp = new ChangeStartPositionOperation(this, i, new Point(x, y));
+            var newOp = new ChangeStartPositionOperation(this.model, i, new Point(x, y));
 
             ChangeStartPositionOperation lastOp = null;
             if (this.undoManager.CanUndo)
@@ -1610,12 +1302,25 @@
 
         private MapAttributesResult GetAttributes()
         {
-            return MapAttributesResult.FromModel(this);
+            return MapAttributesResult.FromModel(this.model);
         }
 
         private void UpdateAttributes(MapAttributesResult newAttrs)
         {
-            this.undoManager.Execute(new ChangeAttributesOperation(this, newAttrs));
+            this.undoManager.Execute(new ChangeAttributesOperation(this.model, newAttrs));
+        }
+
+        private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        {
+            this.FireChange(propertyChangedEventArgs.PropertyName);
+
+            switch (propertyChangedEventArgs.PropertyName)
+            {
+                case "SelectedTile":
+                    this.UpdateCanCut();
+                    this.UpdateCanCopy();
+                    break;
+            }
         }
     }
 }

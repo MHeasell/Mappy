@@ -123,6 +123,7 @@
     <Compile Include="Models\DialogService.cs" />
     <Compile Include="Models\FeatureClipboardRecord.cs" />
     <Compile Include="Models\FeatureInstance.cs" />
+    <Compile Include="Models\FeatureInstanceEventArgs.cs" />
     <Compile Include="Models\IDialogService.cs" />
     <Compile Include="Models\IMainFormModel.cs" />
     <Compile Include="Models\IMainModel.cs" />
@@ -208,11 +209,9 @@
     <Compile Include="UI\Forms\NewMapForm.Designer.cs">
       <DependentUpon>NewMapForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\BindingMapModel.cs" />
     <Compile Include="Operations\AddFloatingTileOperation.cs" />
     <Compile Include="Operations\ClearTilesOperation.cs" />
     <Compile Include="Operations\CompositeOperation.cs" />
-    <Compile Include="Models\IBindingMapModel.cs" />
     <Compile Include="Models\IMapModel.cs" />
     <Compile Include="Operations\IReplayableOperation.cs" />
     <Compile Include="LoadingUtils.cs" />
