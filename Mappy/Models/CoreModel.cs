@@ -108,6 +108,8 @@
                     this.FireChange("CanCut");
                     this.FireChange("CanCopy");
                     this.FireChange("CanPaste");
+
+                    this.FireChange("MinimapImage");
                 }
             }
         }
