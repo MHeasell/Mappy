@@ -1,5 +1,7 @@
 ﻿namespace Geometry
 {
+    using System;
+
     public struct Rectangle2D
     {
         public static readonly Rectangle2D Empty = new Rectangle2D();
@@ -152,6 +154,22 @@
             double height)
         {
             return FromCorner(new Vector2D(x, y), new Vector2D(width, height));
+        }
+
+        public static Rectangle2D FromMinMax(
+            double minX,
+            double minY,
+            double maxX,
+            double maxY)
+        {
+            double centerX = (minX + maxX) / 2.0;
+            double centerY = (minY + maxY) / 2.0;
+            double halfWidth = Math.Abs((maxX - minX) / 2.0);
+            double halfHeight = Math.Abs((maxY - minY) / 2.0);
+
+            return new Rectangle2D(
+                new Vector2D(centerX, centerY),
+                new Vector2D(halfWidth, halfHeight));
         }
     }
 }
