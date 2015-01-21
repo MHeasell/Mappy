@@ -330,7 +330,7 @@ namespace Mappy.Util
 
             var g = Graphics.FromImage(b);
 
-            g.TranslateTransform((float)(-offset.X), (float)-offset.Y);
+            g.TranslateTransform((float)(-offset.X), (float)(-offset.Y));
 
             foreach (var l in projectedLines)
             {
