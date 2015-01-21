@@ -11,8 +11,6 @@
     using System.Linq;
     using System.Windows.Forms;
 
-    using Geometry;
-
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.IO;
@@ -37,7 +35,7 @@
 
         private readonly ISelectionModel model;
 
-        private Rectangle2D viewportRectangle;
+        private Point viewportLocation;
 
         private int deltaX;
 
@@ -248,16 +246,16 @@
             }
         }
 
-        public Rectangle2D ViewportRectangle
+        public Point ViewportLocation
         {
             get
             {
-                return this.viewportRectangle;
+                return this.viewportLocation;
             }
 
             set
             {
-                this.SetField(ref this.viewportRectangle, value, "ViewportRectangle");
+                this.SetField(ref this.viewportLocation, value, "ViewportLocation");
             }
         }
 
@@ -604,20 +602,6 @@
             this.undoManager.Execute(op);
         }
 
-        public void SetViewportCenterNormalized(double x, double y)
-        {
-            double extraX = 1.0 / (this.MapWidth - 1);
-            double extraY = 4.0 / (this.MapHeight - 4);
-
-            var rect = this.ViewportRectangle;
-
-            x = Util.Clamp(x, rect.ExtentX, 1.0 + extraX - rect.ExtentX);
-            y = Util.Clamp(y, rect.ExtentY, 1.0 + extraY - rect.ExtentY);
-
-            rect.Center = new Vector2D(x, y);
-            this.ViewportRectangle = rect;
-        }
-
         public void RefreshMinimapHighQualityWithProgress()
         {
             var worker = Mappy.Util.Util.RenderMinimapWorker();
@@ -723,7 +707,7 @@
             }
         }
 
-        public void PasteFromClipboard()
+        public void PasteFromClipboard(int x, int y)
         {
             var data = Clipboard.GetData(DataFormats.Serializable);
             if (data == null)
@@ -734,14 +718,14 @@
             var tile = data as IMapTile;
             if (tile != null)
             {
-                this.PasteMapTile(tile);
+                this.PasteMapTile(tile, x, y);
             }
             else
             {
                 var record = data as FeatureClipboardRecord;
                 if (record != null)
                 {
-                    this.PasteFeature(record);
+                    this.PasteFeature(record, x, y);
                 }
             }
         }
@@ -904,10 +888,8 @@
 
         private void PasteMapTileNoDeduplicateTopLeft(IMapTile tile)
         {
-            var normX = this.ViewportRectangle.MinX;
-            var normY = this.ViewportRectangle.MinY;
-            int x = (int)(this.MapWidth * normX);
-            int y = (int)(this.MapHeight * normY);
+            int x = this.ViewportLocation.X;
+            int y = this.ViewportLocation.Y;
 
             this.AddAndSelectTile(tile, x, y);
         }
@@ -1009,33 +991,26 @@
             this.IsFileReadOnly = false;
         }
 
-        private void PasteFeature(FeatureClipboardRecord feature)
+        private void PasteFeature(FeatureClipboardRecord feature, int x, int y)
         {
-            var normX = this.ViewportRectangle.CenterX;
-            var normY = this.ViewportRectangle.CenterY;
-            int x = (int)(this.MapWidth * 32 * normX);
-            int y = (int)(this.MapHeight * 32 * normY);
-
             this.DragDropFeature(feature.FeatureName, x, y);
         }
 
-        private void PasteMapTile(IMapTile tile)
+        private void PasteMapTile(IMapTile tile, int x, int y)
         {
             DeduplicateTiles(tile.TileGrid);
-            this.PasteMapTileNoDeduplicate(tile);
+            this.PasteMapTileNoDeduplicate(tile, x, y);
         }
 
-        private void PasteMapTileNoDeduplicate(IMapTile tile)
+        private void PasteMapTileNoDeduplicate(IMapTile tile, int x, int y)
         {
-            var normX = this.ViewportRectangle.CenterX;
-            var normY = this.ViewportRectangle.CenterY;
-            int x = (int)(this.MapWidth * normX);
-            int y = (int)(this.MapHeight * normY);
+            int normX = x / 32;
+            int normY = y / 32;
 
-            x -= tile.TileGrid.Width / 2;
-            y -= tile.TileGrid.Height / 2;
+            normX -= tile.TileGrid.Width / 2;
+            normY -= tile.TileGrid.Height / 2;
 
-            this.AddAndSelectTile(tile, x, y);
+            this.AddAndSelectTile(tile, normX, normY);
         }
 
         private bool TryCopyToClipboard()

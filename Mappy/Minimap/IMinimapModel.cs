@@ -13,11 +13,15 @@
 
         bool MinimapVisible { get; }
 
-        Rectangle2D ViewportRectangle { get; }
+        Point ViewportLocation { get; }
+
+        int ViewportWidth { get; }
+
+        int ViewportHeight { get; }
 
         Bitmap MinimapImage { get; }
 
-        void SetViewportCenterNormalized(double x, double y);
+        void SetViewportLocation(Point location);
 
         void HideMinimap();
     }

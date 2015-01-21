@@ -45,7 +45,7 @@ namespace Mappy.Models
 
         int SeaLevel { get; }
 
-        Rectangle2D ViewportRectangle { get; set; }
+        Point ViewportLocation { get; set; }
 
         FeatureInstance GetFeatureInstance(Guid id);
 

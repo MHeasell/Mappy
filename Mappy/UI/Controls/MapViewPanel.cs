@@ -6,8 +6,6 @@
     using System.Drawing;
     using System.Windows.Forms;
 
-    using Geometry;
-
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.Models;
@@ -206,6 +204,11 @@
 
         private void WireMapModel()
         {
+            if (this.mapModel == null)
+            {
+                return;
+            }
+
             this.mapModel.TilesChanged += this.TilesChanged;
             this.mapModel.BaseTileGraphicsChanged += this.BaseTileChanged;
             this.mapModel.BaseTileHeightChanged += this.BaseTileChanged;
@@ -248,17 +251,16 @@
                 case "BandboxRectangle":
                     this.UpdateBandbox();
                     break;
-                case "ViewportRectangle":
-                    this.UpdateViewViewportRect();
+                case "ViewportLocation":
+                    this.UpdateViewViewportLocation();
                     break;
             }
         }
 
-        private void UpdateViewViewportRect()
+        private void UpdateViewViewportLocation()
         {
-            var rect = this.mapModel.ViewportRectangle;
-            var clientRect = this.ConvertToClientViewport(rect);
-            this.SetViewportPosition(clientRect.X, clientRect.Y);
+            var loc = this.mapModel.ViewportLocation;
+            this.SetViewportPosition(loc.X, loc.Y);
         }
 
         private void SetViewportPosition(int x, int y)
@@ -436,6 +438,11 @@
             }
 
             this.tileMapping.Clear();
+
+            if (this.mapModel == null)
+            {
+                return;
+            }
 
             int count = 0;
             foreach (var t in this.mapModel.FloatingTiles)
@@ -696,48 +703,18 @@
 
         private void UpdateMinimapViewport()
         {
-            if (this.mapModel == null)
+            var rect = this.ViewportRect;
+
+            if (this.settingsModel != null)
             {
-                return;
+                this.settingsModel.ViewportWidth = rect.Width;
+                this.settingsModel.ViewportHeight = rect.Height;
             }
 
-            this.mapModel.ViewportRectangle = this.ConvertToNormalizedViewport(this.ViewportRect);
-        }
-
-        private Rectangle2D ConvertToNormalizedViewport(Rectangle rect)
-        {
-            if (this.mapModel == null)
+            if (this.mapModel != null)
             {
-                return Rectangle2D.Empty;
+                this.mapModel.ViewportLocation = rect.Location;
             }
-
-            int widthScale = (this.mapModel.MapWidth * 32) - 32;
-            int heightScale = (this.mapModel.MapHeight * 32) - 128;
-
-            double x = rect.X / (double)widthScale;
-            double y = rect.Y / (double)heightScale;
-            double w = rect.Width / (double)widthScale;
-            double h = rect.Height / (double)heightScale;
-
-            return Rectangle2D.FromCorner(x, y, w, h);
-        }
-
-        private Rectangle ConvertToClientViewport(Rectangle2D rect)
-        {
-            if (this.mapModel == null)
-            {
-                return Rectangle.Empty;
-            }
-
-            int widthScale = (this.mapModel.MapWidth * 32) - 32;
-            int heightScale = (this.mapModel.MapHeight * 32) - 128;
-
-            int x = (int)Math.Round(rect.MinX * widthScale);
-            int y = (int)Math.Round(rect.MinY * heightScale);
-            int w = (int)Math.Round(rect.Width * widthScale);
-            int h = (int)Math.Round(rect.Height * heightScale);
-
-            return new Rectangle(x, y, w, h);
         }
 
         private void mapView_SizeChanged(object sender, EventArgs e)

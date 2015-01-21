@@ -24,5 +24,9 @@
         IFeatureDatabase FeatureRecords { get; }
 
         IMainModel Map { get; }
+
+        int ViewportWidth { get; set; }
+
+        int ViewportHeight { get; set; }
     }
 }

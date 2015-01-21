@@ -9,8 +9,6 @@
     using System.Linq;
     using System.Windows.Forms;
 
-    using Geometry;
-
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.Database;
@@ -45,6 +43,9 @@
         private bool gridVisible;
         private Size gridSize = new Size(16, 16);
         private Color gridColor = MappySettings.Settings.GridColor;
+
+        private int viewportWidth;
+        private int viewportHeight;
 
         public CoreModel(IDialogService dialogService)
         {
@@ -193,6 +194,40 @@
             set { this.SetField(ref this.featuresVisible, value, "FeaturesVisible"); }
         }
 
+        public int ViewportWidth
+        {
+            get
+            {
+                return this.viewportWidth;
+            }
+
+            set
+            {
+                this.SetField(ref this.viewportWidth, value, "ViewportWidth");
+            }
+        }
+
+        public int ViewportHeight
+        {
+            get
+            {
+                return this.viewportHeight;
+            }
+
+            set
+            {
+                this.SetField(ref this.viewportHeight, value, "ViewportHeight");
+            }
+        }
+
+        public Point ViewportLocation
+        {
+            get
+            {
+                return this.Map == null ? Point.Empty : this.Map.ViewportLocation;
+            }
+        }
+
         public int MapWidth
         {
             get
@@ -246,14 +281,6 @@
                 MappySettings.Settings.GridColor = value;
                 MappySettings.SaveSettings();
                 this.SetField(ref this.gridColor, value, "GridColor");
-            }
-        }
-
-        public Rectangle2D ViewportRectangle
-        {
-            get
-            {
-                return this.Map == null ? Rectangle2D.Empty : this.Map.ViewportRectangle;
             }
         }
 
@@ -486,7 +513,11 @@
                 return;
             }
 
-            this.Map.PasteFromClipboard();
+            var loc = this.ViewportLocation;
+            loc.X += this.ViewportWidth / 2;
+            loc.Y += this.ViewportHeight / 2;
+
+            this.Map.PasteFromClipboard(loc.X, loc.Y);
         }
 
         public void RefreshMinimap()
@@ -642,19 +673,22 @@
             this.Map.FlushSeaLevel();
         }
 
-        public void SetViewportCenterNormalized(double x, double y)
+        public void HideMinimap()
+        {
+            this.MinimapVisible = false;
+        }
+
+        public void SetViewportLocation(Point location)
         {
             if (this.Map == null)
             {
                 return;
             }
 
-            this.Map.SetViewportCenterNormalized(x, y);
-        }
+            location.X = Util.Clamp(location.X, 0, (this.MapWidth * 32) - this.ViewportWidth);
+            location.Y = Util.Clamp(location.Y, 0, (this.MapHeight * 32) - this.ViewportHeight);
 
-        public void HideMinimap()
-        {
-            this.MinimapVisible = false;
+            this.Map.ViewportLocation = location;
         }
 
         private bool CheckOkayDiscard()
@@ -853,7 +887,7 @@
                 case "CanCut":
                 case "CanCopy":
                 case "CanPaste":
-                case "ViewportRectangle":
+                case "ViewportLocation":
                     this.FireChange(propertyChangedEventArgs.PropertyName);
                     break;
             }

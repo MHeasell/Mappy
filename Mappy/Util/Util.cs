@@ -92,6 +92,11 @@ namespace Mappy.Util
             return ((a % p) + p) % p;
         }
 
+        public static int Clamp(int val, int min, int max)
+        {
+            return Math.Min(max, Math.Max(min, val));
+        }
+
         public static float Clamp(float val, float min, float max)
         {
             return Math.Min(max, Math.Max(min, val));

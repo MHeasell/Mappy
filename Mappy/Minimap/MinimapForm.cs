@@ -33,7 +33,9 @@
                 case "MinimapVisible":
                     this.Visible = this.model.MinimapVisible;
                     break;
-                case "ViewportRectangle":
+                case "ViewportLocation":
+                case "ViewportWidth":
+                case "ViewportHeight":
                     this.UpdateViewportRectangle();
                     break;
                 case "MinimapImage":
@@ -66,10 +68,13 @@
                 return;
             }
 
-            double x = loc.X / (double)this.model.MinimapImage.Width;
-            double y = loc.Y / (double)this.model.MinimapImage.Height;
+            int x = loc.X - (this.minimapControl.ViewportRect.Width / 2);
+            int y = loc.Y - (this.minimapControl.ViewportRect.Height / 2);
 
-            this.model.SetViewportCenterNormalized(x, y);
+            x = this.ScaleWidthToMap(x);
+            y = this.ScaleHeightToMap(y);
+
+            this.model.SetViewportLocation(new Point(x, y));
         }
 
         private void MinimapControl1MouseMove(object sender, MouseEventArgs e)
@@ -85,6 +90,34 @@
             this.mouseDown = false;
         }
 
+        private int ScaleWidthToMinimap(int val)
+        {
+            int mapWidth = (this.model.MapWidth * 32) - 32;
+            int minimapWidth = this.minimapControl.BackgroundImage.Width;
+            return (val * minimapWidth) / mapWidth;
+        }
+
+        private int ScaleWidthToMap(int val)
+        {
+            int mapWidth = (this.model.MapWidth * 32) - 32;
+            int minimapWidth = this.minimapControl.BackgroundImage.Width;
+            return (val * mapWidth) / minimapWidth;
+        }
+
+        private int ScaleHeightToMinimap(int val)
+        {
+            int mapHeight = (this.model.MapHeight * 32) - 128;
+            int minimapHeight = this.minimapControl.BackgroundImage.Height;
+            return (val * minimapHeight) / mapHeight;
+        }
+
+        private int ScaleHeightToMap(int val)
+        {
+            int mapHeight = (this.model.MapHeight * 32) - 128;
+            int minimapHeight = this.minimapControl.BackgroundImage.Height;
+            return (val * mapHeight) / minimapHeight;
+        }
+
         private void UpdateViewportRectangle()
         {
             if (this.minimapControl.BackgroundImage == null)
@@ -92,16 +125,13 @@
                 return;
             }
 
-            var rectangle = this.model.ViewportRectangle;
+            var rectangle = new Rectangle(
+                this.ScaleWidthToMinimap(this.model.ViewportLocation.X),
+                this.ScaleHeightToMinimap(this.model.ViewportLocation.Y),
+                this.ScaleWidthToMinimap(this.model.ViewportWidth),
+                this.ScaleHeightToMinimap(this.model.ViewportHeight));
 
-            int w = this.model.MinimapImage.Width;
-            int h = this.model.MinimapImage.Height;
-
-            this.minimapControl.ViewportRect = new Rectangle(
-                (int)(rectangle.MinX * w),
-                (int)(rectangle.MinY * h),
-                (int)(rectangle.Width * w),
-                (int)(rectangle.Height * h));
+            this.minimapControl.ViewportRect = rectangle;
         }
     }
 }
