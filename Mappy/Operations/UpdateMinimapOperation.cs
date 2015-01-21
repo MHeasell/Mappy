@@ -1,4 +1,4 @@
-﻿namespace Mappy.Operations.SelectionModel
+﻿namespace Mappy.Operations
 {
     using System.Drawing;
 
