@@ -55,7 +55,7 @@
         {
             get
             {
-                return this.Size.X;
+                return this.Extents.X * 2.0;
             }
         }
 
@@ -63,7 +63,7 @@
         {
             get
             {
-                return this.Size.Y;
+                return this.Extents.Y * 2.0;
             }
         }
 
@@ -129,7 +129,7 @@
         {
             get
             {
-                return new Vector2D(this.MinX, this.MinY);
+                return this.Center - this.Extents;
             }
         }
 
@@ -137,7 +137,7 @@
         {
             get
             {
-                return new Vector2D(this.MaxX, this.MaxY);
+                return this.Center + this.Extents;
             }
         }
 
