@@ -86,6 +86,8 @@
         {
             this.UpdateCanvasSize();
 
+            this.UpdateViewViewportLocation();
+
             this.UpdateBaseTile();
 
             this.UpdateFloatingTiles();
@@ -261,6 +263,12 @@
 
         private void UpdateViewViewportLocation()
         {
+            if (this.mapModel == null)
+            {
+                this.SetViewportPosition(0, 0);
+                return;
+            }
+
             var loc = this.mapModel.ViewportLocation;
             this.SetViewportPosition(loc.X, loc.Y);
         }
