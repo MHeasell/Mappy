@@ -30,22 +30,22 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.minimapControl1 = new MinimapControl();
+            this.minimapControl = new Mappy.Minimap.MinimapControl();
             this.SuspendLayout();
             // 
-            // minimapControl1
+            // minimapControl
             // 
-            this.minimapControl1.Location = new System.Drawing.Point(0, 0);
-            this.minimapControl1.Margin = new System.Windows.Forms.Padding(0);
-            this.minimapControl1.Name = "minimapControl1";
-            this.minimapControl1.RectColor = System.Drawing.Color.Yellow;
-            this.minimapControl1.Size = new System.Drawing.Size(252, 252);
-            this.minimapControl1.TabIndex = 1;
-            this.minimapControl1.Text = "minimapControl1";
-            this.minimapControl1.ViewportRect = new System.Drawing.Rectangle(5, 5, 50, 50);
-            this.minimapControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MinimapControl1MouseDown);
-            this.minimapControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MinimapControl1MouseMove);
-            this.minimapControl1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MinimapControl1MouseUp);
+            this.minimapControl.Location = new System.Drawing.Point(0, 0);
+            this.minimapControl.Margin = new System.Windows.Forms.Padding(0);
+            this.minimapControl.Name = "minimapControl";
+            this.minimapControl.RectColor = System.Drawing.Color.Yellow;
+            this.minimapControl.Size = new System.Drawing.Size(252, 252);
+            this.minimapControl.TabIndex = 1;
+            this.minimapControl.Text = "minimapControl1";
+            this.minimapControl.ViewportRect = new System.Drawing.Rectangle(5, 5, 50, 50);
+            this.minimapControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MinimapControl1MouseDown);
+            this.minimapControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MinimapControl1MouseMove);
+            this.minimapControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MinimapControl1MouseUp);
             // 
             // MinimapForm
             // 
@@ -54,7 +54,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(252, 252);
-            this.Controls.Add(this.minimapControl1);
+            this.Controls.Add(this.minimapControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "MinimapForm";
             this.Text = "Minimap";
@@ -65,7 +65,8 @@
 
         #endregion
 
-        public MinimapControl minimapControl1;
+        private MinimapControl minimapControl;
+
 
 
     }

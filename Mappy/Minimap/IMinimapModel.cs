@@ -5,20 +5,20 @@
 
     using Geometry;
 
-    using Mappy.Data;
-
     public interface IMinimapModel : INotifyPropertyChanged
     {
         int MapWidth { get; }
 
         int MapHeight { get; }
 
-        bool MinimapVisible { get; set; }
+        bool MinimapVisible { get; }
 
         Rectangle2D ViewportRectangle { get; }
 
         Bitmap MinimapImage { get; }
 
         void SetViewportCenterNormalized(double x, double y);
+
+        void HideMinimap();
     }
 }

@@ -42,8 +42,7 @@
 
             var minimapForm = new MinimapForm();
             minimapForm.Owner = mainForm;
-            var minimapPresenter = new MinimapPresenter(minimapForm, model);
-            minimapForm.Presenter = minimapPresenter;
+            minimapForm.SetModel(model);
 
             Application.Run(mainForm);
         }

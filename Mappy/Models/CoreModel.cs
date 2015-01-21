@@ -652,6 +652,11 @@
             this.Map.SetViewportCenterNormalized(x, y);
         }
 
+        public void HideMinimap()
+        {
+            this.MinimapVisible = false;
+        }
+
         private bool CheckOkayDiscard()
         {
             if (!this.IsDirty)

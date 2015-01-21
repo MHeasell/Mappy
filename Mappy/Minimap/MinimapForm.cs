@@ -1,53 +1,45 @@
 ﻿namespace Mappy.Minimap
 {
+    using System.ComponentModel;
     using System.Drawing;
     using System.Windows.Forms;
 
-    public partial class MinimapForm : Form, IMinimapView
+    public partial class MinimapForm : Form
     {
+        private IMinimapModel model;
+
+        private bool mouseDown;
+
         public MinimapForm()
         {
             this.InitializeComponent();
         }
 
-        public MinimapPresenter Presenter { get; set; }
-
-        public Image MinimapImage
+        public void SetModel(IMinimapModel model)
         {
-            get
-            {
-                return this.minimapControl1.BackgroundImage;
-            }
+            this.model = model;
 
-            set
-            {
-                this.minimapControl1.BackgroundImage = value;
-            }
+            model.PropertyChanged += this.ModelOnPropertyChanged;
+
+            this.Visible = model.MinimapVisible;
+            this.minimapControl.BackgroundImage = model.MinimapImage;
+            this.UpdateViewportRectangle();
         }
 
-        public Rectangle ViewportRectangle
+        private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            get
+            switch (e.PropertyName)
             {
-                return this.minimapControl1.ViewportRect;
-            }
-
-            set
-            {
-                this.minimapControl1.ViewportRect = value;
-            }
-        }
-
-        public bool ViewportVisible
-        {
-            get
-            {
-                return this.minimapControl1.RectVisible;
-            }
-
-            set
-            {
-                this.minimapControl1.RectVisible = value;
+                case "MinimapVisible":
+                    this.Visible = this.model.MinimapVisible;
+                    break;
+                case "ViewportRectangle":
+                    this.UpdateViewportRectangle();
+                    break;
+                case "MinimapImage":
+                    this.minimapControl.BackgroundImage = this.model.MinimapImage;
+                    this.UpdateViewportRectangle();
+                    break;
             }
         }
 
@@ -56,23 +48,60 @@
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 e.Cancel = true;
-                this.Presenter.MinimapClose();
+
+                this.model.HideMinimap();
             }
         }
 
         private void MinimapControl1MouseDown(object sender, MouseEventArgs e)
         {
-            this.Presenter.MinimapClick(e.Location);
+            this.mouseDown = true;
+            this.SetModelViewportCenter(e.Location);
+        }
+
+        private void SetModelViewportCenter(Point loc)
+        {
+            if (this.model.MinimapImage == null)
+            {
+                return;
+            }
+
+            double x = loc.X / (double)this.model.MinimapImage.Width;
+            double y = loc.Y / (double)this.model.MinimapImage.Height;
+
+            this.model.SetViewportCenterNormalized(x, y);
         }
 
         private void MinimapControl1MouseMove(object sender, MouseEventArgs e)
         {
-            this.Presenter.MinimapMouseMove(e.Location);
+            if (this.mouseDown)
+            {
+                this.SetModelViewportCenter(e.Location);
+            }
         }
 
         private void MinimapControl1MouseUp(object sender, MouseEventArgs e)
         {
-            this.Presenter.MinimapMouseUp(e.Location);
+            this.mouseDown = false;
+        }
+
+        private void UpdateViewportRectangle()
+        {
+            if (this.minimapControl.BackgroundImage == null)
+            {
+                return;
+            }
+
+            var rectangle = this.model.ViewportRectangle;
+
+            int w = this.model.MinimapImage.Width;
+            int h = this.model.MinimapImage.Height;
+
+            this.minimapControl.ViewportRect = new Rectangle(
+                (int)(rectangle.MinX * w),
+                (int)(rectangle.MinY * h),
+                (int)(rectangle.Width * w),
+                (int)(rectangle.Height * h));
         }
     }
 }
