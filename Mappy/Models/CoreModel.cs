@@ -846,6 +846,7 @@
                 case "CanCut":
                 case "CanCopy":
                 case "CanPaste":
+                case "ViewportRectangle":
                     this.FireChange(propertyChangedEventArgs.PropertyName);
                     break;
             }
