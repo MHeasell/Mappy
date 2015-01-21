@@ -122,6 +122,7 @@
         {
             if (this.minimapControl.BackgroundImage == null)
             {
+                this.minimapControl.ViewportRect = Rectangle.Empty;
                 return;
             }
 
