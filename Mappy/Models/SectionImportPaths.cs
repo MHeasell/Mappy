@@ -1,4 +1,4 @@
-﻿namespace Mappy.Views
+﻿namespace Mappy.Models
 {
     public class SectionImportPaths
     {

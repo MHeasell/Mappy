@@ -126,6 +126,7 @@
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
     <Compile Include="Models\SectionFeatureLoadResult.cs" />
+    <Compile Include="Models\SectionImportPaths.cs" />
     <Compile Include="Models\UndoableMapModel.cs" />
     <Compile Include="Operations\AddFeatureOperation.cs" />
     <Compile Include="Operations\ChangeAttributesOperation.cs" />
@@ -271,7 +272,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Operations\OperationManager.cs" />
     <Compile Include="Views\IProgressView.cs" />
-    <Compile Include="Views\SectionImportPaths.cs" />
     <EmbeddedResource Include="UI\Controls\FeatureView.resx">
       <DependentUpon>FeatureView.cs</DependentUpon>
     </EmbeddedResource>
