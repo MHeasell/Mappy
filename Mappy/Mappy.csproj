@@ -271,7 +271,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Operations\OperationManager.cs" />
     <Compile Include="Views\IProgressView.cs" />
-    <Compile Include="Views\MinimapMoveEventArgs.cs" />
     <Compile Include="Views\SectionImportPaths.cs" />
     <EmbeddedResource Include="UI\Controls\FeatureView.resx">
       <DependentUpon>FeatureView.cs</DependentUpon>
