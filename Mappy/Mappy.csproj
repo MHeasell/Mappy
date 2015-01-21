@@ -75,7 +75,6 @@
     <Compile Include="Collections\SparseGrid.cs" />
     <Compile Include="Collections\SparseGridEventArgs.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Controllers\SectionFeatureLoadResult.cs" />
     <Compile Include="Controllers\Tags\FeatureTag.cs" />
     <Compile Include="Controllers\Tags\IMapItemTag.cs" />
     <Compile Include="Controllers\Tags\SectionTag.cs" />
@@ -130,6 +129,7 @@
     <Compile Include="Models\IMapViewSettingsModel.cs" />
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
+    <Compile Include="Models\SectionFeatureLoadResult.cs" />
     <Compile Include="Models\UndoableMapModel.cs" />
     <Compile Include="Operations\AddFeatureOperation.cs" />
     <Compile Include="Operations\ChangeAttributesOperation.cs" />
