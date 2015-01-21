@@ -321,12 +321,12 @@ namespace Mappy.Util
             var projectedLines = edges.Select(ProjectLine).ToList();
             var boundingBox = ComputeBoundingBox(projectedLines);
 
-            int w = (int)Math.Ceiling(boundingBox.Extents.X * 2) + 1;
-            int h = (int)Math.Ceiling(boundingBox.Extents.Y * 2) + 1;
+            int w = (int)Math.Ceiling(boundingBox.Width) + 1;
+            int h = (int)Math.Ceiling(boundingBox.Height) + 1;
 
             Bitmap b = new Bitmap(w, h);
 
-            var offset = boundingBox.TopLeft;
+            var offset = boundingBox.MinXY;
 
             var g = Graphics.FromImage(b);
 
@@ -373,12 +373,12 @@ namespace Mappy.Util
             return grid;
         }
 
-        private static AxisRectangle3D ComputeBoundingBox(IEnumerable<Line3D> lines)
+        private static Rectangle2D ComputeBoundingBox(IEnumerable<Line2D> lines)
         {
             return ComputeBoundingBox(ToPoints(lines));
         }
 
-        private static IEnumerable<Vector3D> ToPoints(IEnumerable<Line3D> lines)
+        private static IEnumerable<Vector2D> ToPoints(IEnumerable<Line2D> lines)
         {
             foreach (var l in lines)
             {
@@ -387,7 +387,7 @@ namespace Mappy.Util
             }
         }
 
-        private static AxisRectangle3D ComputeBoundingBox(IEnumerable<Vector3D> points)
+        private static Rectangle2D ComputeBoundingBox(IEnumerable<Vector2D> points)
         {
             double minX = double.PositiveInfinity;
             double maxX = double.NegativeInfinity;
@@ -417,26 +417,23 @@ namespace Mappy.Util
                 }
             }
 
-            return AxisRectangle3D.FromTLBR(maxY, minX, minY, maxX);
+            return Rectangle2D.FromMinMax(minX, minY, maxX, maxY);
         }
 
-        private static Vector3D ProjectPoint(Vector3D point)
+        private static Vector2D ProjectPoint(Vector3D point)
         {
             point /= Math.Pow(2, 16);
 
             point.X *= -1;
 
-            point = new Vector3D(
+            return new Vector2D(
                 point.X,
-                point.Z - (point.Y / 2.0),
-                0.0);
-
-            return point;
+                point.Z - (point.Y / 2.0));
         }
 
-        private static Line3D ProjectLine(Line3D line)
+        private static Line2D ProjectLine(Line3D line)
         {
-            return new Line3D(
+            return new Line2D(
                 ProjectPoint(line.Start),
                 ProjectPoint(line.End));
         }
