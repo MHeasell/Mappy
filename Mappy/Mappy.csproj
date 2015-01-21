@@ -141,7 +141,6 @@
     <Compile Include="Operations\SelectionModel\SelectTileOperation.cs" />
     <Compile Include="Operations\SelectionModel\UpdateMinimapOperation.cs" />
     <Compile Include="Operations\SetSealevelOperation.cs" />
-    <Compile Include="Presentation\IMapView.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

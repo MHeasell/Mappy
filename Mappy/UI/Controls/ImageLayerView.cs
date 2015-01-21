@@ -7,10 +7,9 @@
     using System.Drawing;
     using System.Windows.Forms;
 
-    using Mappy.Presentation;
     using Mappy.UI.Painters;
 
-    public class ImageLayerView : ScrollableControl, IMapView
+    public class ImageLayerView : ScrollableControl
     {
         private readonly ImageLayerCollection items;
 
@@ -84,14 +83,6 @@
         public ImageLayerCollection Items
         {
             get { return this.items; }
-        }
-
-        ICollection<ImageLayerCollection.Item> IMapView.Items
-        {
-            get
-            {
-                return this.items;
-            }
         }
 
         public Size CanvasSize

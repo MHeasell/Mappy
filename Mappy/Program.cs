@@ -6,7 +6,6 @@
 
     using Mappy.Minimap;
     using Mappy.Models;
-    using Mappy.Presentation;
     using Mappy.UI.Forms;
 
     public static class Program
