@@ -9,10 +9,10 @@
     using Geometry;
 
     using Mappy.Collections;
-    using Mappy.Controllers.Tags;
     using Mappy.Data;
     using Mappy.Models;
     using Mappy.UI.Drawables;
+    using Mappy.UI.Tags;
 
     public partial class MapViewPanel : UserControl
     {

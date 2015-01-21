@@ -6,8 +6,8 @@ namespace Mappy.Models.BandboxBehaviours
     using System.Drawing;
     using System.Linq;
 
-    using Mappy.Controllers.Tags;
     using Mappy.UI.Controls;
+    using Mappy.UI.Tags;
     using Mappy.Util;
 
     public class FeatureBandboxBehaviour : Notifier, IBandboxBehaviour

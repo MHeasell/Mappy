@@ -75,10 +75,6 @@
     <Compile Include="Collections\SparseGrid.cs" />
     <Compile Include="Collections\SparseGridEventArgs.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Controllers\Tags\FeatureTag.cs" />
-    <Compile Include="Controllers\Tags\IMapItemTag.cs" />
-    <Compile Include="Controllers\Tags\SectionTag.cs" />
-    <Compile Include="Controllers\Tags\StartPositionTag.cs" />
     <Compile Include="Database\FeatureDictionary.cs" />
     <Compile Include="Database\IFeatureDatabase.cs" />
     <Compile Include="Data\BindingMapTile.cs" />
@@ -228,6 +224,10 @@
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Painters\GridPainter.cs" />
+    <Compile Include="UI\Tags\FeatureTag.cs" />
+    <Compile Include="UI\Tags\IMapItemTag.cs" />
+    <Compile Include="UI\Tags\SectionTag.cs" />
+    <Compile Include="UI\Tags\StartPositionTag.cs" />
     <Compile Include="Util\ImageImport.cs" />
     <Compile Include="Util\ImageSampling\BilinearWrapper.cs" />
     <Compile Include="Util\ImageSampling\IPixelImage.cs" />

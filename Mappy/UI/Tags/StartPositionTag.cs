@@ -1,10 +1,10 @@
-namespace Mappy.Controllers.Tags
+namespace Mappy.UI.Tags
 {
     using Mappy.Models;
 
-    public class SectionTag : IMapItemTag
+    public class StartPositionTag : IMapItemTag
     {
-        public SectionTag(int index)
+        public StartPositionTag(int index)
         {
             this.Index = index;
         }
@@ -13,7 +13,7 @@ namespace Mappy.Controllers.Tags
 
         public void SelectItem(IMainModel model)
         {
-            model.SelectTile(this.Index);
+            model.SelectStartPosition(this.Index);
         }
     }
 }

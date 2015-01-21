@@ -12,7 +12,6 @@
     using Geometry;
 
     using Mappy.Collections;
-    using Mappy.Controllers;
     using Mappy.Data;
     using Mappy.Database;
     using Mappy.IO;

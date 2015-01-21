@@ -1,4 +1,4 @@
-namespace Mappy.Controllers.Tags
+namespace Mappy.UI.Tags
 {
     using Mappy.Models;
 
