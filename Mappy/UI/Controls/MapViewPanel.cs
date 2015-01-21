@@ -53,6 +53,8 @@
 
         private ImageLayerCollection.Item baseItem;
 
+        private Point oldAutoScrollPos;
+
         static MapViewPanel()
         {
             for (int i = 0; i < 10; i++)
@@ -685,11 +687,6 @@
             t.SelectItem(this.mapModel);
         }
 
-        private void mapView_Scroll(object sender, ScrollEventArgs e)
-        {
-            this.UpdateMinimapViewport();
-        }
-
         public Rectangle ViewportRect
         {
             get
@@ -725,6 +722,21 @@
         private void mapView_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
+        }
+
+        private void mapView_Paint(object sender, PaintEventArgs e)
+        {
+            // We listen to paint to detect when scroll position has changed.
+            // We could use the scroll event, but this only detects
+            // scrollbar interaction, and won't catch other scrolling
+            // such as mouse wheel scrolling.
+            var pos = this.mapView.AutoScrollPosition;
+            if (pos != this.oldAutoScrollPos)
+            {
+                this.UpdateMinimapViewport();
+            }
+
+            this.oldAutoScrollPos = pos;
         }
     }
 }
