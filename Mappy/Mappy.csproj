@@ -146,7 +146,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TdfConvert.cs" />
     <Compile Include="UI\Controls\FeatureView.cs">
       <SubType>UserControl</SubType>
     </Compile>
