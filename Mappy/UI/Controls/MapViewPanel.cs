@@ -742,9 +742,8 @@
             if (pos != this.oldAutoScrollPos)
             {
                 this.UpdateMinimapViewport();
+                this.oldAutoScrollPos = pos;
             }
-
-            this.oldAutoScrollPos = pos;
         }
     }
 }
