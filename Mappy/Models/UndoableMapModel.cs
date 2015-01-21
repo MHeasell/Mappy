@@ -630,7 +630,7 @@
                 dlg.Close();
             };
 
-            worker.RunWorkerAsync(this);
+            worker.RunWorkerAsync(this.model);
             dlg.Display();
         }
 
