@@ -86,6 +86,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listBox1);
             this.Name = "MapSelectionForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Select Map to Open";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -650,6 +650,7 @@
             this.Controls.Add(this.button1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "MapAttributesForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Map Attributes";
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);

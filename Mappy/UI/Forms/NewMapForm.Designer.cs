@@ -136,6 +136,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
             this.Name = "NewMapForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "New Map";
             this.Validating += new System.ComponentModel.CancelEventHandler(this.NewMapForm_Validating);
             this.ResumeLayout(false);
