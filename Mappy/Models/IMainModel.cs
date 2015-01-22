@@ -6,8 +6,6 @@ namespace Mappy.Models
     using System.ComponentModel;
     using System.Drawing;
 
-    using Geometry;
-
     using Mappy.Collections;
     using Mappy.Data;
 
