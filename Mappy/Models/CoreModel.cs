@@ -453,6 +453,16 @@
             return this.OpenMap(filename);
         }
 
+        public bool OpenFromDragDrop(string filename)
+        {
+            if (!this.CheckOkayDiscard())
+            {
+                return false;
+            }
+
+            return this.OpenMap(filename);
+        }
+
         public bool Save()
         {
             if (this.Map == null)

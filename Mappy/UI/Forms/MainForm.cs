@@ -356,5 +356,31 @@
 
             return filename + " - " + ProgramName;
         }
+
+        private void MainFormDragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void MainFormDragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var data = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (data.Length > 1)
+                {
+                    return;
+                }
+
+                this.model.OpenFromDragDrop(data[0]);
+            }
+        }
     }
 }

@@ -679,6 +679,7 @@
             // 
             // MainForm
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 562);
@@ -690,6 +691,8 @@
             this.Text = "Mappy";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormFormClosing);
             this.Load += new System.EventHandler(this.MainFormLoad);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainFormDragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainFormDragEnter);
             this.topMenu.ResumeLayout(false);
             this.topMenu.PerformLayout();
             this.sidebarTabs.ResumeLayout(false);

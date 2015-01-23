@@ -28,5 +28,7 @@
         int ViewportWidth { get; set; }
 
         int ViewportHeight { get; set; }
+
+        bool OpenFromDragDrop(string filename);
     }
 }

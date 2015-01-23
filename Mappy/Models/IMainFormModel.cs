@@ -63,6 +63,8 @@
 
         bool Open();
 
+        bool OpenFromDragDrop(string filename);
+
         void Close();
 
         void ShowAbout();

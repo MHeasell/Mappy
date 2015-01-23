@@ -548,6 +548,18 @@
 
         private void MapViewDragDrop(object sender, DragEventArgs e)
         {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                if (files.Length < 1)
+                {
+                    return;
+                }
+
+                this.settingsModel.OpenFromDragDrop(files[0]);
+                return;
+            }
+
             if (this.mapModel == null)
             {
                 return;
