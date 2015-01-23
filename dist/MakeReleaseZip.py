@@ -37,6 +37,8 @@ dist_files = [
         join(slndir, "README.md"),
         join(bindir, "TAUtil.dll"),
         join(bindir, "TAUtil.pdb"),
+        join(bindir, "TAUtil.Hpi.dll"),
+        join(bindir, "TAUtil.Hpi.pdb"),
         join(bindir, "TAUtil.Gdi.dll"),
         join(bindir, "TAUtil.Gdi.pdb"),
     ]

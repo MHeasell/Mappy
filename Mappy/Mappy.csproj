@@ -327,6 +327,10 @@
       <Project>{cbf5cec6-3710-4f40-8a8e-ef57870b7793}</Project>
       <Name>TAUtil.Gdi</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TAUtil\TAUtil.Hpi\TAUtil.Hpi.csproj">
+      <Project>{a13082e4-3557-4666-bf02-b376c9907b69}</Project>
+      <Name>TAUtil.Hpi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TAUtil\TAUtil\TAUtil.csproj">
       <Project>{71AE8770-7794-4CF8-88F1-1D7429F24EB4}</Project>
       <Name>TAUtil</Name>
