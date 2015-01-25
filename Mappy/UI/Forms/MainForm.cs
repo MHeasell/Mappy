@@ -289,8 +289,6 @@
                     this.importHeightmapMenuItem.Enabled = this.model.MapOpen;
                     this.exportMapImageMenuItem.Enabled = this.model.MapOpen;
                     this.importCustomSectionMenuItem.Enabled = this.model.MapOpen;
-                    break;
-                case "IsFileOpen":
                     this.saveAsMenuItem.Enabled = this.model.MapOpen;
                     this.UpdateTitleText();
                     break;
