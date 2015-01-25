@@ -32,7 +32,7 @@ dist_files = [
         join(slndir, "Pngcs/LICENSE.Pngcs.txt"),
         join(bindir, "Ookii.Dialogs.dll"),
         join(slndir, "Ookii.Dialogs/LICENSE.Ookii.Dialogs.txt"),
-        join(slndir, "LICENSE"),
+        join(slndir, "LICENSE.txt"),
         join(bindir, "Mappy.exe"),
         join(bindir, "Mappy.exe.config"),
         join(bindir, "Mappy.pdb"),
