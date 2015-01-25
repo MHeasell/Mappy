@@ -1,9 +1,6 @@
 ﻿namespace Mappy.Util.ImageSampling
 {
-    using System.Collections.Generic;
     using System.Drawing;
-
-    using TAUtil.Gdi.Palette;
 
     public class BilinearWrapper : IPixelImage
     {
@@ -26,37 +23,9 @@
             {
                 var rect = this.GetRect(x, y);
                 var sampledColor = this.SampleArea(rect.X, rect.Y, rect.Width, rect.Height);
-                var nearestNeighbour = NearestNeighbour(sampledColor, PaletteFactory.TAPalette);
 
-                return nearestNeighbour;
+                return sampledColor;
             }
-        }
-
-        private static Color NearestNeighbour(Color color, IEnumerable<Color> choices)
-        {
-            Color winner = new Color();
-            double winningValue = double.PositiveInfinity;
-
-            foreach (var candidate in choices)
-            {
-                double dist = DistanceSquared(color, candidate);
-                if (dist < winningValue)
-                {
-                    winner = candidate;
-                    winningValue = dist;
-                }
-            }
-
-            return winner;
-        }
-
-        private static double DistanceSquared(Color a, Color b)
-        {
-            int dR = b.R - a.R;
-            int dG = b.G - a.G;
-            int dB = b.B - a.B;
-
-            return (dR * dR) + (dG * dG) + (dB * dB);
         }
 
         private Rectangle GetRect(int x, int y)

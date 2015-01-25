@@ -18,6 +18,8 @@ namespace Mappy.Util
     using Mappy.Properties;
     using Mappy.Util.ImageSampling;
 
+    using TAUtil.Gdi.Palette;
+
     public static class Util
     {
         public static Bitmap ExportHeightmap(IGrid<int> heights)
@@ -172,9 +174,15 @@ namespace Mappy.Util
                             width = (int)(252 * (map.Width / (float)map.Height));
                         }
 
-                        var wrapper = new BilinearWrapper(map, width, height);
+                        var wrapper = new NearestNeighbourPaletteWrapper(
+                            new BilinearWrapper(map, width, height),
+                            PaletteFactory.TAPalette);
 
                         Bitmap b = new Bitmap(wrapper.Width, wrapper.Height);
+                        using (var g = Graphics.FromImage(b))
+                        {
+                            g.FillRectangle(Brushes.Black, new Rectangle(0, 0, b.Width, b.Height));
+                        }
 
                         for (int y = 0; y < wrapper.Height; y++)
                         {
@@ -249,7 +257,9 @@ namespace Mappy.Util
                 width = (int)(252 * (map.Width / (float)map.Height));
             }
 
-            var wrapper = new BilinearWrapper(map, width, height);
+            var wrapper = new NearestNeighbourPaletteWrapper(
+                new BilinearWrapper(map, width, height),
+                PaletteFactory.TAPalette);
             return ToBitmap(wrapper);
         }
 
