@@ -4,8 +4,6 @@
     using System.ComponentModel;
     using System.Drawing;
 
-    using Geometry;
-
     using Mappy.Data;
     using Mappy.Database;
 
