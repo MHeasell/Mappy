@@ -3,6 +3,8 @@
     using System;
     using System.Windows.Forms;
 
+    using Ookii.Dialogs;
+
     public partial class PreferencesForm : Form
     {
         public PreferencesForm()
@@ -24,7 +26,7 @@
 
         private void Button1Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog d = new FolderBrowserDialog();
+            var d = new VistaFolderBrowserDialog();
             DialogResult r = d.ShowDialog(this);
             if (r == DialogResult.OK)
             {
