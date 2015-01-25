@@ -30,6 +30,8 @@ dist_files = [
         join(bindir, "ICSharpCode.SharpZipLib.dll"),
         join(bindir, "Pngcs.dll"),
         join(slndir, "Pngcs/LICENSE.Pngcs.txt"),
+        join(bindir, "Ookii.Dialogs.dll"),
+        join(slndir, "Ookii.Dialogs/LICENSE.Ookii.Dialogs.txt"),
         join(slndir, "LICENSE"),
         join(bindir, "Mappy.exe"),
         join(bindir, "Mappy.exe.config"),
