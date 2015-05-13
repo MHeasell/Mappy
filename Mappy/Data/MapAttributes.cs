@@ -43,6 +43,37 @@
         private int meteorDuration;
         private int meteorInterval;
 
+        public MapAttributes()
+        {
+            // set up default values
+            this.Name = "Untitled Map";
+            this.Description = "A map made with Mappy";
+            this.Gravity = 112;
+            this.Memory = string.Empty;
+            this.NumPlayers = "2";
+            this.AiProfile = "DEFAULT";
+
+            this.SurfaceMetal = 3;
+            this.MohoMetal = 30;
+
+            this.TidalStrength = 20;
+            this.SolarStrength = 20;
+
+            this.MinWindSpeed = 0;
+            this.MaxWindSpeed = 3000;
+
+            this.LavaWorld = false;
+
+            this.WaterDoesDamage = false;
+            this.WaterDamage = 0;
+
+            this.MeteorWeapon = string.Empty;
+            this.MeteorRadius = 0;
+            this.MeteorDensity = 0;
+            this.MeteorDuration = 0;
+            this.MeteorInterval = 0;
+        }
+
         public event EventHandler<StartPositionChangedEventArgs> StartPositionChanged;
 
         public string Name
@@ -254,7 +285,7 @@
             r.Entries["tidalstrength"] = TdfConvert.ToString(this.TidalStrength);
             r.Entries["solarstrength"] = TdfConvert.ToString(this.SolarStrength);
             r.Entries["lavaworld"] = TdfConvert.ToString(this.lavaWorld);
-            r.Entries["killmul"] = "0";
+            r.Entries["killmul"] = "50";
             r.Entries["timemul"] = "0";
             r.Entries["minwindspeed"] = TdfConvert.ToString(this.MinWindSpeed);
             r.Entries["maxwindspeed"] = TdfConvert.ToString(this.MaxWindSpeed);
