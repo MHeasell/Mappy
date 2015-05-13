@@ -285,7 +285,7 @@
             r.Entries["tidalstrength"] = TdfConvert.ToString(this.TidalStrength);
             r.Entries["solarstrength"] = TdfConvert.ToString(this.SolarStrength);
             r.Entries["lavaworld"] = TdfConvert.ToString(this.lavaWorld);
-            r.Entries["killmul"] = "0";
+            r.Entries["killmul"] = "50";
             r.Entries["timemul"] = "0";
             r.Entries["minwindspeed"] = TdfConvert.ToString(this.MinWindSpeed);
             r.Entries["maxwindspeed"] = TdfConvert.ToString(this.MaxWindSpeed);
