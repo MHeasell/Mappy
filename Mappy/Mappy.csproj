@@ -40,6 +40,11 @@
   <PropertyGroup>
     <StartupObject>Mappy.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationIcon>Assets\mappy.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
@@ -357,6 +362,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\AboutText.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Assets\mappy.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
