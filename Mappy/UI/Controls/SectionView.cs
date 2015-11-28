@@ -12,11 +12,13 @@
     {
         private IList<Section> sections;
 
-        private IList<TabControl> worldControls = new List<TabControl>();
-
         public SectionView()
         {
             this.InitializeComponent();
+
+            this.control.comboBox1.SelectedIndexChanged += this.ComboBox1SelectedIndexChanged;
+            this.control.comboBox2.SelectedIndexChanged += this.ComboBox2SelectedIndexChanged;
+            this.control.listView1.ItemDrag += this.ListViewItemDrag;
         }
 
         public IList<Section> Sections
@@ -35,92 +37,110 @@
 
         private void PopulateView()
         {
-            this.panel1.Controls.Clear();
-            this.comboBox1.Items.Clear();
+            this.control.comboBox1.Items.Clear();
+            this.control.comboBox2.Items.Clear();
+            this.control.listView1.Items.Clear();
 
             if (this.Sections == null)
             {
                 return;
             }
 
-            var orderedWorlds = this.Sections
-                .GroupBy(x => x.World, StringComparer.InvariantCultureIgnoreCase)
-                .OrderBy(x => x.Key, StringComparer.InvariantCultureIgnoreCase);
-            foreach (var world in orderedWorlds)
+            this.PopulateWorldComboBox();
+        }
+
+        private void PopulateWorldComboBox()
+        {
+            var worlds = this.Sections
+                .Select(x => x.World)
+                .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
+
+            foreach (var world in worlds)
             {
-                this.comboBox1.Items.Add(world.Key);
-
-                TabControl tabs = new TabControl();
-                tabs.Dock = DockStyle.Fill;
-
-                var orderedGroups = world
-                    .GroupBy(x => x.Category, StringComparer.InvariantCultureIgnoreCase)
-                    .OrderBy(x => x.Key, StringComparer.InvariantCultureIgnoreCase);
-                foreach (var group in orderedGroups)
-                {
-                    ListView view = this.CreateViewFor(group);
-                    view.MultiSelect = false;
-                    view.Dock = DockStyle.Fill;
-                    view.ItemDrag += this.ListView_ItemDrag;
-
-                    TabPage page = new TabPage(group.Key);
-                    page.Controls.Add(view);
-                    tabs.Controls.Add(page);
-                }
-
-                this.worldControls.Add(tabs);
+                this.control.comboBox1.Items.Add(world);
             }
 
-            if (this.comboBox1.Items.Count > 0)
+            if (this.control.comboBox1.Items.Count > 0)
             {
-                this.comboBox1.SelectedIndex = 0;
+                this.control.comboBox1.SelectedIndex = 0;
             }
         }
 
-        private ListView CreateViewFor(IEnumerable<Section> sections)
+        private void PopulateCategoryComboBox()
         {
-            var sList = sections.OrderBy(x => x.Name).ToList();
+            this.control.comboBox2.Items.Clear();
 
-            ListView listView = new ListView();
+            var selectedWorld = (string)this.control.comboBox1.SelectedItem;
 
-            ImageList imgs = new ImageList();
-            imgs.ImageSize = new Size(128, 128);
-            foreach (Section s in sList)
+            var categories = this.Sections
+                .Where(x => x.World == selectedWorld)
+                .Select(x => x.Category)
+                .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
+
+            foreach (var cat in categories)
             {
-                imgs.Images.Add(s.Minimap);
+                this.control.comboBox2.Items.Add(cat);
             }
 
-            listView.LargeImageList = imgs;
-
-            int i = 0;
-            foreach (Section s in sList)
+            if (this.control.comboBox2.Items.Count > 0)
             {
-                var label = string.Format("{0} ({1}x{2})", s.Name, s.PixelWidth, s.PixelHeight);
-                ListViewItem item = new ListViewItem(label, i++);
-                item.Tag = s;
-                listView.Items.Add(item);
+                this.control.comboBox2.SelectedIndex = 0;
             }
-
-            return listView;
         }
 
-        private void ListView_ItemDrag(object sender, ItemDragEventArgs e)
+        private void PopulateListView()
         {
-            ListView view = sender as ListView;
+            this.control.listView1.Items.Clear();
+
+            var selectedWorld = (string)this.control.comboBox1.SelectedItem;
+            var selectedCategory = (string)this.control.comboBox2.SelectedItem;
+
+            var sections = this.Sections
+                .Where(x => x.World == selectedWorld && x.Category == selectedCategory)
+                .OrderBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase)
+                .ToList();
+
+            var images = new ImageList();
+            images.ImageSize = new Size(128, 128);
+            foreach (var s in sections)
+            {
+                images.Images.Add(s.Minimap);
+            }
+
+            this.control.listView1.LargeImageList = images;
+
+            var i = 0;
+            foreach (var s in sections)
+            {
+                var label = $"{s.Name} ({s.PixelWidth}x{s.PixelHeight})";
+                var item = new ListViewItem(label, i++) { Tag = s };
+                this.control.listView1.Items.Add(item);
+            }
+        }
+
+        private void ComboBox1SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.PopulateCategoryComboBox();
+        }
+
+        private void ComboBox2SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.PopulateListView();
+        }
+
+        private void ListViewItemDrag(object sender, ItemDragEventArgs e)
+        {
+            var view = (ListView)sender;
 
             if (view.SelectedIndices.Count == 0)
             {
                 return;
             }
 
-            int id = ((Section)view.SelectedItems[0].Tag).Id;
+            var id = ((Section)view.SelectedItems[0].Tag).Id;
             view.DoDragDrop(id.ToString(), DragDropEffects.Copy);
-        }
-
-        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            this.panel1.Controls.Clear();
-            this.panel1.Controls.Add(this.worldControls[this.comboBox1.SelectedIndex]);
         }
     }
 }

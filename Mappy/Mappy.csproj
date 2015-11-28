@@ -156,6 +156,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Controls\DoubleComboListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\DoubleComboListView.Designer.cs">
+      <DependentUpon>DoubleComboListView.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\Controls\FeatureView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -280,6 +286,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Operations\OperationManager.cs" />
     <Compile Include="Views\IProgressView.cs" />
+    <EmbeddedResource Include="UI\Controls\DoubleComboListView.resx">
+      <DependentUpon>DoubleComboListView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Controls\FeatureView.resx">
       <DependentUpon>FeatureView.cs</DependentUpon>
     </EmbeddedResource>
