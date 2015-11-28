@@ -12,11 +12,15 @@
     {
         private IList<Feature> features;
 
-        private IList<TabControl> worldControls = new List<TabControl>();
+        private readonly Dictionary<string, Bitmap> rescaledImageMap = new Dictionary<string, Bitmap>();
 
         public FeatureView()
         {
             this.InitializeComponent();
+
+            this.control.comboBox1.SelectedIndexChanged += this.ComboBox1SelectedIndexChanged;
+            this.control.comboBox2.SelectedIndexChanged += this.ComboBox2SelectedIndexChanged;
+            this.control.listView1.ItemDrag += this.ListViewItemDrag;
         }
 
         public IList<Feature> Features
@@ -35,78 +39,91 @@
 
         private void PopulateView()
         {
-            this.panel1.Controls.Clear();
-            this.comboBox1.Items.Clear();
-            
+            this.control.comboBox1.Items.Clear();
+            this.control.comboBox2.Items.Clear();
+            this.control.listView1.Items.Clear();
+
             if (this.Features == null)
             {
                 return;
             }
 
-            var orderedWorlds = this.Features
-                .GroupBy(x => x.World, StringComparer.InvariantCultureIgnoreCase)
-                .OrderBy(x => x.Key, StringComparer.InvariantCultureIgnoreCase);
-            foreach (var world in orderedWorlds)
+            this.PopulateWorldsComboBox();
+        }
+
+        private void PopulateWorldsComboBox()
+        {
+            this.control.comboBox1.Items.Clear();
+
+            var worlds = this.Features.Select(x => x.World)
+                .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
+
+            foreach (var world in worlds)
             {
-                this.comboBox1.Items.Add(world.Key);
+                this.control.comboBox1.Items.Add(world);
+            }
 
-                TabControl tabs = new TabControl();
-                tabs.Dock = DockStyle.Fill;
-
-                var orderedCategories = world
-                    .GroupBy(x => x.Category, StringComparer.InvariantCultureIgnoreCase)
-                    .OrderBy(x => x.Key, StringComparer.InvariantCultureIgnoreCase);
-                foreach (var group in orderedCategories)
-                {
-                    ListView view = this.CreateViewFor(group);
-                    view.MultiSelect = false;
-                    view.Dock = DockStyle.Fill;
-                    view.ItemDrag += this.ListView_ItemDrag;
-                    
-                    TabPage page = new TabPage(group.Key);
-                    page.Controls.Add(view);
-                    tabs.Controls.Add(page);
-                }
-
-                this.worldControls.Add(tabs);
-
-                if (this.comboBox1.Items.Count > 0)
-                {
-                    this.comboBox1.SelectedIndex = 0;
-                }
+            if (this.control.comboBox1.Items.Count > 0)
+            {
+                this.control.comboBox1.SelectedIndex = 0;
             }
         }
 
-        private ListView CreateViewFor(IEnumerable<Feature> features)
+        private void PopulateCategoryComboBox()
         {
-            ListView view = new ListView();
+            this.control.comboBox2.Items.Clear();
 
-            ImageList imgs = new ImageList();
-            imgs.ImageSize = new Size(64, 64);
+            var world = (string)this.control.comboBox1.SelectedItem;
 
-            var fList = features.OrderBy(x => x.Name).ToList();
+            var categories = this.Features.Where(x => x.World == world)
+                .Select(x => x.Category)
+                .Distinct(StringComparer.InvariantCultureIgnoreCase)
+                .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
 
-            foreach (Feature f in fList)
+            foreach (var category in categories)
             {
-                imgs.Images.Add(this.RescaleImage(f.Image));
+                this.control.comboBox2.Items.Add(category);
             }
 
-            view.LargeImageList = imgs;
-
-            int i = 0;
-            foreach (Feature f in fList)
+            if (this.control.comboBox2.Items.Count > 0)
             {
-                ListViewItem item = new ListViewItem(f.Name, i++);
-                item.Tag = f;
-                view.Items.Add(item);
+                this.control.comboBox2.SelectedIndex = 0;
             }
-
-            return view;
         }
 
-        private void ListView_ItemDrag(object sender, ItemDragEventArgs e)
+        private void PopulateListView()
         {
-            ListView view = sender as ListView;
+            this.control.listView1.Items.Clear();
+
+            var world = (string)this.control.comboBox1.SelectedItem;
+            var category = (string)this.control.comboBox2.SelectedItem;
+
+            var features = this.Features
+                .Where(x => x.World == world && x.Category == category)
+                .OrderBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase)
+                .ToList();
+
+            var images = new ImageList();
+            images.ImageSize = new Size(64, 64);
+            foreach (var f in features)
+            {
+                images.Images.Add(this.GetRescaledImage(f.Name, f.Image));
+            }
+
+            this.control.listView1.LargeImageList = images;
+
+            var i = 0;
+            foreach (var f in features)
+            {
+                var item = new ListViewItem(f.Name, i++) { Tag = f };
+                this.control.listView1.Items.Add(item);
+            }
+        }
+
+        private void ListViewItemDrag(object sender, ItemDragEventArgs e)
+        {
+            var view = (ListView)sender;
 
             if (view.SelectedIndices.Count == 0)
             {
@@ -117,10 +134,26 @@
             view.DoDragDrop(name, DragDropEffects.Copy);
         }
 
-        private void ComboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBox1SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.panel1.Controls.Clear();
-            this.panel1.Controls.Add(this.worldControls[this.comboBox1.SelectedIndex]);
+            this.PopulateCategoryComboBox();
+        }
+
+        private void ComboBox2SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.PopulateListView();
+        }
+
+        private Bitmap GetRescaledImage(string name, Bitmap img)
+        {
+            Bitmap rescaledImage;
+            if (!this.rescaledImageMap.TryGetValue(name, out rescaledImage))
+            {
+                rescaledImage = this.RescaleImage(img);
+                this.rescaledImageMap[name] = rescaledImage;
+            }
+
+            return rescaledImage;
         }
 
         private Bitmap RescaleImage(Bitmap img)
