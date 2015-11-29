@@ -25,6 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>mappy.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -35,6 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>mappy.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -335,6 +337,9 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Assets\PALETTE.PAL" />
+    <None Include="Mappy.ruleset">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\AssemblyInfo.cs.tmpl" />
     <None Include="Properties\DataSources\Mappy.Models.MapAttributesResult.datasource" />
   </ItemGroup>
