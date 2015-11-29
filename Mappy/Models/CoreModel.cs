@@ -801,22 +801,22 @@
         private bool OpenMap(string filename)
         {
             string ext = Path.GetExtension(filename) ?? string.Empty;
-            ext = ext.ToLowerInvariant();
+            ext = ext.ToUpperInvariant();
 
             try
             {
                 switch (ext)
                 {
-                    case ".hpi":
-                    case ".ufo":
-                    case ".ccx":
-                    case ".gpf":
-                    case ".gp3":
+                    case ".HPI":
+                    case ".UFO":
+                    case ".CCX":
+                    case ".GPF":
+                    case ".GP3":
                         return this.OpenFromHapi(filename);
-                    case ".tnt":
+                    case ".TNT":
                         this.OpenTnt(filename);
                         return true;
-                    case ".sct":
+                    case ".SCT":
                         this.OpenSct(filename);
                         return true;
                     default:

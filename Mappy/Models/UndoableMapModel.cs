@@ -907,20 +907,20 @@
                 throw new ArgumentNullException("filename");
             }
 
-            string extension = Path.GetExtension(filename).ToLowerInvariant();
+            string extension = Path.GetExtension(filename).ToUpperInvariant();
 
             try
             {
                 switch (extension)
                 {
-                    case ".tnt":
+                    case ".TNT":
                         this.Save(filename);
                         return true;
-                    case ".hpi":
-                    case ".ufo":
-                    case ".ccx":
-                    case ".gpf":
-                    case ".gp3":
+                    case ".HPI":
+                    case ".UFO":
+                    case ".CCX":
+                    case ".GPF":
+                    case ".GP3":
                         this.SaveHpi(filename);
                         return true;
                     default:
