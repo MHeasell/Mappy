@@ -152,7 +152,7 @@
         {
             if (index < 0 || index >= this.Width * this.Height)
             {
-                throw new IndexOutOfRangeException(
+                throw new ArgumentOutOfRangeException(
                     string.Format("index {0} is out of range", index));
             }
         }
@@ -161,7 +161,8 @@
         {
             if (x < 0 || y < 0 || x >= this.Width || y >= this.Height)
             {
-                throw new IndexOutOfRangeException(string.Format("Coordinates ({0}, {1}) out of range", x, y));
+                throw new ArgumentOutOfRangeException(
+                    string.Format("Coordinates ({0}, {1}) out of range", x, y));
             }
         }
     }
