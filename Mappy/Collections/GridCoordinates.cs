@@ -12,9 +12,9 @@ namespace Mappy.Collections
             this.Y = y;
         }
 
-        public int X { get; private set; }
+        public int X { get; }
 
-        public int Y { get; private set; }
+        public int Y { get; }
 
         public override bool Equals(object obj)
         {
