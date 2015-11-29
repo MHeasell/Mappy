@@ -7,7 +7,7 @@
 
     using Mappy.Collections;
 
-    public class MapPixelImageAdapter : IPixelImage, IDisposable
+    public sealed class MapPixelImageAdapter : IPixelImage, IDisposable
     {
         private readonly IGrid<Bitmap> map;
 
@@ -18,6 +18,11 @@
         public MapPixelImageAdapter(IGrid<Bitmap> map)
         {
             this.map = map;
+        }
+
+        ~MapPixelImageAdapter()
+        {
+            this.Dispose(false);
         }
 
         public int Width
@@ -65,9 +70,21 @@
 
         public void Dispose()
         {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
             if (this.disposed)
             {
                 return;
+            }
+
+            if (disposing)
+            {
+                // Free managed resoures here.
+                // We currently have no managed resources to free.
             }
 
             foreach (var e in this.dataMap)
