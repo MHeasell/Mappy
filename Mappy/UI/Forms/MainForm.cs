@@ -8,6 +8,7 @@
     using System.Windows.Forms;
 
     using Mappy.Models;
+    using Mappy.UI.Controls;
 
     public partial class MainForm : Form
     {
@@ -19,6 +20,8 @@
         {
             this.InitializeComponent();
         }
+
+        public MapViewPanel MapViewPanel => this.mapViewPanel;
 
         public void SetModel(IMainFormModel model)
         {

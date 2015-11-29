@@ -37,7 +37,7 @@
             var model = new CoreModel(svc);
             mainForm.SetModel(model);
 
-            mainForm.mapPanelView.SetSettingsModel(model);
+            mainForm.MapViewPanel.SetSettingsModel(model);
 
             var minimapForm = new MinimapForm();
             minimapForm.Owner = mainForm;
