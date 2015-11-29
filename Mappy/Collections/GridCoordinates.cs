@@ -16,6 +16,16 @@ namespace Mappy.Collections
 
         public int Y { get; }
 
+        public static bool operator ==(GridCoordinates a, GridCoordinates b)
+        {
+            return a.X == b.X && a.Y == b.Y;
+        }
+
+        public static bool operator !=(GridCoordinates a, GridCoordinates b)
+        {
+            return a.X != b.X || a.Y != b.Y;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != this.GetType())
@@ -25,7 +35,7 @@ namespace Mappy.Collections
 
             GridCoordinates g = (GridCoordinates)obj;
 
-            return g.X == this.X && g.Y == this.Y;
+            return this == g;
         }
 
         public override int GetHashCode()
