@@ -34,11 +34,16 @@
             }
         }
 
+        public static DrawableBandbox CreateSimple(Size size, Color color, Color borderColor)
+        {
+            return CreateSimple(size, color, borderColor, 1);
+        }
+
         public static DrawableBandbox CreateSimple(
             Size size,
             Color color,
             Color borderColor,
-            int borderWidth = 1)
+            int borderWidth)
         {
             return new DrawableBandbox(
                 new SolidBrush(color),
