@@ -27,12 +27,12 @@
 
             if (sourceX < 0 || sourceY < 0 || sourceX + width > src.Width || sourceY + height > src.Height)
             {
-                throw new IndexOutOfRangeException("source area overlaps source bounds");
+                throw new ArgumentException("source area overlaps source bounds");
             }
 
             if (destX < 0 || destY < 0 || destX + width > dest.Width || destY + height > dest.Height)
             {
-                throw new IndexOutOfRangeException("destination area overlaps destination bounds");
+                throw new ArgumentException("destination area overlaps destination bounds");
             }
 
             for (int dy = 0; dy < height; dy++)
@@ -58,12 +58,12 @@
 
             if (sourceX < 0 || sourceY < 0 || sourceX + width > src.Width || sourceY + height > src.Height)
             {
-                throw new IndexOutOfRangeException("source area overlaps source bounds");
+                throw new ArgumentException("source area overlaps source bounds");
             }
 
             if (destX < 0 || destY < 0 || destX + width > dest.Width || destY + height > dest.Height)
             {
-                throw new IndexOutOfRangeException("destination area overlaps destination bounds");
+                throw new ArgumentException("destination area overlaps destination bounds");
             }
 
             foreach (var e in src.CoordinateEntries)
@@ -87,7 +87,7 @@
         {
             if (x < 0 || y < 0 || x + src.Width > dest.Width || y + src.Height > dest.Height)
             {
-                throw new IndexOutOfRangeException("part of the other grid falls outside boundaries");
+                throw new ArgumentException("part of the other grid falls outside boundaries");
             }
 
             foreach (var e in src.CoordinateEntries)
@@ -105,7 +105,7 @@
 
             if (x < 0 || y < 0 || x + width > grid.Width || y + height > grid.Height)
             {
-                throw new IndexOutOfRangeException("fill area overlaps boundary");
+                throw new ArgumentException("fill area overlaps boundary");
             }
 
             for (int dy = 0; dy < height; dy++)
