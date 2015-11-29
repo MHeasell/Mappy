@@ -105,7 +105,6 @@
     <Compile Include="IO\FeatureRenderLoader.cs" />
     <Compile Include="IO\FeatureTdfLoader.cs" />
     <Compile Include="IO\FeatureLoadingUtils.cs" />
-    <Compile Include="IO\FrameInfo.cs" />
     <Compile Include="IO\Gaf\GafEntry.cs" />
     <Compile Include="IO\Gaf\GafEntryArrayAdapter.cs" />
     <Compile Include="IO\Gaf\GafFrame.cs" />
