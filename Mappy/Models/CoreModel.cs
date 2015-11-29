@@ -700,6 +700,13 @@
             this.Map.ViewportLocation = location;
         }
 
+        private static IEnumerable<string> GetMapNames(HpiReader hpi)
+        {
+            return hpi.GetFiles("maps")
+                .Where(x => x.Name.EndsWith(".tnt", StringComparison.OrdinalIgnoreCase))
+                .Select(x => x.Name.Substring(0, x.Name.Length - 4));
+        }
+
         private bool CheckOkayDiscard()
         {
             if (!this.IsDirty)
@@ -842,7 +849,7 @@
 
             using (HpiReader h = new HpiReader(filename))
             {
-                maps = this.GetMapNames(h).ToList();
+                maps = GetMapNames(h).ToList();
             }
 
             string mapName;
@@ -869,13 +876,6 @@
 
             this.OpenHapi(filename, HpiPath.Combine("maps", mapName + ".tnt"), readOnly);
             return true;
-        }
-
-        private IEnumerable<string> GetMapNames(HpiReader hpi)
-        {
-            return hpi.GetFiles("maps")
-                .Where(x => x.Name.EndsWith(".tnt", StringComparison.OrdinalIgnoreCase))
-                .Select(x => x.Name.Substring(0, x.Name.Length - 4));
         }
 
         private void MapOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
