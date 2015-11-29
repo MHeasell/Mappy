@@ -13,7 +13,6 @@
     using Mappy.Data;
     using Mappy.Database;
     using Mappy.IO;
-    using Mappy.Minimap;
     using Mappy.Util;
 
     using TAUtil;

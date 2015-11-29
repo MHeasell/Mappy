@@ -1,4 +1,4 @@
-﻿namespace Mappy.Minimap
+﻿namespace Mappy.UI.Forms
 {
     using Mappy.UI.Controls;
 
@@ -30,7 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.minimapControl = new Mappy.Minimap.MinimapControl();
+            this.minimapControl = new MinimapControl();
             this.SuspendLayout();
             // 
             // minimapControl

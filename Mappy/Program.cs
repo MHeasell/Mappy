@@ -4,7 +4,6 @@
     using System.IO;
     using System.Windows.Forms;
 
-    using Mappy.Minimap;
     using Mappy.Models;
     using Mappy.UI.Forms;
 

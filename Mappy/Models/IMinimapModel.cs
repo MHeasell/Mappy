@@ -1,9 +1,7 @@
-﻿namespace Mappy.Minimap
+﻿namespace Mappy.Models
 {
     using System.ComponentModel;
     using System.Drawing;
-
-    using Geometry;
 
     public interface IMinimapModel : INotifyPropertyChanged
     {

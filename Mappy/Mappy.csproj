@@ -139,7 +139,6 @@
     <Compile Include="IO\SectionLoader.cs" />
     <Compile Include="IO\SectionLoadingUtils.cs" />
     <Compile Include="MappySettings.cs" />
-    <Compile Include="Minimap\IMinimapModel.cs" />
     <Compile Include="Models\BandboxBehaviours\FeatureBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxBehaviours\IBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxBehaviours\TileBandboxBehaviour.cs" />
@@ -153,6 +152,7 @@
     <Compile Include="Models\IMainFormModel.cs" />
     <Compile Include="Models\IMainModel.cs" />
     <Compile Include="Models\IMapViewSettingsModel.cs" />
+    <Compile Include="Models\IMinimapModel.cs" />
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
     <Compile Include="Models\SectionFeatureLoadResult.cs" />
@@ -199,6 +199,9 @@
     <Compile Include="UI\Controls\MapViewPanel.Designer.cs">
       <DependentUpon>MapViewPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Controls\MinimapControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\Controls\SectionView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -233,6 +236,12 @@
     </Compile>
     <Compile Include="UI\Forms\MapAttributesForm.Designer.cs">
       <DependentUpon>MapAttributesForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Forms\MinimapForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\Forms\MinimapForm.Designer.cs">
+      <DependentUpon>MinimapForm.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Forms\NewMapForm.cs">
       <SubType>Form</SubType>
@@ -287,15 +296,6 @@
     <Compile Include="UI\Forms\MapSelectionForm.Designer.cs">
       <DependentUpon>MapSelectionForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Minimap\MinimapControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Minimap\MinimapForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Minimap\MinimapForm.Designer.cs">
-      <DependentUpon>MinimapForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\Painters\IPainter.cs" />
     <Compile Include="UI\Forms\PreferencesForm.cs">
       <SubType>Form</SubType>
@@ -334,7 +334,7 @@
     <EmbeddedResource Include="UI\Forms\MapSelectionForm.resx">
       <DependentUpon>MapSelectionForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Minimap\MinimapForm.resx">
+    <EmbeddedResource Include="UI\Forms\MinimapForm.resx">
       <DependentUpon>MinimapForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Forms\NewMapForm.resx">
