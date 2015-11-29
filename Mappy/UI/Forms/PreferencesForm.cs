@@ -40,9 +40,19 @@
 
         private void RemoveButtonClick(object sender, EventArgs e)
         {
-            foreach (int i in this.searchPathsListView.SelectedIndices)
+            var selectedIndices = this.searchPathsListView.SelectedIndices;
+            if (selectedIndices.Count > 0)
             {
+                var i = selectedIndices[0];
                 this.searchPathsListView.Items.RemoveAt(i);
+
+                // select the item before the one we removed,
+                // as long as there are items remaining in the list.
+                if (this.searchPathsListView.Items.Count > 0)
+                {
+                    this.searchPathsListView.Items[Math.Max(i - 1, 0)].Selected = true;
+                    this.searchPathsListView.Focus();
+                }
             }
         }
 
