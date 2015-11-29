@@ -81,9 +81,8 @@
         }
 
         #endregion
-
-        public System.Windows.Forms.ComboBox comboBox1;
-        public System.Windows.Forms.ComboBox comboBox2;
-        public System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.ListView listView1;
     }
 }

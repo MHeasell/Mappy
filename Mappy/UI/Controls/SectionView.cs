@@ -16,9 +16,9 @@
         {
             this.InitializeComponent();
 
-            this.control.comboBox1.SelectedIndexChanged += this.ComboBox1SelectedIndexChanged;
-            this.control.comboBox2.SelectedIndexChanged += this.ComboBox2SelectedIndexChanged;
-            this.control.listView1.ItemDrag += this.ListViewItemDrag;
+            this.control.ComboBox1.SelectedIndexChanged += this.ComboBox1SelectedIndexChanged;
+            this.control.ComboBox2.SelectedIndexChanged += this.ComboBox2SelectedIndexChanged;
+            this.control.ListView.ItemDrag += this.ListViewItemDrag;
         }
 
         public IList<Section> Sections
@@ -37,9 +37,9 @@
 
         private void PopulateView()
         {
-            this.control.comboBox1.Items.Clear();
-            this.control.comboBox2.Items.Clear();
-            this.control.listView1.Items.Clear();
+            this.control.ComboBox1.Items.Clear();
+            this.control.ComboBox2.Items.Clear();
+            this.control.ListView.Items.Clear();
 
             if (this.Sections == null)
             {
@@ -58,20 +58,20 @@
 
             foreach (var world in worlds)
             {
-                this.control.comboBox1.Items.Add(world);
+                this.control.ComboBox1.Items.Add(world);
             }
 
-            if (this.control.comboBox1.Items.Count > 0)
+            if (this.control.ComboBox1.Items.Count > 0)
             {
-                this.control.comboBox1.SelectedIndex = 0;
+                this.control.ComboBox1.SelectedIndex = 0;
             }
         }
 
         private void PopulateCategoryComboBox()
         {
-            this.control.comboBox2.Items.Clear();
+            this.control.ComboBox2.Items.Clear();
 
-            var selectedWorld = (string)this.control.comboBox1.SelectedItem;
+            var selectedWorld = (string)this.control.ComboBox1.SelectedItem;
 
             var categories = this.Sections
                 .Where(x => x.World == selectedWorld)
@@ -81,21 +81,21 @@
 
             foreach (var cat in categories)
             {
-                this.control.comboBox2.Items.Add(cat);
+                this.control.ComboBox2.Items.Add(cat);
             }
 
-            if (this.control.comboBox2.Items.Count > 0)
+            if (this.control.ComboBox2.Items.Count > 0)
             {
-                this.control.comboBox2.SelectedIndex = 0;
+                this.control.ComboBox2.SelectedIndex = 0;
             }
         }
 
         private void PopulateListView()
         {
-            this.control.listView1.Items.Clear();
+            this.control.ListView.Items.Clear();
 
-            var selectedWorld = (string)this.control.comboBox1.SelectedItem;
-            var selectedCategory = (string)this.control.comboBox2.SelectedItem;
+            var selectedWorld = (string)this.control.ComboBox1.SelectedItem;
+            var selectedCategory = (string)this.control.ComboBox2.SelectedItem;
 
             var sections = this.Sections
                 .Where(x => x.World == selectedWorld && x.Category == selectedCategory)
@@ -109,14 +109,14 @@
                 images.Images.Add(s.Minimap);
             }
 
-            this.control.listView1.LargeImageList = images;
+            this.control.ListView.LargeImageList = images;
 
             var i = 0;
             foreach (var s in sections)
             {
                 var label = $"{s.Name} ({s.PixelWidth}x{s.PixelHeight})";
                 var item = new ListViewItem(label, i++) { Tag = s };
-                this.control.listView1.Items.Add(item);
+                this.control.ListView.Items.Add(item);
             }
         }
 

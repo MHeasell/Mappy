@@ -18,9 +18,9 @@
         {
             this.InitializeComponent();
 
-            this.control.comboBox1.SelectedIndexChanged += this.ComboBox1SelectedIndexChanged;
-            this.control.comboBox2.SelectedIndexChanged += this.ComboBox2SelectedIndexChanged;
-            this.control.listView1.ItemDrag += this.ListViewItemDrag;
+            this.control.ComboBox1.SelectedIndexChanged += this.ComboBox1SelectedIndexChanged;
+            this.control.ComboBox2.SelectedIndexChanged += this.ComboBox2SelectedIndexChanged;
+            this.control.ListView.ItemDrag += this.ListViewItemDrag;
         }
 
         public IList<Feature> Features
@@ -39,9 +39,9 @@
 
         private void PopulateView()
         {
-            this.control.comboBox1.Items.Clear();
-            this.control.comboBox2.Items.Clear();
-            this.control.listView1.Items.Clear();
+            this.control.ComboBox1.Items.Clear();
+            this.control.ComboBox2.Items.Clear();
+            this.control.ListView.Items.Clear();
 
             if (this.Features == null)
             {
@@ -53,7 +53,7 @@
 
         private void PopulateWorldsComboBox()
         {
-            this.control.comboBox1.Items.Clear();
+            this.control.ComboBox1.Items.Clear();
 
             var worlds = this.Features.Select(x => x.World)
                 .Distinct(StringComparer.InvariantCultureIgnoreCase)
@@ -61,20 +61,20 @@
 
             foreach (var world in worlds)
             {
-                this.control.comboBox1.Items.Add(world);
+                this.control.ComboBox1.Items.Add(world);
             }
 
-            if (this.control.comboBox1.Items.Count > 0)
+            if (this.control.ComboBox1.Items.Count > 0)
             {
-                this.control.comboBox1.SelectedIndex = 0;
+                this.control.ComboBox1.SelectedIndex = 0;
             }
         }
 
         private void PopulateCategoryComboBox()
         {
-            this.control.comboBox2.Items.Clear();
+            this.control.ComboBox2.Items.Clear();
 
-            var world = (string)this.control.comboBox1.SelectedItem;
+            var world = (string)this.control.ComboBox1.SelectedItem;
 
             var categories = this.Features.Where(x => x.World == world)
                 .Select(x => x.Category)
@@ -83,21 +83,21 @@
 
             foreach (var category in categories)
             {
-                this.control.comboBox2.Items.Add(category);
+                this.control.ComboBox2.Items.Add(category);
             }
 
-            if (this.control.comboBox2.Items.Count > 0)
+            if (this.control.ComboBox2.Items.Count > 0)
             {
-                this.control.comboBox2.SelectedIndex = 0;
+                this.control.ComboBox2.SelectedIndex = 0;
             }
         }
 
         private void PopulateListView()
         {
-            this.control.listView1.Items.Clear();
+            this.control.ListView.Items.Clear();
 
-            var world = (string)this.control.comboBox1.SelectedItem;
-            var category = (string)this.control.comboBox2.SelectedItem;
+            var world = (string)this.control.ComboBox1.SelectedItem;
+            var category = (string)this.control.ComboBox2.SelectedItem;
 
             var features = this.Features
                 .Where(x => x.World == world && x.Category == category)
@@ -111,13 +111,13 @@
                 images.Images.Add(this.GetRescaledImage(f.Name, f.Image));
             }
 
-            this.control.listView1.LargeImageList = images;
+            this.control.ListView.LargeImageList = images;
 
             var i = 0;
             foreach (var f in features)
             {
                 var item = new ListViewItem(f.Name, i++) { Tag = f };
-                this.control.listView1.Items.Add(item);
+                this.control.ListView.Items.Add(item);
             }
         }
 
