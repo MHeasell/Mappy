@@ -32,13 +32,23 @@ namespace Mappy.Collections
 
         private readonly QuadTree<T>[] nodes = new QuadTree<T>[4];
 
-        public QuadTree(Rectangle bounds, int splitThreshold = DefaultSplitThreshold)
+        public QuadTree(Rectangle bounds)
+            : this(bounds, DefaultSplitThreshold)
+        {
+        }
+
+        public QuadTree(Rectangle bounds, int splitThreshold)
         {
             this.bounds = bounds;
             this.splitThreshold = splitThreshold;
         }
 
-        public QuadTree(Rectangle bounds, IEnumerable<T> collection, int splitThreshold = DefaultSplitThreshold)
+        public QuadTree(Rectangle bounds, IEnumerable<T> collection)
+            : this(bounds, collection, DefaultSplitThreshold)
+        {
+        }
+
+        public QuadTree(Rectangle bounds, IEnumerable<T> collection, int splitThreshold)
             : this(bounds, splitThreshold)
         {
             foreach (T item in collection)
