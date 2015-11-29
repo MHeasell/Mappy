@@ -10,9 +10,9 @@
 
     public partial class FeatureView : UserControl
     {
-        private IList<Feature> features;
-
         private readonly Dictionary<string, Bitmap> rescaledImageMap = new Dictionary<string, Bitmap>();
+
+        private IList<Feature> features;
 
         public FeatureView()
         {
