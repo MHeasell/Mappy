@@ -19,75 +19,75 @@
                 foreach (string dir in MappySettings.Settings.SearchPaths)
                 {
                     ListViewItem i = new ListViewItem(dir);
-                    this.listView1.Items.Add(i);
+                    this.searchPathsListView.Items.Add(i);
                 }
             }
         }
 
-        private void Button1Click(object sender, EventArgs e)
+        private void AddButtonClick(object sender, EventArgs e)
         {
             var d = new VistaFolderBrowserDialog();
             DialogResult r = d.ShowDialog(this);
             if (r == DialogResult.OK)
             {
                 ListViewItem i = new ListViewItem(d.SelectedPath);
-                this.listView1.Items.Add(i);
+                this.searchPathsListView.Items.Add(i);
                 i.Selected = true;
             }
 
-            this.listView1.Focus();
+            this.searchPathsListView.Focus();
         }
 
-        private void Button2Click(object sender, EventArgs e)
+        private void RemoveButtonClick(object sender, EventArgs e)
         {
-            foreach (int i in this.listView1.SelectedIndices)
+            foreach (int i in this.searchPathsListView.SelectedIndices)
             {
-                this.listView1.Items.RemoveAt(i);
+                this.searchPathsListView.Items.RemoveAt(i);
             }
         }
 
-        private void Button3Click(object sender, EventArgs e)
+        private void UpButtonClick(object sender, EventArgs e)
         {
-            foreach (int i in this.listView1.SelectedIndices)
+            foreach (int i in this.searchPathsListView.SelectedIndices)
             {
                 if (i == 0)
                 {
-                    this.listView1.Focus();
+                    this.searchPathsListView.Focus();
                     continue;
                 }
 
-                ListViewItem tmp = this.listView1.Items[i];
-                this.listView1.Items.RemoveAt(i);
-                this.listView1.Items.Insert(i - 1, tmp);
+                ListViewItem tmp = this.searchPathsListView.Items[i];
+                this.searchPathsListView.Items.RemoveAt(i);
+                this.searchPathsListView.Items.Insert(i - 1, tmp);
 
-                this.listView1.Items[i - 1].Selected = true;
-                this.listView1.Focus();
+                this.searchPathsListView.Items[i - 1].Selected = true;
+                this.searchPathsListView.Focus();
             }
         }
 
-        private void Button4Click(object sender, EventArgs e)
+        private void DownButtonClick(object sender, EventArgs e)
         {
-            foreach (int i in this.listView1.SelectedIndices)
+            foreach (int i in this.searchPathsListView.SelectedIndices)
             {
-                if (i == this.listView1.Items.Count - 1)
+                if (i == this.searchPathsListView.Items.Count - 1)
                 {
-                    this.listView1.Focus();
+                    this.searchPathsListView.Focus();
                     continue;
                 }
 
-                ListViewItem tmp = this.listView1.Items[i];
-                this.listView1.Items.RemoveAt(i);
-                this.listView1.Items.Insert(i + 1, tmp);
+                ListViewItem tmp = this.searchPathsListView.Items[i];
+                this.searchPathsListView.Items.RemoveAt(i);
+                this.searchPathsListView.Items.Insert(i + 1, tmp);
 
-                this.listView1.Items[i + 1].Selected = true;
-                this.listView1.Focus();
+                this.searchPathsListView.Items[i + 1].Selected = true;
+                this.searchPathsListView.Focus();
             }
         }
 
-        private void Button5Click(object sender, EventArgs e)
+        private void OkButtonClick(object sender, EventArgs e)
         {
             System.Collections.Specialized.StringCollection s = new System.Collections.Specialized.StringCollection();
-            foreach (ListViewItem i in this.listView1.Items)
+            foreach (ListViewItem i in this.searchPathsListView.Items)
             {
                 s.Add(i.Text);
             }
