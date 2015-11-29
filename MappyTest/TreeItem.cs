@@ -4,7 +4,7 @@
 
     using Mappy.Collections;
 
-    public class TreeItem : QuadTree<TreeItem>.IQuadTreeItem
+    public class TreeItem : IQuadTreeItem
     {
         public TreeItem(Rectangle bounds)
         {

@@ -127,7 +127,7 @@ namespace Mappy.UI.Controls
             }
         }
 
-        public class Item : Notifier, QuadTree<Item>.IQuadTreeItem
+        public class Item : Notifier, IQuadTreeItem
         {
             private readonly int x;
             private readonly int y;

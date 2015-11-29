@@ -12,7 +12,7 @@ namespace Mappy.Collections
     /// or rectangle.
     /// </summary>
     /// <typeparam name="T">The type of the elements</typeparam>
-    public class QuadTree<T> : ICollection<T> where T : QuadTree<T>.IQuadTreeItem
+    public class QuadTree<T> : ICollection<T> where T : IQuadTreeItem
     {
         private const int TopLeftIndex = 0;
 
@@ -55,11 +55,6 @@ namespace Mappy.Collections
             {
                 this.Add(item);
             }
-        }
-
-        public interface IQuadTreeItem
-        {
-            Rectangle Bounds { get; }
         }
 
         public int Count { get; private set; }
