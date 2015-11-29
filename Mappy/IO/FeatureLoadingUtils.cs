@@ -10,7 +10,7 @@
 
     using TAUtil.Gdi.Palette;
 
-    public class FeatureLoadingUtils
+    public static class FeatureLoadingUtils
     {
         public static bool LoadFeatures(
             Action<int> progressCallback,
