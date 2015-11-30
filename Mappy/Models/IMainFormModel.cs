@@ -1,106 +1,46 @@
 ﻿namespace Mappy.Models
 {
+    using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Drawing;
 
     using Mappy.Data;
     using Mappy.Database;
 
-    public interface IMainFormModel : INotifyPropertyChanged
+    public interface IMainFormModel
     {
         IFeatureDatabase FeatureRecords { get; }
 
         IList<Section> Sections { get; }
 
-        bool CanUndo { get; }
+        IObservable<bool> CanUndo { get; }
 
-        bool CanRedo { get; }
+        IObservable<bool> CanRedo { get; }
 
-        bool CanCut { get; }
+        IObservable<bool> CanCut { get; }
 
-        bool CanCopy { get; }
+        IObservable<bool> CanCopy { get; }
 
-        bool CanPaste { get; }
+        IObservable<bool> CanPaste { get; }
 
-        bool IsDirty { get; }
+        IObservable<bool> IsDirty { get; }
 
-        bool MapOpen { get; }
+        IObservable<bool> MapOpen { get; }
 
-        string FilePath { get; }
+        IObservable<string> FilePath { get; }
 
-        bool IsFileReadOnly { get; }
+        IObservable<bool> IsFileReadOnly { get; }
 
-        bool GridVisible { get; set; }
+        IObservable<bool> GridVisible { get; }
 
-        Size GridSize { get; set; }
+        IObservable<Size> GridSize { get; }
 
-        bool HeightmapVisible { get; }
+        IObservable<bool> HeightmapVisible { get; }
 
-        bool FeaturesVisible { get; }
+        IObservable<bool> FeaturesVisible { get; }
 
-        bool MinimapVisible { get; }
+        IObservable<bool> MinimapVisible { get; }
 
-        int SeaLevel { get; }
-
-        void Initialize();
-
-        void ChooseColor();
-
-        void OpenMapAttributes();
-
-        void Undo();
-
-        void Redo();
-
-        bool New();
-
-        bool Save();
-
-        bool SaveAs();
-
-        bool Open();
-
-        bool OpenFromDragDrop(string filename);
-
-        void Close();
-
-        void ShowAbout();
-
-        void ToggleHeightmap();
-
-        void ToggleMinimap();
-
-        void ToggleFeatures();
-
-        void RefreshMinimap();
-
-        void RefreshMinimapHighQualityWithProgress();
-
-        void OpenPreferences();
-
-        void CloseMap();
-
-        void SetSeaLevel(int value);
-
-        void FlushSeaLevel();
-
-        void CutSelectionToClipboard();
-
-        void CopySelectionToClipboard();
-
-        void PasteFromClipboard();
-
-        void ExportMinimap();
-
-        void ExportHeightmap();
-
-        void ImportMinimap();
-
-        void ImportHeightmap();
-
-        void ImportCustomSection();
-
-        void ExportMapImage();
+        IObservable<int> SeaLevel { get; }
     }
 }

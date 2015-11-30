@@ -21,7 +21,7 @@
     using TAUtil.Tdf;
     using TAUtil.Tnt;
 
-    public class CoreModel : Notifier, IMinimapModel, IMainFormModel, IMapViewSettingsModel
+    public class CoreModel : Notifier, IMinimapModel, IMapViewSettingsModel, IUserEventDispatcher
     {
         private readonly IFeatureDatabase featureRecords;
         private readonly IList<Section> sections;
@@ -289,6 +289,17 @@
             {
                 return this.Map == null ? null : this.Map.Minimap;
             }
+        }
+
+        public void HideGrid()
+        {
+            this.GridVisible = false;
+        }
+
+        public void EnableGridWithSize(Size s)
+        {
+            this.GridSize = s;
+            this.GridVisible = true;
         }
 
         public void ShowAbout()

@@ -35,7 +35,8 @@
             var mainForm = new MainForm();
             var svc = new DialogService(mainForm);
             var model = new CoreModel(svc);
-            mainForm.SetModel(model);
+            mainForm.SetModel(new MainFormViewModel(model));
+            mainForm.SetDispatcher(model);
 
             mainForm.MapViewPanel.SetSettingsModel(model);
 
