@@ -14,10 +14,6 @@
     {
         private readonly CoreModel model;
 
-        // TODO: still doesn't support section/feature loading
-
-
-
         public MainFormViewModel(CoreModel model)
         {
             this.model = model;
@@ -132,11 +128,25 @@
                 .Select(_ => this.model.SeaLevel)
                 .Subscribe(seaLevel);
             this.SeaLevel = seaLevel;
+
+            var featureRecords = new BehaviorSubject<IFeatureDatabase>(this.model.FeatureRecords);
+            modelPropertyChanged
+                .Where(x => x == "FeatureRecords")
+                .Select(_ => this.model.FeatureRecords)
+                .Subscribe(featureRecords);
+            this.FeatureRecords = featureRecords;
+
+            var sections = new BehaviorSubject<IList<Section>>(this.model.Sections);
+            modelPropertyChanged
+                .Where(x => x == "Sections")
+                .Select(_ => this.model.Sections)
+                .Subscribe(sections);
+            this.Sections = sections;
         }
 
-        public IFeatureDatabase FeatureRecords => this.model.FeatureRecords;
+        public IObservable<IFeatureDatabase> FeatureRecords { get; }
 
-        public IList<Section> Sections => this.model.Sections;
+        public IObservable<IList<Section>> Sections { get; }
 
         public IObservable<bool> CanUndo { get; }
 

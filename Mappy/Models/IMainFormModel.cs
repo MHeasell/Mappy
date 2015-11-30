@@ -9,9 +9,9 @@
 
     public interface IMainFormModel
     {
-        IFeatureDatabase FeatureRecords { get; }
+        IObservable<IFeatureDatabase> FeatureRecords { get; }
 
-        IList<Section> Sections { get; }
+        IObservable<IList<Section>> Sections { get; }
 
         IObservable<bool> CanUndo { get; }
 

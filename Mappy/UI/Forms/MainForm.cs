@@ -103,6 +103,12 @@
 
             // features
             model.FeaturesVisible.Subscribe(x => this.toggleFeaturesMenuItem.Checked = x);
+
+            // sections
+            model.Sections.Subscribe(x => this.sectionsView.Sections = x);
+
+            // feature records
+            model.FeatureRecords.Subscribe(x => this.featureView.Features = x.EnumerateAll().ToList());
         }
 
         private void UpdateGridSize(Size? sizeContainer)
