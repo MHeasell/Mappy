@@ -9,12 +9,8 @@
 
     public class MainFormViewModel : IMainFormModel
     {
-        private readonly CoreModel model;
-
         public MainFormViewModel(CoreModel model)
         {
-            this.model = model;
-
             this.CanUndo = model.PropertyAsObservable(x => x.CanUndo, "CanUndo");
             this.CanRedo = model.PropertyAsObservable(x => x.CanRedo, "CanRedo");
             this.CanCut = model.PropertyAsObservable(x => x.CanCut, "CanCut");
