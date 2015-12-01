@@ -27,6 +27,10 @@
             this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, "MinimapVisible");
             this.SeaLevel = model.PropertyAsObservable(x => x.SeaLevel, "SeaLevel");
 
+            // TODO: Come up with some other solution for this.
+            // It should be possible to observe add/remove events from these collections
+            // rather than listening to the collections themselves.
+            // Needs some refactoring in CoreModel.
             this.FeatureRecords = model.PropertyAsObservable(x => x.FeatureRecords, "FeatureRecords");
             this.Sections = model.PropertyAsObservable(x => x.Sections, "Sections");
         }
