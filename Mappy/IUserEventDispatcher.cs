@@ -71,5 +71,9 @@
         void ImportCustomSection();
 
         void Initialize();
+
+        void SetViewportLocation(Point location);
+
+        void HideMinimap();
     }
 }

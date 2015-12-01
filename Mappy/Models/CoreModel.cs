@@ -21,7 +21,7 @@
     using TAUtil.Tdf;
     using TAUtil.Tnt;
 
-    public class CoreModel : Notifier, IMinimapModel, IMapViewSettingsModel, IUserEventDispatcher
+    public class CoreModel : Notifier, IMapViewSettingsModel, IUserEventDispatcher
     {
         private readonly IFeatureDatabase featureRecords;
         private readonly IList<Section> sections;

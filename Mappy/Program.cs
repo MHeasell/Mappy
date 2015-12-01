@@ -42,7 +42,8 @@
 
             var minimapForm = new MinimapForm();
             minimapForm.Owner = mainForm;
-            minimapForm.SetModel(model);
+            minimapForm.SetModel(new MinimapFormViewModel(model));
+            minimapForm.SetDispatcher(model);
 
             Application.Run(mainForm);
         }

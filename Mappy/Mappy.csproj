@@ -119,6 +119,7 @@
     <Compile Include="Data\Positioned.cs" />
     <Compile Include="Data\Section.cs" />
     <Compile Include="Data\StartPositionChangedEventArgs.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IO\AbstractHpiLoader.cs" />
     <Compile Include="IO\BitmapCache.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MainFormViewModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
+    <Compile Include="Models\MinimapFormViewModel.cs" />
     <Compile Include="Models\SectionFeatureLoadResult.cs" />
     <Compile Include="Models\SectionImportPaths.cs" />
     <Compile Include="Models\UndoableMapModel.cs" />

@@ -1,26 +1,22 @@
 ﻿namespace Mappy.Models
 {
-    using System.ComponentModel;
+    using System;
     using System.Drawing;
 
-    public interface IMinimapModel : INotifyPropertyChanged
+    public interface IMinimapModel
     {
-        int MapWidth { get; }
+        IObservable<int> MapWidth { get; }
 
-        int MapHeight { get; }
+        IObservable<int> MapHeight { get; }
 
-        bool MinimapVisible { get; }
+        IObservable<bool> MinimapVisible { get; }
 
-        Point ViewportLocation { get; }
+        IObservable<Point> ViewportLocation { get; }
 
-        int ViewportWidth { get; }
+        IObservable<int> ViewportWidth { get; }
 
-        int ViewportHeight { get; }
+        IObservable<int> ViewportHeight { get; }
 
-        Bitmap MinimapImage { get; }
-
-        void SetViewportLocation(Point location);
-
-        void HideMinimap();
+        IObservable<Bitmap> MinimapImage { get; }
     }
 }

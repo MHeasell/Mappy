@@ -1,7 +1,8 @@
 ﻿namespace Mappy.UI.Forms
 {
-    using System.ComponentModel;
+    using System;
     using System.Drawing;
+    using System.Reactive.Linq;
     using System.Windows.Forms;
 
     using Mappy.Models;
@@ -10,7 +11,13 @@
     {
         private IMinimapModel model;
 
+        private IUserEventDispatcher dispatcher;
+
         private bool mouseDown;
+
+        private int mapWidth;
+
+        private int mapHeight;
 
         public MinimapForm()
         {
@@ -21,30 +28,51 @@
         {
             this.model = model;
 
-            model.PropertyChanged += this.ModelOnPropertyChanged;
+            model.MapWidth.Subscribe(x => this.mapWidth = x);
+            model.MapHeight.Subscribe(x => this.mapHeight = x);
 
-            this.Visible = model.MinimapVisible;
-            this.minimapControl.BackgroundImage = model.MinimapImage;
-            this.UpdateViewportRectangle();
+            model.MinimapVisible.Subscribe(x => this.Visible = x);
+            model.MinimapImage.Subscribe(x => this.minimapControl.BackgroundImage = x);
+
+            // transform the coordinates for the minimap viewport rectangle
+            var width = this.ScaleObsWidthToMinimap(model.ViewportWidth);
+            var height = this.ScaleObsHeightToMinimap(model.ViewportHeight);
+            var locX = this.ScaleObsWidthToMinimap(model.ViewportLocation.Select(x => x.X));
+            var locY = this.ScaleObsHeightToMinimap(model.ViewportLocation.Select(x => x.Y));
+            var loc = locX.CombineLatest(locY, (x, y) => new Point(x, y));
+            var size = width.CombineLatest(height, (w, h) => new Size(w, h));
+            var rect = loc.CombineLatest(size, (l, s) => new Rectangle(l, s));
+
+            var empty = Observable.Return(Rectangle.Empty);
+            model.MinimapImage
+                .Select(x => x == null ? empty : rect)
+                .Switch()
+                .Subscribe(x => this.minimapControl.ViewportRect = x);
         }
 
-        private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void SetDispatcher(IUserEventDispatcher dispatcher)
         {
-            switch (e.PropertyName)
-            {
-                case "MinimapVisible":
-                    this.Visible = this.model.MinimapVisible;
-                    break;
-                case "ViewportLocation":
-                case "ViewportWidth":
-                case "ViewportHeight":
-                    this.UpdateViewportRectangle();
-                    break;
-                case "MinimapImage":
-                    this.minimapControl.BackgroundImage = this.model.MinimapImage;
-                    this.UpdateViewportRectangle();
-                    break;
-            }
+            this.dispatcher = dispatcher;
+        }
+
+        private IObservable<int> ScaleObsWidthToMinimap(IObservable<int> value)
+        {
+            var mapWidth = this.model.MapWidth.Select(x => (x * 32) - 32);
+            var minimapWidth = this.model.MinimapImage.Select(x => x?.Width ?? 0);
+
+            return value
+                .CombineLatest(minimapWidth, (v, h) => v * h)
+                .CombineLatest(mapWidth, (v, h) => v / h);
+        }
+
+        private IObservable<int> ScaleObsHeightToMinimap(IObservable<int> value)
+        {
+            var mapHeight = this.model.MapHeight.Select(x => (x * 32) - 128);
+            var minimapHeight = this.model.MinimapImage.Select(x => x?.Height ?? 0);
+
+            return value
+                .CombineLatest(minimapHeight, (v, h) => v * h)
+                .CombineLatest(mapHeight, (v, h) => v / h);
         }
 
         private void MinimapFormFormClosing(object sender, FormClosingEventArgs e)
@@ -53,7 +81,7 @@
             {
                 e.Cancel = true;
 
-                this.model.HideMinimap();
+                this.dispatcher.HideMinimap();
             }
         }
 
@@ -65,7 +93,7 @@
 
         private void SetModelViewportCenter(Point loc)
         {
-            if (this.model.MinimapImage == null)
+            if (this.minimapControl.BackgroundImage == null)
             {
                 return;
             }
@@ -76,7 +104,7 @@
             x = this.ScaleWidthToMap(x);
             y = this.ScaleHeightToMap(y);
 
-            this.model.SetViewportLocation(new Point(x, y));
+            this.dispatcher.SetViewportLocation(new Point(x, y));
         }
 
         private void MinimapControl1MouseMove(object sender, MouseEventArgs e)
@@ -92,49 +120,18 @@
             this.mouseDown = false;
         }
 
-        private int ScaleWidthToMinimap(int val)
-        {
-            int mapWidth = (this.model.MapWidth * 32) - 32;
-            int minimapWidth = this.minimapControl.BackgroundImage.Width;
-            return (val * minimapWidth) / mapWidth;
-        }
-
         private int ScaleWidthToMap(int val)
         {
-            int mapWidth = (this.model.MapWidth * 32) - 32;
+            int mapWidth = (this.mapWidth * 32) - 32;
             int minimapWidth = this.minimapControl.BackgroundImage.Width;
             return (val * mapWidth) / minimapWidth;
         }
 
-        private int ScaleHeightToMinimap(int val)
-        {
-            int mapHeight = (this.model.MapHeight * 32) - 128;
-            int minimapHeight = this.minimapControl.BackgroundImage.Height;
-            return (val * minimapHeight) / mapHeight;
-        }
-
         private int ScaleHeightToMap(int val)
         {
-            int mapHeight = (this.model.MapHeight * 32) - 128;
+            int mapHeight = (this.mapHeight * 32) - 128;
             int minimapHeight = this.minimapControl.BackgroundImage.Height;
             return (val * mapHeight) / minimapHeight;
-        }
-
-        private void UpdateViewportRectangle()
-        {
-            if (this.minimapControl.BackgroundImage == null)
-            {
-                this.minimapControl.ViewportRect = Rectangle.Empty;
-                return;
-            }
-
-            var rectangle = new Rectangle(
-                this.ScaleWidthToMinimap(this.model.ViewportLocation.X),
-                this.ScaleHeightToMinimap(this.model.ViewportLocation.Y),
-                this.ScaleWidthToMinimap(this.model.ViewportWidth),
-                this.ScaleHeightToMinimap(this.model.ViewportHeight));
-
-            this.minimapControl.ViewportRect = rectangle;
         }
     }
 }
