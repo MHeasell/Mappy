@@ -1,34 +1,32 @@
 ﻿namespace Mappy.Models
 {
+    using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Drawing;
 
     using Mappy.Data;
     using Mappy.Database;
 
-    public interface IMapViewSettingsModel : INotifyPropertyChanged
+    public interface IMapViewSettingsModel
     {
-        bool GridVisible { get; }
+        IObservable<bool> GridVisible { get; }
 
-        Color GridColor { get; }
+        IObservable<Color> GridColor { get; }
 
-        Size GridSize { get; }
+        IObservable<Size> GridSize { get; }
 
-        bool HeightmapVisible { get; }
+        IObservable<bool> HeightmapVisible { get; }
 
-        bool FeaturesVisible { get; }
+        IObservable<bool> FeaturesVisible { get; }
 
-        IList<Section> Sections { get; }
+        IObservable<IList<Section>> Sections { get; }
 
-        IFeatureDatabase FeatureRecords { get; }
+        IObservable<IFeatureDatabase> FeatureRecords { get; }
 
-        IMainModel Map { get; }
+        IObservable<IMainModel> Map { get; }
 
-        int ViewportWidth { get; set; }
+        IObservable<int> ViewportWidth { get; set; }
 
-        int ViewportHeight { get; set; }
-
-        bool OpenFromDragDrop(string filename);
+        IObservable<int> ViewportHeight { get; set; }
     }
 }

@@ -8,6 +8,7 @@
 
     using Mappy.Collections;
     using Mappy.Data;
+    using Mappy.Database;
     using Mappy.Models;
     using Mappy.UI.Drawables;
     using Mappy.UI.Tags;
@@ -41,6 +42,8 @@
 
         private IMainModel mapModel;
 
+        private IUserEventDispatcher dispatcher;
+
         private bool mouseDown;
 
         private Point lastMousePos;
@@ -54,6 +57,14 @@
         private ImageLayerCollection.Item baseItem;
 
         private Point oldAutoScrollPos;
+
+        private IFeatureDatabase featureDatabase;
+
+        private bool featuresVisible;
+
+        private IList<Section> sections;
+
+        private bool heightmapVisible;
 
         static MapViewPanel()
         {
@@ -72,7 +83,21 @@
         public void SetSettingsModel(IMapViewSettingsModel model)
         {
             this.settingsModel = model;
-            model.PropertyChanged += this.SettingsModelPropertyChanged;
+
+            model.HeightmapVisible.Subscribe(x => this.heightmapVisible = x);
+            model.Map.Subscribe(this.SetMapModel);
+            model.GridVisible.Subscribe(x => this.mapView.GridVisible = x);
+            model.GridColor.Subscribe(x => this.mapView.GridColor = x);
+            model.GridSize.Subscribe(x => this.mapView.GridSize = x);
+            model.HeightmapVisible.Subscribe(this.RefreshHeightmapVisibility);
+            model.FeaturesVisible.Subscribe(x => this.featuresVisible = x);
+            model.FeatureRecords.Subscribe(x => this.featureDatabase = x);
+            model.Sections.Subscribe(x => this.sections = x);
+        }
+
+        public void SetDispatcher(IUserEventDispatcher dispatcher)
+        {
+            this.dispatcher = dispatcher;
         }
 
         private void SetMapModel(IMainModel model)
@@ -154,7 +179,7 @@
 
             this.baseTile = new DrawableTile(this.mapModel.BaseTile);
             this.baseTile.BackgroundColor = Color.CornflowerBlue;
-            this.baseTile.DrawHeightMap = this.settingsModel.HeightmapVisible;
+            this.baseTile.DrawHeightMap = this.heightmapVisible;
             this.baseTile.SeaLevel = this.mapModel.SeaLevel;
             this.baseItem = new ImageLayerCollection.Item(
                 0,
@@ -167,36 +192,14 @@
             this.mapView.Items.Add(this.baseItem);
         }
 
-        private void SettingsModelPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
-        {
-            switch (propertyChangedEventArgs.PropertyName)
-            {
-                case "Map":
-                    this.SetMapModel(this.settingsModel.Map);
-                    break;
-                case "GridVisible":
-                    this.mapView.GridVisible = this.settingsModel.GridVisible;
-                    break;
-                case "GridColor":
-                    this.mapView.GridColor = this.settingsModel.GridColor;
-                    break;
-                case "GridSize":
-                    this.mapView.GridSize = this.settingsModel.GridSize;
-                    break;
-                case "HeightmapVisible":
-                    this.RefreshHeightmapVisibility();
-                    break;
-            }
-        }
-
-        private void RefreshHeightmapVisibility()
+        private void RefreshHeightmapVisibility(bool visible)
         {
             if (this.baseTile == null)
             {
                 return;
             }
 
-            this.baseTile.DrawHeightMap = this.settingsModel.HeightmapVisible;
+            this.baseTile.DrawHeightMap = visible;
             this.mapView.Invalidate();
         }
 
@@ -504,7 +507,7 @@
             var coords = f.Location;
             int index = this.ToFeatureIndex(coords);
             Feature featureRecord;
-            if (!this.settingsModel.FeatureRecords.TryGetFeature(f.FeatureName, out featureRecord))
+            if (!this.featureDatabase.TryGetFeature(f.FeatureName, out featureRecord))
             {
                 featureRecord = DefaultFeatureRecord;
             }
@@ -516,7 +519,7 @@
                     index + 1000, // magic number to separate from tiles
                     new DrawableBitmap(featureRecord.Image));
             i.Tag = new FeatureTag(f.Id);
-            i.Visible = this.settingsModel.FeaturesVisible;
+            i.Visible = this.featuresVisible;
             this.featureMapping[f.Id] = i;
             this.mapView.Items.Add(i);
 
@@ -556,7 +559,7 @@
                     return;
                 }
 
-                this.settingsModel.OpenFromDragDrop(files[0]);
+                this.dispatcher.OpenFromDragDrop(files[0]);
                 return;
             }
 
@@ -581,7 +584,7 @@
                 int id;
                 if (int.TryParse(dataString, out id))
                 {
-                    var tile = this.settingsModel.Sections[id].GetTile();
+                    var tile = this.sections[id].GetTile();
                     this.mapModel.DragDropTile(tile, virtualX, virtualY);
                 }
                 else
@@ -722,15 +725,10 @@
         {
             var rect = this.ViewportRect;
 
-            if (this.settingsModel != null)
+            if (this.dispatcher != null)
             {
-                this.settingsModel.ViewportWidth = rect.Width;
-                this.settingsModel.ViewportHeight = rect.Height;
-            }
-
-            if (this.mapModel != null)
-            {
-                this.mapModel.ViewportLocation = rect.Location;
+                this.dispatcher.SetViewportSize(rect.Size);
+                this.dispatcher.SetViewportLocation(rect.Location);
             }
         }
 

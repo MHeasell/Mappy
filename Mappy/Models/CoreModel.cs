@@ -21,7 +21,7 @@
     using TAUtil.Tdf;
     using TAUtil.Tnt;
 
-    public class CoreModel : Notifier, IMapViewSettingsModel, IUserEventDispatcher
+    public class CoreModel : Notifier, IUserEventDispatcher
     {
         private readonly IFeatureDatabase featureRecords;
         private readonly IList<Section> sections;
@@ -55,14 +55,6 @@
 
             this.sectionFactory = new SectionFactory();
             this.mapModelFactory = new MapModelFactory();
-        }
-
-        IMainModel IMapViewSettingsModel.Map
-        {
-            get
-            {
-                return this.Map;
-            }
         }
 
         public bool MapOpen
@@ -709,6 +701,12 @@
             location.Y = Util.Clamp(location.Y, 0, (this.MapHeight * 32) - this.ViewportHeight);
 
             this.Map.ViewportLocation = location;
+        }
+
+        public void SetViewportSize(Size size)
+        {
+            this.ViewportWidth = size.Width;
+            this.ViewportHeight = size.Height;
         }
 
         private static IEnumerable<string> GetMapNames(HpiReader hpi)

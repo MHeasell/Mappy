@@ -159,6 +159,7 @@
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MainFormViewModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
+    <Compile Include="Models\MapViewViewModel.cs" />
     <Compile Include="Models\MinimapFormViewModel.cs" />
     <Compile Include="Models\SectionFeatureLoadResult.cs" />
     <Compile Include="Models\SectionImportPaths.cs" />

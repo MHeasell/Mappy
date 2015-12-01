@@ -38,7 +38,8 @@
             mainForm.SetModel(new MainFormViewModel(model));
             mainForm.SetDispatcher(model);
 
-            mainForm.MapViewPanel.SetSettingsModel(model);
+            mainForm.MapViewPanel.SetSettingsModel(new MapViewViewModel(model));
+            mainForm.MapViewPanel.SetDispatcher(model);
 
             var minimapForm = new MinimapForm();
             minimapForm.Owner = mainForm;

@@ -72,6 +72,8 @@
 
         void Initialize();
 
+        void SetViewportSize(Size size);
+
         void SetViewportLocation(Point location);
 
         void HideMinimap();
