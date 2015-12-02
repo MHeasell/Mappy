@@ -19,8 +19,6 @@
             this.MinimapImage = model.PropertyAsObservable(x => x.MinimapImage, "MinimapImage");
 
             // set up the minimap rectangle observable
-            var minimapRect = new BehaviorSubject<Rectangle>(Rectangle.Empty);
-
             var minimapRectWidth = this.ScaleObsWidthToMinimap(viewportWidth);
             var minimapRectHeight = this.ScaleObsHeightToMinimap(viewportHeight);
             var minimapRectSize = minimapRectWidth.CombineLatest(minimapRectHeight, (w, h) => new Size(w, h));
@@ -29,9 +27,10 @@
             var minimapRectY = this.ScaleObsHeightToMinimap(viewportLocation.Select(x => x.Y));
             var minimapRectLocation = minimapRectX.CombineLatest(minimapRectY, (x, y) => new Point(x, y));
 
-            minimapRectLocation
+            var minimapRect = minimapRectLocation
                 .CombineLatest(minimapRectSize, (l, s) => new Rectangle(l, s))
-                .Subscribe(minimapRect);
+                .Replay(1);
+            minimapRect.Connect();
 
             this.MinimapRect = minimapRect;
         }

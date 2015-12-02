@@ -54,17 +54,15 @@
             this.Sections = model.PropertyAsObservable(x => x.Sections, "Sections");
 
             // set up CanSave observable
-            var canSave = new BehaviorSubject<bool>(false);
-            Observable.CombineLatest(
+            var canSave = Observable.CombineLatest(
                 mapOpen,
                 filePath.Select(x => x != null),
                 isFileReadOnly.Select(x => !x))
                 .Select(x => x.All(y => y))
-                .Subscribe(canSave);
+                .Replay(1);
             this.CanSave = canSave;
 
             // set up TitleText observable
-            var titleText = new BehaviorSubject<string>(string.Empty);
             var cleanFileName = filePath.Select(x => (x ?? "Untitled"));
             var dirtyFileName = cleanFileName.Select(x => x + "*");
 
@@ -79,10 +77,11 @@
 
             var defaultTitle = Observable.Return(ProgramName);
             var openFileTitle = fileNameTitle.Select(y => y + " - " + ProgramName);
-            mapOpen
+            var titleText = mapOpen
                 .Select(x => x ? openFileTitle : defaultTitle)
                 .Switch()
-                .Subscribe(titleText);
+                .Replay(1);
+            titleText.Connect();
 
             this.TitleText = titleText;
         }
