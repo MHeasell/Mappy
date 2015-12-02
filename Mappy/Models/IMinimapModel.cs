@@ -11,12 +11,8 @@
 
         IObservable<bool> MinimapVisible { get; }
 
-        IObservable<Point> ViewportLocation { get; }
-
-        IObservable<int> ViewportWidth { get; }
-
-        IObservable<int> ViewportHeight { get; }
-
         IObservable<Bitmap> MinimapImage { get; }
+
+        IObservable<Rectangle> MinimapRect { get; }
     }
 }
