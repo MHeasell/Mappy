@@ -68,7 +68,6 @@
                 .Subscribe(x => this.saveMenuItem.Enabled = x);
 
             // window title logic
-            model.FilePath.Subscribe(x => Console.WriteLine("" + x));
             var cleanFilenameStream = model.FilePath.Select(x => (x ?? "Untitled"));
             var dirtyFilenameStream = cleanFilenameStream.Select(x => x + "*");
 
