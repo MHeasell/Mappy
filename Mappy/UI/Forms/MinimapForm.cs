@@ -8,8 +8,6 @@
 
     public partial class MinimapForm : Form
     {
-        private IMinimapModel model;
-
         private IUserEventDispatcher dispatcher;
 
         private bool mouseDown;
@@ -25,8 +23,6 @@
 
         public void SetModel(IMinimapModel model)
         {
-            this.model = model;
-
             model.MapWidth.Subscribe(x => this.mapWidth = x);
             model.MapHeight.Subscribe(x => this.mapHeight = x);
 

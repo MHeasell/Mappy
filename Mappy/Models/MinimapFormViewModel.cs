@@ -7,12 +7,8 @@
 
     public class MinimapFormViewModel : IMinimapModel
     {
-        private CoreModel model;
-
         public MinimapFormViewModel(CoreModel model)
         {
-            this.model = model;
-
             var viewportLocation = model.PropertyAsObservable(x => x.ViewportLocation, "ViewportLocation");
             var viewportWidth = model.PropertyAsObservable(x => x.ViewportWidth, "ViewportWidth");
             var viewportHeight = model.PropertyAsObservable(x => x.ViewportHeight, "ViewportHeight");
