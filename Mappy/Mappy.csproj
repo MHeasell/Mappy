@@ -155,7 +155,7 @@
     <Compile Include="Models\IMainFormModel.cs" />
     <Compile Include="Models\IMainModel.cs" />
     <Compile Include="Models\IMapViewSettingsModel.cs" />
-    <Compile Include="Models\IMinimapModel.cs" />
+    <Compile Include="Models\IMinimapFormViewModel.cs" />
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MainFormViewModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />

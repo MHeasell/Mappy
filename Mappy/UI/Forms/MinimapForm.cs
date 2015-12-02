@@ -21,7 +21,7 @@
             this.InitializeComponent();
         }
 
-        public void SetModel(IMinimapModel model)
+        public void SetModel(IMinimapFormViewModel model)
         {
             model.MapWidth.Subscribe(x => this.mapWidth = x);
             model.MapHeight.Subscribe(x => this.mapHeight = x);

@@ -3,7 +3,7 @@
     using System;
     using System.Drawing;
 
-    public interface IMinimapModel
+    public interface IMinimapFormViewModel
     {
         IObservable<int> MapWidth { get; }
 

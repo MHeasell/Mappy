@@ -5,7 +5,7 @@
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
 
-    public class MinimapFormViewModel : IMinimapModel
+    public class MinimapFormViewModel : IMinimapFormViewModel
     {
         public MinimapFormViewModel(CoreModel model)
         {
