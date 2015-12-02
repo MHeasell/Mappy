@@ -7,7 +7,7 @@
     using Mappy.Data;
     using Mappy.Database;
 
-    public interface IMainFormModel
+    public interface IMainFormViewModel
     {
         IObservable<IFeatureDatabase> FeatureRecords { get; }
 

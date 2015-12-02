@@ -21,7 +21,7 @@
 
         public MapViewPanel MapViewPanel => this.mapViewPanel;
 
-        public void SetModel(IMainFormModel model)
+        public void SetModel(IMainFormViewModel model)
         {
             var gridSize = model.GridSize.CombineLatest(
                 model.GridVisible,

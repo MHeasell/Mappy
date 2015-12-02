@@ -10,7 +10,7 @@
     using Mappy.Data;
     using Mappy.Database;
 
-    public class MainFormViewModel : IMainFormModel
+    public class MainFormViewModel : IMainFormViewModel
     {
         private const string ProgramName = "Mappy";
 
