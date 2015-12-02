@@ -12,8 +12,6 @@
 
     public partial class MainForm : Form
     {
-        private const string ProgramName = "Mappy";
-
         private IUserEventDispatcher dispatcher;
 
         public MainForm()
@@ -25,132 +23,66 @@
 
         public void SetModel(IMainFormModel model)
         {
-            var gridSizeStream = model.GridSize.CombineLatest(
+            var gridSize = model.GridSize.CombineLatest(
                 model.GridVisible,
                 (size, visible) => visible ? new Size?(size) : null);
 
-            gridSizeStream.Subscribe(this.UpdateGridSize);
+            gridSize.Subscribe(x => this.gridOffMenuItem.Checked = x == null);
+            gridSize.Subscribe(x => this.grid16MenuItem.Checked = x == new Size(16, 16));
+            gridSize.Subscribe(x => this.grid32MenuItem.Checked = x == new Size(32, 32));
+            gridSize.Subscribe(x => this.grid64MenuItem.Checked = x == new Size(64, 64));
+            gridSize.Subscribe(x => this.grid128MenuItem.Checked = x == new Size(128, 128));
+            gridSize.Subscribe(x => this.grid256MenuItem.Checked = x == new Size(256, 256));
+            gridSize.Subscribe(x => this.grid512MenuItem.Checked = x == new Size(512, 512));
+            gridSize.Subscribe(x => this.grid1024MenuItem.Checked = x == new Size(1024, 1024));
 
+            // file menu bindings
+            model.CanSave.Subscribe(x => this.saveMenuItem.Enabled = x);
+            model.CanSaveAs.Subscribe(x => this.saveAsMenuItem.Enabled = x);
+            model.CanCloseMap.Subscribe(x => this.closeMenuItem.Enabled = x);
+
+            model.CanImportMinimap.Subscribe(x => this.importMinimapMenuItem.Enabled = x);
+            model.CanExportMinimap.Subscribe(x => this.exportMinimapMenuItem.Enabled = x);
+
+            model.CanImportHeightmap.Subscribe(x => this.importHeightmapMenuItem.Enabled = x);
+            model.CanExportHeightmap.Subscribe(x => this.exportHeightmapMenuItem.Enabled = x);
+
+            model.CanExportMapImage.Subscribe(x => this.exportMapImageMenuItem.Enabled = x);
+            model.CanImportCustomSection.Subscribe(x => this.importCustomSectionMenuItem.Enabled = x);
+
+            // edit menu bindings
             model.CanUndo.Subscribe(x => this.undoMenuItem.Enabled = x);
             model.CanRedo.Subscribe(x => this.redoMenuItem.Enabled = x);
             model.CanCopy.Subscribe(x => this.copyMenuItem.Enabled = x);
             model.CanCut.Subscribe(x => this.cutMenuItem.Enabled = x);
             model.CanPaste.Subscribe(x => this.pasteMenuItem.Enabled = x);
 
-            // map open bindings
-            model.MapOpen.Subscribe(x => this.mapAttributesMenuItem.Enabled = x);
-            model.MapOpen.Subscribe(x => this.closeMenuItem.Enabled = x);
+            model.CanGenerateMinimap.Subscribe(x => this.generateMinimapMenuItem.Enabled = x);
+            model.CanGenerateMinimapHighQuality.Subscribe(x => this.generateMinimapHighQualityMenuItem.Enabled = x);
 
-            model.MapOpen.Subscribe(x => this.seaLevelLabel.Enabled = x);
-            model.MapOpen.Subscribe(x => this.seaLevelValueLabel.Enabled = x);
-            model.MapOpen.Subscribe(x => this.seaLevelTrackbar.Enabled = x);
+            model.CanOpenAttributes.Subscribe(x => this.mapAttributesMenuItem.Enabled = x);
 
-            model.MapOpen.Subscribe(x => this.generateMinimapMenuItem.Enabled = x);
-            model.MapOpen.Subscribe(x => this.generateMinimapHighQualityMenuItem.Enabled = x);
+            // view menu bindings
+            model.MinimapVisible.Subscribe(x => this.toggleMinimapMenuItem.Checked = x);
+            model.HeightmapVisible.Subscribe(x => this.toggleHeightmapMenuItem.Checked = x);
+            model.FeaturesVisible.Subscribe(x => this.toggleFeaturesMenuItem.Checked = x);
 
-            model.MapOpen.Subscribe(x => this.importMinimapMenuItem.Enabled = x);
-            model.MapOpen.Subscribe(x => this.exportMinimapMenuItem.Enabled = x);
+            // sea level widget bindings
+            model.CanChangeSeaLevel.Subscribe(x => this.seaLevelLabel.Enabled = x);
+            model.CanChangeSeaLevel.Subscribe(x => this.seaLevelValueLabel.Enabled = x);
+            model.CanChangeSeaLevel.Subscribe(x => this.seaLevelTrackbar.Enabled = x);
 
-            model.MapOpen.Subscribe(x => this.importHeightmapMenuItem.Enabled = x);
-            model.MapOpen.Subscribe(x => this.exportHeightmapMenuItem.Enabled = x);
-
-            model.MapOpen.Subscribe(x => this.exportMapImageMenuItem.Enabled = x);
-            model.MapOpen.Subscribe(x => this.importCustomSectionMenuItem.Enabled = x);
-
-            model.MapOpen.Subscribe(x => this.saveAsMenuItem.Enabled = x);
-
-            // save menu item logic
-            Observable.CombineLatest(
-                model.MapOpen,
-                model.FilePath.Select(x => x != null),
-                model.IsFileReadOnly.Select(x => !x))
-                .Select(x => x.All(y => y))
-                .Subscribe(x => this.saveMenuItem.Enabled = x);
-
-            // window title logic
-            var cleanFilenameStream = model.FilePath.Select(x => (x ?? "Untitled"));
-            var dirtyFilenameStream = cleanFilenameStream.Select(x => x + "*");
-
-            var filenameStream = model.IsDirty
-                .Select(x => x ? dirtyFilenameStream : cleanFilenameStream)
-                .Switch();
-            var readOnlyFilenameStream = filenameStream.Select(y => y + " [read only]");
-
-            var filenameTitleStream = model.IsFileReadOnly
-                .Select(x => x ? readOnlyFilenameStream : filenameStream)
-                .Switch();
-
-            var programNameStream = Observable.Return(ProgramName);
-            var openFileTitleStream = filenameTitleStream.Select(y => y + " - " + ProgramName);
-            var titleStream = model.MapOpen
-                .Select(x => x ? openFileTitleStream : programNameStream)
-                .Switch();
-
-            titleStream.Subscribe(x => this.Text = x);
-
-            // sea level
             model.SeaLevel.Subscribe(x => this.seaLevelTrackbar.Value = x);
             model.SeaLevel
                 .Select(x => x.ToString(CultureInfo.CurrentCulture))
                 .Subscribe(x => this.seaLevelValueLabel.Text = x);
 
-            // minimap
-            model.MinimapVisible.Subscribe(x => this.toggleMinimapMenuItem.Checked = x);
+            // title text bindings
+            model.TitleText.Subscribe(x => this.Text = x);
 
-            // heightmap
-            model.HeightmapVisible.Subscribe(x => this.toggleHeightmapMenuItem.Checked = x);
-
-            // features
-            model.FeaturesVisible.Subscribe(x => this.toggleFeaturesMenuItem.Checked = x);
-
-            // sections
+            // hacky section/feature database bindings
             model.Sections.Subscribe(x => this.sectionsView.Sections = x);
-
-            // feature records
             model.FeatureRecords.Subscribe(x => this.featureView.Features = x.EnumerateAll().ToList());
-        }
-
-        private void UpdateGridSize(Size? sizeContainer)
-        {
-            this.ClearGridCheckboxes();
-
-            if (!sizeContainer.HasValue)
-            {
-                this.gridOffMenuItem.Checked = true;
-                return;
-            }
-
-            var size = sizeContainer.Value;
-
-            if (size.Width != size.Height)
-            {
-                return;
-            }
-
-            switch (size.Width)
-            {
-                case 16:
-                    this.grid16MenuItem.Checked = true;
-                    break;
-                case 32:
-                    this.grid32MenuItem.Checked = true;
-                    break;
-                case 64:
-                    this.grid64MenuItem.Checked = true;
-                    break;
-                case 128:
-                    this.grid128MenuItem.Checked = true;
-                    break;
-                case 256:
-                    this.grid256MenuItem.Checked = true;
-                    break;
-                case 512:
-                    this.grid512MenuItem.Checked = true;
-                    break;
-                case 1024:
-                    this.grid1024MenuItem.Checked = true;
-                    break;
-            }
         }
 
         public void SetDispatcher(IUserEventDispatcher dispatcher)
@@ -225,18 +157,6 @@
         private void GenerateMinimapMenuItemClick(object sender, EventArgs e)
         {
             this.dispatcher.RefreshMinimap();
-        }
-
-        private void ClearGridCheckboxes()
-        {
-            this.gridOffMenuItem.Checked = false;
-            this.grid16MenuItem.Checked = false;
-            this.grid32MenuItem.Checked = false;
-            this.grid64MenuItem.Checked = false;
-            this.grid128MenuItem.Checked = false;
-            this.grid256MenuItem.Checked = false;
-            this.grid512MenuItem.Checked = false;
-            this.grid1024MenuItem.Checked = false;
         }
 
         private void GridOffMenuItemClick(object sender, EventArgs e)

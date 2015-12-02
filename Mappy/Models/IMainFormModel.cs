@@ -13,6 +13,24 @@
 
         IObservable<IList<Section>> Sections { get; }
 
+        IObservable<bool> CanSave { get; }
+
+        IObservable<bool> CanSaveAs { get; }
+
+        IObservable<bool> CanCloseMap { get; }
+
+        IObservable<bool> CanImportMinimap { get; }
+
+        IObservable<bool> CanExportMinimap { get; }
+
+        IObservable<bool> CanImportHeightmap { get; }
+
+        IObservable<bool> CanExportHeightmap { get; }
+
+        IObservable<bool> CanImportCustomSection { get; }
+
+        IObservable<bool> CanExportMapImage { get; }
+
         IObservable<bool> CanUndo { get; }
 
         IObservable<bool> CanRedo { get; }
@@ -23,13 +41,11 @@
 
         IObservable<bool> CanPaste { get; }
 
-        IObservable<bool> IsDirty { get; }
+        IObservable<bool> CanGenerateMinimap { get; }
 
-        IObservable<bool> MapOpen { get; }
+        IObservable<bool> CanGenerateMinimapHighQuality { get; }
 
-        IObservable<string> FilePath { get; }
-
-        IObservable<bool> IsFileReadOnly { get; }
+        IObservable<bool> CanOpenAttributes { get; }
 
         IObservable<bool> GridVisible { get; }
 
@@ -41,6 +57,10 @@
 
         IObservable<bool> MinimapVisible { get; }
 
+        IObservable<bool> CanChangeSeaLevel { get; }
+
         IObservable<int> SeaLevel { get; }
+
+        IObservable<string> TitleText { get; }
     }
 }
