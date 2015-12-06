@@ -23,6 +23,8 @@
 
         public SectionView SectionView => this.sectionsView;
 
+        public SectionView FeatureView => this.featureView;
+
         public void SetModel(IMainFormViewModel model)
         {
             var gridSize = model.GridSize.CombineLatest(
@@ -81,9 +83,6 @@
 
             // title text bindings
             model.TitleText.Subscribe(x => this.Text = x);
-
-            // hacky section/feature database bindings
-            model.FeatureRecords.Subscribe(x => this.featureView.Features = x.EnumerateAll().ToList());
         }
 
         public void SetDispatcher(IUserEventDispatcher dispatcher)

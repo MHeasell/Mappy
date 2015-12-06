@@ -27,13 +27,15 @@
             this.control.ListView.ItemDrag += this.ListViewItemDrag;
         }
 
+        public Size ImageSize { get; set; } = new Size(128, 128);
+
         public void SetModel(ISectionViewViewModel model)
         {
-            model.Worlds.Buffer(2, 1).Subscribe(xs => this.UpdateComboBox1(xs[0], xs[1]));
+            model.ComboBox1Model.Buffer(2, 1).Subscribe(xs => this.UpdateComboBox1(xs[0], xs[1]));
 
-            model.Categories.Buffer(2, 1).Subscribe(xs => this.UpdateComboBox2(xs[0], xs[1]));
+            model.ComboBox2Model.Buffer(2, 1).Subscribe(xs => this.UpdateComboBox2(xs[0], xs[1]));
 
-            model.Sections.Subscribe(this.UpdateListView);
+            model.ListViewItems.Subscribe(this.UpdateListView);
 
             this.model = model;
         }
@@ -81,7 +83,7 @@
             lv.Items.Clear();
 
             // update the images list
-            var images = new ImageList { ImageSize = new Size(128, 128) };
+            var images = new ImageList { ImageSize = this.ImageSize };
             foreach (var x in sections)
             {
                 images.Images.Add(x.Image);
@@ -107,7 +109,7 @@
                 return;
             }
 
-            this.model.SelectWorld(this.control.ComboBox1.SelectedIndex);
+            this.model.SelectComboBox1Item(this.control.ComboBox1.SelectedIndex);
         }
 
         private void ComboBox2SelectedIndexChanged(object sender, EventArgs e)
@@ -117,7 +119,7 @@
                 return;
             }
 
-            this.model.SelectCategory(this.control.ComboBox2.SelectedIndex);
+            this.model.SelectComboBox2Item(this.control.ComboBox2.SelectedIndex);
         }
 
         private void ListViewItemDrag(object sender, ItemDragEventArgs e)

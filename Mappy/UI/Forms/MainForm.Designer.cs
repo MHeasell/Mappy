@@ -84,16 +84,16 @@
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sidebarTabs = new System.Windows.Forms.TabControl();
             this.sectionsTab = new System.Windows.Forms.TabPage();
-            this.sectionsView = new Mappy.UI.Controls.SectionView();
             this.featuresTab = new System.Windows.Forms.TabPage();
-            this.featureView = new Mappy.UI.Controls.FeatureView();
             this.startPositionsTab = new System.Windows.Forms.TabPage();
-            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             this.attributesTab = new System.Windows.Forms.TabPage();
             this.seaLevelValueLabel = new System.Windows.Forms.Label();
             this.seaLevelLabel = new System.Windows.Forms.Label();
             this.seaLevelTrackbar = new System.Windows.Forms.TrackBar();
             this.mapViewPanel = new Mappy.UI.Controls.MapViewPanel();
+            this.sectionsView = new Mappy.UI.Controls.SectionView();
+            this.featureView = new Mappy.UI.Controls.SectionView();
+            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -567,15 +567,6 @@
             this.sectionsTab.Text = "Sections";
             this.sectionsTab.UseVisualStyleBackColor = true;
             // 
-            // sectionsView
-            // 
-            this.sectionsView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sectionsView.Location = new System.Drawing.Point(3, 3);
-            this.sectionsView.Margin = new System.Windows.Forms.Padding(4);
-            this.sectionsView.Name = "sectionsView";
-            this.sectionsView.Size = new System.Drawing.Size(201, 506);
-            this.sectionsView.TabIndex = 3;
-            // 
             // featuresTab
             // 
             this.featuresTab.Controls.Add(this.featureView);
@@ -587,16 +578,6 @@
             this.featuresTab.Text = "Features";
             this.featuresTab.UseVisualStyleBackColor = true;
             // 
-            // featureView
-            // 
-            this.featureView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.featureView.Features = null;
-            this.featureView.Location = new System.Drawing.Point(3, 3);
-            this.featureView.Margin = new System.Windows.Forms.Padding(4);
-            this.featureView.Name = "featureView";
-            this.featureView.Size = new System.Drawing.Size(201, 506);
-            this.featureView.TabIndex = 0;
-            // 
             // startPositionsTab
             // 
             this.startPositionsTab.Controls.Add(this.startPositionsView1);
@@ -607,15 +588,6 @@
             this.startPositionsTab.TabIndex = 2;
             this.startPositionsTab.Text = "Starts";
             this.startPositionsTab.UseVisualStyleBackColor = true;
-            // 
-            // startPositionsView1
-            // 
-            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
-            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
-            this.startPositionsView1.Name = "startPositionsView1";
-            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
-            this.startPositionsView1.TabIndex = 0;
             // 
             // attributesTab
             // 
@@ -677,6 +649,35 @@
             this.mapViewPanel.Size = new System.Drawing.Size(569, 538);
             this.mapViewPanel.TabIndex = 5;
             // 
+            // sectionsView
+            // 
+            this.sectionsView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sectionsView.ImageSize = new System.Drawing.Size(128, 128);
+            this.sectionsView.Location = new System.Drawing.Point(3, 3);
+            this.sectionsView.Margin = new System.Windows.Forms.Padding(4);
+            this.sectionsView.Name = "sectionsView";
+            this.sectionsView.Size = new System.Drawing.Size(201, 506);
+            this.sectionsView.TabIndex = 3;
+            // 
+            // featureView
+            // 
+            this.featureView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.featureView.ImageSize = new System.Drawing.Size(64, 64);
+            this.featureView.Location = new System.Drawing.Point(3, 3);
+            this.featureView.Margin = new System.Windows.Forms.Padding(4);
+            this.featureView.Name = "featureView";
+            this.featureView.Size = new System.Drawing.Size(201, 506);
+            this.featureView.TabIndex = 0;
+            // 
+            // startPositionsView1
+            // 
+            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
+            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
+            this.startPositionsView1.Name = "startPositionsView1";
+            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
+            this.startPositionsView1.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -731,7 +732,7 @@
         private System.Windows.Forms.TabControl sidebarTabs;
         private System.Windows.Forms.TabPage sectionsTab;
         private System.Windows.Forms.TabPage featuresTab;
-        private FeatureView featureView;
+        private SectionView featureView;
         private System.Windows.Forms.ToolStripMenuItem gridMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gridOffMenuItem;
         private System.Windows.Forms.ToolStripMenuItem grid16MenuItem;

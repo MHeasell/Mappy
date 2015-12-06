@@ -151,6 +151,7 @@
     <Compile Include="Models\FeatureClipboardRecord.cs" />
     <Compile Include="Models\FeatureInstance.cs" />
     <Compile Include="Models\FeatureInstanceEventArgs.cs" />
+    <Compile Include="Models\FeatureViewViewModel.cs" />
     <Compile Include="Models\IDialogService.cs" />
     <Compile Include="Models\IMainFormViewModel.cs" />
     <Compile Include="Models\IMainModel.cs" />
@@ -190,12 +191,6 @@
     </Compile>
     <Compile Include="UI\Controls\DoubleComboListView.Designer.cs">
       <DependentUpon>DoubleComboListView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UI\Controls\FeatureView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UI\Controls\FeatureView.Designer.cs">
-      <DependentUpon>FeatureView.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Controls\ImageLayerCollection.cs" />
     <Compile Include="UI\Controls\ImageLayerView.cs">
@@ -317,9 +312,6 @@
     <Compile Include="Views\IProgressView.cs" />
     <EmbeddedResource Include="UI\Controls\DoubleComboListView.resx">
       <DependentUpon>DoubleComboListView.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Controls\FeatureView.resx">
-      <DependentUpon>FeatureView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Controls\MapViewPanel.resx">
       <DependentUpon>MapViewPanel.cs</DependentUpon>

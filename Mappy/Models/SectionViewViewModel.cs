@@ -92,18 +92,18 @@
                     });
         }
 
-        public IObservable<ComboBoxViewModel> Worlds => this.worlds;
+        public IObservable<ComboBoxViewModel> ComboBox1Model => this.worlds;
 
-        public IObservable<ComboBoxViewModel> Categories => this.categories;
+        public IObservable<ComboBoxViewModel> ComboBox2Model => this.categories;
 
-        public IObservable<IEnumerable<ListViewItem>> Sections => this.sections;
+        public IObservable<IEnumerable<ListViewItem>> ListViewItems => this.sections;
 
-        public void SelectWorld(int index)
+        public void SelectComboBox1Item(int index)
         {
             this.selectWorldEvent.OnNext(index);
         }
 
-        public void SelectCategory(int index)
+        public void SelectComboBox2Item(int index)
         {
             this.selectCategoryEvent.OnNext(index);
         }
