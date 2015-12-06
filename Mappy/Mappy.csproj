@@ -156,6 +156,7 @@
     <Compile Include="Models\IMainModel.cs" />
     <Compile Include="Models\IMapViewSettingsModel.cs" />
     <Compile Include="Models\IMinimapFormViewModel.cs" />
+    <Compile Include="Models\ISectionViewViewModel.cs" />
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\MainFormViewModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Models\MinimapFormViewModel.cs" />
     <Compile Include="Models\SectionFeatureLoadResult.cs" />
     <Compile Include="Models\SectionImportPaths.cs" />
+    <Compile Include="Models\SectionViewViewModel.cs" />
     <Compile Include="Models\UndoableMapModel.cs" />
     <Compile Include="Operations\AddFeatureOperation.cs" />
     <Compile Include="Operations\ChangeAttributesOperation.cs" />

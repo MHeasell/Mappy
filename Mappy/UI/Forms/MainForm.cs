@@ -21,6 +21,8 @@
 
         public MapViewPanel MapViewPanel => this.mapViewPanel;
 
+        public SectionView SectionView => this.sectionsView;
+
         public void SetModel(IMainFormViewModel model)
         {
             var gridSize = model.GridSize.CombineLatest(
@@ -81,7 +83,6 @@
             model.TitleText.Subscribe(x => this.Text = x);
 
             // hacky section/feature database bindings
-            model.Sections.Subscribe(x => this.sectionsView.Sections = x);
             model.FeatureRecords.Subscribe(x => this.featureView.Features = x.EnumerateAll().ToList());
         }
 

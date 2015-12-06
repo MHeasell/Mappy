@@ -4,13 +4,19 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
+    using System.Reactive.Linq;
     using System.Windows.Forms;
 
-    using Mappy.Data;
+    using Mappy.Models;
+
+    using ListViewItem = System.Windows.Forms.ListViewItem;
 
     public partial class SectionView : UserControl
     {
-        private IList<Section> sections;
+        private ISectionViewViewModel model;
+
+        private bool suppressCombo1SelectedItemEvents;
+        private bool suppressCombo2SelectedItemEvents;
 
         public SectionView()
         {
@@ -21,113 +27,97 @@
             this.control.ListView.ItemDrag += this.ListViewItemDrag;
         }
 
-        public IList<Section> Sections
+        public void SetModel(ISectionViewViewModel model)
         {
-            get
-            {
-                return this.sections;
-            }
+            model.Worlds.Buffer(2, 1).Subscribe(xs => this.UpdateComboBox1(xs[0], xs[1]));
 
-            set
-            {
-                this.sections = value;
-                this.PopulateView();
-            }
+            model.Categories.Buffer(2, 1).Subscribe(xs => this.UpdateComboBox2(xs[0], xs[1]));
+
+            model.Sections.Subscribe(this.UpdateListView);
+
+            this.model = model;
         }
 
-        private void PopulateView()
+        private static void UpdateComboBox(ComboBox c, ComboBoxViewModel oldModel, ComboBoxViewModel newModel)
         {
-            this.control.ComboBox1.Items.Clear();
-            this.control.ComboBox2.Items.Clear();
-            this.control.ListView.Items.Clear();
+            c.BeginUpdate();
 
-            if (this.Sections == null)
+            // yes we really want reference equality here
+            if (oldModel.Items != newModel.Items)
             {
-                return;
+                c.Items.Clear();
+                foreach (var x in newModel.Items)
+                {
+                    c.Items.Add(x);
+                }
             }
 
-            this.PopulateWorldComboBox();
+            c.SelectedIndex = newModel.SelectedIndex;
+
+            c.EndUpdate();
         }
 
-        private void PopulateWorldComboBox()
+        private void UpdateComboBox1(ComboBoxViewModel oldModel, ComboBoxViewModel newModel)
         {
-            var worlds = this.Sections
-                .Select(x => x.World)
-                .Distinct(StringComparer.InvariantCultureIgnoreCase)
-                .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
-
-            foreach (var world in worlds)
-            {
-                this.control.ComboBox1.Items.Add(world);
-            }
-
-            if (this.control.ComboBox1.Items.Count > 0)
-            {
-                this.control.ComboBox1.SelectedIndex = 0;
-            }
+            this.suppressCombo1SelectedItemEvents = true;
+            UpdateComboBox(this.control.ComboBox1, oldModel, newModel);
+            this.suppressCombo1SelectedItemEvents = false;
         }
 
-        private void PopulateCategoryComboBox()
+        private void UpdateComboBox2(ComboBoxViewModel oldModel, ComboBoxViewModel newModel)
         {
-            this.control.ComboBox2.Items.Clear();
-
-            var selectedWorld = (string)this.control.ComboBox1.SelectedItem;
-
-            var categories = this.Sections
-                .Where(x => x.World == selectedWorld)
-                .Select(x => x.Category)
-                .Distinct(StringComparer.InvariantCultureIgnoreCase)
-                .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
-
-            foreach (var cat in categories)
-            {
-                this.control.ComboBox2.Items.Add(cat);
-            }
-
-            if (this.control.ComboBox2.Items.Count > 0)
-            {
-                this.control.ComboBox2.SelectedIndex = 0;
-            }
+            this.suppressCombo2SelectedItemEvents = true;
+            UpdateComboBox(this.control.ComboBox2, oldModel, newModel);
+            this.suppressCombo2SelectedItemEvents = false;
         }
 
-        private void PopulateListView()
+        private void UpdateListView(IEnumerable<Models.ListViewItem> xs)
         {
-            this.control.ListView.Items.Clear();
+            var sections = xs.ToList();
 
-            var selectedWorld = (string)this.control.ComboBox1.SelectedItem;
-            var selectedCategory = (string)this.control.ComboBox2.SelectedItem;
+            var lv = this.control.ListView;
 
-            var sections = this.Sections
-                .Where(x => x.World == selectedWorld && x.Category == selectedCategory)
-                .OrderBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase)
-                .ToList();
+            lv.BeginUpdate();
+            lv.Items.Clear();
 
-            var images = new ImageList();
-            images.ImageSize = new Size(128, 128);
-            foreach (var s in sections)
+            // update the images list
+            var images = new ImageList { ImageSize = new Size(128, 128) };
+            foreach (var x in sections)
             {
-                images.Images.Add(s.Minimap);
+                images.Images.Add(x.Image);
             }
 
-            this.control.ListView.LargeImageList = images;
+            lv.LargeImageList = images;
 
-            var i = 0;
-            foreach (var s in sections)
+            // update the items list
+            int i = 0;
+            foreach (var x in sections)
             {
-                var label = $"{s.Name} ({s.PixelWidth}x{s.PixelHeight})";
-                var item = new ListViewItem(label, i++) { Tag = s };
-                this.control.ListView.Items.Add(item);
+                var item = new ListViewItem(x.Name, i++) { Tag = x.Tag };
+                lv.Items.Add(item);
             }
+
+            lv.EndUpdate();
         }
 
         private void ComboBox1SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.PopulateCategoryComboBox();
+            if (this.suppressCombo1SelectedItemEvents)
+            {
+                return;
+            }
+
+            this.model.SelectWorld(this.control.ComboBox1.SelectedIndex);
         }
 
         private void ComboBox2SelectedIndexChanged(object sender, EventArgs e)
         {
-            this.PopulateListView();
+            if (this.suppressCombo2SelectedItemEvents)
+            {
+                return;
+            }
+
+            this.model.SelectCategory(this.control.ComboBox2.SelectedIndex);
         }
 
         private void ListViewItemDrag(object sender, ItemDragEventArgs e)
@@ -139,8 +129,8 @@
                 return;
             }
 
-            var id = ((Section)view.SelectedItems[0].Tag).Id;
-            view.DoDragDrop(id.ToString(), DragDropEffects.Copy);
+            var data = view.SelectedItems[0].Tag;
+            view.DoDragDrop(data, DragDropEffects.Copy);
         }
     }
 }

@@ -38,6 +38,8 @@
             mainForm.SetModel(new MainFormViewModel(model));
             mainForm.SetDispatcher(model);
 
+            mainForm.SectionView.SetModel(new SectionViewViewModel(model));
+
             mainForm.MapViewPanel.SetSettingsModel(new MapViewViewModel(model));
             mainForm.MapViewPanel.SetDispatcher(model);
 

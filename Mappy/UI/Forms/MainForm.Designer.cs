@@ -573,7 +573,6 @@
             this.sectionsView.Location = new System.Drawing.Point(3, 3);
             this.sectionsView.Margin = new System.Windows.Forms.Padding(4);
             this.sectionsView.Name = "sectionsView";
-            this.sectionsView.Sections = null;
             this.sectionsView.Size = new System.Drawing.Size(201, 506);
             this.sectionsView.TabIndex = 3;
             // 
