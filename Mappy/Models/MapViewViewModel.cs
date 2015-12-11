@@ -1,11 +1,11 @@
 ﻿namespace Mappy.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
+    using System.Windows.Forms;
 
-    using Mappy.Data;
     using Mappy.Database;
+    using Mappy.UI.Controls;
 
     public class MapViewViewModel : IMapViewSettingsModel
     {
@@ -18,7 +18,6 @@
             this.GridSize = model.PropertyAsObservable(x => x.GridSize, "GridSize");
             this.HeightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, "HeightmapVisible");
             this.FeaturesVisible = model.PropertyAsObservable(x => x.FeaturesVisible, "FeaturesVisible");
-            this.Sections = model.PropertyAsObservable(x => x.Sections, "Sections");
             this.FeatureRecords = model.PropertyAsObservable(x => x.FeatureRecords, "FeatureRecords");
             this.Map = model.PropertyAsObservable(x => x.Map, "Map");
             this.ViewportWidth = model.PropertyAsObservable(x => x.ViewportWidth, "ViewportWidth");
@@ -36,8 +35,6 @@
         public IObservable<bool> HeightmapVisible { get; }
 
         public IObservable<bool> FeaturesVisible { get; }
-
-        public IObservable<IList<Section>> Sections { get; }
 
         public IObservable<IFeatureDatabase> FeatureRecords { get; }
 
@@ -60,6 +57,40 @@
         public void OpenFromDragDrop(string filename)
         {
             this.model.OpenFromDragDrop(filename);
+        }
+
+        public void DragDropData(IDataObject data, Point loc)
+        {
+            if (data.GetDataPresent(DataFormats.FileDrop))
+            {
+                var files = (string[])data.GetData(DataFormats.FileDrop);
+                if (files.Length < 1)
+                {
+                    return;
+                }
+
+                this.model.OpenFromDragDrop(files[0]);
+                return;
+            }
+
+            if (data.GetDataPresent(typeof(StartPositionDragData)))
+            {
+                StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
+                this.model.SetStartPosition(posData.PositionNumber, loc.X, loc.Y);
+            }
+            else
+            {
+                string dataString = data.GetData(DataFormats.Text).ToString();
+                int id;
+                if (int.TryParse(dataString, out id))
+                {
+                    this.model.DragDropSection(id, loc.X, loc.Y);
+                }
+                else
+                {
+                    this.model.DragDropFeature(dataString, loc.X, loc.Y);
+                }
+            }
         }
     }
 }

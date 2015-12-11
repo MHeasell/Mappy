@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Windows.Forms;
 
     using Mappy.Data;
     using Mappy.Database;
@@ -19,8 +20,6 @@
 
         IObservable<bool> FeaturesVisible { get; }
 
-        IObservable<IList<Section>> Sections { get; }
-
         IObservable<IFeatureDatabase> FeatureRecords { get; }
 
         IObservable<IMainModel> Map { get; }
@@ -34,5 +33,7 @@
         void SetViewportLocation(Point pos);
 
         void OpenFromDragDrop(string filename);
+
+        void DragDropData(IDataObject data, Point loc);
     }
 }

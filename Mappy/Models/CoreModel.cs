@@ -709,6 +709,22 @@
             this.ViewportHeight = size.Height;
         }
 
+        public void SetStartPosition(int positionNumber, int x, int y)
+        {
+            this.Map?.DragDropStartPosition(positionNumber, x, y);
+        }
+
+        public void DragDropSection(int sectionId, int x, int y)
+        {
+            var section = this.sections[sectionId].GetTile();
+            this.Map?.DragDropTile(section, x, y);
+        }
+
+        public void DragDropFeature(string featureName, int x, int y)
+        {
+            this.Map?.DragDropFeature(featureName, x, y);
+        }
+
         private static IEnumerable<string> GetMapNames(HpiReader hpi)
         {
             return hpi.GetFiles("maps")

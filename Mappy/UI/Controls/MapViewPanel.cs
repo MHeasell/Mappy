@@ -60,8 +60,6 @@
 
         private bool featuresVisible;
 
-        private IList<Section> sections;
-
         private bool heightmapVisible;
 
         static MapViewPanel()
@@ -90,7 +88,6 @@
             model.HeightmapVisible.Subscribe(this.RefreshHeightmapVisibility);
             model.FeaturesVisible.Subscribe(x => this.featuresVisible = x);
             model.FeatureRecords.Subscribe(x => this.featureDatabase = x);
-            model.Sections.Subscribe(x => this.sections = x);
         }
 
         private void SetMapModel(IMainModel model)
@@ -544,47 +541,8 @@
 
         private void MapViewDragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                var files = (string[])e.Data.GetData(DataFormats.FileDrop);
-                if (files.Length < 1)
-                {
-                    return;
-                }
-
-                this.settingsModel.OpenFromDragDrop(files[0]);
-                return;
-            }
-
-            if (this.mapModel == null)
-            {
-                return;
-            }
-
             var loc = this.mapView.ToVirtualPoint(this.mapView.PointToClient(new Point(e.X, e.Y)));
-            var virtualX = loc.X;
-            var virtualY = loc.Y;
-            var data = e.Data;
-
-            if (data.GetDataPresent(typeof(StartPositionDragData)))
-            {
-                StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
-                this.mapModel.DragDropStartPosition(posData.PositionNumber, virtualX, virtualY);
-            }
-            else
-            {
-                string dataString = data.GetData(DataFormats.Text).ToString();
-                int id;
-                if (int.TryParse(dataString, out id))
-                {
-                    var tile = this.sections[id].GetTile();
-                    this.mapModel.DragDropTile(tile, virtualX, virtualY);
-                }
-                else
-                {
-                    this.mapModel.DragDropFeature(dataString, virtualX, virtualY);
-                }
-            }
+            this.settingsModel.DragDropData(e.Data, loc);
         }
 
         private void MapViewMouseDown(object sender, MouseEventArgs e)
