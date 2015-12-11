@@ -42,8 +42,6 @@
 
         private IMainModel mapModel;
 
-        private IUserEventDispatcher dispatcher;
-
         private bool mouseDown;
 
         private Point lastMousePos;
@@ -93,11 +91,6 @@
             model.FeaturesVisible.Subscribe(x => this.featuresVisible = x);
             model.FeatureRecords.Subscribe(x => this.featureDatabase = x);
             model.Sections.Subscribe(x => this.sections = x);
-        }
-
-        public void SetDispatcher(IUserEventDispatcher dispatcher)
-        {
-            this.dispatcher = dispatcher;
         }
 
         private void SetMapModel(IMainModel model)
@@ -559,7 +552,7 @@
                     return;
                 }
 
-                this.dispatcher.OpenFromDragDrop(files[0]);
+                this.settingsModel.OpenFromDragDrop(files[0]);
                 return;
             }
 
@@ -725,10 +718,10 @@
         {
             var rect = this.ViewportRect;
 
-            if (this.dispatcher != null)
+            if (this.settingsModel != null)
             {
-                this.dispatcher.SetViewportSize(rect.Size);
-                this.dispatcher.SetViewportLocation(rect.Location);
+                this.settingsModel.SetViewportSize(rect.Size);
+                this.settingsModel.SetViewportLocation(rect.Location);
             }
         }
 

@@ -3,10 +3,11 @@
     using System;
     using System.Drawing;
     using System.Reactive.Linq;
-    using System.Reactive.Subjects;
 
     public class MinimapFormViewModel : IMinimapFormViewModel
     {
+        private readonly CoreModel model;
+
         public MinimapFormViewModel(CoreModel model)
         {
             var viewportLocation = model.PropertyAsObservable(x => x.ViewportLocation, "ViewportLocation");
@@ -33,6 +34,8 @@
             minimapRect.Connect();
 
             this.MinimapRect = minimapRect;
+
+            this.model = model;
         }
 
         public IObservable<int> MapWidth { get; }
@@ -44,6 +47,16 @@
         public IObservable<Bitmap> MinimapImage { get; }
 
         public IObservable<Rectangle> MinimapRect { get; }
+
+        public void SetViewportLocation(Point location)
+        {
+            this.model.SetViewportLocation(location);
+        }
+
+        public void HideMinimap()
+        {
+            this.model.HideMinimap();
+        }
 
         private IObservable<int> ScaleObsWidthToMinimap(IObservable<int> value)
         {

@@ -8,7 +8,7 @@
 
     public partial class MinimapForm : Form
     {
-        private IUserEventDispatcher dispatcher;
+        private IMinimapFormViewModel model;
 
         private bool mouseDown;
 
@@ -29,11 +29,8 @@
             model.MinimapVisible.Subscribe(x => this.Visible = x);
             model.MinimapImage.Subscribe(x => this.minimapControl.BackgroundImage = x);
             model.MinimapRect.Subscribe(x => this.minimapControl.ViewportRect = x);
-        }
 
-        public void SetDispatcher(IUserEventDispatcher dispatcher)
-        {
-            this.dispatcher = dispatcher;
+            this.model = model;
         }
 
         private void MinimapFormFormClosing(object sender, FormClosingEventArgs e)
@@ -42,7 +39,7 @@
             {
                 e.Cancel = true;
 
-                this.dispatcher.HideMinimap();
+                this.model.HideMinimap();
             }
         }
 
@@ -65,7 +62,7 @@
             x = this.ScaleWidthToMap(x);
             y = this.ScaleHeightToMap(y);
 
-            this.dispatcher.SetViewportLocation(new Point(x, y));
+            this.model.SetViewportLocation(new Point(x, y));
         }
 
         private void MinimapControl1MouseMove(object sender, MouseEventArgs e)

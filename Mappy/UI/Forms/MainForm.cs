@@ -3,7 +3,6 @@
     using System;
     using System.Drawing;
     using System.Globalization;
-    using System.Linq;
     using System.Reactive.Linq;
     using System.Windows.Forms;
 
@@ -12,7 +11,7 @@
 
     public partial class MainForm : Form
     {
-        private IUserEventDispatcher dispatcher;
+        private IMainFormViewModel model;
 
         public MainForm()
         {
@@ -83,85 +82,82 @@
 
             // title text bindings
             model.TitleText.Subscribe(x => this.Text = x);
-        }
 
-        public void SetDispatcher(IUserEventDispatcher dispatcher)
-        {
-            this.dispatcher = dispatcher;
+            this.model = model;
         }
 
         private void OpenMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.Open();
+            this.model.Open();
         }
 
         private void ToggleHeightmapMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ToggleHeightmap();
+            this.model.ToggleHeightmap();
         }
 
         private void PreferencesMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.OpenPreferences();
+            this.model.OpenPreferences();
         }
 
         private void SaveAsMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.SaveAs();
+            this.model.SaveAs();
         }
 
         private void SaveMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.Save();
+            this.model.Save();
         }
 
         private void ToggleMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ToggleMinimap();
+            this.model.ToggleMinimap();
         }
 
         private void UndoMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.Undo();
+            this.model.Undo();
         }
 
         private void RedoMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.Redo();
+            this.model.Redo();
         }
 
         private void MainFormFormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                this.dispatcher.Close();
+                this.model.Close();
                 e.Cancel = true;
             }
         }
 
         private void ExitMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.Close();
+            this.model.Close();
         }
 
         private void NewMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.New();
+            this.model.New();
         }
 
         private void AboutMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ShowAbout();
+            this.model.ShowAbout();
         }
 
         private void GenerateMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.RefreshMinimap();
+            this.model.RefreshMinimap();
         }
 
         private void GridOffMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.HideGrid();
+            this.model.HideGrid();
         }
 
         private void GridMenuItemClick(object sender, EventArgs e)
@@ -170,92 +166,92 @@
             int size = Convert.ToInt32(item.Tag);
             Size s = new Size(size, size);
 
-            this.dispatcher.EnableGridWithSize(s);
+            this.model.EnableGridWithSize(s);
         }
 
         private void GridColorMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ChooseColor();
+            this.model.ChooseColor();
         }
 
         private void ToggleFeaturesMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ToggleFeatures();
+            this.model.ToggleFeatures();
         }
 
         private void MapAttributesMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.OpenMapAttributes();
+            this.model.OpenMapAttributes();
         }
 
         private void TrackBar1ValueChanged(object sender, EventArgs e)
         {
-            this.dispatcher.SetSeaLevel(this.seaLevelTrackbar.Value);
+            this.model.SetSeaLevel(this.seaLevelTrackbar.Value);
         }
 
         private void CloseMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.CloseMap();
+            this.model.CloseMap();
         }
 
         private void GenerateMinimapHighQualityMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.RefreshMinimapHighQualityWithProgress();
+            this.model.RefreshMinimapHighQualityWithProgress();
         }
 
         private void SeaLevelTrackbarMouseUp(object sender, MouseEventArgs e)
         {
-            this.dispatcher.FlushSeaLevel();
+            this.model.FlushSeaLevel();
         }
 
         private void CopyMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.CopySelectionToClipboard();
+            this.model.CopySelectionToClipboard();
         }
 
         private void PasteMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.PasteFromClipboard();
+            this.model.PasteFromClipboard();
         }
 
         private void CutMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.CutSelectionToClipboard();
+            this.model.CutSelectionToClipboard();
         }
 
         private void MainFormLoad(object sender, EventArgs e)
         {
-            this.dispatcher.Initialize();
+            this.model.Initialize();
         }
 
         private void ExportMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ExportMinimap();
+            this.model.ExportMinimap();
         }
 
         private void ExportHeightmapMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ExportHeightmap();
+            this.model.ExportHeightmap();
         }
 
         private void ImportMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ImportMinimap();
+            this.model.ImportMinimap();
         }
 
         private void ImportHeightmapMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ImportHeightmap();
+            this.model.ImportHeightmap();
         }
 
         private void ExportMapImageMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ExportMapImage();
+            this.model.ExportMapImage();
         }
 
         private void ImportCustomSectionMenuItemClick(object sender, EventArgs e)
         {
-            this.dispatcher.ImportCustomSection();
+            this.model.ImportCustomSection();
         }
 
         private void MainFormDragEnter(object sender, DragEventArgs e)
@@ -280,7 +276,7 @@
                     return;
                 }
 
-                this.dispatcher.OpenFromDragDrop(data[0]);
+                this.model.OpenFromDragDrop(data[0]);
             }
         }
     }

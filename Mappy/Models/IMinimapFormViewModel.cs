@@ -14,5 +14,9 @@
         IObservable<Bitmap> MinimapImage { get; }
 
         IObservable<Rectangle> MinimapRect { get; }
+
+        void SetViewportLocation(Point location);
+
+        void HideMinimap();
     }
 }

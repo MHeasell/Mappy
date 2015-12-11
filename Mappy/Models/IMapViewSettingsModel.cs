@@ -28,5 +28,11 @@
         IObservable<int> ViewportWidth { get; set; }
 
         IObservable<int> ViewportHeight { get; set; }
+
+        void SetViewportSize(Size size);
+
+        void SetViewportLocation(Point pos);
+
+        void OpenFromDragDrop(string filename);
     }
 }

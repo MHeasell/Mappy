@@ -5,7 +5,6 @@
     using System.Drawing;
     using System.Linq;
     using System.Reactive.Linq;
-    using System.Reactive.Subjects;
 
     using Mappy.Data;
     using Mappy.Database;
@@ -13,6 +12,8 @@
     public class MainFormViewModel : IMainFormViewModel
     {
         private const string ProgramName = "Mappy";
+
+        private readonly CoreModel model;
 
         public MainFormViewModel(CoreModel model)
         {
@@ -84,6 +85,8 @@
             titleText.Connect();
 
             this.TitleText = titleText;
+
+            this.model = model;
         }
 
         public IObservable<bool> CanCloseMap { get; }
@@ -139,5 +142,165 @@
         public IObservable<bool> MinimapVisible { get; }
 
         public IObservable<int> SeaLevel { get; }
+
+        public void ToggleHeightmap()
+        {
+            this.model.ToggleHeightmap();
+        }
+
+        public void ToggleMinimap()
+        {
+            this.model.ToggleMinimap();
+        }
+
+        public void ToggleFeatures()
+        {
+            this.model.ToggleFeatures();
+        }
+
+        public void OpenPreferences()
+        {
+            this.model.OpenPreferences();
+        }
+
+        public void ShowAbout()
+        {
+            this.model.ShowAbout();
+        }
+
+        public void OpenMapAttributes()
+        {
+            this.model.OpenMapAttributes();
+        }
+
+        public void ChooseColor()
+        {
+            this.model.ChooseColor();
+        }
+
+        public bool New()
+        {
+            return this.model.New();
+        }
+
+        public bool Open()
+        {
+            return this.model.Open();
+        }
+
+        public bool OpenFromDragDrop(string filename)
+        {
+            return this.model.OpenFromDragDrop(filename);
+        }
+
+        public bool Save()
+        {
+            return this.model.Save();
+        }
+
+        public bool SaveAs()
+        {
+            return this.model.SaveAs();
+        }
+
+        public void CloseMap()
+        {
+            this.model.CloseMap();
+        }
+
+        public void Undo()
+        {
+            this.model.Undo();
+        }
+
+        public void Redo()
+        {
+            this.model.Redo();
+        }
+
+        public void Close()
+        {
+            this.model.Close();
+        }
+
+        public void RefreshMinimap()
+        {
+            this.model.RefreshMinimap();
+        }
+
+        public void RefreshMinimapHighQualityWithProgress()
+        {
+            this.model.RefreshMinimapHighQualityWithProgress();
+        }
+
+        public void HideGrid()
+        {
+            this.model.HideGrid();
+        }
+
+        public void EnableGridWithSize(Size s)
+        {
+            this.model.EnableGridWithSize(s);
+        }
+
+        public void SetSeaLevel(int value)
+        {
+            this.model.SetSeaLevel(value);
+        }
+
+        public void FlushSeaLevel()
+        {
+            this.model.FlushSeaLevel();
+        }
+
+        public void CopySelectionToClipboard()
+        {
+            this.model.CopySelectionToClipboard();
+        }
+
+        public void CutSelectionToClipboard()
+        {
+            this.model.CutSelectionToClipboard();
+        }
+
+        public void PasteFromClipboard()
+        {
+            this.model.PasteFromClipboard();
+        }
+
+        public void ImportMinimap()
+        {
+            this.model.ImportMinimap();
+        }
+
+        public void ExportMinimap()
+        {
+            this.model.ExportMinimap();
+        }
+
+        public void ImportHeightmap()
+        {
+            this.model.ImportHeightmap();
+        }
+
+        public void ExportHeightmap()
+        {
+            this.model.ExportHeightmap();
+        }
+
+        public void ExportMapImage()
+        {
+            this.model.ExportMapImage();
+        }
+
+        public void ImportCustomSection()
+        {
+            this.model.ImportCustomSection();
+        }
+
+        public void Initialize()
+        {
+            this.model.Initialize();
+        }
     }
 }

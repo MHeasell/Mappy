@@ -21,7 +21,7 @@
     using TAUtil.Tdf;
     using TAUtil.Tnt;
 
-    public class CoreModel : Notifier, IUserEventDispatcher
+    public class CoreModel : Notifier
     {
         private readonly IFeatureDatabase featureRecords;
         private readonly IList<Section> sections;

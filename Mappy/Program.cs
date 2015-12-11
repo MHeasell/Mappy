@@ -36,18 +36,15 @@
             var svc = new DialogService(mainForm);
             var model = new CoreModel(svc);
             mainForm.SetModel(new MainFormViewModel(model));
-            mainForm.SetDispatcher(model);
 
             mainForm.SectionView.SetModel(new SectionViewViewModel(model));
             mainForm.FeatureView.SetModel(new FeatureViewViewModel(model));
 
             mainForm.MapViewPanel.SetSettingsModel(new MapViewViewModel(model));
-            mainForm.MapViewPanel.SetDispatcher(model);
 
             var minimapForm = new MinimapForm();
             minimapForm.Owner = mainForm;
             minimapForm.SetModel(new MinimapFormViewModel(model));
-            minimapForm.SetDispatcher(model);
 
             Application.Run(mainForm);
         }
