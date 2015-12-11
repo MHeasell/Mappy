@@ -40,9 +40,9 @@
 
         public IObservable<IMainModel> Map { get; }
 
-        public IObservable<int> ViewportWidth { get; set; }
+        public IObservable<int> ViewportWidth { get; }
 
-        public IObservable<int> ViewportHeight { get; set; }
+        public IObservable<int> ViewportHeight { get; }
 
         public void SetViewportSize(Size size)
         {
