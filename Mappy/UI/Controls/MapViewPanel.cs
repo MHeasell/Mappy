@@ -661,20 +661,17 @@
             t.SelectItem(this.mapModel);
         }
 
-        public Rectangle ViewportRect
+        private Rectangle CalculateViewportRect()
         {
-            get
-            {
-                Point loc = this.mapView.AutoScrollPosition;
-                loc.X *= -1;
-                loc.Y *= -1;
-                return new Rectangle(loc, this.mapView.ClientSize);
-            }
+            Point loc = this.mapView.AutoScrollPosition;
+            loc.X *= -1;
+            loc.Y *= -1;
+            return new Rectangle(loc, this.mapView.ClientSize);
         }
 
         private void UpdateMinimapViewport()
         {
-            var rect = this.ViewportRect;
+            var rect = this.CalculateViewportRect();
 
             if (this.settingsModel != null)
             {
