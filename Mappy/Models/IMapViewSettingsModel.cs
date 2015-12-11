@@ -1,11 +1,9 @@
 ﻿namespace Mappy.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
 
-    using Mappy.Data;
     using Mappy.Database;
 
     public interface IMapViewSettingsModel
