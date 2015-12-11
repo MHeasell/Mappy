@@ -680,17 +680,17 @@
             }
         }
 
-        private void mapView_SizeChanged(object sender, EventArgs e)
+        private void MapViewSizeChanged(object sender, EventArgs e)
         {
             this.UpdateMinimapViewport();
         }
 
-        private void mapView_DragEnter(object sender, DragEventArgs e)
+        private void MapViewDragEnter(object sender, DragEventArgs e)
         {
             e.Effect = DragDropEffects.Copy;
         }
 
-        private void mapView_Paint(object sender, PaintEventArgs e)
+        private void MapViewPaint(object sender, PaintEventArgs e)
         {
             // We listen to paint to detect when scroll position has changed.
             // We could use the scroll event, but this only detects

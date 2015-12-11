@@ -45,10 +45,10 @@
             this.mapView.Size = new System.Drawing.Size(150, 150);
             this.mapView.TabIndex = 0;
             this.mapView.Text = "imageLayerView1";
-            this.mapView.SizeChanged += new System.EventHandler(this.mapView_SizeChanged);
+            this.mapView.SizeChanged += new System.EventHandler(this.MapViewSizeChanged);
             this.mapView.DragDrop += new System.Windows.Forms.DragEventHandler(this.MapViewDragDrop);
-            this.mapView.DragEnter += new System.Windows.Forms.DragEventHandler(this.mapView_DragEnter);
-            this.mapView.Paint += new System.Windows.Forms.PaintEventHandler(this.mapView_Paint);
+            this.mapView.DragEnter += new System.Windows.Forms.DragEventHandler(this.MapViewDragEnter);
+            this.mapView.Paint += new System.Windows.Forms.PaintEventHandler(this.MapViewPaint);
             this.mapView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MapViewKeyDown);
             this.mapView.Leave += new System.EventHandler(this.MapViewLeave);
             this.mapView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MapViewMouseDown);
