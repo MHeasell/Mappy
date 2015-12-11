@@ -221,10 +221,10 @@
 
             this.mapModel.PropertyChanged += this.MapModelPropertyChanged;
 
-            this.mapModel.SelectedFeatures.CollectionChanged += SelectedFeatures_CollectionChanged;
+            this.mapModel.SelectedFeatures.CollectionChanged += this.SelectedFeaturesCollectionChanged;
         }
 
-        private void SelectedFeatures_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void SelectedFeaturesCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             this.RefreshSelection();
         }
