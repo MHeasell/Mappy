@@ -24,9 +24,9 @@
 
         IObservable<IMainModel> Map { get; }
 
-        IObservable<int> ViewportWidth { get; set; }
+        IObservable<int> ViewportWidth { get; }
 
-        IObservable<int> ViewportHeight { get; set; }
+        IObservable<int> ViewportHeight { get; }
 
         void SetViewportSize(Size size);
 
