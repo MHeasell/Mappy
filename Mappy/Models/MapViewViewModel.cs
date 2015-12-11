@@ -2,6 +2,7 @@
 {
     using System;
     using System.Drawing;
+    using System.Reactive.Linq;
     using System.Windows.Forms;
 
     using Mappy.Database;
@@ -23,6 +24,10 @@
             this.ViewportWidth = model.PropertyAsObservable(x => x.ViewportWidth, "ViewportWidth");
             this.ViewportHeight = model.PropertyAsObservable(x => x.ViewportHeight, "ViewportHeight");
 
+            var mapWidth = model.PropertyAsObservable(x => x.MapWidth, "MapWidth");
+            var mapHeight = model.PropertyAsObservable(x => x.MapHeight, "MapHeight");
+            this.CanvasSize = mapWidth.CombineLatest(mapHeight, (w, h) => new Size(w * 32, h * 32));
+
             this.model = model;
         }
 
@@ -43,6 +48,8 @@
         public IObservable<int> ViewportWidth { get; }
 
         public IObservable<int> ViewportHeight { get; }
+
+        public IObservable<Size> CanvasSize { get; }
 
         public void SetViewportSize(Size size)
         {

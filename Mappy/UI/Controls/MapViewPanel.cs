@@ -88,6 +88,7 @@
             model.HeightmapVisible.Subscribe(this.RefreshHeightmapVisibility);
             model.FeaturesVisible.Subscribe(x => this.featuresVisible = x);
             model.FeatureRecords.Subscribe(x => this.featureDatabase = x);
+            model.CanvasSize.Subscribe(x => this.mapView.CanvasSize = x);
         }
 
         private void SetMapModel(IMainModel model)
@@ -99,8 +100,6 @@
 
         private void ResetView()
         {
-            this.UpdateCanvasSize();
-
             this.UpdateViewViewportLocation();
 
             this.UpdateBaseTile();
@@ -138,19 +137,6 @@
             {
                 this.InsertFeature(f.Id);
             }
-        }
-
-        private void UpdateCanvasSize()
-        {
-            if (this.mapModel == null)
-            {
-                this.mapView.CanvasSize = Size.Empty;
-                return;
-            }
-
-            this.mapView.CanvasSize = new Size(
-                this.mapModel.MapWidth * 32,
-                this.mapModel.MapHeight * 32);
         }
 
         private void UpdateBaseTile()
@@ -235,10 +221,6 @@
             {
                 case "SeaLevel":
                     this.RefreshSeaLevel();
-                    break;
-                case "MapWidth":
-                case "MapHeight":
-                    this.UpdateCanvasSize();
                     break;
                 case "SelectedTile":
                 case "SelectedFeatures":

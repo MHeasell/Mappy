@@ -26,6 +26,8 @@
 
         IObservable<int> ViewportHeight { get; }
 
+        IObservable<Size> CanvasSize { get; }
+
         void SetViewportSize(Size size);
 
         void SetViewportLocation(Point pos);
