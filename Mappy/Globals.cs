@@ -9,17 +9,20 @@ namespace Mappy
 
     public static class Globals
     {
-        public static readonly BitmapCache TileCache;
+        public static readonly BitmapCache TileCache = new BitmapCache();
 
-        public static readonly Bitmap DefaultTile;
+        public static readonly Bitmap DefaultTile = CreateWhiteBitmap(32, 32);
 
-        static Globals()
+        private static Bitmap CreateWhiteBitmap(int width, int height)
         {
-            TileCache = new BitmapCache();
+            var bitmap = new Bitmap(width, height);
 
-            DefaultTile = new Bitmap(32, 32);
-            var g = Graphics.FromImage(DefaultTile);
-            g.FillRectangle(Brushes.White, 0, 0, DefaultTile.Width, DefaultTile.Height);
+            using (var g = Graphics.FromImage(bitmap))
+            {
+                g.FillRectangle(Brushes.White, 0, 0, bitmap.Width, bitmap.Height);
+            }
+
+            return bitmap;
         }
     }
 }

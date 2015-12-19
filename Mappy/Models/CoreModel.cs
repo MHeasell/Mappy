@@ -156,7 +156,7 @@
         public IList<Section> Sections
         {
             get { return this.sections; }
-        } 
+        }
 
         public bool IsDirty
         {
@@ -418,7 +418,7 @@
             {
                 return;
             }
-            
+
             this.Map.Redo();
         }
 

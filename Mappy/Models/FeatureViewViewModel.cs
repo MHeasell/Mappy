@@ -11,7 +11,7 @@
 
     public class FeatureViewViewModel : ISectionViewViewModel
     {
-        private readonly BehaviorSubject<ComboBoxViewModel> worlds = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty); 
+        private readonly BehaviorSubject<ComboBoxViewModel> worlds = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty);
 
         private readonly BehaviorSubject<ComboBoxViewModel> categories = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty);
 
@@ -21,7 +21,7 @@
 
         private readonly BehaviorSubject<IFeatureDatabase> rawFeatures;
 
-        private readonly BehaviorSubject<IEnumerable<ListViewItem>> features = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>()); 
+        private readonly BehaviorSubject<IEnumerable<ListViewItem>> features = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>());
 
         private readonly Dictionary<string, Bitmap> rescaledImageMap = new Dictionary<string, Bitmap>();
 

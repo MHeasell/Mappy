@@ -11,7 +11,7 @@ namespace Mappy.Data
         private Point location;
 
         public Positioned(T item)
-            : this(item, new Point())
+            : this(item, Point.Empty)
         {
         }
 

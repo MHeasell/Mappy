@@ -161,7 +161,7 @@
                 case DialogResult.OK:
                     return new Size(dialog.MapWidth, dialog.MapHeight);
                 case DialogResult.Cancel:
-                    return new Size();
+                    return Size.Empty;
                 default:
                     throw new ArgumentException("bad dialogresult");
             }

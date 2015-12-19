@@ -47,7 +47,7 @@ namespace Mappy.Models
 
         FeatureInstance GetFeatureInstance(Guid id);
 
-        IEnumerable<FeatureInstance> EnumerateFeatureInstances(); 
+        IEnumerable<FeatureInstance> EnumerateFeatureInstances();
 
         void DragDropStartPosition(int index, int x, int y);
 

@@ -7,7 +7,8 @@
 
     public static class ExtensionMethods
     {
-        public static BehaviorSubject<TField> PropertyAsObservable<TSource, TField>(this TSource source, Func<TSource, TField> accessor, string name) where TSource : INotifyPropertyChanged
+        public static BehaviorSubject<TField> PropertyAsObservable<TSource, TField>(this TSource source, Func<TSource, TField> accessor, string name)
+            where TSource : INotifyPropertyChanged
         {
             var subject = new BehaviorSubject<TField>(accessor(source));
 

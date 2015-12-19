@@ -55,7 +55,7 @@
                     Errors = this.HpiErrors,
                     FileErrors = this.FileErrors,
                 };
-        } 
+        }
 
         protected abstract IEnumerable<HpiEntry> EnumerateFiles(HpiReader r);
 

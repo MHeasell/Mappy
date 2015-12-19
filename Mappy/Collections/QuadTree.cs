@@ -12,7 +12,8 @@ namespace Mappy.Collections
     /// or rectangle.
     /// </summary>
     /// <typeparam name="T">The type of the elements</typeparam>
-    public class QuadTree<T> : ICollection<T> where T : IQuadTreeItem
+    public class QuadTree<T> : ICollection<T>
+        where T : IQuadTreeItem
     {
         private const int TopLeftIndex = 0;
 
@@ -278,7 +279,7 @@ namespace Mappy.Collections
                     yield return item;
                 }
             }
-        } 
+        }
 
         private void Split()
         {

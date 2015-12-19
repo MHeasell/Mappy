@@ -5,11 +5,11 @@
 
     public struct Maybe<T> : IEquatable<Maybe<T>>
     {
+        public static readonly Maybe<T> None = default(Maybe<T>);
+
         private readonly bool hasValue;
 
         private readonly T value;
-
-        public static readonly Maybe<T> None = new Maybe<T>();
 
         private Maybe(T value)
         {
@@ -22,6 +22,11 @@
         public bool HasValue => this.hasValue;
 
         public bool IsSome => this.hasValue;
+
+        public static bool operator ==(Maybe<T> left, Maybe<T> right)
+        {
+            return left.Equals(right);
+        }
 
         public static Maybe<T> Return(T value)
         {
@@ -41,11 +46,6 @@
         public static Maybe<T> From(T value)
         {
             return new Maybe<T>(value);
-        }
-
-        public static bool operator ==(Maybe<T> left, Maybe<T> right)
-        {
-            return left.Equals(right);
         }
 
         public static bool operator !=(Maybe<T> left, Maybe<T> right)
@@ -153,7 +153,7 @@
             }
 
             return this.hasValue ? f(this.value) : Maybe<TR>.None;
-        } 
+        }
 
         public Maybe<TR> SelectMany<TR>(Func<T, Maybe<TR>> f)
         {
