@@ -30,6 +30,8 @@
 
         void SetViewportLocation(Point pos);
 
+        void SetViewportRectangle(Rectangle viewport);
+
         void OpenFromDragDrop(string filename);
 
         void DragDropData(IDataObject data, Point loc);

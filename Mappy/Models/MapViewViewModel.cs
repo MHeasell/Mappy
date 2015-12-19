@@ -59,6 +59,12 @@
             this.model.SetViewportLocation(pos);
         }
 
+        public void SetViewportRectangle(Rectangle rect)
+        {
+            this.model.SetViewportLocation(rect.Location);
+            this.model.SetViewportSize(rect.Size);
+        }
+
         public void OpenFromDragDrop(string filename)
         {
             this.model.OpenFromDragDrop(filename);

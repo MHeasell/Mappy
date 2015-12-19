@@ -623,12 +623,7 @@
         private void UpdateMinimapViewport()
         {
             var rect = this.CalculateViewportRect();
-
-            if (this.settingsModel != null)
-            {
-                this.settingsModel.SetViewportSize(rect.Size);
-                this.settingsModel.SetViewportLocation(rect.Location);
-            }
+            this.settingsModel?.SetViewportRectangle(rect);
         }
 
         private void MapViewSizeChanged(object sender, EventArgs e)
