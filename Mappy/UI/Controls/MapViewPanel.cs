@@ -595,14 +595,9 @@
 
         private void MapViewKeyDown(object sender, KeyEventArgs e)
         {
-            if (this.mapModel == null)
-            {
-                return;
-            }
-
             if (e.KeyCode == Keys.Delete)
             {
-                this.mapModel.DeleteSelection();
+                this.settingsModel.DeleteSelection();
             }
         }
 

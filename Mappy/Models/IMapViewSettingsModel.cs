@@ -33,5 +33,7 @@
         void OpenFromDragDrop(string filename);
 
         void DragDropData(IDataObject data, Point loc);
+
+        void DeleteSelection();
     }
 }

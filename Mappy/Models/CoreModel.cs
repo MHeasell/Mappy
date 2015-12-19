@@ -725,6 +725,11 @@
             this.Map?.DragDropFeature(featureName, x, y);
         }
 
+        public void DeleteSelection()
+        {
+            this.Map?.DeleteSelection();
+        }
+
         private static IEnumerable<string> GetMapNames(HpiReader hpi)
         {
             return hpi.GetFiles("maps")

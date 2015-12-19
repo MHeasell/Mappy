@@ -97,5 +97,10 @@
                 }
             }
         }
+
+        public void DeleteSelection()
+        {
+            this.model.DeleteSelection();
+        }
     }
 }
