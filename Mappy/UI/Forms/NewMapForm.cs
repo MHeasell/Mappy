@@ -80,7 +80,7 @@
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             int valX;
-            if (!int.TryParse(textBox1.Text, out valX))
+            if (!int.TryParse(this.textBox1.Text, out valX))
             {
                 this.label3.Text = string.Empty;
                 return;
@@ -94,7 +94,7 @@
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             int valY;
-            if (!int.TryParse(textBox2.Text, out valY))
+            if (!int.TryParse(this.textBox2.Text, out valY))
             {
                 this.label4.Text = string.Empty;
                 return;
