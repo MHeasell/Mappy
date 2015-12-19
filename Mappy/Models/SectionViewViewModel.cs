@@ -23,7 +23,7 @@
             this.SelectedIndex = selectedIndex;
         }
 
-        public IList<string> Items { get; } 
+        public IList<string> Items { get; }
 
         public int SelectedIndex { get; }
 
@@ -50,7 +50,7 @@
 
     public class SectionViewViewModel : ISectionViewViewModel
     {
-        private readonly BehaviorSubject<ComboBoxViewModel> worlds = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty); 
+        private readonly BehaviorSubject<ComboBoxViewModel> worlds = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty);
 
         private readonly BehaviorSubject<ComboBoxViewModel> categories = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty);
 
@@ -60,7 +60,7 @@
 
         private readonly BehaviorSubject<IList<Section>> rawSections;
 
-        private readonly BehaviorSubject<IEnumerable<ListViewItem>> sections = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>()); 
+        private readonly BehaviorSubject<IEnumerable<ListViewItem>> sections = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>());
 
         public SectionViewViewModel(CoreModel model)
         {

@@ -1,5 +1,4 @@
-﻿
-namespace Mappy.Util.ImageSampling
+﻿namespace Mappy.Util.ImageSampling
 {
     using System.Drawing;
 

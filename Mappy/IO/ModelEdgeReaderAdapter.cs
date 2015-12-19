@@ -8,7 +8,7 @@
 
     public class ModelEdgeReaderAdapter : IModelReaderAdapter
     {
-        private readonly List<Vector3D> vertices = new List<Vector3D>(); 
+        private readonly List<Vector3D> vertices = new List<Vector3D>();
 
         private readonly List<Line3D> edges = new List<Line3D>();
 
@@ -52,7 +52,7 @@
             {
                 var vec0 = this.vertices[vertexIndices[i - 1]];
                 var vec1 = this.vertices[vertexIndices[i]];
-                
+
                 this.edges.Add(new Line3D(vec0, vec1));
             }
 

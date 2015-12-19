@@ -16,7 +16,7 @@
             this.Id = id;
             this.FeatureName = featureName;
             this.Location = location;
-        }         
+        }
 
         public Guid Id { get; private set; }
 

@@ -41,7 +41,7 @@
         public static Maybe<T> Some(T value)
         {
             return Return(value);
-        } 
+        }
 
         public static Maybe<T> From(T value)
         {

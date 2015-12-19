@@ -16,7 +16,7 @@
 
         private readonly T fillValue;
 
-        private IGrid<T> oldContents; 
+        private IGrid<T> oldContents;
 
         public FillAreaOperation(IGrid<T> target, int x, int y, int width, int height, T fillValue)
         {

@@ -36,11 +36,11 @@
         {
             int startX = clipRectangle.X / this.tileSize;
             int startY = clipRectangle.Y / this.tileSize;
-            
+
             // start a tile before to account for bleed in
             startX -= 1;
             startY -= 1;
-            
+
             // cap start to lower bounds of grid
             startX = Math.Max(0, startX);
             startY = Math.Max(0, startY);
