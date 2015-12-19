@@ -89,6 +89,7 @@
             model.FeaturesVisible.Subscribe(x => this.featuresVisible = x);
             model.FeatureRecords.Subscribe(x => this.featureDatabase = x);
             model.CanvasSize.Subscribe(x => this.mapView.CanvasSize = x);
+            model.ViewportLocation.Subscribe(x => this.mapView.AutoScrollPosition = x);
         }
 
         private void SetMapModel(IMainModel model)
@@ -100,8 +101,6 @@
 
         private void ResetView()
         {
-            this.UpdateViewViewportLocation();
-
             this.UpdateBaseTile();
 
             this.UpdateFloatingTiles();
@@ -230,27 +229,7 @@
                 case "BandboxRectangle":
                     this.UpdateBandbox();
                     break;
-                case "ViewportLocation":
-                    this.UpdateViewViewportLocation();
-                    break;
             }
-        }
-
-        private void UpdateViewViewportLocation()
-        {
-            if (this.mapModel == null)
-            {
-                this.SetViewportPosition(0, 0);
-                return;
-            }
-
-            var loc = this.mapModel.ViewportLocation;
-            this.SetViewportPosition(loc.X, loc.Y);
-        }
-
-        private void SetViewportPosition(int x, int y)
-        {
-            this.mapView.AutoScrollPosition = new Point(x, y);
         }
 
         private void UpdateBandbox()

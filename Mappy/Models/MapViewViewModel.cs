@@ -21,8 +21,10 @@
             this.FeaturesVisible = model.PropertyAsObservable(x => x.FeaturesVisible, "FeaturesVisible");
             this.FeatureRecords = model.PropertyAsObservable(x => x.FeatureRecords, "FeatureRecords");
             this.Map = model.PropertyAsObservable(x => x.Map, "Map");
+
             this.ViewportWidth = model.PropertyAsObservable(x => x.ViewportWidth, "ViewportWidth");
             this.ViewportHeight = model.PropertyAsObservable(x => x.ViewportHeight, "ViewportHeight");
+            this.ViewportLocation = model.PropertyAsObservable(x => x.ViewportLocation, "ViewportLocation");
 
             var mapWidth = model.PropertyAsObservable(x => x.MapWidth, "MapWidth");
             var mapHeight = model.PropertyAsObservable(x => x.MapHeight, "MapHeight");
@@ -48,6 +50,8 @@
         public IObservable<int> ViewportWidth { get; }
 
         public IObservable<int> ViewportHeight { get; }
+
+        public IObservable<Point> ViewportLocation { get; }
 
         public IObservable<Size> CanvasSize { get; }
 
