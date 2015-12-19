@@ -22,10 +22,6 @@
 
         IObservable<IMainModel> Map { get; }
 
-        IObservable<int> ViewportWidth { get; }
-
-        IObservable<int> ViewportHeight { get; }
-
         IObservable<Point> ViewportLocation { get; }
 
         IObservable<Size> CanvasSize { get; }
