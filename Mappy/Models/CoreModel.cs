@@ -730,6 +730,11 @@
             this.Map?.DeleteSelection();
         }
 
+        public void ClearSelection()
+        {
+            this.Map?.ClearSelection();
+        }
+
         private static IEnumerable<string> GetMapNames(HpiReader hpi)
         {
             return hpi.GetFiles("maps")

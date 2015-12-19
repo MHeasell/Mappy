@@ -603,12 +603,7 @@
 
         private void MapViewLeave(object sender, EventArgs e)
         {
-            if (this.mapModel == null)
-            {
-                return;
-            }
-
-            this.mapModel.ClearSelection();
+            this.settingsModel.ClearSelection();
         }
 
         private void SelectFromTag(object tag)

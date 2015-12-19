@@ -102,5 +102,10 @@
         {
             this.model.DeleteSelection();
         }
+
+        public void ClearSelection()
+        {
+            this.model.ClearSelection();
+        }
     }
 }

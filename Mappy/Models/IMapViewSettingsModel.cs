@@ -35,5 +35,7 @@
         void DragDropData(IDataObject data, Point loc);
 
         void DeleteSelection();
+
+        void ClearSelection();
     }
 }
