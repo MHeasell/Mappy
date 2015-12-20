@@ -89,29 +89,20 @@ namespace Mappy.UI.Controls
 
         protected virtual void OnAdd(Item item)
         {
-            NotifyCollectionChangedEventHandler h = this.CollectionChanged;
-            if (h != null)
-            {
-                h(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item));
-            }
+            var e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item);
+            this.CollectionChanged?.Invoke(this, e);
         }
 
         protected virtual void OnClear()
         {
-            NotifyCollectionChangedEventHandler h = this.CollectionChanged;
-            if (h != null)
-            {
-                h(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            }
+            var e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+            this.CollectionChanged?.Invoke(this, e);
         }
 
         protected virtual void OnRemove(Item item)
         {
-            NotifyCollectionChangedEventHandler h = this.CollectionChanged;
-            if (h != null)
-            {
-                h(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item));
-            }
+            var e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item);
+            this.CollectionChanged?.Invoke(this, e);
         }
 
         public class Item : Notifier, IQuadTreeItem
