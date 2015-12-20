@@ -19,20 +19,11 @@ namespace Mappy.UI.Drawables
             this.heightPainter.ShowSeaLevel = true;
         }
 
-        public Size Size
-        {
-            get { return new Size(this.Width, this.Height); }
-        }
+        public Size Size => new Size(this.Width, this.Height);
 
-        public int Width
-        {
-            get { return this.tile.TileGrid.Width * 32; }
-        }
+        public int Width => this.tile.TileGrid.Width * 32;
 
-        public int Height
-        {
-            get { return this.tile.TileGrid.Height * 32; }
-        }
+        public int Height => this.tile.TileGrid.Height * 32;
 
         public Color BackgroundColor
         {
