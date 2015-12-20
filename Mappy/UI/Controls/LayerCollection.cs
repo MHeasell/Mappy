@@ -8,7 +8,7 @@
     // An ordered collection of layers.
     // Provides events to notify when an area changes
     // or when the whole canvas becomes invalid.
-    public class ImageLayerCollection2 : IList<ILayer>
+    public class LayerCollection : IList<ILayer>
     {
         public event EventHandler FullRedraw;
 

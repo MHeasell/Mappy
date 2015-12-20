@@ -10,11 +10,11 @@ namespace Mappy.UI.Controls
     using Mappy.UI.Drawables;
     using Mappy.Util;
 
-    public class ImageLayerCollection : ICollection<ImageLayerCollection.Item>, INotifyCollectionChanged
+    public class DrawableItemCollection : ICollection<DrawableItemCollection.Item>, INotifyCollectionChanged
     {
         private QuadTree<Item> items;
 
-        public ImageLayerCollection(int width, int height)
+        public DrawableItemCollection(int width, int height)
         {
             this.items = new QuadTree<Item>(new Rectangle(0, 0, width, height));
         }

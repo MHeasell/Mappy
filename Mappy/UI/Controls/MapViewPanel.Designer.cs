@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mapView = new Mappy.UI.Controls.ImageLayerView2();
+            this.mapView = new Mappy.UI.Controls.LayerView();
             this.SuspendLayout();
             // 
             // mapView
@@ -63,6 +63,6 @@
 
         #endregion
 
-        private ImageLayerView2 mapView;
+        private LayerView mapView;
     }
 }

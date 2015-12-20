@@ -202,9 +202,9 @@
     <Compile Include="UI\Controls\GuideLayer.cs" />
     <Compile Include="UI\Controls\PainterLayer.cs" />
     <Compile Include="UI\Controls\ILayer.cs" />
-    <Compile Include="UI\Controls\ImageLayerCollection.cs" />
-    <Compile Include="UI\Controls\ImageLayerCollection2.cs" />
-    <Compile Include="UI\Controls\ImageLayerView2.cs">
+    <Compile Include="UI\Controls\DrawableItemCollection.cs" />
+    <Compile Include="UI\Controls\LayerCollection.cs" />
+    <Compile Include="UI\Controls\LayerView.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UI\Controls\LayerChangedEventArgs.cs" />

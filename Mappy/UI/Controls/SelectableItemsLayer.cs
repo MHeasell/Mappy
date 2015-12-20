@@ -7,29 +7,29 @@
 
     public class SelectableItemsLayer : AbstractLayer
     {
-        private readonly HashSet<ImageLayerCollection.Item> selectedItems = new HashSet<ImageLayerCollection.Item>();
+        private readonly HashSet<DrawableItemCollection.Item> selectedItems = new HashSet<DrawableItemCollection.Item>();
 
         public SelectableItemsLayer(int width, int height)
         {
-            this.Items = new ImageLayerCollection(width, height);
+            this.Items = new DrawableItemCollection(width, height);
             this.Items.CollectionChanged += this.ItemsChanged;
         }
 
-        public ImageLayerCollection Items { get; }
+        public DrawableItemCollection Items { get; }
 
-        public ImageLayerCollection.Item HitTest(int x, int y)
+        public DrawableItemCollection.Item HitTest(int x, int y)
         {
             return this.Items.HitTest(new Point(x, y));
         }
 
-        public void AddToSelection(ImageLayerCollection.Item item)
+        public void AddToSelection(DrawableItemCollection.Item item)
         {
             this.InvalidateSelectionRect(item);
 
             this.selectedItems.Add(item);
         }
 
-        public void RemoveFromSelection(ImageLayerCollection.Item item)
+        public void RemoveFromSelection(DrawableItemCollection.Item item)
         {
             if (this.selectedItems.Remove(item))
             {
@@ -37,7 +37,7 @@
             }
         }
 
-        public bool SelectedItemsContains(ImageLayerCollection.Item item)
+        public bool SelectedItemsContains(DrawableItemCollection.Item item)
         {
             return this.selectedItems.Contains(item);
         }
@@ -89,7 +89,7 @@
                 case NotifyCollectionChangedAction.Add:
                     foreach (var i in e.NewItems)
                     {
-                        ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
+                        DrawableItemCollection.Item item = (DrawableItemCollection.Item)i;
                         item.PropertyChanged += this.ItemPropertyChanged;
                         this.OnLayerChanged(item.Bounds);
                     }
@@ -99,7 +99,7 @@
                 case NotifyCollectionChangedAction.Remove:
                     foreach (var i in e.OldItems)
                     {
-                        ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
+                        DrawableItemCollection.Item item = (DrawableItemCollection.Item)i;
                         item.PropertyChanged -= this.ItemPropertyChanged;
                         this.OnLayerChanged(item.Bounds);
                     }
@@ -109,14 +109,14 @@
                 case NotifyCollectionChangedAction.Replace:
                     foreach (var i in e.OldItems)
                     {
-                        ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
+                        DrawableItemCollection.Item item = (DrawableItemCollection.Item)i;
                         item.PropertyChanged -= this.ItemPropertyChanged;
                         this.OnLayerChanged(item.Bounds);
                     }
 
                     foreach (var i in e.NewItems)
                     {
-                        ImageLayerCollection.Item item = (ImageLayerCollection.Item)i;
+                        DrawableItemCollection.Item item = (DrawableItemCollection.Item)i;
                         item.PropertyChanged += this.ItemPropertyChanged;
                         this.OnLayerChanged(item.Bounds);
                     }
@@ -127,11 +127,11 @@
 
         private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            ImageLayerCollection.Item i = (ImageLayerCollection.Item)sender;
+            DrawableItemCollection.Item i = (DrawableItemCollection.Item)sender;
             this.OnLayerChanged(i.Bounds);
         }
 
-        private void InvalidateSelectionRect(ImageLayerCollection.Item item)
+        private void InvalidateSelectionRect(DrawableItemCollection.Item item)
         {
             var r = item.Bounds;
             this.OnLayerChanged(new Rectangle(r.Left, r.Top, r.Width, 1));

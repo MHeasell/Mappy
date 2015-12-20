@@ -4,13 +4,13 @@
     using System.Drawing;
     using System.Windows.Forms;
 
-    public sealed class ImageLayerView2 : ScrollableControl
+    public sealed class LayerView : ScrollableControl
     {
-        private readonly ImageLayerCollection2 layers = new ImageLayerCollection2();
+        private readonly LayerCollection layers = new LayerCollection();
 
         private Size canvasSize;
 
-        public ImageLayerView2()
+        public LayerView()
         {
             this.DoubleBuffered = true;
             this.layers.FullRedraw += this.LayersOnFullRedraw;
@@ -19,7 +19,7 @@
 
         public event EventHandler CanvasSizeChanged;
 
-        public ImageLayerCollection2 Layers => this.layers;
+        public LayerCollection Layers => this.layers;
 
         public Size CanvasSize
         {
