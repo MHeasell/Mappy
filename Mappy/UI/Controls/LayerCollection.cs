@@ -10,11 +10,11 @@
     // or when the whole canvas becomes invalid.
     public class LayerCollection : IList<ILayer>
     {
+        private readonly List<ILayer> items = new List<ILayer>();
+
         public event EventHandler FullRedraw;
 
         public event EventHandler<AreaChangedEventArgs> AreaChanged;
-
-        private readonly List<ILayer> items = new List<ILayer>();
 
         public ILayer this[int index]
         {
