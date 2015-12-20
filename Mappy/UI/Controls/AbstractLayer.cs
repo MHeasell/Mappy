@@ -38,17 +38,20 @@
 
         protected void OnLayerChanged()
         {
-            this.LayerChanged?.Invoke(this, new LayerChangedEventArgs());
+            this.OnLayerChanged(new LayerChangedEventArgs());
         }
 
         protected void OnLayerChanged(Rectangle rect)
         {
-            this.LayerChanged?.Invoke(this, new LayerChangedEventArgs(rect));
+            this.OnLayerChanged(new LayerChangedEventArgs(rect));
         }
 
         protected virtual void OnLayerChanged(LayerChangedEventArgs e)
         {
-            this.LayerChanged?.Invoke(this, e);
+            if (this.enabled)
+            {
+                this.LayerChanged?.Invoke(this, e);
+            }
         }
     }
 }
