@@ -21,21 +21,9 @@ namespace Mappy.UI.Controls
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        public int Count
-        {
-            get
-            {
-                return this.items.Count;
-            }
-        }
+        public int Count => this.items.Count;
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly => false;
 
         public void Add(Item item)
         {
@@ -128,46 +116,30 @@ namespace Mappy.UI.Controls
 
         public class Item : Notifier, IQuadTreeItem
         {
-            private readonly int x;
-            private readonly int y;
-            private readonly int z;
-            private readonly IDrawable drawable;
-
             private bool visible = true;
             private bool locked;
 
             public Item(int x, int y, int z, IDrawable drawable)
             {
-                this.x = x;
-                this.y = y;
-                this.z = z;
-                this.drawable = drawable;
+                this.X = x;
+                this.Y = y;
+                this.Z = z;
+                this.Drawable = drawable;
             }
 
-            public int X
-            {
-                get { return this.x; }
-            }
+            public int X { get; }
 
-            public int Y
-            {
-                get { return this.y; }
-            }
+            public int Y { get; }
 
-            public int Z
-            {
-                get { return this.z; }
-            }
+            public int Z { get; }
 
-            public IDrawable Drawable
-            {
-                get { return this.drawable; }
-            }
+            public IDrawable Drawable { get; }
 
-            public Rectangle Bounds
-            {
-                get { return new Rectangle(this.X, this.Y, this.Drawable.Width, this.Drawable.Height); }
-            }
+            public Rectangle Bounds => new Rectangle(
+                this.X,
+                this.Y,
+                this.Drawable.Width,
+                this.Drawable.Height);
 
             public bool Locked
             {
