@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Collections.Specialized;
-    using System.ComponentModel;
     using System.Drawing;
 
     public class SelectableItemsLayer : AbstractLayer
@@ -89,9 +88,7 @@
                 case NotifyCollectionChangedAction.Add:
                     foreach (var i in e.NewItems)
                     {
-                        DrawableItemCollection.Item item = (DrawableItemCollection.Item)i;
-                        item.PropertyChanged += this.ItemPropertyChanged;
-                        this.OnLayerChanged(item.Bounds);
+                        this.OnAddItem((DrawableItemCollection.Item)i);
                     }
 
                     break;
@@ -99,9 +96,7 @@
                 case NotifyCollectionChangedAction.Remove:
                     foreach (var i in e.OldItems)
                     {
-                        DrawableItemCollection.Item item = (DrawableItemCollection.Item)i;
-                        item.PropertyChanged -= this.ItemPropertyChanged;
-                        this.OnLayerChanged(item.Bounds);
+                        this.OnRemoveItem((DrawableItemCollection.Item)i);
                     }
 
                     break;
@@ -109,26 +104,33 @@
                 case NotifyCollectionChangedAction.Replace:
                     foreach (var i in e.OldItems)
                     {
-                        DrawableItemCollection.Item item = (DrawableItemCollection.Item)i;
-                        item.PropertyChanged -= this.ItemPropertyChanged;
-                        this.OnLayerChanged(item.Bounds);
+                        this.OnRemoveItem((DrawableItemCollection.Item)i);
                     }
 
                     foreach (var i in e.NewItems)
                     {
-                        DrawableItemCollection.Item item = (DrawableItemCollection.Item)i;
-                        item.PropertyChanged += this.ItemPropertyChanged;
-                        this.OnLayerChanged(item.Bounds);
+                        this.OnAddItem((DrawableItemCollection.Item)i);
                     }
 
                     break;
             }
         }
 
-        private void ItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void OnAddItem(DrawableItemCollection.Item item)
         {
-            DrawableItemCollection.Item i = (DrawableItemCollection.Item)sender;
-            this.OnLayerChanged(i.Bounds);
+            item.AreaChanged += this.ItemAreaChanged;
+            this.OnLayerChanged(item.Bounds);
+        }
+
+        private void OnRemoveItem(DrawableItemCollection.Item item)
+        {
+            item.AreaChanged -= this.ItemAreaChanged;
+            this.OnLayerChanged(item.Bounds);
+        }
+
+        private void ItemAreaChanged(object sender, AreaChangedEventArgs e)
+        {
+            this.OnLayerChanged(e.ChangedRectangle);
         }
 
         private void InvalidateSelectionRect(DrawableItemCollection.Item item)

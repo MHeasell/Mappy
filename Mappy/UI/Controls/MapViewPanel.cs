@@ -213,13 +213,11 @@
             }
 
             this.baseTile.DrawHeightMap = visible;
-            this.mapView.Invalidate();
         }
 
         private void RefreshSeaLevel()
         {
             this.baseTile.SeaLevel = this.mapModel.SeaLevel;
-            this.mapView.Invalidate();
         }
 
         private void WireMapModel()

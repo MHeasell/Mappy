@@ -5,11 +5,13 @@ namespace Mappy.UI.Drawables
     using Mappy.Data;
     using Mappy.UI.Painters;
 
-    public class DrawableTile : IDrawable
+    public class DrawableTile : AbstractDrawable
     {
         private readonly IMapTile tile;
         private readonly BitmapGridPainter painter;
         private readonly ContourHeightPainter heightPainter;
+
+        private bool drawHeightmap;
 
         public DrawableTile(IMapTile tile)
         {
@@ -19,11 +21,11 @@ namespace Mappy.UI.Drawables
             this.heightPainter.ShowSeaLevel = true;
         }
 
-        public Size Size => new Size(this.Width, this.Height);
+        public override Size Size => new Size(this.Width, this.Height);
 
-        public int Width => this.tile.TileGrid.Width * 32;
+        public override int Width => this.tile.TileGrid.Width * 32;
 
-        public int Height => this.tile.TileGrid.Height * 32;
+        public override int Height => this.tile.TileGrid.Height * 32;
 
         public Color BackgroundColor
         {
@@ -38,7 +40,22 @@ namespace Mappy.UI.Drawables
             }
         }
 
-        public bool DrawHeightMap { get; set; }
+        public bool DrawHeightMap
+        {
+            get
+            {
+                return this.drawHeightmap;
+            }
+
+            set
+            {
+                if (this.drawHeightmap != value)
+                {
+                    this.drawHeightmap = value;
+                    this.OnAreaChanged();
+                }
+            }
+        }
 
         public int SeaLevel
         {
@@ -49,11 +66,18 @@ namespace Mappy.UI.Drawables
 
             set
             {
-                this.heightPainter.SeaLevel = value;
+                if (this.heightPainter.SeaLevel != value)
+                {
+                    this.heightPainter.SeaLevel = value;
+                    if (this.drawHeightmap && this.heightPainter.ShowSeaLevel)
+                    {
+                        this.OnAreaChanged();
+                    }
+                }
             }
         }
 
-        public void Draw(Graphics graphics, Rectangle clipRectangle)
+        public override void Draw(Graphics graphics, Rectangle clipRectangle)
         {
             this.painter.Paint(graphics, clipRectangle);
             if (this.DrawHeightMap)

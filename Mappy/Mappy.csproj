@@ -231,6 +231,7 @@
     <Compile Include="UI\Controls\StartPositionsView.Designer.cs">
       <DependentUpon>StartPositionsView.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Drawables\AbstractDrawable.cs" />
     <Compile Include="UI\Drawables\DrawableBandbox.cs" />
     <Compile Include="UI\Drawables\DrawableBitmap.cs" />
     <Compile Include="UI\Drawables\DrawableTile.cs" />

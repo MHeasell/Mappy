@@ -1,5 +1,6 @@
 namespace Mappy.UI.Controls
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -116,7 +117,10 @@ namespace Mappy.UI.Controls
                 this.Y = y;
                 this.Z = z;
                 this.Drawable = drawable;
+                drawable.AreaChanged += this.DrawableOnAreaChanged;
             }
+
+            public event EventHandler<AreaChangedEventArgs> AreaChanged;
 
             public int X { get; }
 
@@ -140,8 +144,18 @@ namespace Mappy.UI.Controls
 
             public bool Visible
             {
-                get { return this.visible; }
-                set { this.SetField(ref this.visible, value, "Visible"); }
+                get
+                {
+                    return this.visible;
+                }
+
+                set
+                {
+                    if (this.SetField(ref this.visible, value, "Visible"))
+                    {
+                        this.AreaChanged?.Invoke(this, new AreaChangedEventArgs(this.Bounds));
+                    }
+                }
             }
 
             public object Tag { get; set; }
@@ -161,6 +175,13 @@ namespace Mappy.UI.Controls
                 clip.Offset(-this.X, -this.Y);
                 this.Drawable.Draw(g, clip);
                 g.TranslateTransform(-this.X, -this.Y);
+            }
+
+            private void DrawableOnAreaChanged(object sender, AreaChangedEventArgs areaChangedEventArgs)
+            {
+                var rect = areaChangedEventArgs.ChangedRectangle;
+                rect.Offset(this.X, this.Y);
+                this.AreaChanged?.Invoke(this, new AreaChangedEventArgs(rect));
             }
         }
     }

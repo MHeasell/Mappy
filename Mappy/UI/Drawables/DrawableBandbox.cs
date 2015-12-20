@@ -3,7 +3,7 @@
     using System;
     using System.Drawing;
 
-    public class DrawableBandbox : IDrawable, IDisposable
+    public sealed class DrawableBandbox : AbstractDrawable, IDisposable
     {
         private readonly Brush fillBrush;
 
@@ -16,11 +16,11 @@
             this.Size = size;
         }
 
-        public Size Size { get; }
+        public override Size Size { get; }
 
-        public int Width => this.Size.Width;
+        public override int Width => this.Size.Width;
 
-        public int Height => this.Size.Height;
+        public override int Height => this.Size.Height;
 
         public static DrawableBandbox CreateSimple(Size size, Color color, Color borderColor)
         {
@@ -39,7 +39,7 @@
                 size);
         }
 
-        public void Draw(Graphics graphics, Rectangle clipRectangle)
+        public override void Draw(Graphics graphics, Rectangle clipRectangle)
         {
             graphics.FillRectangle(this.fillBrush, 0, 0, this.Width - 1, this.Height - 1);
             graphics.DrawRectangle(this.borderPen, 0, 0, this.Width - 1, this.Height - 1);
@@ -47,17 +47,8 @@
 
         public void Dispose()
         {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                this.fillBrush.Dispose();
-                this.borderPen.Dispose();
-            }
+            this.fillBrush.Dispose();
+            this.borderPen.Dispose();
         }
     }
 }

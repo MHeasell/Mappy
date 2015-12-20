@@ -2,7 +2,7 @@ namespace Mappy.UI.Drawables
 {
     using System.Drawing;
 
-    public class DrawableBitmap : IDrawable
+    public class DrawableBitmap : AbstractDrawable
     {
         private readonly Bitmap bitmap;
 
@@ -11,22 +11,13 @@ namespace Mappy.UI.Drawables
             this.bitmap = bitmap;
         }
 
-        public System.Drawing.Size Size
-        {
-            get { return this.bitmap.Size; }
-        }
+        public override Size Size => this.bitmap.Size;
 
-        public int Width
-        {
-            get { return this.bitmap.Width; }
-        }
+        public override int Width => this.bitmap.Width;
 
-        public int Height
-        {
-            get { return this.bitmap.Height; }
-        }
+        public override int Height => this.bitmap.Height;
 
-        public void Draw(Graphics graphics, Rectangle clipRectangle)
+        public override void Draw(Graphics graphics, Rectangle clipRectangle)
         {
             graphics.DrawImageUnscaled(this.bitmap, 0, 0);
         }
