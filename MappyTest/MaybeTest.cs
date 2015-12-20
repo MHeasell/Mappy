@@ -12,7 +12,7 @@
         [TestMethod]
         public void TestFromValue()
         {
-            var i = Maybe<string>.From("asdf");
+            var i = Maybe.From("asdf");
             i.Match(
                 some: x => Assert.AreEqual("asdf", x),
                 none: Assert.Fail);
@@ -21,7 +21,7 @@
         [TestMethod]
         public void TestFromNull()
         {
-            var i = Maybe<string>.From(null);
+            var i = Maybe.From((string)null);
 
             Assert.IsTrue(i.IsNone);
             Assert.IsFalse(i.IsSome);
@@ -36,7 +36,7 @@
         [TestMethod]
         public void TestSome()
         {
-            var i = Maybe<int>.Some(2);
+            var i = Maybe.Some(2);
             Assert.IsTrue(i.IsSome);
             Assert.IsFalse(i.IsNone);
 
@@ -50,7 +50,7 @@
         {
             try
             {
-                Maybe<string>.Some(null);
+                Maybe.Some((string)null);
                 Assert.Fail();
             }
             catch (ArgumentNullException)
@@ -62,7 +62,7 @@
         [TestMethod]
         public void TestMap()
         {
-            var i = Maybe<int>.Some(2);
+            var i = Maybe.Some(2);
             var j = i.Map(x => x.ToString());
             j.Match(
                 some: x => Assert.AreEqual("2", x),
@@ -72,7 +72,7 @@
         [TestMethod]
         public void TestMapNull()
         {
-            var i = Maybe<int>.None;
+            var i = Maybe.None<int>();
             var j = i.Map(x => x.ToString());
 
             bool passed = false;
@@ -85,7 +85,7 @@
         [TestMethod]
         public void TestWhereFalse()
         {
-            var i = Maybe<int>.Some(1);
+            var i = Maybe.Some(1);
             var j = i.Where(_ => false);
 
             Assert.IsTrue(j.IsNone);
@@ -94,7 +94,7 @@
         [TestMethod]
         public void TestWhereTrue()
         {
-            var i = Maybe<int>.Some(1);
+            var i = Maybe.Some(1);
             var j = i.Where(_ => true);
 
             j.Match(
@@ -105,7 +105,7 @@
         [TestMethod]
         public void TestWhereNull()
         {
-            var i = Maybe<int>.None;
+            var i = Maybe.None<int>();
             var j = i.Where(_ => true);
 
             Assert.IsTrue(j.IsNone);
@@ -114,7 +114,7 @@
         [TestMethod]
         public void TestOrValueNone()
         {
-            var i = Maybe<int>.None;
+            var i = Maybe.None<int>();
             var j = i.Or(23);
             Assert.AreEqual(23, j);
         }
@@ -122,7 +122,7 @@
         [TestMethod]
         public void TestOrValueSome()
         {
-            var i = Maybe<int>.Some(21);
+            var i = Maybe.Some(21);
             var j = i.Or(23);
             Assert.AreEqual(21, j);
         }

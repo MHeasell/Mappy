@@ -5,13 +5,11 @@
 
     public struct Maybe<T> : IEquatable<Maybe<T>>
     {
-        public static readonly Maybe<T> None = default(Maybe<T>);
-
         private readonly bool hasValue;
 
         private readonly T value;
 
-        private Maybe(T value)
+        internal Maybe(T value)
         {
             this.value = value;
             this.hasValue = this.value != null;
@@ -26,26 +24,6 @@
         public static bool operator ==(Maybe<T> left, Maybe<T> right)
         {
             return left.Equals(right);
-        }
-
-        public static Maybe<T> Return(T value)
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            return new Maybe<T>(value);
-        }
-
-        public static Maybe<T> Some(T value)
-        {
-            return Return(value);
-        }
-
-        public static Maybe<T> From(T value)
-        {
-            return new Maybe<T>(value);
         }
 
         public static bool operator !=(Maybe<T> left, Maybe<T> right)
@@ -137,7 +115,7 @@
                 throw new ArgumentNullException(nameof(f));
             }
 
-            return this.hasValue ? new Maybe<TR>(f(this.value)) : Maybe<TR>.None;
+            return this.hasValue ? new Maybe<TR>(f(this.value)) : Maybe.None<TR>();
         }
 
         public Maybe<TR> Select<TR>(Func<T, TR> f)
@@ -152,7 +130,7 @@
                 throw new ArgumentNullException(nameof(f));
             }
 
-            return this.hasValue ? f(this.value) : Maybe<TR>.None;
+            return this.hasValue ? f(this.value) : Maybe.None<TR>();
         }
 
         public Maybe<TR> SelectMany<TR>(Func<T, Maybe<TR>> f)
@@ -172,7 +150,7 @@
                 throw new ArgumentNullException(nameof(filter));
             }
 
-            return this.hasValue && filter(this.value) ? this : None;
+            return this.hasValue && filter(this.value) ? this : Maybe.None<T>();
         }
 
         public Maybe<T> Filter(Predicate<T> filter)
@@ -194,6 +172,34 @@
             {
                 action();
             }
+        }
+    }
+
+    public static class Maybe
+    {
+        public static Maybe<T> Return<T>(T value)
+        {
+            if (value == null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return new Maybe<T>(value);
+        }
+
+        public static Maybe<T> Some<T>(T value)
+        {
+            return Return(value);
+        }
+
+        public static Maybe<T> From<T>(T value)
+        {
+            return new Maybe<T>(value);
+        }
+
+        public static Maybe<T> None<T>()
+        {
+            return default(Maybe<T>);
         }
     }
 }
