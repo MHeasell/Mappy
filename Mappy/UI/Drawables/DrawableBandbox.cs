@@ -16,23 +16,11 @@
             this.Size = size;
         }
 
-        public Size Size { get; private set; }
+        public Size Size { get; }
 
-        public int Width
-        {
-            get
-            {
-                return this.Size.Width;
-            }
-        }
+        public int Width => this.Size.Width;
 
-        public int Height
-        {
-            get
-            {
-                return this.Size.Height;
-            }
-        }
+        public int Height => this.Size.Height;
 
         public static DrawableBandbox CreateSimple(Size size, Color color, Color borderColor)
         {
