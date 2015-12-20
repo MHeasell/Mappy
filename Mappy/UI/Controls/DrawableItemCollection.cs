@@ -73,16 +73,15 @@ namespace Mappy.UI.Controls
 
         public IEnumerable<Item> EnumerateIntersecting(Rectangle rect)
         {
-            var l = this.items.FindInArea(rect).Where(x => x.Visible).ToList();
-            l.Sort(new ZComparer());
-            return l;
+            return this.items.FindInArea(rect).Where(x => x.Visible).OrderBy(x => x.Z);
         }
 
         public Item HitTest(Point p)
         {
-            var l = this.items.FindAtPoint(p).Where(x => !x.Locked && x.Visible).ToList();
-            l.Sort(new ZComparer());
-            return l.LastOrDefault();
+            return this.items.FindAtPoint(p)
+                .Where(x => !x.Locked && x.Visible)
+                .OrderByDescending(x => x.Z)
+                .FirstOrDefault();
         }
 
         public void Resize(int newWidth, int newHeight)
@@ -199,14 +198,6 @@ namespace Mappy.UI.Controls
                 clip.Offset(-this.X, -this.Y);
                 this.Drawable.Draw(g, clip);
                 g.TranslateTransform(-this.X, -this.Y);
-            }
-        }
-
-        private class ZComparer : IComparer<Item>
-        {
-            public int Compare(Item x, Item y)
-            {
-                return x.Z.CompareTo(y.Z);
             }
         }
     }
