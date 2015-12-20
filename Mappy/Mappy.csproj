@@ -191,16 +191,27 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="UI\Controls\AbstractLayer.cs" />
+    <Compile Include="UI\Controls\AreaChangedEventArgs.cs" />
     <Compile Include="UI\Controls\DoubleComboListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="UI\Controls\DoubleComboListView.Designer.cs">
       <DependentUpon>DoubleComboListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Controls\GridLayer.cs" />
+    <Compile Include="UI\Controls\GuideLayer.cs" />
+    <Compile Include="UI\Controls\PainterLayer.cs" />
+    <Compile Include="UI\Controls\ILayer.cs" />
     <Compile Include="UI\Controls\ImageLayerCollection.cs" />
+    <Compile Include="UI\Controls\ImageLayerCollection2.cs" />
+    <Compile Include="UI\Controls\ImageLayerView2.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UI\Controls\ImageLayerView.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="UI\Controls\LayerChangedEventArgs.cs" />
     <Compile Include="UI\Controls\MapViewPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -216,6 +227,7 @@
     <Compile Include="UI\Controls\SectionView.Designer.cs">
       <DependentUpon>SectionView.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Controls\SelectableItemsLayer.cs" />
     <Compile Include="UI\Controls\StartPositionDragData.cs" />
     <Compile Include="UI\Controls\StartPositionsView.cs">
       <SubType>UserControl</SubType>

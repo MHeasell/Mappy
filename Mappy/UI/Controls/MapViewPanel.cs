@@ -38,6 +38,12 @@
 
         private readonly ImageLayerCollection.Item[] startPositionMapping = new ImageLayerCollection.Item[10];
 
+        private readonly GridLayer grid = new GridLayer(16, Color.Black);
+
+        private readonly GuideLayer guides = new GuideLayer();
+
+        private SelectableItemsLayer itemsLayer = new SelectableItemsLayer(0, 0);
+
         private IMapViewSettingsModel settingsModel;
 
         private IMainModel mapModel;
@@ -74,6 +80,10 @@
         public MapViewPanel()
         {
             this.InitializeComponent();
+
+            this.mapView.Layers.Add(this.itemsLayer);
+            this.mapView.Layers.Add(this.grid);
+            this.mapView.Layers.Add(this.guides);
         }
 
         public void SetSettingsModel(IMapViewSettingsModel model)
@@ -82,13 +92,23 @@
 
             model.HeightmapVisible.Subscribe(x => this.heightmapVisible = x);
             model.Map.Subscribe(this.SetMapModel);
-            model.GridVisible.Subscribe(x => this.mapView.GridVisible = x);
-            model.GridColor.Subscribe(x => this.mapView.GridColor = x);
-            model.GridSize.Subscribe(x => this.mapView.GridSize = x);
+            model.GridVisible.Subscribe(x => this.grid.Enabled = x);
+            model.GridColor.Subscribe(x => this.grid.Color = x);
+
+            // FIXME: this should not ignore height
+            model.GridSize.Subscribe(x => this.grid.CellSize = x.Width);
             model.HeightmapVisible.Subscribe(this.RefreshHeightmapVisibility);
             model.FeaturesVisible.Subscribe(x => this.featuresVisible = x);
             model.FeatureRecords.Subscribe(x => this.featureDatabase = x);
             model.CanvasSize.Subscribe(x => this.mapView.CanvasSize = x);
+
+            model.CanvasSize.Subscribe(
+                x =>
+                    {
+                        this.guides.ClearGuides();
+                        this.guides.AddHorizontalGuide(x.Height - 128);
+                        this.guides.AddVerticalGuide(x.Width - 32);
+                    });
             model.ViewportLocation.Subscribe(x => this.mapView.AutoScrollPosition = x);
         }
 
@@ -101,6 +121,8 @@
 
         private void ResetView()
         {
+            this.UpdateItemsLayer();
+
             this.UpdateBaseTile();
 
             this.UpdateFloatingTiles();
@@ -108,6 +130,22 @@
             this.UpdateFeatures();
 
             this.UpdateStartPositions();
+        }
+
+        private void UpdateItemsLayer()
+        {
+            if (this.mapModel == null)
+            {
+                this.itemsLayer = new SelectableItemsLayer(0, 0);
+            }
+            else
+            {
+                this.itemsLayer = new SelectableItemsLayer(
+                    this.mapModel.MapWidth * 32,
+                    this.mapModel.MapHeight * 32);
+            }
+
+            this.mapView.Layers[0] = this.itemsLayer;
         }
 
         private void UpdateStartPositions()
@@ -122,7 +160,7 @@
         {
             foreach (var f in this.featureMapping.Values)
             {
-                this.mapView.Items.Remove(f);
+                this.itemsLayer.Items.Remove(f);
             }
 
             this.featureMapping.Clear();
@@ -142,7 +180,7 @@
         {
             if (this.baseItem != null)
             {
-                this.mapView.Items.Remove(this.baseItem);
+                this.itemsLayer.Items.Remove(this.baseItem);
             }
 
             if (this.mapModel == null)
@@ -164,7 +202,7 @@
 
             this.baseItem.Locked = true;
 
-            this.mapView.Items.Add(this.baseItem);
+            this.itemsLayer.Items.Add(this.baseItem);
         }
 
         private void RefreshHeightmapVisibility(bool visible)
@@ -236,7 +274,7 @@
         {
             if (this.bandboxMapping != null)
             {
-                this.mapView.Items.Remove(this.bandboxMapping);
+                this.itemsLayer.Items.Remove(this.bandboxMapping);
             }
 
             if (this.mapModel == null)
@@ -262,12 +300,12 @@
 
             this.bandboxMapping.Locked = true;
 
-            this.mapView.Items.Add(this.bandboxMapping);
+            this.itemsLayer.Items.Add(this.bandboxMapping);
         }
 
         private void RefreshSelection()
         {
-            this.mapView.ClearSelection();
+            this.itemsLayer.ClearSelection();
 
             if (this.mapModel == null)
             {
@@ -278,7 +316,7 @@
             {
                 if (this.tileMapping.Count > this.mapModel.SelectedTile)
                 {
-                    this.mapView.AddToSelection(this.tileMapping[this.mapModel.SelectedTile.Value]);
+                    this.itemsLayer.AddToSelection(this.tileMapping[this.mapModel.SelectedTile.Value]);
                 }
             }
             else if (this.mapModel.SelectedFeatures.Count > 0)
@@ -287,7 +325,7 @@
                 {
                     if (this.featureMapping.ContainsKey(item))
                     {
-                        this.mapView.AddToSelection(this.featureMapping[item]);
+                        this.itemsLayer.AddToSelection(this.featureMapping[item]);
                     }
                 }
             }
@@ -296,7 +334,7 @@
                 var mapping = this.startPositionMapping[this.mapModel.SelectedStartPosition.Value];
                 if (mapping != null)
                 {
-                    this.mapView.AddToSelection(mapping);
+                    this.itemsLayer.AddToSelection(mapping);
                 }
             }
         }
@@ -325,8 +363,8 @@
             if (this.startPositionMapping[index] != null)
             {
                 var mapping = this.startPositionMapping[index];
-                this.mapView.Items.Remove(mapping);
-                this.mapView.RemoveFromSelection(mapping);
+                this.itemsLayer.Items.Remove(mapping);
+                this.itemsLayer.RemoveFromSelection(mapping);
                 this.startPositionMapping[index] = null;
             }
 
@@ -346,11 +384,11 @@
                     img);
                 i.Tag = new StartPositionTag(index);
                 this.startPositionMapping[index] = i;
-                this.mapView.Items.Add(i);
+                this.itemsLayer.Items.Add(i);
 
                 if (this.mapModel.SelectedStartPosition == index)
                 {
-                    this.mapView.AddToSelection(i);
+                    this.itemsLayer.AddToSelection(i);
                 }
             }
         }
@@ -398,7 +436,7 @@
         {
             foreach (var t in this.tileMapping)
             {
-                this.mapView.Items.Remove(t);
+                this.itemsLayer.Items.Remove(t);
             }
 
             this.tileMapping.Clear();
@@ -426,19 +464,19 @@
                     drawable);
             i.Tag = new SectionTag(index);
             this.tileMapping.Insert(index, i);
-            this.mapView.Items.Add(i);
+            this.itemsLayer.Items.Add(i);
 
             if (this.mapModel.SelectedTile == index)
             {
-                this.mapView.AddToSelection(i);
+                this.itemsLayer.AddToSelection(i);
             }
         }
 
         private void RemoveTile(int index)
         {
             ImageLayerCollection.Item item = this.tileMapping[index];
-            this.mapView.Items.Remove(item);
-            this.mapView.RemoveFromSelection(item);
+            this.itemsLayer.Items.Remove(item);
+            this.itemsLayer.RemoveFromSelection(item);
             this.tileMapping.RemoveAt(index);
         }
 
@@ -472,11 +510,11 @@
             i.Tag = new FeatureTag(f.Id);
             i.Visible = this.featuresVisible;
             this.featureMapping[f.Id] = i;
-            this.mapView.Items.Add(i);
+            this.itemsLayer.Items.Add(i);
 
             if (this.mapModel.SelectedFeatures.Contains(f.Id))
             {
-                this.mapView.AddToSelection(i);
+                this.itemsLayer.AddToSelection(i);
             }
         }
 
@@ -491,8 +529,8 @@
             if (this.featureMapping.ContainsKey(id))
             {
                 ImageLayerCollection.Item item = this.featureMapping[id];
-                this.mapView.Items.Remove(item);
-                this.mapView.RemoveFromSelection(item);
+                this.itemsLayer.Items.Remove(item);
+                this.itemsLayer.RemoveFromSelection(item);
                 this.featureMapping.Remove(id);
                 return true;
             }
@@ -520,9 +558,9 @@
                 return;
             }
 
-            if (!this.mapView.IsInSelection(virtualX, virtualY))
+            if (!this.itemsLayer.IsInSelection(virtualX, virtualY))
             {
-                var hit = this.mapView.HitTest(virtualX, virtualY);
+                var hit = this.itemsLayer.HitTest(virtualX, virtualY);
                 if (hit != null)
                 {
                     this.SelectFromTag(hit.Tag);

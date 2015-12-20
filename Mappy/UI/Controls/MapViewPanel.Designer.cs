@@ -28,18 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mapView = new Mappy.UI.Controls.ImageLayerView();
+            this.mapView = new Mappy.UI.Controls.ImageLayerView2();
             this.SuspendLayout();
             // 
             // mapView
             // 
             this.mapView.AllowDrop = true;
-            this.mapView.CanvasColor = System.Drawing.Color.CornflowerBlue;
             this.mapView.CanvasSize = new System.Drawing.Size(0, 0);
             this.mapView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mapView.GridColor = System.Drawing.Color.Black;
-            this.mapView.GridSize = new System.Drawing.Size(16, 16);
-            this.mapView.GridVisible = false;
             this.mapView.Location = new System.Drawing.Point(0, 0);
             this.mapView.Name = "mapView";
             this.mapView.Size = new System.Drawing.Size(150, 150);
@@ -67,6 +63,6 @@
 
         #endregion
 
-        private ImageLayerView mapView;
+        private ImageLayerView2 mapView;
     }
 }
