@@ -1,11 +1,7 @@
 namespace Mappy
 {
     using System.Drawing;
-    using System.IO;
-
     using Mappy.IO;
-
-    using TAUtil.Gdi.Palette;
 
     public static class Globals
     {

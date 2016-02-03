@@ -8,8 +8,6 @@
     using Mappy.Data;
     using Mappy.Util;
 
-    using TAUtil.Gdi.Palette;
-
     public static class FeatureLoadingUtils
     {
         public static bool LoadFeatures(

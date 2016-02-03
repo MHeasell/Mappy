@@ -4,8 +4,6 @@
 
     using Mappy.Data;
 
-    using TAUtil.Gdi.Palette;
-
     public static class SectionLoadingUtils
     {
         public static bool LoadSections(
