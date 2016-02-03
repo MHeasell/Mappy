@@ -16,13 +16,7 @@
             this.records = new Dictionary<string, Feature>();
         }
 
-        public Feature this[string name]
-        {
-            get
-            {
-                return this.records[name];
-            }
-        }
+        public Feature this[string name] => this.records[name];
 
         public void AddFeature(Feature f)
         {

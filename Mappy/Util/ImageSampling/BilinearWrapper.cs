@@ -13,9 +13,9 @@
             this.Height = height;
         }
 
-        public int Width { get; private set; }
+        public int Width { get; }
 
-        public int Height { get; private set; }
+        public int Height { get; }
 
         public Color this[int x, int y]
         {

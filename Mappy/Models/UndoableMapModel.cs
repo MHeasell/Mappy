@@ -142,109 +142,31 @@
             private set { this.SetField(ref this.isFileReadOnly, value, "IsFileReadOnly"); }
         }
 
-        public bool CanUndo
-        {
-            get
-            {
-                return this.undoManager.CanUndo;
-            }
-        }
+        public bool CanUndo => this.undoManager.CanUndo;
 
-        public bool CanRedo
-        {
-            get
-            {
-                return this.undoManager.CanRedo;
-            }
-        }
+        public bool CanRedo => this.undoManager.CanRedo;
 
-        public bool IsMarked
-        {
-            get
-            {
-                return this.undoManager.IsMarked;
-            }
-        }
+        public bool IsMarked => this.undoManager.IsMarked;
 
-        public Bitmap Minimap
-        {
-            get
-            {
-                return this.model.Minimap;
-            }
-        }
+        public Bitmap Minimap => this.model.Minimap;
 
-        public int SeaLevel
-        {
-            get
-            {
-                return this.model.SeaLevel;
-            }
-        }
+        public int SeaLevel => this.model.SeaLevel;
 
-        public Rectangle BandboxRectangle
-        {
-            get
-            {
-                return this.bandboxBehaviour.BandboxRectangle;
-            }
-        }
+        public Rectangle BandboxRectangle => this.bandboxBehaviour.BandboxRectangle;
 
-        public IMapTile BaseTile
-        {
-            get
-            {
-                return this.model.Tile;
-            }
-        }
+        public IMapTile BaseTile => this.model.Tile;
 
-        public int MapWidth
-        {
-            get
-            {
-                return this.model.Tile.TileGrid.Width;
-            }
-        }
+        public int MapWidth => this.model.Tile.TileGrid.Width;
 
-        public int MapHeight
-        {
-            get
-            {
-                return this.model.Tile.TileGrid.Height;
-            }
-        }
+        public int MapHeight => this.model.Tile.TileGrid.Height;
 
-        public int FeatureGridWidth
-        {
-            get
-            {
-                return this.model.FeatureGridWidth;
-            }
-        }
+        public int FeatureGridWidth => this.model.FeatureGridWidth;
 
-        public int FeatureGridHeight
-        {
-            get
-            {
-                return this.model.FeatureGridHeight;
-            }
-        }
+        public int FeatureGridHeight => this.model.FeatureGridHeight;
 
-        public IList<Positioned<IMapTile>> FloatingTiles
-        {
-            get
-            {
-                return this.model.FloatingTiles;
-            }
-        }
+        public IList<Positioned<IMapTile>> FloatingTiles => this.model.FloatingTiles;
 
-        public int? SelectedStartPosition
-        {
-            get
-            {
-                return this.model.SelectedStartPosition;
-            }
-        }
+        public int? SelectedStartPosition => this.model.SelectedStartPosition;
 
         public Point ViewportLocation
         {
@@ -259,21 +181,9 @@
             }
         }
 
-        public ObservableCollection<Guid> SelectedFeatures
-        {
-            get
-            {
-                return this.model.SelectedFeatures;
-            }
-        }
+        public ObservableCollection<Guid> SelectedFeatures => this.model.SelectedFeatures;
 
-        public int? SelectedTile
-        {
-            get
-            {
-                return this.model.SelectedTile;
-            }
-        }
+        public int? SelectedTile => this.model.SelectedTile;
 
         public bool Save()
         {
@@ -904,7 +814,7 @@
         {
             if (filename == null)
             {
-                throw new ArgumentNullException("filename");
+                throw new ArgumentNullException(nameof(filename));
             }
 
             string extension = Path.GetExtension(filename).ToUpperInvariant();
@@ -942,7 +852,7 @@
             {
                 throw new ArgumentException(
                     "Dimensions do not match map heightmap",
-                    "heightmap");
+                    nameof(heightmap));
             }
 
             var op = new CopyAreaOperation<int>(
@@ -1036,38 +946,22 @@
 
         private void FloatingTilesOnListChanged(object sender, ListChangedEventArgs e)
         {
-            var h = this.TilesChanged;
-            if (h != null)
-            {
-                h(this, e);
-            }
+            this.TilesChanged?.Invoke(this, e);
         }
 
         private void TileOnTileGridChanged(object sender, GridEventArgs e)
         {
-            var h = this.BaseTileGraphicsChanged;
-            if (h != null)
-            {
-                h(this, e);
-            }
+            this.BaseTileGraphicsChanged?.Invoke(this, e);
         }
 
         private void TileOnHeightGridChanged(object sender, GridEventArgs e)
         {
-            var h = this.BaseTileHeightChanged;
-            if (h != null)
-            {
-                h(this, e);
-            }
+            this.BaseTileHeightChanged?.Invoke(this, e);
         }
 
         private void AttributesOnStartPositionChanged(object sender, StartPositionChangedEventArgs e)
         {
-            var h = this.StartPositionChanged;
-            if (h != null)
-            {
-                h(this, e);
-            }
+            this.StartPositionChanged?.Invoke(this, e);
         }
 
         private void AddAndSelectTile(IMapTile tile, int x, int y)

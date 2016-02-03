@@ -16,15 +16,15 @@ namespace Mappy.Operations
             this.StartY = startY;
         }
 
-        public int StartX { get; private set; }
+        public int StartX { get; }
 
-        public int StartY { get; private set; }
+        public int StartY { get; }
 
-        public int DestX { get; private set; }
+        public int DestX { get; }
 
-        public int DestY { get; private set; }
+        public int DestY { get; }
 
-        public BindingSparseGrid<Feature> Grid { get; private set; }
+        public BindingSparseGrid<Feature> Grid { get; }
 
         public void Execute()
         {

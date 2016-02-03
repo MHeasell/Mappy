@@ -96,11 +96,7 @@
 
         private void OnCancelPressed()
         {
-            EventHandler h = this.CancelPressed;
-            if (h != null)
-            {
-                h(this, EventArgs.Empty);
-            }
+            this.CancelPressed?.Invoke(this, EventArgs.Empty);
         }
 
         private void ProgressFormClosing(object sender, FormClosingEventArgs e)

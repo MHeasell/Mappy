@@ -41,11 +41,7 @@ namespace Mappy.Data
 
         private void OnLocationChanged()
         {
-            EventHandler h = this.LocationChanged;
-            if (h != null)
-            {
-                h(this, EventArgs.Empty);
-            }
+            this.LocationChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

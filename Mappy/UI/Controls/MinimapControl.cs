@@ -93,21 +93,9 @@
             }
         }
 
-        protected override Size DefaultSize
-        {
-            get
-            {
-                return new Size(252, 252);
-            }
-        }
+        protected override Size DefaultSize => new Size(252, 252);
 
-        private Rectangle CoveredRect
-        {
-            get
-            {
-                return new Rectangle(this.ViewportRect.Location, this.ViewportRect.Size + new Size(1, 1));
-            }
-        }
+        private Rectangle CoveredRect => new Rectangle(this.ViewportRect.Location, this.ViewportRect.Size + new Size(1, 1));
 
         protected override void OnPaint(PaintEventArgs e)
         {

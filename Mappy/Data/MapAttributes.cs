@@ -337,11 +337,7 @@
 
         protected virtual void OnStartPositionChanged(StartPositionChangedEventArgs e)
         {
-            EventHandler<StartPositionChangedEventArgs> h = this.StartPositionChanged;
-            if (h != null)
-            {
-                h(this, e);
-            }
+            this.StartPositionChanged?.Invoke(this, e);
         }
     }
 }

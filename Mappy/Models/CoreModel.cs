@@ -57,13 +57,7 @@
             this.mapModelFactory = new MapModelFactory();
         }
 
-        public bool MapOpen
-        {
-            get
-            {
-                return this.Map != null;
-            }
-        }
+        public bool MapOpen => this.Map != null;
 
         public UndoableMapModel Map
         {
@@ -106,72 +100,27 @@
             }
         }
 
-        public int SeaLevel
-        {
-            get
-            {
-                return this.Map == null ? 0 : this.Map.SeaLevel;
-            }
-        }
+        public int SeaLevel => this.Map?.SeaLevel ?? 0;
 
-        public bool CanUndo
-        {
-            get { return this.Map != null && this.Map.CanUndo; }
-        }
+        public bool CanUndo => this.Map != null && this.Map.CanUndo;
 
-        public bool CanRedo
-        {
-            get { return this.Map != null && this.Map.CanRedo; }
-        }
+        public bool CanRedo => this.Map != null && this.Map.CanRedo;
 
-        public bool CanCopy
-        {
-            get
-            {
-                return this.Map != null && this.Map.CanCopy;
-            }
-        }
+        public bool CanCopy => this.Map != null && this.Map.CanCopy;
 
-        public bool CanPaste
-        {
-            get
-            {
-                return this.Map != null;
-            }
-        }
+        public bool CanPaste => this.Map != null;
 
-        public bool CanCut
-        {
-            get
-            {
-                return this.Map != null && this.Map.CanCut;
-            }
-        }
+        public bool CanCut => this.Map != null && this.Map.CanCut;
 
-        public IFeatureDatabase FeatureRecords
-        {
-            get { return this.featureRecords; }
-        }
+        public IFeatureDatabase FeatureRecords => this.featureRecords;
 
-        public IList<Section> Sections
-        {
-            get { return this.sections; }
-        }
+        public IList<Section> Sections => this.sections;
 
-        public bool IsDirty
-        {
-            get { return this.Map != null && !this.Map.IsMarked; }
-        }
+        public bool IsDirty => this.Map != null && !this.Map.IsMarked;
 
-        public string FilePath
-        {
-            get { return this.Map == null ? null : this.Map.FilePath; }
-        }
+        public string FilePath => this.Map?.FilePath;
 
-        public bool IsFileReadOnly
-        {
-            get { return this.Map != null && this.Map.IsFileReadOnly; }
-        }
+        public bool IsFileReadOnly => this.Map != null && this.Map.IsFileReadOnly;
 
         public bool HeightmapVisible
         {
@@ -211,29 +160,11 @@
             }
         }
 
-        public Point ViewportLocation
-        {
-            get
-            {
-                return this.Map == null ? Point.Empty : this.Map.ViewportLocation;
-            }
-        }
+        public Point ViewportLocation => this.Map?.ViewportLocation ?? Point.Empty;
 
-        public int MapWidth
-        {
-            get
-            {
-                return this.Map == null ? 0 : this.Map.BaseTile.TileGrid.Width;
-            }
-        }
+        public int MapWidth => this.Map?.BaseTile.TileGrid.Width ?? 0;
 
-        public int MapHeight
-        {
-            get
-            {
-                return this.Map == null ? 0 : this.Map.BaseTile.TileGrid.Height;
-            }
-        }
+        public int MapHeight => this.Map?.BaseTile.TileGrid.Height ?? 0;
 
         public bool MinimapVisible
         {
@@ -500,22 +431,12 @@
 
         public void CopySelectionToClipboard()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.CopySelectionToClipboard();
+            this.Map?.CopySelectionToClipboard();
         }
 
         public void CutSelectionToClipboard()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.CutSelectionToClipboard();
+            this.Map?.CutSelectionToClipboard();
         }
 
         public void PasteFromClipboard()
@@ -534,22 +455,12 @@
 
         public void RefreshMinimap()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.RefreshMinimap();
+            this.Map?.RefreshMinimap();
         }
 
         public void RefreshMinimapHighQualityWithProgress()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.RefreshMinimapHighQualityWithProgress();
+            this.Map?.RefreshMinimapHighQualityWithProgress();
         }
 
         public void ChooseColor()
@@ -563,12 +474,7 @@
 
         public void ExportHeightmap()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.ExportHeightmap();
+            this.Map?.ExportHeightmap();
         }
 
         public void ExportMinimap()
@@ -594,42 +500,22 @@
 
         public void ExportMapImage()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.ExportMapImage();
+            this.Map?.ExportMapImage();
         }
 
         public void ImportCustomSection()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.ImportCustomSection();
+            this.Map?.ImportCustomSection();
         }
 
         public void ImportHeightmap()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.ImportHeightmap();
+            this.Map?.ImportHeightmap();
         }
 
         public void ImportMinimap()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.ImportMinimap();
+            this.Map?.ImportMinimap();
         }
 
         public void ToggleFeatures()
@@ -649,12 +535,7 @@
 
         public void OpenMapAttributes()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.OpenMapAttributes();
+            this.Map?.OpenMapAttributes();
         }
 
         public void CloseMap()
@@ -667,22 +548,12 @@
 
         public void SetSeaLevel(int value)
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.SetSeaLevel(value);
+            this.Map?.SetSeaLevel(value);
         }
 
         public void FlushSeaLevel()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.FlushSeaLevel();
+            this.Map?.FlushSeaLevel();
         }
 
         public void HideMinimap()

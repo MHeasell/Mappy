@@ -35,45 +35,15 @@
             this.reverseFeatures = Util.ReverseMapping(this.features);
         }
 
-        public int DataWidth
-        {
-            get
-            {
-                return this.model.Tile.TileGrid.Width;
-            }
-        }
+        public int DataWidth => this.model.Tile.TileGrid.Width;
 
-        public int DataHeight
-        {
-            get
-            {
-                return this.model.Tile.TileGrid.Height;
-            }
-        }
+        public int DataHeight => this.model.Tile.TileGrid.Height;
 
-        public int SeaLevel
-        {
-            get
-            {
-                return this.model.SeaLevel;
-            }
-        }
+        public int SeaLevel => this.model.SeaLevel;
 
-        public int TileCount
-        {
-            get
-            {
-                return this.tiles.Length;
-            }
-        }
+        public int TileCount => this.tiles.Length;
 
-        public int AnimCount
-        {
-            get
-            {
-                return this.features.Length;
-            }
-        }
+        public int AnimCount => this.features.Length;
 
         public IEnumerable<byte[]> EnumerateTiles()
         {

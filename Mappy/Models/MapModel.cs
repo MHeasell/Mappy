@@ -120,31 +120,13 @@
             }
         }
 
-        public MapAttributes Attributes { get; private set; }
+        public MapAttributes Attributes { get; }
 
-        public IMapTile Tile
-        {
-            get
-            {
-                return this.tile;
-            }
-        }
+        public IMapTile Tile => this.tile;
 
-        public IList<Positioned<IMapTile>> FloatingTiles
-        {
-            get
-            {
-                return this.floatingTiles;
-            }
-        }
+        public IList<Positioned<IMapTile>> FloatingTiles => this.floatingTiles;
 
-        public ISparseGrid<bool> Voids
-        {
-            get
-            {
-                return this.voids;
-            }
-        }
+        public ISparseGrid<bool> Voids => this.voids;
 
         public int SeaLevel
         {
@@ -175,24 +157,12 @@
         /// <summary>
         /// <see cref="IMapModel.FeatureGridWidth"/>
         /// </summary>
-        public int FeatureGridWidth
-        {
-            get
-            {
-                return this.Tile.HeightGrid.Width;
-            }
-        }
+        public int FeatureGridWidth => this.Tile.HeightGrid.Width;
 
         /// <summary>
         /// <see cref="IMapModel.FeatureGridHeight"/>
         /// </summary>
-        public int FeatureGridHeight
-        {
-            get
-            {
-                return this.Tile.HeightGrid.Height;
-            }
-        }
+        public int FeatureGridHeight => this.Tile.HeightGrid.Height;
 
         public int? SelectedStartPosition
         {
@@ -220,13 +190,7 @@
             }
         }
 
-        public ObservableCollection<Guid> SelectedFeatures
-        {
-            get
-            {
-                return this.selectedFeatures;
-            }
-        }
+        public ObservableCollection<Guid> SelectedFeatures => this.selectedFeatures;
 
         /// <summary>
         /// <see cref="IMapModel.AddFeatureInstance"/>
@@ -274,7 +238,7 @@
 
             this.RemoveFeatureInstanceInternal(instance.Id);
             this.AddFeatureInstanceInternal(instance);
-            
+
             var arg = new FeatureInstanceEventArgs(
                 FeatureInstanceEventArgs.ActionType.Move,
                 instance.Id);

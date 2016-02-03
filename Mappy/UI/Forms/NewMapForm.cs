@@ -88,7 +88,7 @@
 
             float convertedX = (valX * 32) / 512.0f;
 
-            this.label3.Text = string.Format("({0})", convertedX);
+            this.label3.Text = $"({convertedX})";
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
@@ -102,7 +102,7 @@
 
             float convertedY = (valY * 32) / 512.0f;
 
-            this.label4.Text = string.Format("({0})", convertedY);
+            this.label4.Text = $"({convertedY})";
         }
     }
 }

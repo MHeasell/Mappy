@@ -20,39 +20,15 @@
 
         public event EventHandler<SparseGridEventArgs> EntriesChanged;
 
-        public IEnumerable<KeyValuePair<int, T>> IndexEntries
-        {
-            get { return this.grid.IndexEntries; }
-        }
+        public IEnumerable<KeyValuePair<int, T>> IndexEntries => this.grid.IndexEntries;
 
-        public IEnumerable<KeyValuePair<GridCoordinates, T>> CoordinateEntries
-        {
-            get
-            {
-                return this.grid.CoordinateEntries;
-            }
-        }
+        public IEnumerable<KeyValuePair<GridCoordinates, T>> CoordinateEntries => this.grid.CoordinateEntries;
 
-        public IEnumerable<T> Values
-        {
-            get { return this.grid.Values; }
-        }
+        public IEnumerable<T> Values => this.grid.Values;
 
-        public int Width
-        {
-            get
-            {
-                return this.grid.Width;
-            }
-        }
+        public int Width => this.grid.Width;
 
-        public int Height
-        {
-            get
-            {
-                return this.grid.Height;
-            }
-        }
+        public int Height => this.grid.Height;
 
         public T this[int index]
         {
@@ -149,11 +125,7 @@
 
         protected virtual void OnEntryChanged(SparseGridEventArgs args)
         {
-            EventHandler<SparseGridEventArgs> h = this.EntriesChanged;
-            if (h != null)
-            {
-                h(this, args);
-            }
+            this.EntriesChanged?.Invoke(this, args);
         }
     }
 }

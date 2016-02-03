@@ -25,21 +25,9 @@
             this.Dispose(false);
         }
 
-        public int Width
-        {
-            get
-            {
-                return (this.map.Width * 32) - 32;
-            }
-        }
+        public int Width => (this.map.Width * 32) - 32;
 
-        public int Height
-        {
-            get
-            {
-                return (this.map.Height * 32) - 128;
-            }
-        }
+        public int Height => (this.map.Height * 32) - 128;
 
         public Color this[int x, int y]
         {

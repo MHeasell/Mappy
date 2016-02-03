@@ -11,7 +11,7 @@
             this.FeatureId = featureId;
         }
 
-        public Guid FeatureId { get; private set; }
+        public Guid FeatureId { get; }
 
         public void SelectItem(IMainModel model)
         {

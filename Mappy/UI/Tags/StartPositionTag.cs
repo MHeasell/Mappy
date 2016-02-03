@@ -9,7 +9,7 @@ namespace Mappy.UI.Tags
             this.Index = index;
         }
 
-        public int Index { get; private set; }
+        public int Index { get; }
 
         public void SelectItem(IMainModel model)
         {

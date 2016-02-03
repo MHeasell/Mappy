@@ -12,9 +12,9 @@
             this.NewAttributes = newAttributes;
         }
 
-        public IMapModel Map { get; private set; }
+        public IMapModel Map { get; }
 
-        public MapAttributesResult NewAttributes { get; private set; }
+        public MapAttributesResult NewAttributes { get; }
 
         public void Execute()
         {

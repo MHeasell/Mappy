@@ -45,7 +45,7 @@ namespace Mappy.Collections
 
         public override string ToString()
         {
-            return string.Format("({0}, {1})", this.X, this.Y);
+            return $"({this.X}, {this.Y})";
         }
     }
 }

@@ -21,9 +21,9 @@
             this.arr = new T[width * height];
         }
 
-        public int Width { get; private set; }
+        public int Width { get; }
 
-        public int Height { get; private set; }
+        public int Height { get; }
 
         public T this[int index]
         {

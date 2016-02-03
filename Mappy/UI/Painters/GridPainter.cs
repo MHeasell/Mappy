@@ -12,9 +12,9 @@
             this.Pen = pen;
         }
 
-        public int CellSize { get; private set; }
+        public int CellSize { get; }
 
-        public Pen Pen { get; private set; }
+        public Pen Pen { get; }
 
         public void Paint(Graphics g, Rectangle clipRectangle)
         {

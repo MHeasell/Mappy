@@ -29,14 +29,8 @@ namespace Mappy.Data
 
         public event EventHandler<GridEventArgs> HeightGridChanged;
 
-        public IGrid<Bitmap> TileGrid
-        {
-            get { return this.tileGrid; }
-        }
+        public IGrid<Bitmap> TileGrid => this.tileGrid;
 
-        public IGrid<int> HeightGrid
-        {
-            get { return this.heightGrid; }
-        }
+        public IGrid<int> HeightGrid => this.heightGrid;
     }
 }

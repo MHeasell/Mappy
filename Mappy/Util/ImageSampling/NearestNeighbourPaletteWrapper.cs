@@ -16,28 +16,10 @@
             this.palette = palette;
         }
 
-        public int Width
-        {
-            get
-            {
-                return this.source.Width;
-            }
-        }
+        public int Width => this.source.Width;
 
-        public int Height
-        {
-            get
-            {
-                return this.source.Height;
-            }
-        }
+        public int Height => this.source.Height;
 
-        public Color this[int x, int y]
-        {
-            get
-            {
-                return this.palette[this.palette.GetNearest(this.source[x, y])];
-            }
-        }
+        public Color this[int x, int y] => this.palette[this.palette.GetNearest(this.source[x, y])];
     }
 }

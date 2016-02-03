@@ -9,20 +9,8 @@
             this.InitializeComponent();
         }
 
-        public ListBox.ObjectCollection Items
-        {
-            get
-            {
-                return this.listBox1.Items;
-            }
-        }
+        public ListBox.ObjectCollection Items => this.listBox1.Items;
 
-        public object SelectedItem
-        {
-            get
-            {
-                return this.listBox1.SelectedItem;
-            }
-        }
+        public object SelectedItem => this.listBox1.SelectedItem;
     }
 }

@@ -16,11 +16,11 @@
             this.NewPosition = newPosition;
         }
 
-        public IMapModel Map { get; private set; }
+        public IMapModel Map { get; }
 
-        public int Index { get; private set; }
+        public int Index { get; }
 
-        public Point NewPosition { get; private set; }
+        public Point NewPosition { get; }
 
         public void Execute()
         {

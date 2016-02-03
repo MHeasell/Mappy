@@ -15,11 +15,11 @@
             this.HpiErrors = new List<HpiErrorInfo>();
         }
 
-        public List<T> Records { get; private set; }
+        public List<T> Records { get; }
 
-        public List<HpiInnerFileErrorInfo> FileErrors { get; private set; }
+        public List<HpiInnerFileErrorInfo> FileErrors { get; }
 
-        public List<HpiErrorInfo> HpiErrors { get; private set; }
+        public List<HpiErrorInfo> HpiErrors { get; }
 
         public bool LoadFiles()
         {

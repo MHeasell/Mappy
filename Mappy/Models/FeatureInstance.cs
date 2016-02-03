@@ -18,27 +18,15 @@
             this.Location = location;
         }
 
-        public Guid Id { get; private set; }
+        public Guid Id { get; }
 
-        public string FeatureName { get; private set; }
+        public string FeatureName { get; }
 
-        public GridCoordinates Location { get; private set; }
+        public GridCoordinates Location { get; }
 
-        public int X
-        {
-            get
-            {
-                return this.Location.X;
-            }
-        }
+        public int X => this.Location.X;
 
-        public int Y
-        {
-            get
-            {
-                return this.Location.Y;
-            }
-        }
+        public int Y => this.Location.Y;
 
         public FeatureInstance Translate(int x, int y)
         {

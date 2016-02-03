@@ -14,13 +14,7 @@
 
         private readonly Stack<Vector3D> positions = new Stack<Vector3D>();
 
-        public List<Line3D> Edges
-        {
-            get
-            {
-                return this.edges;
-            }
-        }
+        public List<Line3D> Edges => this.edges;
 
         public void CreateChild(string name, Vector position)
         {

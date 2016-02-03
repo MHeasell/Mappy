@@ -159,29 +159,17 @@
 
         private void OnCanRedoChanged()
         {
-            EventHandler h = this.CanRedoChanged;
-            if (h != null)
-            {
-                h(this, EventArgs.Empty);
-            }
+            this.CanRedoChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnCanUndoChanged()
         {
-            EventHandler h = this.CanUndoChanged;
-            if (h != null)
-            {
-                h(this, EventArgs.Empty);
-            }
+            this.CanUndoChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnIsMarkedChanged()
         {
-            EventHandler h = this.IsMarkedChanged;
-            if (h != null)
-            {
-                h(this, EventArgs.Empty);
-            }
+            this.IsMarkedChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

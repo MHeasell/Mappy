@@ -14,9 +14,9 @@
             this.Index = index;
         }
 
-        public IMapModel Map { get; private set; }
+        public IMapModel Map { get; }
 
-        public int Index { get; private set; }
+        public int Index { get; }
 
         public void Execute()
         {

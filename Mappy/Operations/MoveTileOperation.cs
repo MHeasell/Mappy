@@ -14,9 +14,9 @@
             this.Y = y;
         }
 
-        public Positioned<IMapTile> Tile { get; private set; }
+        public Positioned<IMapTile> Tile { get; }
 
-        public int X { get; private set; }
+        public int X { get; }
 
         public int Y { get; set; }
 

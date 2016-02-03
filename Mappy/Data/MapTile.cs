@@ -31,8 +31,8 @@ namespace Mappy.Data
             this.HeightGrid = heightmap;
         }
 
-        public IGrid<Bitmap> TileGrid { get; private set; }
+        public IGrid<Bitmap> TileGrid { get; }
 
-        public IGrid<int> HeightGrid { get; private set; }
+        public IGrid<int> HeightGrid { get; }
     }
 }

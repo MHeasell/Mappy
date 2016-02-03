@@ -19,15 +19,9 @@
 
         public event EventHandler<GridEventArgs> CellsChanged;
 
-        public int Width
-        {
-            get { return this.grid.Width; }
-        }
+        public int Width => this.grid.Width;
 
-        public int Height
-        {
-            get { return this.grid.Height; }
-        }
+        public int Height => this.grid.Height;
 
         public T this[int index]
         {
@@ -70,11 +64,7 @@
 
         protected virtual void OnCellChanged(GridEventArgs args)
         {
-            EventHandler<GridEventArgs> h = this.CellsChanged;
-            if (h != null)
-            {
-                h(this, args);
-            }
+            this.CellsChanged?.Invoke(this, args);
         }
     }
 }

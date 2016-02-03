@@ -60,21 +60,9 @@ namespace Mappy.Collections
 
         public int Count { get; private set; }
 
-        public bool IsReadOnly
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public bool IsReadOnly => false;
 
-        private bool HasSplit
-        {
-            get
-            {
-                return this.nodes[0] != null;
-            }
-        }
+        private bool HasSplit => this.nodes[0] != null;
 
         public void Add(T item)
         {
@@ -146,12 +134,12 @@ namespace Mappy.Collections
         {
             if (array == null)
             {
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
             }
 
             if (arrayIndex < 0)
             {
-                throw new ArgumentOutOfRangeException("arrayIndex");
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
             }
 
             if (array.Length - arrayIndex < this.Count)

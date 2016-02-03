@@ -21,11 +21,7 @@ namespace Mappy.Util
 
         protected void FireChange(string name)
         {
-            PropertyChangedEventHandler h = this.PropertyChanged;
-            if (h != null)
-            {
-                h(this, new PropertyChangedEventArgs(name));
-            }
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }

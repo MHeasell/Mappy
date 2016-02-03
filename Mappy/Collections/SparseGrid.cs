@@ -19,25 +19,11 @@
             this.Height = height;
         }
 
-        public int Width
-        {
-            get;
-            private set;
-        }
+        public int Width { get; }
 
-        public int Height
-        {
-            get;
-            private set;
-        }
+        public int Height { get; }
 
-        public IEnumerable<KeyValuePair<int, T>> IndexEntries
-        {
-            get
-            {
-                return this.values;
-            }
-        }
+        public IEnumerable<KeyValuePair<int, T>> IndexEntries => this.values;
 
         public IEnumerable<KeyValuePair<GridCoordinates, T>> CoordinateEntries
         {
@@ -50,13 +36,7 @@
             }
         }
 
-        public IEnumerable<T> Values
-        {
-            get
-            {
-                return this.values.Values;
-            }
-        }
+        public IEnumerable<T> Values => this.values.Values;
 
         public T this[int x, int y]
         {
@@ -152,17 +132,20 @@
         {
             if (index < 0 || index >= this.Width * this.Height)
             {
-                throw new ArgumentOutOfRangeException(
-                    string.Format("index {0} is out of range", index));
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
         }
 
         private void CheckIndexInBounds(int x, int y)
         {
-            if (x < 0 || y < 0 || x >= this.Width || y >= this.Height)
+            if (x < 0 || x >= this.Width)
             {
-                throw new ArgumentOutOfRangeException(
-                    string.Format("Coordinates ({0}, {1}) out of range", x, y));
+                throw new ArgumentOutOfRangeException(nameof(x));
+            }
+
+            if (y < 0 || y >= this.Height)
+            {
+                throw new ArgumentOutOfRangeException(nameof(y));
             }
         }
     }

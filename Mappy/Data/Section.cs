@@ -36,21 +36,9 @@ namespace Mappy.Data
 
         public int DataHeight { get; set; }
 
-        public int PixelWidth
-        {
-            get
-            {
-                return this.DataWidth * 32;
-            }
-        }
+        public int PixelWidth => this.DataWidth * 32;
 
-        public int PixelHeight
-        {
-            get
-            {
-                return this.DataHeight * 32;
-            }
-        }
+        public int PixelHeight => this.DataHeight * 32;
 
         public Bitmap Minimap { get; set; }
 

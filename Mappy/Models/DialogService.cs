@@ -136,7 +136,7 @@
         public string AskUserToChooseHeightmap(int width, int height)
         {
             OpenFileDialog d = new OpenFileDialog();
-            d.Title = string.Format("Import Heightmap ({0}x{1} image)", width, height);
+            d.Title = $"Import Heightmap ({width}x{height} image)";
             d.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.gif;*.bmp|All files|*.*";
             if (d.ShowDialog(this.owner) == DialogResult.OK)
             {
