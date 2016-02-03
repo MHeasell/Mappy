@@ -1,40 +1,42 @@
 ﻿namespace Mappy.IO.Gaf
 {
+    using System;
+
     /// <summary>
     /// Data structure representing an individual frame
     /// in a GAF animation.
     /// </summary>
-    public struct GafFrame
+    public class GafFrame
     {
         /// <summary>
-        /// The frame's offset in the X direction.
+        /// Gets or sets the frame's offset in the X direction.
         /// </summary>
-        public int OffsetX;
+        public int OffsetX { get; set; }
 
         /// <summary>
-        /// The frame's offset in the Y direction.
+        /// Gets or sets the frame's offset in the Y direction.
         /// </summary>
-        public int OffsetY;
+        public int OffsetY { get; set; }
 
         /// <summary>
-        /// The width of the frame.
+        /// Gets or sets the width of the frame.
         /// </summary>
-        public int Width;
+        public int Width { get; set; }
 
         /// <summary>
-        /// The height of the frame.
+        /// Gets or sets the height of the frame.
         /// </summary>
-        public int Height;
+        public int Height { get; set; }
 
         /// <summary>
-        /// The color index used in this frame
+        /// Gets or sets The color index used in this frame
         /// to represent transparency.
         /// </summary>
-        public byte TransparencyIndex;
+        public byte TransparencyIndex { get; set; }
 
         /// <summary>
-        /// The frame's image data.
+        /// Gets or sets the frame's image data.
         /// </summary>
-        public byte[] Data;
+        public byte[] Data { get; set; }
     }
 }
