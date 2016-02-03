@@ -16,8 +16,8 @@ namespace Mappy.Data
         public const int AttrWidth = TileWidth / 2;
         public const int AttrHeight = TileHeight / 2;
 
-        public static readonly Size TileSize = new Size(MapTile.TileWidth, MapTile.TileHeight);
-        public static readonly Size AttrSize = new Size(MapTile.AttrWidth, MapTile.AttrHeight);
+        public static readonly Size TileSize = new Size(TileWidth, TileHeight);
+        public static readonly Size AttrSize = new Size(AttrWidth, AttrHeight);
 
         public MapTile(int width, int height)
         {

@@ -22,7 +22,7 @@
 
         public static IEnumerable<Point> EnumerateCoveringIndices(Rectangle rect, Size tileSize, Size gridSize)
         {
-            Rectangle coveringRect = GridUtil.GetCoveringRect(rect, tileSize, gridSize);
+            Rectangle coveringRect = GetCoveringRect(rect, tileSize, gridSize);
 
             for (int y = coveringRect.Top; y <= coveringRect.Bottom; y++)
             {

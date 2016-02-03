@@ -39,7 +39,7 @@
             int i = 0;
             foreach (Positioned<IMapTile> t in model.FloatingTiles)
             {
-                arr[i++] = OperationFactory.CreateClipMergeTileOperation(t.Item, model.Tile, t.Location.X, t.Location.Y);
+                arr[i++] = CreateClipMergeTileOperation(t.Item, model.Tile, t.Location.X, t.Location.Y);
             }
 
             arr[i] = new ClearTilesOperation(model);
@@ -51,7 +51,7 @@
         {
             var tile = map.FloatingTiles[index];
 
-            var mergeOp = OperationFactory.CreateClipMergeTileOperation(tile.Item, map.Tile, tile.Location.X, tile.Location.Y);
+            var mergeOp = CreateClipMergeTileOperation(tile.Item, map.Tile, tile.Location.X, tile.Location.Y);
 
             var removeOp = new RemoveTileOperation(map.FloatingTiles, index);
 
