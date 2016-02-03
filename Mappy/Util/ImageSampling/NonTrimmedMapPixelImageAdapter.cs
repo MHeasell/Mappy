@@ -44,7 +44,7 @@
                 int tilePixelX = x % 32;
                 int tilePixelY = y % 32;
 
-                Bitmap bitmap = this.map[tileX, tileY];
+                Bitmap bitmap = this.map.Get(tileX, tileY);
                 var data = this.GetOrLockData(bitmap);
 
                 unsafe

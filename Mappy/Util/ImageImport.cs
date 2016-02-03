@@ -72,7 +72,7 @@
                 int x = 0;
                 foreach (var bmp in ReadRowChunk(reader, y))
                 {
-                    g[x++, y] = bmp;
+                    g.Set(x++, y, bmp);
                 }
 
                 progress((100 * (y + 1)) / h);

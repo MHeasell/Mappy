@@ -38,20 +38,6 @@
             }
         }
 
-        public T this[int x, int y]
-        {
-            get
-            {
-                return this.grid[x, y];
-            }
-
-            set
-            {
-                this.grid[x, y] = value;
-                this.OnCellChanged(new GridEventArgs(x, y));
-            }
-        }
-
         public IEnumerator<T> GetEnumerator()
         {
             return this.grid.GetEnumerator();

@@ -38,19 +38,6 @@
             }
         }
 
-        public T this[int x, int y]
-        {
-            get
-            {
-                return this.arr[this.ToIndex(x, y)];
-            }
-
-            set
-            {
-                this.arr[this.ToIndex(x, y)] = value;
-            }
-        }
-
         public IEnumerator<T> GetEnumerator()
         {
             return this.arr.Cast<T>().GetEnumerator();

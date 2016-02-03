@@ -405,7 +405,7 @@
             }
 
             this.featureInstances[instance.Id] = instance;
-            this.featureLocationIndex[instance.X, instance.Y] = instance;
+            this.featureLocationIndex.Set(instance.X, instance.Y, instance);
         }
 
         private void RemoveFeatureInstanceInternal(Guid id)

@@ -30,11 +30,11 @@
             {
                 foreach (Point p in enumer)
                 {
-                    var img = this.map[p.X, p.Y];
+                    var img = this.map.Get(p.X, p.Y);
                     if (img != null)
                     {
                         g.DrawImageUnscaled(
-                            this.map[p.X, p.Y],
+                            this.map.Get(p.X, p.Y),
                             p.X * this.tileSize,
                             p.Y * this.tileSize);
                     }

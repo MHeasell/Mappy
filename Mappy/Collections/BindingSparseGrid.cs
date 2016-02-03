@@ -44,20 +44,6 @@
             }
         }
 
-        public T this[int x, int y]
-        {
-            get
-            {
-                return this.grid[x, y];
-            }
-
-            set
-            {
-                this.grid[x, y] = value;
-                this.OnEntryChanged(SparseGridEventArgs.Set(this.ToIndex(x, y)));
-            }
-        }
-
         public void Move(int oldIndex, int newIndex)
         {
             this.grid[newIndex] = this.grid[oldIndex];

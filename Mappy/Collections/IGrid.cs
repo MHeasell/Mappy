@@ -13,7 +13,5 @@
         int Height { get; }
 
         T this[int index] { get; set; }
-
-        T this[int x, int y] { get; set; }
     }
 }

@@ -89,10 +89,10 @@
             // find the height range
             int[] heights =
             {
-                this.heights[p.X, p.Y],
-                this.heights[p.X + 1, p.Y],
-                this.heights[p.X, p.Y + 1],
-                this.heights[p.X + 1, p.Y + 1]
+                this.heights.Get(p.X, p.Y),
+                this.heights.Get(p.X + 1, p.Y),
+                this.heights.Get(p.X, p.Y + 1),
+                this.heights.Get(p.X + 1, p.Y + 1)
             };
             float minHeight = (float)heights.Min();
             float maxHeight = (float)heights.Max();
@@ -130,10 +130,10 @@
 
         private IEnumerable<Triangle3D> GenerateTriangles(Point p)
         {
-            Vector3D a = new Vector3D(p.X, p.Y, this.heights[p.X, p.Y]);
-            Vector3D b = new Vector3D(p.X + 1, p.Y, this.heights[p.X + 1, p.Y]);
-            Vector3D c = new Vector3D(p.X, p.Y + 1, this.heights[p.X, p.Y + 1]);
-            Vector3D d = new Vector3D(p.X + 1, p.Y + 1, this.heights[p.X + 1, p.Y + 1]);
+            Vector3D a = new Vector3D(p.X, p.Y, this.heights.Get(p.X, p.Y));
+            Vector3D b = new Vector3D(p.X + 1, p.Y, this.heights.Get(p.X + 1, p.Y));
+            Vector3D c = new Vector3D(p.X, p.Y + 1, this.heights.Get(p.X, p.Y + 1));
+            Vector3D d = new Vector3D(p.X + 1, p.Y + 1, this.heights.Get(p.X + 1, p.Y + 1));
 
             Vector3D avg = new Vector3D(p.X + 0.5f, p.Y + 0.5f, (a.Z + b.Z + c.Z + d.Z) / 4.0f);
 

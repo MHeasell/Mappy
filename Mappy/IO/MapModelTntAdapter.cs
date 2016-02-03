@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.Linq;
 
+    using Mappy.Collections;
     using Mappy.Models;
     using Mappy.Util;
 
@@ -88,9 +89,9 @@
         {
             TileAttr attr = new TileAttr();
 
-            attr.Height = (byte)this.model.Tile.HeightGrid[x, y];
+            attr.Height = (byte)this.model.Tile.HeightGrid.Get(x, y);
 
-            if (this.model.Voids[x, y])
+            if (this.model.Voids.Get(x, y))
             {
                 attr.Feature = TileAttr.FeatureVoid;
             }

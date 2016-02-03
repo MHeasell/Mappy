@@ -69,7 +69,7 @@ namespace Mappy.Util
 
             for (int row = heightmap.Height - 1; row >= 0; row--)
             {
-                int height = heightmap[col, row];
+                int height = heightmap.Get(col, row);
                 AxisRectangle3D rect = new AxisRectangle3D(
                     new Vector3D((col * 16) + 0.5, (row * 16) + 0.5, height),
                     16.0,

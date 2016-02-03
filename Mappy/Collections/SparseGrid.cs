@@ -1,6 +1,7 @@
 ﻿namespace Mappy.Collections
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -38,59 +39,42 @@
 
         public IEnumerable<T> Values => this.values.Values;
 
-        public T this[int x, int y]
+        public T this[int index]
         {
             get
             {
-                this.CheckIndexInBounds(x, y);
+                this.CheckIndexInBounds(index);
 
                 T val;
-                this.values.TryGetValue(this.ToIndex(x, y), out val);
+                this.values.TryGetValue(index, out val);
                 return val;
             }
 
             set
             {
-                this.CheckIndexInBounds(x, y);
+                this.CheckIndexInBounds(index);
 
                 if (EqualityComparer<T>.Default.Equals(value, default(T)))
                 {
-                    this.Remove(x, y);
+                    this.Remove(index);
                 }
                 else
                 {
-                    this.values[this.ToIndex(x, y)] = value;
+                    this.values[index] = value;
                 }
-            }
-        }
-
-        public T this[int index]
-        {
-            get
-            {
-                var coords = this.ToCoords(index);
-                return this[coords.X, coords.Y];
-            }
-
-            set
-            {
-                var coords = this.ToCoords(index);
-                this[coords.X, coords.Y] = value;
             }
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            for (int y = 0; y < this.Height; y++)
+            int len = this.Width * this.Height;
+            for (int i = 0; i < len; i++)
             {
-                for (int x = 0; x < this.Width; x++)
-                {
-                    yield return this[x, y];
-                }
+                yield return this[i];
             }
         }
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
@@ -133,19 +117,6 @@
             if (index < 0 || index >= this.Width * this.Height)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
-            }
-        }
-
-        private void CheckIndexInBounds(int x, int y)
-        {
-            if (x < 0 || x >= this.Width)
-            {
-                throw new ArgumentOutOfRangeException(nameof(x));
-            }
-
-            if (y < 0 || y >= this.Height)
-            {
-                throw new ArgumentOutOfRangeException(nameof(y));
             }
         }
     }

@@ -8,6 +8,20 @@
     /// </summary>
     public static class GridMethods
     {
+        public static T Get<T>(this IGrid<T> grid, int x, int y) => grid[grid.ToIndex(x, y)];
+
+        public static T Get<T>(this IGrid<T> grid, GridCoordinates c) => grid.Get(c.X, c.Y);
+
+        public static void Set<T>(this IGrid<T> grid, int x, int y, T value)
+        {
+            grid[grid.ToIndex(x, y)] = value;
+        }
+
+        public static void Set<T>(this IGrid<T> grid, GridCoordinates c, T value)
+        {
+            grid.Set(c.X, c.Y, value);
+        }
+
         public static int ToIndex<T>(this IGrid<T> grid, int x, int y)
         {
             return (y * grid.Width) + x;
@@ -39,7 +53,7 @@
             {
                 for (int dx = 0; dx < width; dx++)
                 {
-                    dest[destX + dx, destY + dy] = src[sourceX + dx, sourceY + dy];
+                    dest.Set(destX + dx, destY + dy, src.Get(sourceX + dx, sourceY + dy));
                 }
             }
         }
@@ -79,7 +93,7 @@
                     continue;
                 }
 
-                dest[destX + (sourceCoords.X - sourceX), destY + (sourceCoords.Y - sourceY)] = value;
+                dest.Set(destX + (sourceCoords.X - sourceX), destY + (sourceCoords.Y - sourceY), value);
             }
         }
 
@@ -92,7 +106,7 @@
 
             foreach (var e in src.CoordinateEntries)
             {
-                dest[e.Key.X + x, e.Key.Y + y] = e.Value;
+                dest.Set(e.Key.X + x, e.Key.Y + y, e.Value);
             }
         }
 
@@ -112,7 +126,7 @@
             {
                 for (int dx = 0; dx < width; dx++)
                 {
-                    grid[x + dx, y + dy] = value;
+                    grid.Set(x + dx, y + dy, value);
                 }
             }
         }

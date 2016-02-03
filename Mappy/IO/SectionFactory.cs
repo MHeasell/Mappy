@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.Linq;
 
+    using Mappy.Collections;
     using Mappy.Data;
 
     using TAUtil;
@@ -43,7 +44,7 @@
                 for (int x = 0; x < sct.DataWidth * 2; x++)
                 {
                     enumer.MoveNext();
-                    tile.HeightGrid[x, y] = enumer.Current.Height;
+                    tile.HeightGrid.Set(x, y, enumer.Current.Height);
                 }
             }
         }
@@ -56,7 +57,7 @@
                 for (int x = 0; x < sct.DataWidth; x++)
                 {
                     enumer.MoveNext();
-                    tile.TileGrid[x, y] = tiles[enumer.Current];
+                    tile.TileGrid.Set(x, y, tiles[enumer.Current]);
                 }
             }
         }

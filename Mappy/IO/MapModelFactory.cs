@@ -5,6 +5,7 @@
     using System.Drawing;
     using System.Linq;
 
+    using Mappy.Collections;
     using Mappy.Data;
     using Mappy.Models;
 
@@ -58,7 +59,7 @@
                 for (int x = 0; x < tnt.DataWidth * 2; x++)
                 {
                     enumer.MoveNext();
-                    model.Tile.HeightGrid[x, y] = enumer.Current.Height;
+                    model.Tile.HeightGrid.Set(x, y, enumer.Current.Height);
 
                     switch (enumer.Current.Feature)
                     {
@@ -66,7 +67,7 @@
                         case TileAttr.FeatureUnknown:
                             break;
                         case TileAttr.FeatureVoid:
-                            model.Voids[x, y] = true;
+                            model.Voids.Set(x, y, true);
                             break;
                         default:
                             var inst = new FeatureInstance(Guid.NewGuid(), features[enumer.Current.Feature], x, y);
@@ -85,7 +86,7 @@
                 for (int x = 0; x < tnt.DataWidth; x++)
                 {
                     enumer.MoveNext();
-                    model.Tile.TileGrid[x, y] = tiles[enumer.Current];
+                    model.Tile.TileGrid.Set(x, y, tiles[enumer.Current]);
                 }
             }
         }
