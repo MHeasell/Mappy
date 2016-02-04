@@ -335,22 +335,12 @@
 
         public void Undo()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.Undo();
+            this.Map?.Undo();
         }
 
         public void Redo()
         {
-            if (this.Map == null)
-            {
-                return;
-            }
-
-            this.Map.Redo();
+            this.Map?.Redo();
         }
 
         public bool New()
