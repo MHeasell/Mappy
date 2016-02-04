@@ -722,7 +722,7 @@
                         this.OpenSct(filename);
                         return true;
                     default:
-                        this.dialogService.ShowError(string.Format("Mappy doesn't know how to open {0} files", ext));
+                        this.dialogService.ShowError($"Mappy doesn't know how to open {ext} files");
                         return false;
                 }
             }
