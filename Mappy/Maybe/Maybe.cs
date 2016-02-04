@@ -93,14 +93,14 @@
             }
         }
 
-        public Maybe<T> Or(Maybe<T> value)
+        public Maybe<T> Or(Maybe<T> other)
         {
-            return this.hasValue ? this : value;
+            return this.hasValue ? this : other;
         }
 
-        public T Or(T value)
+        public T Or(T otherValue)
         {
-            return this.hasValue ? this.value : value;
+            return this.hasValue ? this.value : otherValue;
         }
 
         public T GetOrDefault(T defaultValue)
