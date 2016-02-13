@@ -88,10 +88,12 @@
             {
                 StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
                 this.model.SetStartPosition(posData.PositionNumber, loc.X, loc.Y);
+                return;
             }
-            else
+
+            if (data.GetDataPresent(DataFormats.Text))
             {
-                string dataString = data.GetData(DataFormats.Text).ToString();
+                var dataString = (string)data.GetData(DataFormats.Text);
                 int id;
                 if (int.TryParse(dataString, out id))
                 {
@@ -101,6 +103,8 @@
                 {
                     this.model.DragDropFeature(dataString, loc.X, loc.Y);
                 }
+
+                return;
             }
         }
 
