@@ -2,51 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Drawing;
     using System.Linq;
     using System.Reactive.Subjects;
 
     using Mappy.Data;
-
-    public struct ComboBoxViewModel
-    {
-        public static readonly ComboBoxViewModel Empty = new ComboBoxViewModel(new List<string>(), -1);
-
-        public ComboBoxViewModel(IList<string> items)
-            : this(items, items.Count > 0 ? 0 : -1)
-        {
-        }
-
-        public ComboBoxViewModel(IList<string> items, int selectedIndex)
-        {
-            this.Items = items;
-            this.SelectedIndex = selectedIndex;
-        }
-
-        public IList<string> Items { get; }
-
-        public int SelectedIndex { get; }
-
-        public string SelectedItem => this.SelectedIndex == -1 ? null : this.Items[this.SelectedIndex];
-
-        public ComboBoxViewModel Select(int index) => new ComboBoxViewModel(this.Items, index);
-    }
-
-    public struct ListViewItem
-    {
-        public ListViewItem(string name, Bitmap image, object tag)
-        {
-            this.Name = name;
-            this.Image = image;
-            this.Tag = tag;
-        }
-
-        public string Name { get; }
-
-        public Bitmap Image { get; }
-
-        public object Tag { get; }
-    }
 
     public class SectionViewViewModel : ISectionViewViewModel
     {

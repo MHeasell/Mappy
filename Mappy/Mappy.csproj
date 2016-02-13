@@ -150,6 +150,7 @@
     <Compile Include="Models\BandboxBehaviours\IBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxBehaviours\TileBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxMode.cs" />
+    <Compile Include="Models\ComboBoxViewModel.cs" />
     <Compile Include="Models\CoreModel.cs" />
     <Compile Include="Models\DialogService.cs" />
     <Compile Include="Models\FeatureClipboardRecord.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Models\IMinimapFormViewModel.cs" />
     <Compile Include="Models\ISectionViewViewModel.cs" />
     <Compile Include="Models\ISelectionModel.cs" />
+    <Compile Include="Models\ListViewItem.cs" />
     <Compile Include="Models\MainFormViewModel.cs" />
     <Compile Include="Models\MapAttributesResult.cs" />
     <Compile Include="Models\MapViewViewModel.cs" />
