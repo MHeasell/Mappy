@@ -25,6 +25,8 @@
             var attrs = MapAttributes.Load(ota);
             var model = new MapModel(tnt.DataWidth, tnt.DataHeight, attrs);
 
+            this.ReadTnt(tnt, model);
+
             var schemaData = ota.Keys["GlobalHeader"].Keys["Schema 0"];
             if (schemaData.Keys.ContainsKey("features"))
             {
@@ -36,12 +38,15 @@
                     var y = TdfConvert.ToInt32(node.Entries["ZPos"]);
                     var name = node.Entries["Featurename"];
 
-                    var inst = new FeatureInstance(Guid.NewGuid(), name, x, y);
-                    model.AddFeatureInstance(inst);
+                    if (!model.HasFeatureInstanceAt(x, y))
+                    {
+                        var inst = new FeatureInstance(Guid.NewGuid(), name, x, y);
+                        model.AddFeatureInstance(inst);
+                    }
                 }
             }
 
-            return this.ReadTnt(tnt, model);
+            return model;
         }
 
         public MapModel FromTnt(ITntSource tnt)
