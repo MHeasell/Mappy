@@ -110,6 +110,8 @@
                         this.guides.AddVerticalGuide(x.Width - 32);
                     });
             model.ViewportLocation.Subscribe(x => this.mapView.AutoScrollPosition = x);
+
+            model.PropertyChanged += this.SettingsModelPropertyChanged;
         }
 
         private void SetMapModel(IMainModel model)
@@ -257,13 +259,22 @@
                 case "SeaLevel":
                     this.RefreshSeaLevel();
                     break;
-                case "SelectedTile":
                 case "SelectedFeatures":
                 case "SelectedStartPosition":
                     this.RefreshSelection();
                     break;
                 case "BandboxRectangle":
                     this.UpdateBandbox();
+                    break;
+            }
+        }
+
+        private void SettingsModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "SelectedTile":
+                    this.RefreshSelection();
                     break;
             }
         }
@@ -310,11 +321,16 @@
                 return;
             }
 
-            if (this.mapModel.SelectedTile.HasValue)
+            if (this.settingsModel == null)
             {
-                if (this.tileMapping.Count > this.mapModel.SelectedTile)
+                return;
+            }
+
+            if (this.settingsModel.SelectedTile.HasValue)
+            {
+                if (this.tileMapping.Count > this.settingsModel.SelectedTile)
                 {
-                    this.itemsLayer.AddToSelection(this.tileMapping[this.mapModel.SelectedTile.Value]);
+                    this.itemsLayer.AddToSelection(this.tileMapping[this.settingsModel.SelectedTile.Value]);
                 }
             }
             else if (this.mapModel.SelectedFeatures.Count > 0)
@@ -464,7 +480,7 @@
             this.tileMapping.Insert(index, i);
             this.itemsLayer.Items.Add(i);
 
-            if (this.mapModel.SelectedTile == index)
+            if (this.settingsModel.SelectedTile == index)
             {
                 this.itemsLayer.AddToSelection(i);
             }

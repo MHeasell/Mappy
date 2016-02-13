@@ -1,13 +1,14 @@
 ﻿namespace Mappy.Models
 {
     using System;
+    using System.ComponentModel;
     using System.Drawing;
     using System.Windows.Forms;
 
     using Mappy.Data;
     using Mappy.Database;
 
-    public interface IMapViewSettingsModel
+    public interface IMapViewSettingsModel : INotifyPropertyChanged
     {
         IObservable<bool> GridVisible { get; }
 
@@ -26,6 +27,8 @@
         IObservable<Point> ViewportLocation { get; }
 
         IObservable<Size> CanvasSize { get; }
+
+        int? SelectedTile { get; }
 
         void SetViewportSize(Size size);
 

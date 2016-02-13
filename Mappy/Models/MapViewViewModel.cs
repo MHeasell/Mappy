@@ -8,10 +8,13 @@
     using Mappy.Data;
     using Mappy.Database;
     using Mappy.UI.Controls;
+    using Mappy.Util;
 
-    public class MapViewViewModel : IMapViewSettingsModel
+    public class MapViewViewModel : Notifier, IMapViewSettingsModel
     {
         private readonly CoreModel model;
+
+        private int? selectedTile;
 
         public MapViewViewModel(CoreModel model)
         {
@@ -28,6 +31,11 @@
             var mapWidth = model.PropertyAsObservable(x => x.MapWidth, "MapWidth");
             var mapHeight = model.PropertyAsObservable(x => x.MapHeight, "MapHeight");
             this.CanvasSize = mapWidth.CombineLatest(mapHeight, (w, h) => new Size(w * 32, h * 32));
+
+            this.Map
+                .Select(x => x?.PropertyAsObservable(y => y.SelectedTile, "SelectedTile") ?? Observable.Return<int?>(null))
+                .Switch()
+                .Subscribe(x => this.SelectedTile = x);
 
             this.model = model;
         }
@@ -49,6 +57,19 @@
         public IObservable<Point> ViewportLocation { get; }
 
         public IObservable<Size> CanvasSize { get; }
+
+        public int? SelectedTile
+        {
+            get
+            {
+                return this.selectedTile;
+            }
+
+            set
+            {
+                this.SetField(ref this.selectedTile, value, nameof(this.SelectedTile));
+            }
+        }
 
         public void SetViewportSize(Size size)
         {
