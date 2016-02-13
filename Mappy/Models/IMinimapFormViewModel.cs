@@ -5,18 +5,18 @@
 
     public interface IMinimapFormViewModel
     {
-        IObservable<int> MapWidth { get; }
-
-        IObservable<int> MapHeight { get; }
-
         IObservable<bool> MinimapVisible { get; }
 
         IObservable<Bitmap> MinimapImage { get; }
 
         IObservable<Rectangle> MinimapRect { get; }
 
-        void SetViewportLocation(Point location);
+        void MouseDown(Point location);
 
-        void HideMinimap();
+        void MouseMove(Point location);
+
+        void MouseUp();
+
+        void FormCloseButtonClick();
     }
 }
