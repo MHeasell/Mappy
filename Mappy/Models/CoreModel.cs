@@ -596,6 +596,56 @@
             this.Map?.ClearSelection();
         }
 
+        public void DragDropStartPosition(int index, int x, int y)
+        {
+            this.Map?.DragDropStartPosition(index, x, y);
+        }
+
+        public void DragDropTile(IMapTile tile, int x, int y)
+        {
+            this.Map?.DragDropTile(tile, x, y);
+        }
+
+        public void StartBandbox(int x, int y)
+        {
+            this.Map?.StartBandbox(x, y);
+        }
+
+        public void GrowBandbox(int x, int y)
+        {
+            this.Map?.GrowBandbox(x, y);
+        }
+
+        public void CommitBandbox()
+        {
+            this.Map?.CommitBandbox();
+        }
+
+        public void TranslateSelection(int x, int y)
+        {
+            this.Map?.TranslateSelection(x, y);
+        }
+
+        public void FlushTranslation()
+        {
+            this.Map?.FlushTranslation();
+        }
+
+        public void SelectTile(int index)
+        {
+            this.Map?.SelectTile(index);
+        }
+
+        public void SelectFeature(Guid id)
+        {
+            this.Map?.SelectFeature(id);
+        }
+
+        public void SelectStartPosition(int index)
+        {
+            this.Map?.SelectStartPosition(index);
+        }
+
         private static IEnumerable<string> GetMapNames(HpiReader hpi)
         {
             return hpi.GetFiles("maps")

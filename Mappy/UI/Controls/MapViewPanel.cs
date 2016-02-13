@@ -551,7 +551,7 @@
             this.mouseDown = true;
             this.lastMousePos = new Point(virtualX, virtualY);
 
-            if (this.mapModel == null)
+            if (this.settingsModel == null)
             {
                 return;
             }
@@ -565,8 +565,8 @@
                 }
                 else
                 {
-                    this.mapModel.ClearSelection();
-                    this.mapModel.StartBandbox(virtualX, virtualY);
+                    this.settingsModel.ClearSelection();
+                    this.settingsModel.StartBandbox(virtualX, virtualY);
                     this.bandboxMode = true;
                 }
             }
@@ -580,7 +580,7 @@
 
             try
             {
-                if (this.mapModel == null)
+                if (this.settingsModel == null)
                 {
                     return;
                 }
@@ -592,13 +592,13 @@
 
                 if (this.bandboxMode)
                 {
-                    this.mapModel.GrowBandbox(
+                    this.settingsModel.GrowBandbox(
                         virtualX - this.lastMousePos.X,
                         virtualY - this.lastMousePos.Y);
                 }
                 else
                 {
-                    this.mapModel.TranslateSelection(
+                    this.settingsModel.TranslateSelection(
                         virtualX - this.lastMousePos.X,
                         virtualY - this.lastMousePos.Y);
                 }
@@ -613,19 +613,19 @@
         {
             this.mouseDown = false;
 
-            if (this.mapModel == null)
+            if (this.settingsModel == null)
             {
                 return;
             }
 
             if (this.bandboxMode)
             {
-                this.mapModel.CommitBandbox();
+                this.settingsModel.CommitBandbox();
                 this.bandboxMode = false;
             }
             else
             {
-                this.mapModel.FlushTranslation();
+                this.settingsModel.FlushTranslation();
             }
         }
 
@@ -645,7 +645,7 @@
         private void SelectFromTag(object tag)
         {
             IMapItemTag t = (IMapItemTag)tag;
-            t.SelectItem(this.mapModel);
+            t.SelectItem(this.settingsModel);
         }
 
         private Rectangle CalculateViewportRect()

@@ -4,6 +4,7 @@
     using System.Drawing;
     using System.Windows.Forms;
 
+    using Mappy.Data;
     using Mappy.Database;
 
     public interface IMapViewSettingsModel
@@ -39,5 +40,27 @@
         void DeleteSelection();
 
         void ClearSelection();
+
+        void DragDropStartPosition(int index, int x, int y);
+
+        void DragDropTile(IMapTile tile, int x, int y);
+
+        void DragDropFeature(string name, int x, int y);
+
+        void StartBandbox(int x, int y);
+
+        void GrowBandbox(int x, int y);
+
+        void CommitBandbox();
+
+        void TranslateSelection(int x, int y);
+
+        void FlushTranslation();
+
+        void SelectTile(int index);
+
+        void SelectFeature(Guid id);
+
+        void SelectStartPosition(int index);
     }
 }

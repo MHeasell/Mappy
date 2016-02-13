@@ -5,6 +5,7 @@
     using System.Reactive.Linq;
     using System.Windows.Forms;
 
+    using Mappy.Data;
     using Mappy.Database;
     using Mappy.UI.Controls;
 
@@ -116,6 +117,61 @@
         public void ClearSelection()
         {
             this.model.ClearSelection();
+        }
+
+        public void DragDropStartPosition(int index, int x, int y)
+        {
+            this.model.DragDropStartPosition(index, x, y);
+        }
+
+        public void DragDropTile(IMapTile tile, int x, int y)
+        {
+            this.model.DragDropTile(tile, x, y);
+        }
+
+        public void DragDropFeature(string name, int x, int y)
+        {
+            this.model.DragDropFeature(name, x, y);
+        }
+
+        public void StartBandbox(int x, int y)
+        {
+            this.model.StartBandbox(x, y);
+        }
+
+        public void GrowBandbox(int x, int y)
+        {
+            this.model.GrowBandbox(x, y);
+        }
+
+        public void CommitBandbox()
+        {
+            this.model.CommitBandbox();
+        }
+
+        public void TranslateSelection(int x, int y)
+        {
+            this.model.TranslateSelection(x, y);
+        }
+
+        public void FlushTranslation()
+        {
+            this.model.FlushTranslation();
+        }
+
+        public void SelectTile(int index)
+        {
+            this.model.SelectTile(index);
+        }
+
+        public void SelectFeature(Guid id)
+        {
+            this.model.SelectFeature(id);
+        }
+
+        public void SelectStartPosition(int index)
+        {
+            this.model.SelectStartPosition(index);
         }
     }
 }

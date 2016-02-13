@@ -11,7 +11,7 @@ namespace Mappy.UI.Tags
 
         public int Index { get; }
 
-        public void SelectItem(IMainModel model)
+        public void SelectItem(IMapViewSettingsModel model)
         {
             model.SelectTile(this.Index);
         }

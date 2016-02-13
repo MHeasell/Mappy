@@ -49,32 +49,6 @@ namespace Mappy.Models
 
         IEnumerable<FeatureInstance> EnumerateFeatureInstances();
 
-        void DragDropStartPosition(int index, int x, int y);
-
-        void DragDropTile(IMapTile tile, int x, int y);
-
-        void DragDropFeature(string name, int x, int y);
-
-        void StartBandbox(int x, int y);
-
-        void GrowBandbox(int x, int y);
-
-        void CommitBandbox();
-
-        void TranslateSelection(int x, int y);
-
-        void FlushTranslation();
-
-        void ClearSelection();
-
-        void DeleteSelection();
-
         Point? GetStartPosition(int index);
-
-        void SelectTile(int index);
-
-        void SelectFeature(Guid id);
-
-        void SelectStartPosition(int index);
     }
 }

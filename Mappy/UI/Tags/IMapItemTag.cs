@@ -4,6 +4,6 @@ namespace Mappy.UI.Tags
 
     public interface IMapItemTag
     {
-        void SelectItem(IMainModel model);
+        void SelectItem(IMapViewSettingsModel model);
     }
 }
