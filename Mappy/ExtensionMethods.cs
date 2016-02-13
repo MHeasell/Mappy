@@ -24,5 +24,16 @@
 
             return subject;
         }
+
+        /// <summary>
+        /// Creates an observable that is paused while the pauser is false.
+        /// Events from the source observable are dropped
+        /// while in the paused state.
+        /// </summary>
+        public static IObservable<T> Pausable<T>(this IObservable<T> source, IObservable<bool> pauser)
+        {
+            var nothing = Observable.Empty<T>();
+            return pauser.Select(x => x ? source : nothing).Switch();
+        }
     }
 }

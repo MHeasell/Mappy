@@ -45,9 +45,8 @@
                 .CombineLatest(minimapRectExtents, (l, e) => new Point(l.X - e.Width, l.Y - e.Height));
             var newMapViewportLocation = ScaleToMap(minimapViewportTopLeft, mapVisiblePixelSize, minimapSize);
 
-            this.mouseDown
-                .Select(x => x ? newMapViewportLocation : Observable.Empty<Point>())
-                .Switch()
+            newMapViewportLocation
+                .Pausable(this.mouseDown)
                 .Subscribe(model.SetViewportLocation);
 
             this.model = model;
