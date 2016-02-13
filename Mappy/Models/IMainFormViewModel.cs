@@ -63,68 +63,70 @@
 
         IObservable<string> TitleText { get; }
 
-        void ToggleHeightmap();
+        void ToggleHeightMapMenuItemClick();
 
-        void ToggleMinimap();
+        void ToggleMinimapMenuItemClick();
 
-        void ToggleFeatures();
+        void ToggleFeaturesMenuItemClick();
 
-        void OpenPreferences();
+        void PreferencesMenuItemClick();
 
-        void ShowAbout();
+        void AboutMenuItemClick();
 
-        void OpenMapAttributes();
+        void MapAttributesMenuItemClick();
 
-        void ChooseColor();
+        void GridColorMenuItemClick();
 
-        bool New();
+        bool NewMenuItemClick();
 
-        bool Open();
+        bool OpenMenuItemClick();
 
-        bool OpenFromDragDrop(string filename);
+        bool DragDropFile(string filename);
 
-        bool Save();
+        bool SaveMenuItemClick();
 
-        bool SaveAs();
+        bool SaveAsMenuItemClick();
 
-        void CloseMap();
+        void CloseMenuItemClick();
 
-        void Undo();
+        void UndoMenuItemClick();
 
-        void Redo();
+        void RedoMenuItemClick();
 
-        void Close();
+        void FormCloseButtonClick();
 
-        void RefreshMinimap();
+        void ExitMenuItemClick();
 
-        void RefreshMinimapHighQualityWithProgress();
+        void GenerateMinimapMenuItemClick();
 
-        void HideGrid();
+        void GenerateMinimapHighQualityMenuItemClick();
 
-        void EnableGridWithSize(Size s);
+        void GridOffMenuItemClick();
 
-        void SetSeaLevel(int value);
+        void GridMenuItemClick(Size s);
 
-        void FlushSeaLevel();
+        void SeaLevelTrackBarValueChanged(int value);
 
-        void CopySelectionToClipboard();
+        void SeaLevelTrackBarMouseUp();
 
-        void CutSelectionToClipboard();
+        void CopyMenuItemClick();
 
-        void PasteFromClipboard();
+        void CutMenuItemClick();
 
-        void ImportMinimap();
+        void PasteMenuItemClick();
 
-        void ExportMinimap();
+        void ImportMinimapMenuItemClick();
 
-        void ImportHeightmap();
+        void ExportMinimapMenuItemClick();
 
-        void ExportHeightmap();
+        void ImportHeightmapMenuItemClick();
 
-        void ExportMapImage();
+        void ExportHeightmapMenuItemClick();
 
-        void ImportCustomSection();
+        void ExportMapImageMenuItemClick();
 
-        void Initialize();
+        void ImportCustomSectionMenuItemClick();
+
+        void Load();
     }
 }

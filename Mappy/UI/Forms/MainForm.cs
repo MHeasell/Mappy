@@ -88,76 +88,76 @@
 
         private void OpenMenuItemClick(object sender, EventArgs e)
         {
-            this.model.Open();
+            this.model.OpenMenuItemClick();
         }
 
         private void ToggleHeightmapMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ToggleHeightmap();
+            this.model.ToggleHeightMapMenuItemClick();
         }
 
         private void PreferencesMenuItemClick(object sender, EventArgs e)
         {
-            this.model.OpenPreferences();
+            this.model.PreferencesMenuItemClick();
         }
 
         private void SaveAsMenuItemClick(object sender, EventArgs e)
         {
-            this.model.SaveAs();
+            this.model.SaveAsMenuItemClick();
         }
 
         private void SaveMenuItemClick(object sender, EventArgs e)
         {
-            this.model.Save();
+            this.model.SaveMenuItemClick();
         }
 
         private void ToggleMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ToggleMinimap();
+            this.model.ToggleMinimapMenuItemClick();
         }
 
         private void UndoMenuItemClick(object sender, EventArgs e)
         {
-            this.model.Undo();
+            this.model.UndoMenuItemClick();
         }
 
         private void RedoMenuItemClick(object sender, EventArgs e)
         {
-            this.model.Redo();
+            this.model.RedoMenuItemClick();
         }
 
         private void MainFormFormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                this.model.Close();
+                this.model.FormCloseButtonClick();
                 e.Cancel = true;
             }
         }
 
         private void ExitMenuItemClick(object sender, EventArgs e)
         {
-            this.model.Close();
+            this.model.ExitMenuItemClick();
         }
 
         private void NewMenuItemClick(object sender, EventArgs e)
         {
-            this.model.New();
+            this.model.NewMenuItemClick();
         }
 
         private void AboutMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ShowAbout();
+            this.model.AboutMenuItemClick();
         }
 
         private void GenerateMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.model.RefreshMinimap();
+            this.model.GenerateMinimapMenuItemClick();
         }
 
         private void GridOffMenuItemClick(object sender, EventArgs e)
         {
-            this.model.HideGrid();
+            this.model.GridOffMenuItemClick();
         }
 
         private void GridMenuItemClick(object sender, EventArgs e)
@@ -166,92 +166,92 @@
             int size = Convert.ToInt32(item.Tag);
             Size s = new Size(size, size);
 
-            this.model.EnableGridWithSize(s);
+            this.model.GridMenuItemClick(s);
         }
 
         private void GridColorMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ChooseColor();
+            this.model.GridColorMenuItemClick();
         }
 
         private void ToggleFeaturesMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ToggleFeatures();
+            this.model.ToggleFeaturesMenuItemClick();
         }
 
         private void MapAttributesMenuItemClick(object sender, EventArgs e)
         {
-            this.model.OpenMapAttributes();
+            this.model.MapAttributesMenuItemClick();
         }
 
-        private void TrackBar1ValueChanged(object sender, EventArgs e)
+        private void SeaLevelTrackBarValueChanged(object sender, EventArgs e)
         {
-            this.model.SetSeaLevel(this.seaLevelTrackbar.Value);
+            this.model.SeaLevelTrackBarValueChanged(this.seaLevelTrackbar.Value);
         }
 
         private void CloseMenuItemClick(object sender, EventArgs e)
         {
-            this.model.CloseMap();
+            this.model.CloseMenuItemClick();
         }
 
         private void GenerateMinimapHighQualityMenuItemClick(object sender, EventArgs e)
         {
-            this.model.RefreshMinimapHighQualityWithProgress();
+            this.model.GenerateMinimapHighQualityMenuItemClick();
         }
 
-        private void SeaLevelTrackbarMouseUp(object sender, MouseEventArgs e)
+        private void SeaLevelTrackBarMouseUp(object sender, MouseEventArgs e)
         {
-            this.model.FlushSeaLevel();
+            this.model.SeaLevelTrackBarMouseUp();
         }
 
         private void CopyMenuItemClick(object sender, EventArgs e)
         {
-            this.model.CopySelectionToClipboard();
+            this.model.CopyMenuItemClick();
         }
 
         private void PasteMenuItemClick(object sender, EventArgs e)
         {
-            this.model.PasteFromClipboard();
+            this.model.PasteMenuItemClick();
         }
 
         private void CutMenuItemClick(object sender, EventArgs e)
         {
-            this.model.CutSelectionToClipboard();
+            this.model.CutMenuItemClick();
         }
 
         private void MainFormLoad(object sender, EventArgs e)
         {
-            this.model.Initialize();
+            this.model.Load();
         }
 
         private void ExportMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ExportMinimap();
+            this.model.ExportMinimapMenuItemClick();
         }
 
         private void ExportHeightmapMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ExportHeightmap();
+            this.model.ExportHeightmapMenuItemClick();
         }
 
         private void ImportMinimapMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ImportMinimap();
+            this.model.ImportMinimapMenuItemClick();
         }
 
         private void ImportHeightmapMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ImportHeightmap();
+            this.model.ImportHeightmapMenuItemClick();
         }
 
         private void ExportMapImageMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ExportMapImage();
+            this.model.ExportMapImageMenuItemClick();
         }
 
         private void ImportCustomSectionMenuItemClick(object sender, EventArgs e)
         {
-            this.model.ImportCustomSection();
+            this.model.ImportCustomSectionMenuItemClick();
         }
 
         private void MainFormDragEnter(object sender, DragEventArgs e)
@@ -276,7 +276,7 @@
                     return;
                 }
 
-                this.model.OpenFromDragDrop(data[0]);
+                this.model.DragDropFile(data[0]);
             }
         }
     }

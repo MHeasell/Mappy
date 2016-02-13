@@ -143,162 +143,167 @@
 
         public IObservable<int> SeaLevel { get; }
 
-        public void ToggleHeightmap()
+        public void ToggleHeightMapMenuItemClick()
         {
             this.model.ToggleHeightmap();
         }
 
-        public void ToggleMinimap()
+        public void ToggleMinimapMenuItemClick()
         {
             this.model.ToggleMinimap();
         }
 
-        public void ToggleFeatures()
+        public void ToggleFeaturesMenuItemClick()
         {
             this.model.ToggleFeatures();
         }
 
-        public void OpenPreferences()
+        public void PreferencesMenuItemClick()
         {
             this.model.OpenPreferences();
         }
 
-        public void ShowAbout()
+        public void AboutMenuItemClick()
         {
             this.model.ShowAbout();
         }
 
-        public void OpenMapAttributes()
+        public void MapAttributesMenuItemClick()
         {
             this.model.OpenMapAttributes();
         }
 
-        public void ChooseColor()
+        public void GridColorMenuItemClick()
         {
             this.model.ChooseColor();
         }
 
-        public bool New()
+        public bool NewMenuItemClick()
         {
             return this.model.New();
         }
 
-        public bool Open()
+        public bool OpenMenuItemClick()
         {
             return this.model.Open();
         }
 
-        public bool OpenFromDragDrop(string filename)
+        public bool DragDropFile(string filename)
         {
             return this.model.OpenFromDragDrop(filename);
         }
 
-        public bool Save()
+        public bool SaveMenuItemClick()
         {
             return this.model.Save();
         }
 
-        public bool SaveAs()
+        public bool SaveAsMenuItemClick()
         {
             return this.model.SaveAs();
         }
 
-        public void CloseMap()
+        public void CloseMenuItemClick()
         {
             this.model.CloseMap();
         }
 
-        public void Undo()
+        public void UndoMenuItemClick()
         {
             this.model.Undo();
         }
 
-        public void Redo()
+        public void RedoMenuItemClick()
         {
             this.model.Redo();
         }
 
-        public void Close()
+        public void FormCloseButtonClick()
         {
             this.model.Close();
         }
 
-        public void RefreshMinimap()
+        public void ExitMenuItemClick()
+        {
+            this.model.Close();
+        }
+
+        public void GenerateMinimapMenuItemClick()
         {
             this.model.RefreshMinimap();
         }
 
-        public void RefreshMinimapHighQualityWithProgress()
+        public void GenerateMinimapHighQualityMenuItemClick()
         {
             this.model.RefreshMinimapHighQualityWithProgress();
         }
 
-        public void HideGrid()
+        public void GridOffMenuItemClick()
         {
             this.model.HideGrid();
         }
 
-        public void EnableGridWithSize(Size s)
+        public void GridMenuItemClick(Size s)
         {
             this.model.EnableGridWithSize(s);
         }
 
-        public void SetSeaLevel(int value)
+        public void SeaLevelTrackBarValueChanged(int value)
         {
             this.model.SetSeaLevel(value);
         }
 
-        public void FlushSeaLevel()
+        public void SeaLevelTrackBarMouseUp()
         {
             this.model.FlushSeaLevel();
         }
 
-        public void CopySelectionToClipboard()
+        public void CopyMenuItemClick()
         {
             this.model.CopySelectionToClipboard();
         }
 
-        public void CutSelectionToClipboard()
+        public void CutMenuItemClick()
         {
             this.model.CutSelectionToClipboard();
         }
 
-        public void PasteFromClipboard()
+        public void PasteMenuItemClick()
         {
             this.model.PasteFromClipboard();
         }
 
-        public void ImportMinimap()
+        public void ImportMinimapMenuItemClick()
         {
             this.model.ImportMinimap();
         }
 
-        public void ExportMinimap()
+        public void ExportMinimapMenuItemClick()
         {
             this.model.ExportMinimap();
         }
 
-        public void ImportHeightmap()
+        public void ImportHeightmapMenuItemClick()
         {
             this.model.ImportHeightmap();
         }
 
-        public void ExportHeightmap()
+        public void ExportHeightmapMenuItemClick()
         {
             this.model.ExportHeightmap();
         }
 
-        public void ExportMapImage()
+        public void ExportMapImageMenuItemClick()
         {
             this.model.ExportMapImage();
         }
 
-        public void ImportCustomSection()
+        public void ImportCustomSectionMenuItemClick()
         {
             this.model.ImportCustomSection();
         }
 
-        public void Initialize()
+        public void Load()
         {
             this.model.Initialize();
         }

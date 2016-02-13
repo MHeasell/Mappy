@@ -638,8 +638,8 @@
             this.seaLevelTrackbar.Size = new System.Drawing.Size(106, 45);
             this.seaLevelTrackbar.TabIndex = 8;
             this.seaLevelTrackbar.TickFrequency = 16;
-            this.seaLevelTrackbar.ValueChanged += new System.EventHandler(this.TrackBar1ValueChanged);
-            this.seaLevelTrackbar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SeaLevelTrackbarMouseUp);
+            this.seaLevelTrackbar.ValueChanged += new System.EventHandler(this.SeaLevelTrackBarValueChanged);
+            this.seaLevelTrackbar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SeaLevelTrackBarMouseUp);
             // 
             // mapViewPanel
             // 
