@@ -9,68 +9,70 @@
     {
         private readonly CoreModel model;
 
-        private readonly BehaviorSubject<Bitmap> minimapImage;
+        // subjects from user events
+        private readonly ISubject<Point> mousePosition = new Subject<Point>();
 
-        private readonly BehaviorSubject<int> mapWidth;
-
-        private readonly BehaviorSubject<int> mapHeight;
-
-        private readonly BehaviorSubject<Rectangle> minimapRect;
-
-        private bool mouseDown;
+        private readonly ISubject<bool> mouseDown = new BehaviorSubject<bool>(false);
 
         public MinimapFormViewModel(CoreModel model)
         {
+            // set up observables from properties
             var viewportLocation = model.PropertyAsObservable(x => x.ViewportLocation, "ViewportLocation");
             var viewportWidth = model.PropertyAsObservable(x => x.ViewportWidth, "ViewportWidth");
             var viewportHeight = model.PropertyAsObservable(x => x.ViewportHeight, "ViewportHeight");
 
-            this.mapWidth = model.PropertyAsObservable(x => x.MapWidth, "MapWidth");
-            this.mapHeight = model.PropertyAsObservable(x => x.MapHeight, "MapHeight");
+            var mapWidth = model.PropertyAsObservable(x => x.MapWidth, "MapWidth");
+            var mapHeight = model.PropertyAsObservable(x => x.MapHeight, "MapHeight");
             this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, "MinimapVisible");
 
-            this.minimapImage = model.PropertyAsObservable(x => x.MinimapImage, "MinimapImage");
+            this.MinimapImage = model.PropertyAsObservable(x => x.MinimapImage, "MinimapImage");
+
+            // set up some computed observables
+            var viewportSize = viewportWidth.CombineLatest(viewportHeight, (w, h) => new Size(w, h));
+            var mapSize = mapWidth.CombineLatest(mapHeight, (w, h) => new Size(w, h));
+            var mapVisiblePixelSize = mapSize.Select(s => new Size((s.Width * 32) - 32, (s.Height * 32) - 128));
+            var minimapSize = this.MinimapImage.Select(x => x?.Size);
 
             // set up the minimap rectangle observable
-            var minimapRectWidth = this.ScaleObsWidthToMinimap(viewportWidth);
-            var minimapRectHeight = this.ScaleObsHeightToMinimap(viewportHeight);
-            var minimapRectSize = minimapRectWidth.CombineLatest(minimapRectHeight, (w, h) => new Size(w, h));
+            var minimapRectSize = ScaleToMinimap(viewportSize, mapVisiblePixelSize, minimapSize);
+            var minimapRectLocation = ScaleToMinimap(viewportLocation, mapVisiblePixelSize, minimapSize);
+            this.MinimapRect = minimapRectLocation
+                .CombineLatest(minimapRectSize, (l, s) => new Rectangle(l, s));
 
-            var minimapRectX = this.ScaleObsWidthToMinimap(viewportLocation.Select(x => x.X));
-            var minimapRectY = this.ScaleObsHeightToMinimap(viewportLocation.Select(x => x.Y));
-            var minimapRectLocation = minimapRectX.CombineLatest(minimapRectY, (x, y) => new Point(x, y));
+            // wire up user events to the model
+            var minimapRectExtents = minimapRectSize.Select(s => new Size(s.Width / 2, s.Height / 2));
+            var minimapViewportTopLeft = this.mousePosition
+                .CombineLatest(minimapRectExtents, (l, e) => new Point(l.X - e.Width, l.Y - e.Height));
+            var newMapViewportLocation = ScaleToMap(minimapViewportTopLeft, mapVisiblePixelSize, minimapSize);
 
-            this.minimapRect = new BehaviorSubject<Rectangle>(Rectangle.Empty);
-            minimapRectLocation
-                .CombineLatest(minimapRectSize, (l, s) => new Rectangle(l, s))
-                .Subscribe(this.minimapRect);
+            this.mouseDown
+                .Select(x => x ? newMapViewportLocation : Observable.Empty<Point>())
+                .Switch()
+                .Subscribe(model.SetViewportLocation);
 
             this.model = model;
         }
 
         public IObservable<bool> MinimapVisible { get; }
 
-        public IObservable<Bitmap> MinimapImage => this.minimapImage;
+        public IObservable<Bitmap> MinimapImage { get; }
 
-        public IObservable<Rectangle> MinimapRect => this.minimapRect;
+        public IObservable<Rectangle> MinimapRect { get; }
 
         public void MouseDown(Point location)
         {
-            this.mouseDown = true;
-            this.SetModelViewportCenter(location);
+            this.mouseDown.OnNext(true);
+            this.mousePosition.OnNext(location);
         }
 
         public void MouseMove(Point location)
         {
-            if (this.mouseDown)
-            {
-                this.SetModelViewportCenter(location);
-            }
+            this.mousePosition.OnNext(location);
         }
 
         public void MouseUp()
         {
-            this.mouseDown = false;
+            this.mouseDown.OnNext(false);
         }
 
         public void FormCloseButtonClick()
@@ -78,57 +80,38 @@
             this.model.HideMinimap();
         }
 
-        private IObservable<int> ScaleObsWidthToMinimap(IObservable<int> value)
+        private static IObservable<Point> ScaleToMinimap(
+            IObservable<Point> value,
+            IObservable<Size> mapWidth,
+            IObservable<Size?> minimapWidth)
         {
-            var mapWidth = this.mapWidth.Select(x => (x * 32) - 32);
-            var minimapWidth = this.MinimapImage.Select(x => x?.Width ?? 0);
+            var newMinimapWidth = minimapWidth.Select(x => x ?? Size.Empty);
 
             return value
-                .CombineLatest(minimapWidth, (v, w) => v * w)
-                .CombineLatest(mapWidth, (v, w) => v / w);
+                .CombineLatest(newMinimapWidth, (v, w) => new Point(v.X * w.Width, v.Y * w.Height))
+                .CombineLatest(mapWidth, (v, w) => new Point(v.X / w.Width, v.Y / w.Height));
         }
 
-        private IObservable<int> ScaleObsHeightToMinimap(IObservable<int> value)
+        private static IObservable<Size> ScaleToMinimap(
+            IObservable<Size> value,
+            IObservable<Size> mapWidth,
+            IObservable<Size?> minimapWidth)
         {
-            var mapHeight = this.mapHeight.Select(x => (x * 32) - 128);
-            var minimapHeight = this.MinimapImage.Select(x => x?.Height ?? 0);
+            var newMinimapWidth = minimapWidth.Select(x => x ?? Size.Empty);
 
             return value
-                .CombineLatest(minimapHeight, (v, h) => v * h)
-                .CombineLatest(mapHeight, (v, h) => v / h);
+                .CombineLatest(newMinimapWidth, (v, w) => new Size(v.Width * w.Width, v.Height * w.Height))
+                .CombineLatest(mapWidth, (v, w) => new Size(v.Width / w.Width, v.Height / w.Height));
         }
 
-        private void SetModelViewportCenter(Point location)
+        private static IObservable<Point> ScaleToMap(
+            IObservable<Point> value,
+            IObservable<Size> mapSize,
+            IObservable<Size?> minimapSize)
         {
-            var image = this.minimapImage.Value;
-            if (image == null)
-            {
-                return;
-            }
-
-            var rect = this.minimapRect.Value;
-
-            int x = location.X - (rect.Width / 2);
-            int y = location.Y - (rect.Height / 2);
-
-            x = this.ScaleWidthToMap(x);
-            y = this.ScaleHeightToMap(y);
-
-            this.model.SetViewportLocation(new Point(x, y));
-        }
-
-        private int ScaleWidthToMap(int val)
-        {
-            int mapWidth = (this.mapWidth.Value * 32) - 32;
-            int minimapWidth = this.minimapImage.Value.Width;
-            return (val * mapWidth) / minimapWidth;
-        }
-
-        private int ScaleHeightToMap(int val)
-        {
-            int mapHeight = (this.mapHeight.Value * 32) - 128;
-            int minimapHeight = this.minimapImage.Value.Height;
-            return (val * mapHeight) / minimapHeight;
+            return value
+                .CombineLatest(mapSize, (v, w) => new Point(v.X * w.Width, v.Y * w.Height))
+                .CombineLatest(minimapSize, (v, w) => w.HasValue ? new Point(v.X / w.Value.Width, v.Y / w.Value.Height) : Point.Empty);
         }
     }
 }
