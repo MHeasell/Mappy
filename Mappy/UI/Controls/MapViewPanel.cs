@@ -260,7 +260,6 @@
                     this.RefreshSeaLevel();
                     break;
                 case "SelectedFeatures":
-                case "SelectedStartPosition":
                     this.RefreshSelection();
                     break;
                 case "BandboxRectangle":
@@ -274,6 +273,7 @@
             switch (e.PropertyName)
             {
                 case "SelectedTile":
+                case "SelectedStartPosition":
                     this.RefreshSelection();
                     break;
             }
@@ -343,9 +343,9 @@
                     }
                 }
             }
-            else if (this.mapModel.SelectedStartPosition.HasValue)
+            else if (this.settingsModel.SelectedStartPosition.HasValue)
             {
-                var mapping = this.startPositionMapping[this.mapModel.SelectedStartPosition.Value];
+                var mapping = this.startPositionMapping[this.settingsModel.SelectedStartPosition.Value];
                 if (mapping != null)
                 {
                     this.itemsLayer.AddToSelection(mapping);
@@ -387,6 +387,11 @@
                 return;
             }
 
+            if (this.settingsModel == null)
+            {
+                return;
+            }
+
             Point? p = this.mapModel.GetStartPosition(index);
             if (p.HasValue)
             {
@@ -400,7 +405,7 @@
                 this.startPositionMapping[index] = i;
                 this.itemsLayer.Items.Add(i);
 
-                if (this.mapModel.SelectedStartPosition == index)
+                if (this.settingsModel.SelectedStartPosition == index)
                 {
                     this.itemsLayer.AddToSelection(i);
                 }

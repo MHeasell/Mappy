@@ -16,6 +16,8 @@
 
         private int? selectedTile;
 
+        private int? selectedStartPosition;
+
         public MapViewViewModel(CoreModel model)
         {
             this.GridVisible = model.PropertyAsObservable(x => x.GridVisible, "GridVisible");
@@ -36,6 +38,11 @@
                 .Select(x => x?.PropertyAsObservable(y => y.SelectedTile, "SelectedTile") ?? Observable.Return<int?>(null))
                 .Switch()
                 .Subscribe(x => this.SelectedTile = x);
+
+            this.Map
+                .Select(x => x?.PropertyAsObservable(y => y.SelectedStartPosition, "SelectedStartPosition") ?? Observable.Return<int?>(null))
+                .Switch()
+                .Subscribe(x => this.SelectedStartPosition = x);
 
             this.model = model;
         }
@@ -68,6 +75,19 @@
             set
             {
                 this.SetField(ref this.selectedTile, value, nameof(this.SelectedTile));
+            }
+        }
+
+        public int? SelectedStartPosition
+        {
+            get
+            {
+                return this.selectedStartPosition;
+            }
+
+            set
+            {
+                this.SetField(ref this.selectedStartPosition, value, nameof(this.SelectedStartPosition));
             }
         }
 

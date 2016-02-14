@@ -30,6 +30,8 @@
 
         int? SelectedTile { get; }
 
+        int? SelectedStartPosition { get; }
+
         void SetViewportSize(Size size);
 
         void SetViewportLocation(Point pos);
