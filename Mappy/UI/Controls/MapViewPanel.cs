@@ -112,6 +112,8 @@
             model.ViewportLocation.Subscribe(x => this.mapView.AutoScrollPosition = x);
 
             model.PropertyChanged += this.SettingsModelPropertyChanged;
+
+            model.SelectedFeatures.CollectionChanged += this.SelectedFeaturesCollectionChanged;
         }
 
         private void SetMapModel(IMainModel model)
@@ -243,8 +245,6 @@
             this.mapModel.StartPositionChanged += this.StartPositionChanged;
 
             this.mapModel.PropertyChanged += this.MapModelPropertyChanged;
-
-            this.mapModel.SelectedFeatures.CollectionChanged += this.SelectedFeaturesCollectionChanged;
         }
 
         private void SelectedFeaturesCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -259,9 +259,6 @@
                 case "SeaLevel":
                     this.RefreshSeaLevel();
                     break;
-                case "SelectedFeatures":
-                    this.RefreshSelection();
-                    break;
                 case "BandboxRectangle":
                     this.UpdateBandbox();
                     break;
@@ -274,6 +271,7 @@
             {
                 case "SelectedTile":
                 case "SelectedStartPosition":
+                case "SelectedFeatures":
                     this.RefreshSelection();
                     break;
             }
@@ -333,9 +331,9 @@
                     this.itemsLayer.AddToSelection(this.tileMapping[this.settingsModel.SelectedTile.Value]);
                 }
             }
-            else if (this.mapModel.SelectedFeatures.Count > 0)
+            else if (this.settingsModel.SelectedFeatures.Count > 0)
             {
-                foreach (var item in this.mapModel.SelectedFeatures)
+                foreach (var item in this.settingsModel.SelectedFeatures)
                 {
                     if (this.featureMapping.ContainsKey(item))
                     {
@@ -531,7 +529,7 @@
             this.featureMapping[f.Id] = i;
             this.itemsLayer.Items.Add(i);
 
-            if (this.mapModel.SelectedFeatures.Contains(f.Id))
+            if (this.settingsModel.SelectedFeatures.Contains(f.Id))
             {
                 this.itemsLayer.AddToSelection(i);
             }

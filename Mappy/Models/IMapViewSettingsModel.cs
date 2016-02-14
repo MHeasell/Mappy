@@ -1,6 +1,7 @@
 ﻿namespace Mappy.Models
 {
     using System;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Drawing;
     using System.Windows.Forms;
@@ -31,6 +32,8 @@
         int? SelectedTile { get; }
 
         int? SelectedStartPosition { get; }
+
+        ObservableCollection<Guid> SelectedFeatures { get; }
 
         void SetViewportSize(Size size);
 

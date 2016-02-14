@@ -1,6 +1,8 @@
 ﻿namespace Mappy.Models
 {
     using System;
+    using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.Drawing;
     using System.Reactive.Linq;
     using System.Windows.Forms;
@@ -43,6 +45,10 @@
                 .Select(x => x?.PropertyAsObservable(y => y.SelectedStartPosition, "SelectedStartPosition") ?? Observable.Return<int?>(null))
                 .Switch()
                 .Subscribe(x => this.SelectedStartPosition = x);
+
+            this.Map
+                .Select(x => x?.SelectedFeatures)
+                .Subscribe(this.BindSelectedFeatures);
 
             this.model = model;
         }
@@ -90,6 +96,8 @@
                 this.SetField(ref this.selectedStartPosition, value, nameof(this.SelectedStartPosition));
             }
         }
+
+        public ObservableCollection<Guid> SelectedFeatures { get; } = new ObservableCollection<Guid>();
 
         public void SetViewportSize(Size size)
         {
@@ -213,6 +221,47 @@
         public void SelectStartPosition(int index)
         {
             this.model.SelectStartPosition(index);
+        }
+
+        private void BindSelectedFeatures(ObservableCollection<Guid> x)
+        {
+            this.SelectedFeatures.Clear();
+            if (x == null)
+            {
+                return;
+            }
+
+            foreach (var e in x)
+            {
+                this.SelectedFeatures.Add(e);
+            }
+
+            x.CollectionChanged += this.SelectedFeaturesCollectionChanged;
+        }
+
+        private void SelectedFeaturesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Reset)
+            {
+                this.SelectedFeatures.Clear();
+                return;
+            }
+
+            if (e.OldItems != null)
+            {
+                foreach (var i in e.OldItems)
+                {
+                    this.SelectedFeatures.Remove((Guid)i);
+                }
+            }
+
+            if (e.NewItems != null)
+            {
+                foreach (var i in e.NewItems)
+                {
+                    this.SelectedFeatures.Add((Guid)i);
+                }
+            }
         }
     }
 }
