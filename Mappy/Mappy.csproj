@@ -160,7 +160,7 @@
     <Compile Include="Models\IDialogService.cs" />
     <Compile Include="Models\IMainFormViewModel.cs" />
     <Compile Include="Models\IMainModel.cs" />
-    <Compile Include="Models\IMapViewSettingsModel.cs" />
+    <Compile Include="Models\IMapViewViewModel.cs" />
     <Compile Include="Models\IMinimapFormViewModel.cs" />
     <Compile Include="Models\ISectionViewViewModel.cs" />
     <Compile Include="Models\ISelectionModel.cs" />
@@ -200,6 +200,7 @@
     <Compile Include="UI\Controls\DoubleComboListView.Designer.cs">
       <DependentUpon>DoubleComboListView.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Controls\DummyLayer.cs" />
     <Compile Include="UI\Controls\GridLayer.cs" />
     <Compile Include="UI\Controls\GuideLayer.cs" />
     <Compile Include="UI\Controls\PainterLayer.cs" />

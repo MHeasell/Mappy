@@ -13,7 +13,7 @@
 
         public Guid FeatureId { get; }
 
-        public void SelectItem(IMapViewSettingsModel model)
+        public void SelectItem(CoreModel model)
         {
             model.SelectFeature(this.FeatureId);
         }

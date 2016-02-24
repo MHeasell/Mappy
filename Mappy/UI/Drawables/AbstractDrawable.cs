@@ -17,6 +17,11 @@
 
         public abstract void Draw(Graphics graphics, Rectangle clipRectangle);
 
+        public void Invalidate()
+        {
+            this.OnAreaChanged();
+        }
+
         protected void OnAreaChanged()
         {
             var rect = new Rectangle(0, 0, this.Width, this.Height);
