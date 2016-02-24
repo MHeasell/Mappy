@@ -57,8 +57,6 @@
             this.mapModelFactory = new MapModelFactory();
         }
 
-        public bool MapOpen => this.Map != null;
-
         public UndoableMapModel Map
         {
             get
@@ -75,7 +73,6 @@
                         this.Map.PropertyChanged += this.MapOnPropertyChanged;
                     }
 
-                    this.FireChange("MapOpen");
                     this.FireChange("MapWidth");
                     this.FireChange("MapHeight");
                     this.FireChange("SeaLevel");

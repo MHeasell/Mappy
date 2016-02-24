@@ -17,7 +17,7 @@
 
         public MainFormViewModel(CoreModel model)
         {
-            var mapOpen = model.PropertyAsObservable(x => x.MapOpen, "MapOpen");
+            var mapOpen = model.PropertyAsObservable(x => x.Map, nameof(model.Map)).Select(x => x != null);
             var isDirty = model.PropertyAsObservable(x => x.IsDirty, "IsDirty");
             var filePath = model.PropertyAsObservable(x => x.FilePath, "FilePath");
             var isFileReadOnly = model.PropertyAsObservable(x => x.IsFileReadOnly, "IsFileReadOnly");
