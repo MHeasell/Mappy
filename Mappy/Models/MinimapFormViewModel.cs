@@ -28,7 +28,7 @@
 
             this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, "MinimapVisible");
 
-            this.MinimapImage = model.PropertyAsObservable(x => x.MinimapImage, "MinimapImage");
+            this.MinimapImage = map.ObservePropertyOrDefault(x => x.Minimap, "Minimap", null);
 
             // set up some computed observables
             var viewportSize = viewportWidth.CombineLatest(viewportHeight, (w, h) => new Size(w, h));

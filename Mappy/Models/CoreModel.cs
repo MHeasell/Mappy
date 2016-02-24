@@ -87,8 +87,6 @@
                     this.FireChange("CanCut");
                     this.FireChange("CanCopy");
                     this.FireChange("CanPaste");
-
-                    this.FireChange("MinimapImage");
                 }
             }
         }
@@ -190,14 +188,6 @@
                 MappySettings.Settings.GridColor = value;
                 MappySettings.SaveSettings();
                 this.SetField(ref this.gridColor, value, "GridColor");
-            }
-        }
-
-        public Bitmap MinimapImage
-        {
-            get
-            {
-                return this.Map == null ? null : this.Map.Minimap;
             }
         }
 
@@ -815,9 +805,6 @@
         {
             switch (propertyChangedEventArgs.PropertyName)
             {
-                case "Minimap":
-                    this.FireChange("MinimapImage");
-                    break;
                 case "IsMarked":
                     this.FireChange("IsDirty");
                     break;
