@@ -73,10 +73,6 @@
                         this.Map.PropertyChanged += this.MapOnPropertyChanged;
                     }
 
-                    this.FireChange("SelectedTile");
-                    this.FireChange("SelectedStartPosition");
-                    this.FireChange("SelectedFeatures");
-
                     this.FireChange("CanUndo");
                     this.FireChange("CanRedo");
 
