@@ -73,8 +73,6 @@
                         this.Map.PropertyChanged += this.MapOnPropertyChanged;
                     }
 
-                    this.FireChange("MapWidth");
-                    this.FireChange("MapHeight");
                     this.FireChange("SeaLevel");
 
                     this.FireChange("SelectedTile");
@@ -158,10 +156,6 @@
         }
 
         public Point ViewportLocation => this.Map?.ViewportLocation ?? Point.Empty;
-
-        public int MapWidth => this.Map?.BaseTile.TileGrid.Width ?? 0;
-
-        public int MapHeight => this.Map?.BaseTile.TileGrid.Height ?? 0;
 
         public bool MinimapVisible
         {
@@ -555,8 +549,8 @@
                 return;
             }
 
-            location.X = Util.Clamp(location.X, 0, (this.MapWidth * 32) - this.ViewportWidth);
-            location.Y = Util.Clamp(location.Y, 0, (this.MapHeight * 32) - this.ViewportHeight);
+            location.X = Util.Clamp(location.X, 0, (this.Map.MapWidth * 32) - this.ViewportWidth);
+            location.Y = Util.Clamp(location.Y, 0, (this.Map.MapHeight * 32) - this.ViewportHeight);
 
             this.Map.ViewportLocation = location;
         }

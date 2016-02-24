@@ -80,10 +80,12 @@
             var gridColor = model.PropertyAsObservable(x => x.GridColor, nameof(model.GridColor));
             var gridSize = model.PropertyAsObservable(x => x.GridSize, nameof(model.GridSize));
             var featuresVisible = model.PropertyAsObservable(x => x.FeaturesVisible, nameof(model.FeaturesVisible));
-            var mapWidth = model.PropertyAsObservable(x => x.MapWidth, nameof(model.MapWidth));
-            var mapHeight = model.PropertyAsObservable(x => x.MapHeight, nameof(model.MapHeight));
-
             var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
+
+            var mapWidth = map.Select(x => x?.PropertyAsObservable(y => y.MapWidth, nameof(x.MapWidth)) ?? Observable.Return(0))
+                .Switch();
+            var mapHeight = map.Select(x => x?.PropertyAsObservable(y => y.MapHeight, nameof(x.MapHeight)) ?? Observable.Return(0))
+                .Switch();
 
             this.ViewportLocation = model.PropertyAsObservable(x => x.ViewportLocation, nameof(model.ViewportLocation));
 
