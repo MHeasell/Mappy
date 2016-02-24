@@ -85,7 +85,10 @@
             var mapWidth = map.ObservePropertyOrDefault(x => x.MapWidth, "MapWidth", 0);
             var mapHeight = map.ObservePropertyOrDefault(x => x.MapHeight, "MapHeight", 0);
 
-            this.ViewportLocation = model.PropertyAsObservable(x => x.ViewportLocation, nameof(model.ViewportLocation));
+            this.ViewportLocation = map.ObservePropertyOrDefault(
+                x => x.ViewportLocation,
+                "ViewportLocation",
+                Point.Empty);
 
             map.Subscribe(this.SetMapModel);
             gridVisible.Subscribe(x => this.grid.Enabled = x);

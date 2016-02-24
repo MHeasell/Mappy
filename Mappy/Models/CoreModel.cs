@@ -135,8 +135,6 @@
             }
         }
 
-        public Point ViewportLocation => this.Map?.ViewportLocation ?? Point.Empty;
-
         public bool MinimapVisible
         {
             get
@@ -399,7 +397,7 @@
                 return;
             }
 
-            var loc = this.ViewportLocation;
+            var loc = this.Map.ViewportLocation;
             loc.X += this.ViewportWidth / 2;
             loc.Y += this.ViewportHeight / 2;
 
@@ -796,7 +794,6 @@
                 case "CanCut":
                 case "CanCopy":
                 case "CanPaste":
-                case "ViewportLocation":
                     this.FireChange(propertyChangedEventArgs.PropertyName);
                     break;
             }

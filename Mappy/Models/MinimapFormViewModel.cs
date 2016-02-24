@@ -17,11 +17,14 @@
         public MinimapFormViewModel(CoreModel model)
         {
             // set up observables from properties
-            var viewportLocation = model.PropertyAsObservable(x => x.ViewportLocation, "ViewportLocation");
+            var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
+
+            var viewportLocation = map.ObservePropertyOrDefault(
+                x => x.ViewportLocation,
+                "ViewportLocation",
+                Point.Empty);
             var viewportWidth = model.PropertyAsObservable(x => x.ViewportWidth, "ViewportWidth");
             var viewportHeight = model.PropertyAsObservable(x => x.ViewportHeight, "ViewportHeight");
-
-            var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
 
             var mapWidth = map.ObservePropertyOrDefault(x => x.MapWidth, "MapWidth", 0);
             var mapHeight = map.ObservePropertyOrDefault(x => x.MapHeight, "MapHeight", 0);
