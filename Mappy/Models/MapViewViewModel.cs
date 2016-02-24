@@ -82,10 +82,8 @@
             var featuresVisible = model.PropertyAsObservable(x => x.FeaturesVisible, nameof(model.FeaturesVisible));
             var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
 
-            var mapWidth = map.Select(x => x?.PropertyAsObservable(y => y.MapWidth, nameof(x.MapWidth)) ?? Observable.Return(0))
-                .Switch();
-            var mapHeight = map.Select(x => x?.PropertyAsObservable(y => y.MapHeight, nameof(x.MapHeight)) ?? Observable.Return(0))
-                .Switch();
+            var mapWidth = map.ObservePropertyOrDefault(x => x.MapWidth, "MapWidth", 0);
+            var mapHeight = map.ObservePropertyOrDefault(x => x.MapHeight, "MapHeight", 0);
 
             this.ViewportLocation = model.PropertyAsObservable(x => x.ViewportLocation, nameof(model.ViewportLocation));
 
@@ -107,11 +105,9 @@
                         this.guides.AddVerticalGuide(x.Width - 32);
                     });
 
-            map.Select(x => x?.PropertyAsObservable(y => y.SelectedTile, nameof(x.SelectedTile)) ?? Observable.Return<int?>(null))
-                .Switch()
+            map.ObservePropertyOrDefault(x => x.SelectedTile, "SelectedTile", null)
                 .Subscribe(_ => this.RefreshSelection());
-            map.Select(x => x?.PropertyAsObservable(y => y.SelectedStartPosition, nameof(x.SelectedStartPosition)) ?? Observable.Return<int?>(null))
-                .Switch()
+            map.ObservePropertyOrDefault(x => x.SelectedStartPosition, "SelectedStartPosition", null)
                 .Subscribe(_ => this.RefreshSelection());
 
             map.Where(x => x != null)

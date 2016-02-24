@@ -23,10 +23,8 @@
 
             var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
 
-            var mapWidth = map.Select(x => x?.PropertyAsObservable(y => y.MapWidth, nameof(x.MapWidth)) ?? Observable.Return(0))
-                .Switch();
-            var mapHeight = map.Select(x => x?.PropertyAsObservable(y => y.MapHeight, nameof(x.MapHeight)) ?? Observable.Return(0))
-                .Switch();
+            var mapWidth = map.ObservePropertyOrDefault(x => x.MapWidth, "MapWidth", 0);
+            var mapHeight = map.ObservePropertyOrDefault(x => x.MapHeight, "MapHeight", 0);
 
             this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, "MinimapVisible");
 

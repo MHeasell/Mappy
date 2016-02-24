@@ -35,5 +35,22 @@
             var nothing = Observable.Empty<T>();
             return pauser.Select(x => x ? source : nothing).Switch();
         }
+
+        /// <summary>
+        /// Creates an observable that streams the value of the selected property
+        /// of the value contained in source.
+        /// If the source becomes null, the default value is emitted instead.
+        /// </summary>
+        public static IObservable<TValue> ObservePropertyOrDefault<TSource, TValue>(
+            this IObservable<TSource> source,
+            Func<TSource, TValue> accessor,
+            string name,
+            TValue defaultValue)
+            where TSource : INotifyPropertyChanged
+        {
+            var defaultObservable = Observable.Return(defaultValue);
+            return source.Select(x => x?.PropertyAsObservable(accessor, name) ?? defaultObservable)
+                .Switch();
+        }
     }
 }

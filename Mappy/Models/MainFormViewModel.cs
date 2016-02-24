@@ -33,9 +33,7 @@
             this.HeightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, "HeightmapVisible");
             this.FeaturesVisible = model.PropertyAsObservable(x => x.FeaturesVisible, "FeaturesVisible");
             this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, "MinimapVisible");
-            this.SeaLevel = map
-                .Select(x => x?.PropertyAsObservable(y => y.SeaLevel, nameof(x.SeaLevel)) ?? Observable.Return(0))
-                .Switch();
+            this.SeaLevel = map.ObservePropertyOrDefault(x => x.SeaLevel, "SeaLevel", 0);
 
             this.CanSaveAs = mapOpen;
             this.CanCloseMap = mapOpen;
