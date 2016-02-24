@@ -73,8 +73,6 @@
                         this.Map.PropertyChanged += this.MapOnPropertyChanged;
                     }
 
-                    this.FireChange("SeaLevel");
-
                     this.FireChange("SelectedTile");
                     this.FireChange("SelectedStartPosition");
                     this.FireChange("SelectedFeatures");
@@ -94,8 +92,6 @@
                 }
             }
         }
-
-        public int SeaLevel => this.Map?.SeaLevel ?? 0;
 
         public bool CanUndo => this.Map != null && this.Map.CanUndo;
 
@@ -825,7 +821,6 @@
                 case "IsMarked":
                     this.FireChange("IsDirty");
                     break;
-                case "SeaLevel":
                 case "CanUndo":
                 case "CanRedo":
                 case "FilePath":

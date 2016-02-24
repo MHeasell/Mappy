@@ -17,7 +17,8 @@
 
         public MainFormViewModel(CoreModel model)
         {
-            var mapOpen = model.PropertyAsObservable(x => x.Map, nameof(model.Map)).Select(x => x != null);
+            var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
+            var mapOpen = map.Select(x => x != null);
             var isDirty = model.PropertyAsObservable(x => x.IsDirty, "IsDirty");
             var filePath = model.PropertyAsObservable(x => x.FilePath, "FilePath");
             var isFileReadOnly = model.PropertyAsObservable(x => x.IsFileReadOnly, "IsFileReadOnly");
@@ -32,7 +33,9 @@
             this.HeightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, "HeightmapVisible");
             this.FeaturesVisible = model.PropertyAsObservable(x => x.FeaturesVisible, "FeaturesVisible");
             this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, "MinimapVisible");
-            this.SeaLevel = model.PropertyAsObservable(x => x.SeaLevel, "SeaLevel");
+            this.SeaLevel = map
+                .Select(x => x?.PropertyAsObservable(y => y.SeaLevel, nameof(x.SeaLevel)) ?? Observable.Return(0))
+                .Switch();
 
             this.CanSaveAs = mapOpen;
             this.CanCloseMap = mapOpen;
