@@ -27,6 +27,11 @@
             return (y * grid.Width) + x;
         }
 
+        public static int ToIndex<T>(this IGrid<T> grid, GridCoordinates coords)
+        {
+            return grid.ToIndex(coords.X, coords.Y);
+        }
+
         public static GridCoordinates ToCoords<T>(this IGrid<T> grid, int index)
         {
             return new GridCoordinates(index % grid.Width, index / grid.Width);
