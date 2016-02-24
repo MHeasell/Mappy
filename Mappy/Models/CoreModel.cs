@@ -80,10 +80,6 @@
                     this.FireChange("CanUndo");
                     this.FireChange("CanRedo");
 
-                    this.FireChange("IsDirty");
-                    this.FireChange("FilePath");
-                    this.FireChange("IsFileReadOnly");
-
                     this.FireChange("CanCut");
                     this.FireChange("CanCopy");
                     this.FireChange("CanPaste");
@@ -104,12 +100,6 @@
         public IFeatureDatabase FeatureRecords => this.featureRecords;
 
         public IList<Section> Sections => this.sections;
-
-        public bool IsDirty => this.Map != null && !this.Map.IsMarked;
-
-        public string FilePath => this.Map?.FilePath;
-
-        public bool IsFileReadOnly => this.Map != null && this.Map.IsFileReadOnly;
 
         public bool HeightmapVisible
         {
@@ -632,7 +622,7 @@
 
         private bool CheckOkayDiscard()
         {
-            if (!this.IsDirty)
+            if (this.Map == null || this.Map.IsMarked)
             {
                 return true;
             }
@@ -805,13 +795,8 @@
         {
             switch (propertyChangedEventArgs.PropertyName)
             {
-                case "IsMarked":
-                    this.FireChange("IsDirty");
-                    break;
                 case "CanUndo":
                 case "CanRedo":
-                case "FilePath":
-                case "IsFileReadOnly":
                 case "CanCut":
                 case "CanCopy":
                 case "CanPaste":

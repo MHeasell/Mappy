@@ -19,9 +19,9 @@
         {
             var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
             var mapOpen = map.Select(x => x != null);
-            var isDirty = model.PropertyAsObservable(x => x.IsDirty, "IsDirty");
-            var filePath = model.PropertyAsObservable(x => x.FilePath, "FilePath");
-            var isFileReadOnly = model.PropertyAsObservable(x => x.IsFileReadOnly, "IsFileReadOnly");
+            var isDirty = map.ObservePropertyOrDefault(x => x.IsMarked, "IsMarked", true).Select(x => !x);
+            var filePath = map.ObservePropertyOrDefault(x => x.FilePath, "FilePath", null);
+            var isFileReadOnly = map.ObservePropertyOrDefault(x => x.IsFileReadOnly, "IsFileReadOnly", false);
 
             this.CanUndo = model.PropertyAsObservable(x => x.CanUndo, "CanUndo");
             this.CanRedo = model.PropertyAsObservable(x => x.CanRedo, "CanRedo");
