@@ -250,16 +250,6 @@
                     new SelectTileOperation(this.model, index)));
         }
 
-        public void OpenMapAttributes()
-        {
-            MapAttributesResult r = this.dialogService.AskUserForMapAttributes(this.GetAttributes());
-
-            if (r != null)
-            {
-                this.UpdateAttributes(r);
-            }
-        }
-
         public void SelectFeature(Guid id)
         {
             this.undoManager.Execute(
@@ -552,6 +542,16 @@
             int y = this.ViewportLocation.Y;
 
             this.AddAndSelectTile(tile, x, y);
+        }
+
+        public MapAttributesResult GetAttributes()
+        {
+            return MapAttributesResult.FromModel(this.model);
+        }
+
+        public void UpdateAttributes(MapAttributesResult newAttrs)
+        {
+            this.undoManager.Execute(new ChangeAttributesOperation(this.model, newAttrs));
         }
 
         private static void DeduplicateTiles(IGrid<Bitmap> tiles)
@@ -898,16 +898,6 @@
         private void UndoManagerOnCanUndoChanged(object sender, EventArgs eventArgs)
         {
             this.FireChange("CanUndo");
-        }
-
-        private MapAttributesResult GetAttributes()
-        {
-            return MapAttributesResult.FromModel(this.model);
-        }
-
-        private void UpdateAttributes(MapAttributesResult newAttrs)
-        {
-            this.undoManager.Execute(new ChangeAttributesOperation(this.model, newAttrs));
         }
 
         private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

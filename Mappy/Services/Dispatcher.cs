@@ -564,7 +564,17 @@
 
         public void OpenMapAttributes()
         {
-            this.model.Map?.OpenMapAttributes();
+            var map = this.model.Map;
+            if (map == null)
+            {
+                return;
+            }
+
+            MapAttributesResult r = this.dialogService.AskUserForMapAttributes(map.GetAttributes());
+            if (r != null)
+            {
+                map.UpdateAttributes(r);
+            }
         }
 
         public void SetSeaLevel(int value)
