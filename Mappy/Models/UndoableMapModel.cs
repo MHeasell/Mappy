@@ -145,18 +145,7 @@
 
         public bool IsMarked => this.undoManager.IsMarked;
 
-        public Bitmap Minimap
-        {
-            get
-            {
-                return this.model.Minimap;
-            }
-
-            set
-            {
-                this.model.Minimap = value;
-            }
-        }
+        public Bitmap Minimap => this.model.Minimap;
 
         public int SeaLevel => this.model.SeaLevel;
 
@@ -743,6 +732,12 @@
             this.undoManager.Execute(op);
         }
 
+        public void SetMinimap(Bitmap minimap)
+        {
+            var op = new UpdateMinimapOperation(this.model, minimap);
+            this.undoManager.Execute(op);
+        }
+
         private static void DeduplicateTiles(IGrid<Bitmap> tiles)
         {
             var len = tiles.Width * tiles.Height;
@@ -758,12 +753,6 @@
             int y = this.ViewportLocation.Y;
 
             this.AddAndSelectTile(tile, x, y);
-        }
-
-        private void SetMinimap(Bitmap minimap)
-        {
-            var op = new UpdateMinimapOperation(this.model, minimap);
-            this.undoManager.Execute(op);
         }
 
         private bool SaveHelper(string filename)

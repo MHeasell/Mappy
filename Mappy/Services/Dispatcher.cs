@@ -349,7 +349,7 @@
             }
 
             var minimap = this.LoadMinimapFromUser();
-            minimap.IfSome(x => this.model.Map.Minimap = x);
+            minimap.IfSome(x => this.model.Map.SetMinimap(x));
         }
 
         public void ToggleFeatures()
