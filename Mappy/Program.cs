@@ -37,8 +37,9 @@
             var svc = new DialogService(mainForm);
             var featureService = new FeatureService();
             var sectionsService = new SectionsService();
+            var mapLoadingService = new MapLoadingService(svc);
             var model = new CoreModel();
-            var dispatcher = new Dispatcher(model, svc, sectionsService, featureService);
+            var dispatcher = new Dispatcher(model, svc, sectionsService, featureService, mapLoadingService);
             mainForm.SetModel(new MainFormViewModel(model, dispatcher));
 
             mainForm.SectionView.SetModel(new SectionViewViewModel(sectionsService));

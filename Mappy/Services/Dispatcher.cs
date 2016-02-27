@@ -9,16 +9,12 @@
     using System.Linq;
     using System.Windows.Forms;
 
-    using Mappy.Collections;
     using Mappy.Data;
     using Mappy.IO;
     using Mappy.Models;
 
     using TAUtil;
     using TAUtil.Hpi;
-    using TAUtil.Sct;
-    using TAUtil.Tdf;
-    using TAUtil.Tnt;
 
     public class Dispatcher
     {
@@ -30,23 +26,20 @@
 
         private readonly FeatureService featureService;
 
-        private readonly SectionFactory sectionFactory;
-
-        private readonly MapModelFactory mapModelFactory;
+        private readonly MapLoadingService mapLoadingService;
 
         public Dispatcher(
             CoreModel model,
             IDialogService dialogService,
             SectionsService sectionsService,
-            FeatureService featureService)
+            FeatureService featureService,
+            MapLoadingService mapLoadingService)
         {
             this.model = model;
             this.dialogService = dialogService;
             this.sectionsService = sectionsService;
             this.featureService = featureService;
-
-            this.sectionFactory = new SectionFactory();
-            this.mapModelFactory = new MapModelFactory();
+            this.mapLoadingService = mapLoadingService;
         }
 
         public void Initialize()
@@ -530,60 +523,13 @@
                 return;
             }
 
-            this.OpenHapi(filename, HpiPath.Combine("maps", mapName + ".tnt"), readOnly);
-        }
-
-        private void OpenHapi(string hpipath, string mappath, bool readOnly = false)
-        {
-            MapModel m;
-
-            using (HpiReader hpi = new HpiReader(hpipath))
-            {
-                string otaPath = HpiPath.ChangeExtension(mappath, ".ota");
-
-                TdfNode n;
-
-                using (var ota = hpi.ReadTextFile(otaPath))
-                {
-                    n = TdfNode.LoadTdf(ota);
-                }
-
-                using (var s = new TntReader(hpi.ReadFile(mappath)))
-                {
-                    m = this.mapModelFactory.FromTntAndOta(s, n);
-                }
-            }
-
-            this.model.Map = new UndoableMapModel(m, this.dialogService, hpipath, readOnly);
+            var tntPath = HpiPath.Combine("maps", mapName + ".tnt");
+            this.model.Map = this.mapLoadingService.CreateFromHpi(filename, tntPath, readOnly);
         }
 
         private void OpenTnt(string filename)
         {
-            MapModel m;
-
-            var otaFileName = filename.Substring(0, filename.Length - 4) + ".ota";
-            if (File.Exists(otaFileName))
-            {
-                TdfNode attrs;
-                using (var ota = File.OpenRead(otaFileName))
-                {
-                    attrs = TdfNode.LoadTdf(ota);
-                }
-
-                using (var s = new TntReader(filename))
-                {
-                    m = this.mapModelFactory.FromTntAndOta(s, attrs);
-                }
-            }
-            else
-            {
-                using (var s = new TntReader(filename))
-                {
-                    m = this.mapModelFactory.FromTnt(s);
-                }
-            }
-
-            this.model.Map = new UndoableMapModel(m, this.dialogService, filename, false);
+            this.model.Map = this.mapLoadingService.CreateFromTnt(filename);
         }
 
         private bool CheckOkayDiscard()
@@ -609,21 +555,12 @@
 
         private void New(int width, int height)
         {
-            var map = new MapModel(width, height);
-            GridMethods.Fill(map.Tile.TileGrid, Globals.DefaultTile);
-            var mapModel = new UndoableMapModel(map, this.dialogService, null, false);
-            this.model.Map = mapModel;
+            this.model.Map = this.mapLoadingService.CreateMap(width, height);
         }
 
         private void OpenSct(string filename)
         {
-            MapTile t;
-            using (var s = new SctReader(filename))
-            {
-                t = this.sectionFactory.TileFromSct(s);
-            }
-
-            this.model.Map = new UndoableMapModel(new MapModel(t), this.dialogService, filename, true);
+            this.model.Map = this.mapLoadingService.CreateFromSct(filename);
         }
     }
 }

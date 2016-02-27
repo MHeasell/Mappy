@@ -193,6 +193,7 @@
     </Compile>
     <Compile Include="Services\Dispatcher.cs" />
     <Compile Include="Services\FeatureService.cs" />
+    <Compile Include="Services\MapLoadingService.cs" />
     <Compile Include="Services\SectionsService.cs" />
     <Compile Include="UI\Controls\AbstractLayer.cs" />
     <Compile Include="UI\Controls\AreaChangedEventArgs.cs" />
