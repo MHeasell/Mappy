@@ -7,6 +7,7 @@
     using System.Reactive.Linq;
 
     using Mappy.Data;
+    using Mappy.Services;
 
     public class MainFormViewModel : IMainFormViewModel
     {
@@ -14,7 +15,9 @@
 
         private readonly CoreModel model;
 
-        public MainFormViewModel(CoreModel model)
+        private readonly Dispatcher dispatcher;
+
+        public MainFormViewModel(CoreModel model, Dispatcher dispatcher)
         {
             var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
             var mapOpen = map.Select(x => x != null);
@@ -80,6 +83,7 @@
             this.TitleText = titleText;
 
             this.model = model;
+            this.dispatcher = dispatcher;
         }
 
         public IObservable<bool> CanCloseMap { get; }
@@ -294,7 +298,7 @@
 
         public void Load()
         {
-            this.model.Initialize();
+            this.dispatcher.Initialize();
         }
     }
 }

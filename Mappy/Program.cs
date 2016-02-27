@@ -37,8 +37,9 @@
             var svc = new DialogService(mainForm);
             var featureService = new FeatureService();
             var sectionsService = new SectionsService();
+            var dispatcher = new Dispatcher(svc, sectionsService, featureService);
             var model = new CoreModel(svc, featureService, sectionsService);
-            mainForm.SetModel(new MainFormViewModel(model));
+            mainForm.SetModel(new MainFormViewModel(model, dispatcher));
 
             mainForm.SectionView.SetModel(new SectionViewViewModel(model, sectionsService));
             mainForm.FeatureView.SetModel(new FeatureViewViewModel(model, featureService));
