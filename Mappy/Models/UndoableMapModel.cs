@@ -6,7 +6,6 @@
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Drawing;
-    using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
     using System.Windows.Forms;
@@ -18,7 +17,6 @@
     using Mappy.Operations;
     using Mappy.Operations.SelectionModel;
     using Mappy.Util;
-    using Mappy.Util.ImageSampling;
 
     public class UndoableMapModel : Notifier, IMainModel, IBandboxModel
     {
@@ -275,18 +273,6 @@
             this.undoManager.Execute(new CompositeOperation(
                 OperationFactory.CreateDeselectAndMergeOperation(this.model),
                 new SelectStartPositionOperation(this.model, index)));
-        }
-
-        public void RefreshMinimap()
-        {
-            Bitmap minimap;
-            using (var adapter = new MapPixelImageAdapter(this.model.Tile.TileGrid))
-            {
-                minimap = Util.GenerateMinimap(adapter);
-            }
-
-            var op = new UpdateMinimapOperation(this.model, minimap);
-            this.undoManager.Execute(op);
         }
 
         public void RefreshMinimapHighQualityWithProgress()

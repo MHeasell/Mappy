@@ -15,6 +15,7 @@
     using Mappy.Maybe;
     using Mappy.Models;
     using Mappy.Util;
+    using Mappy.Util.ImageSampling;
 
     using TAUtil;
     using TAUtil.Gdi.Palette;
@@ -283,7 +284,19 @@
 
         public void RefreshMinimap()
         {
-            this.model.Map?.RefreshMinimap();
+            var map = this.model.Map;
+            if (map == null)
+            {
+                return;
+            }
+
+            Bitmap minimap;
+            using (var adapter = new MapPixelImageAdapter(map.BaseTile.TileGrid))
+            {
+                minimap = Util.GenerateMinimap(adapter);
+            }
+
+            map.SetMinimap(minimap);
         }
 
         public void RefreshMinimapHighQualityWithProgress()
