@@ -5,6 +5,7 @@
     using System.Windows.Forms;
 
     using Mappy.Models;
+    using Mappy.Services;
     using Mappy.UI.Forms;
 
     public static class Program
@@ -34,11 +35,12 @@
 
             var mainForm = new MainForm();
             var svc = new DialogService(mainForm);
-            var model = new CoreModel(svc);
+            var featureService = new FeatureService();
+            var model = new CoreModel(svc, featureService);
             mainForm.SetModel(new MainFormViewModel(model));
 
             mainForm.SectionView.SetModel(new SectionViewViewModel(model));
-            mainForm.FeatureView.SetModel(new FeatureViewViewModel(model));
+            mainForm.FeatureView.SetModel(new FeatureViewViewModel(model, featureService));
 
             mainForm.MapViewPanel.SetModel(new MapViewViewModel(model));
 

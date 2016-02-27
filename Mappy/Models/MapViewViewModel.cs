@@ -628,11 +628,8 @@
             var f = this.mapModel.GetFeatureInstance(id);
             var coords = f.Location;
             int index = this.ToFeatureIndex(coords);
-            Feature featureRecord;
-            if (!this.model.FeatureRecords.TryGetFeature(f.FeatureName, out featureRecord))
-            {
-                featureRecord = DefaultFeatureRecord;
-            }
+
+            var featureRecord = this.model.FeatureRecords.TryGetFeature(f.FeatureName).Or(DefaultFeatureRecord);
 
             Rectangle r = featureRecord.GetDrawBounds(this.mapModel.BaseTile.HeightGrid, coords.X, coords.Y);
             DrawableItemCollection.Item i = new DrawableItemCollection.Item(

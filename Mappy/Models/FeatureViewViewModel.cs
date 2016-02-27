@@ -4,10 +4,11 @@
     using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
+    using System.Reactive.Linq;
     using System.Reactive.Subjects;
 
     using Mappy.Data;
-    using Mappy.Database;
+    using Mappy.Services;
 
     public class FeatureViewViewModel : ISectionViewViewModel
     {
@@ -19,40 +20,47 @@
 
         private readonly Subject<int> selectCategoryEvent = new Subject<int>();
 
-        private readonly BehaviorSubject<IFeatureDatabase> rawFeatures;
-
         private readonly BehaviorSubject<IEnumerable<ListViewItem>> features = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>());
 
         private readonly Dictionary<string, Bitmap> rescaledImageMap = new Dictionary<string, Bitmap>();
 
-        public FeatureViewViewModel(CoreModel model)
+        private readonly FeatureService featureService;
+
+        private readonly ISubject<bool> worldsInvalidated = new Subject<bool>();
+        private readonly ISubject<bool> categoriesInvalidated = new Subject<bool>();
+        private readonly ISubject<bool> featuresInvalidated = new Subject<bool>();
+
+        public FeatureViewViewModel(CoreModel model, FeatureService featureService)
         {
-            this.rawFeatures = model.PropertyAsObservable(x => x.FeatureRecords, "FeatureRecords");
+            featureService.FeaturesChanged += this.OnFeaturesChanged;
 
-            this.rawFeatures.Subscribe(
-                _ =>
-                    {
-                        this.UpdateWorlds();
-                        this.UpdateCategories();
-                        this.UpdateFeatures();
-                    });
+            this.selectWorldEvent
+                .Select(i => this.worlds.Value.Select(i))
+                .Subscribe(this.worlds);
 
-            this.selectWorldEvent.Subscribe(
-                i =>
-                    {
-                        this.worlds.OnNext(this.worlds.Value.Select(i));
+            this.selectCategoryEvent
+                .Select(i => this.categories.Value.Select(i))
+                .Subscribe(this.categories);
 
-                        this.UpdateCategories();
-                        this.UpdateFeatures();
-                    });
+            this.worlds.Select(_ => true).Subscribe(this.categoriesInvalidated);
+            this.categories.Select(_ => true).Subscribe(this.featuresInvalidated);
 
-            this.selectCategoryEvent.Subscribe(
-                i =>
-                    {
-                        this.categories.OnNext(this.categories.Value.Select(i));
+            this.worldsInvalidated
+                .DistinctUntilChanged()
+                .Where(x => x)
+                .Subscribe(_ => this.UpdateWorlds());
 
-                        this.UpdateFeatures();
-                    });
+            this.categoriesInvalidated
+                .DistinctUntilChanged()
+                .Where(x => x)
+                .Subscribe(_ => this.UpdateCategories());
+
+            this.featuresInvalidated
+                .DistinctUntilChanged()
+                .Where(x => x)
+                .Subscribe(_ => this.UpdateFeatures());
+
+            this.featureService = featureService;
         }
 
         public IObservable<ComboBoxViewModel> ComboBox1Model => this.worlds;
@@ -107,30 +115,6 @@
             return thumb;
         }
 
-        private static IEnumerable<string> EnumerateWorlds(IEnumerable<Feature> features)
-        {
-            return features
-                .Select(x => x.World)
-                .Distinct(StringComparer.InvariantCultureIgnoreCase)
-                .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
-        }
-
-        private static IEnumerable<string> EnumerateCategories(IEnumerable<Feature> features, string world)
-        {
-            return features
-                .Where(x => x.World == world)
-                .Select(x => x.Category)
-                .Distinct(StringComparer.InvariantCultureIgnoreCase)
-                .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
-        }
-
-        private static IEnumerable<Feature> FilterFeatures(IEnumerable<Feature> features, string world, string category)
-        {
-            return features
-                .Where(x => x.World == world && x.Category == category)
-                .OrderBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase);
-        }
-
         private Bitmap GetRescaledImage(string name, Bitmap img)
         {
             Bitmap rescaledImage;
@@ -150,30 +134,38 @@
 
         private void UpdateWorlds()
         {
-            var featureDb = this.rawFeatures.Value;
+            this.worldsInvalidated.OnNext(false);
 
-            var worlds = EnumerateWorlds(featureDb.EnumerateAll()).ToList();
-            var worldsModel = new ComboBoxViewModel(worlds);
+            var worlds = this.featureService.EnumerateWorlds();
+            var worldsModel = new ComboBoxViewModel(worlds.ToList());
             this.worlds.OnNext(worldsModel);
         }
 
         private void UpdateCategories()
         {
-            var featuresDb = this.rawFeatures.Value;
-            var worldsModel = this.worlds.Value;
+            this.categoriesInvalidated.OnNext(false);
 
-            var categories = EnumerateCategories(featuresDb.EnumerateAll(), worldsModel.SelectedItem).ToList();
-            var categoriesModel = new ComboBoxViewModel(categories);
+            var world = this.worlds.Value.SelectedItem;
+            var categories = this.featureService.EnumerateCategories(world);
+            var categoriesModel = new ComboBoxViewModel(categories.ToList());
             this.categories.OnNext(categoriesModel);
         }
 
         private void UpdateFeatures()
         {
-            var filteredSections = FilterFeatures(
-                this.rawFeatures.Value.EnumerateAll(),
-                this.worlds.Value.SelectedItem,
-                this.categories.Value.SelectedItem);
-            this.features.OnNext(filteredSections.Select(this.ToItem));
+            this.featuresInvalidated.OnNext(false);
+
+            var world = this.worlds.Value.SelectedItem;
+            var category = this.categories.Value.SelectedItem;
+            var features = this.featureService.EnumerateFeatures(world, category);
+            this.features.OnNext(features.Select(this.ToItem).ToList());
+        }
+
+        private void OnFeaturesChanged(object sender, EventArgs e)
+        {
+            // this will end up invalidating everything
+            // via knock-on effect
+            this.worldsInvalidated.OnNext(true);
         }
     }
 }

@@ -113,8 +113,6 @@
     <Compile Include="Collections\SparseGrid.cs" />
     <Compile Include="Collections\SparseGridEventArgs.cs" />
     <Compile Include="Configuration.cs" />
-    <Compile Include="Database\FeatureDictionary.cs" />
-    <Compile Include="Database\IFeatureDatabase.cs" />
     <Compile Include="Data\BindingMapTile.cs" />
     <Compile Include="Data\Feature.cs" />
     <Compile Include="Data\FeatureRecord.cs" />
@@ -192,6 +190,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\FeatureService.cs" />
     <Compile Include="UI\Controls\AbstractLayer.cs" />
     <Compile Include="UI\Controls\AreaChangedEventArgs.cs" />
     <Compile Include="UI\Controls\DoubleComboListView.cs">

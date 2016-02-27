@@ -11,8 +11,8 @@
 
     using Mappy.Collections;
     using Mappy.Data;
-    using Mappy.Database;
     using Mappy.IO;
+    using Mappy.Services;
     using Mappy.Util;
 
     using TAUtil;
@@ -23,7 +23,7 @@
 
     public class CoreModel : Notifier
     {
-        private readonly IFeatureDatabase featureRecords;
+        private readonly FeatureService featureRecords;
         private readonly IList<Section> sections;
 
         private readonly SectionFactory sectionFactory;
@@ -46,11 +46,11 @@
         private int viewportWidth;
         private int viewportHeight;
 
-        public CoreModel(IDialogService dialogService)
+        public CoreModel(IDialogService dialogService, FeatureService featureService)
         {
             this.dialogService = dialogService;
 
-            this.featureRecords = new FeatureDictionary();
+            this.featureRecords = featureService;
             this.sections = new List<Section>();
 
             this.sectionFactory = new SectionFactory();
@@ -93,7 +93,7 @@
 
         public bool CanCut => this.Map != null && this.Map.CanCut;
 
-        public IFeatureDatabase FeatureRecords => this.featureRecords;
+        public FeatureService FeatureRecords => this.featureRecords;
 
         public IList<Section> Sections => this.sections;
 
@@ -272,7 +272,7 @@
                     this.FeatureRecords.AddFeature(f);
                 }
 
-                this.FireChange("FeatureRecords");
+                this.FeatureRecords.NotifyChanges();
 
                 if (sectionResult.Errors.Count > 0 || sectionResult.FileErrors.Count > 0)
                 {

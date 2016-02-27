@@ -1,18 +1,10 @@
 ﻿namespace Mappy.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
-
-    using Mappy.Data;
-    using Mappy.Database;
 
     public interface IMainFormViewModel
     {
-        IObservable<IFeatureDatabase> FeatureRecords { get; }
-
-        IObservable<IList<Section>> Sections { get; }
-
         IObservable<bool> CanSave { get; }
 
         IObservable<bool> CanSaveAs { get; }
