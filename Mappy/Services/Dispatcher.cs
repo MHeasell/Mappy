@@ -348,39 +348,8 @@
                 return;
             }
 
-            var loc = this.dialogService.AskUserToChooseMinimap();
-            if (loc == null)
-            {
-                return;
-            }
-
-            try
-            {
-                Bitmap bmp;
-                using (var s = File.OpenRead(loc))
-                {
-                    bmp = (Bitmap)Image.FromStream(s);
-                }
-
-                if (bmp.Width > TntConstants.MaxMinimapWidth
-                    || bmp.Height > TntConstants.MaxMinimapHeight)
-                {
-                    var msg = string.Format(
-                        "Minimap dimensions too large. The maximum size is {0}x{1}.",
-                        TntConstants.MaxMinimapWidth,
-                        TntConstants.MaxMinimapHeight);
-
-                    this.dialogService.ShowError(msg);
-                    return;
-                }
-
-                Quantization.ToTAPalette(bmp);
-                this.model.Map.Minimap = bmp;
-            }
-            catch (Exception)
-            {
-                this.dialogService.ShowError("There was a problem importing the selected minimap.");
-            }
+            var minimap = this.LoadMinimapFromUser();
+            minimap.IfSome(x => this.model.Map.Minimap = x);
         }
 
         public void ToggleFeatures()
@@ -646,6 +615,44 @@
             {
                 this.dialogService.ShowError("There was a problem importing the selected heightmap");
                 return Maybe.None<Grid<int>>();
+            }
+        }
+
+        private Maybe<Bitmap> LoadMinimapFromUser()
+        {
+            var loc = this.dialogService.AskUserToChooseMinimap();
+            if (loc == null)
+            {
+                return Maybe.None<Bitmap>();
+            }
+
+            try
+            {
+                Bitmap bmp;
+                using (var s = File.OpenRead(loc))
+                {
+                    bmp = (Bitmap)Image.FromStream(s);
+                }
+
+                if (bmp.Width > TntConstants.MaxMinimapWidth
+                    || bmp.Height > TntConstants.MaxMinimapHeight)
+                {
+                    var msg = string.Format(
+                        "Minimap dimensions too large. The maximum size is {0}x{1}.",
+                        TntConstants.MaxMinimapWidth,
+                        TntConstants.MaxMinimapHeight);
+
+                    this.dialogService.ShowError(msg);
+                    return Maybe.None<Bitmap>();
+                }
+
+                Quantization.ToTAPalette(bmp);
+                return Maybe.Some(bmp);
+            }
+            catch (Exception)
+            {
+                this.dialogService.ShowError("There was a problem importing the selected minimap.");
+                return Maybe.None<Bitmap>();
             }
         }
     }
