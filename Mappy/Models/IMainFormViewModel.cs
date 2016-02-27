@@ -69,15 +69,15 @@
 
         void GridColorMenuItemClick();
 
-        bool NewMenuItemClick();
+        void NewMenuItemClick();
 
-        bool OpenMenuItemClick();
+        void OpenMenuItemClick();
 
-        bool DragDropFile(string filename);
+        void DragDropFile(string filename);
 
-        bool SaveMenuItemClick();
+        void SaveMenuItemClick();
 
-        bool SaveAsMenuItemClick();
+        void SaveAsMenuItemClick();
 
         void CloseMenuItemClick();
 

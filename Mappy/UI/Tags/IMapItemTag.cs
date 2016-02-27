@@ -1,9 +1,9 @@
 namespace Mappy.UI.Tags
 {
-    using Mappy.Models;
+    using Mappy.Services;
 
     public interface IMapItemTag
     {
-        void SelectItem(CoreModel model);
+        void SelectItem(Dispatcher dispatcher);
     }
 }

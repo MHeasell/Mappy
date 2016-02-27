@@ -1,6 +1,6 @@
 namespace Mappy.UI.Tags
 {
-    using Mappy.Models;
+    using Mappy.Services;
 
     public class SectionTag : IMapItemTag
     {
@@ -11,9 +11,9 @@ namespace Mappy.UI.Tags
 
         public int Index { get; }
 
-        public void SelectItem(CoreModel model)
+        public void SelectItem(Dispatcher dispatcher)
         {
-            model.SelectTile(this.Index);
+            dispatcher.SelectTile(this.Index);
         }
     }
 }

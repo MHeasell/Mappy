@@ -37,7 +37,7 @@
             var svc = new DialogService(mainForm);
             var featureService = new FeatureService();
             var sectionsService = new SectionsService();
-            var model = new CoreModel(svc);
+            var model = new CoreModel();
             var dispatcher = new Dispatcher(model, svc, sectionsService, featureService);
             mainForm.SetModel(new MainFormViewModel(model, dispatcher));
 
@@ -48,7 +48,7 @@
 
             var minimapForm = new MinimapForm();
             minimapForm.Owner = mainForm;
-            minimapForm.SetModel(new MinimapFormViewModel(model));
+            minimapForm.SetModel(new MinimapFormViewModel(model, dispatcher));
 
             Application.Run(mainForm);
         }

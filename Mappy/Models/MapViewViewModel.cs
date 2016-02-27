@@ -148,14 +148,14 @@
                     return;
                 }
 
-                this.model.OpenFromDragDrop(files[0]);
+                this.dispatcher.OpenFromDragDrop(files[0]);
                 return;
             }
 
             if (data.GetDataPresent(typeof(StartPositionDragData)))
             {
                 StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
-                this.model.SetStartPosition(posData.PositionNumber, location.X, location.Y);
+                this.dispatcher.SetStartPosition(posData.PositionNumber, location.X, location.Y);
                 return;
             }
 
@@ -169,7 +169,7 @@
                 }
                 else
                 {
-                    this.model.DragDropFeature(dataString, location.X, location.Y);
+                    this.dispatcher.DragDropFeature(dataString, location.X, location.Y);
                 }
 
                 return;
@@ -200,8 +200,8 @@
                 }
                 else
                 {
-                    this.model.ClearSelection();
-                    this.model.StartBandbox(location.X, location.Y);
+                    this.dispatcher.ClearSelection();
+                    this.dispatcher.StartBandbox(location.X, location.Y);
                     this.bandboxMode = true;
                 }
             }
@@ -218,13 +218,13 @@
 
                 if (this.bandboxMode)
                 {
-                    this.model.GrowBandbox(
+                    this.dispatcher.GrowBandbox(
                         location.X - this.lastMousePos.X,
                         location.Y - this.lastMousePos.Y);
                 }
                 else
                 {
-                    this.model.TranslateSelection(
+                    this.dispatcher.TranslateSelection(
                         location.X - this.lastMousePos.X,
                         location.Y - this.lastMousePos.Y);
                 }
@@ -241,12 +241,12 @@
 
             if (this.bandboxMode)
             {
-                this.model.CommitBandbox();
+                this.dispatcher.CommitBandbox();
                 this.bandboxMode = false;
             }
             else
             {
-                this.model.FlushTranslation();
+                this.dispatcher.FlushTranslation();
             }
         }
 
@@ -254,13 +254,13 @@
         {
             if (key == Keys.Delete)
             {
-                this.model.DeleteSelection();
+                this.dispatcher.DeleteSelection();
             }
         }
 
         public void LeaveFocus()
         {
-            this.model.ClearSelection();
+            this.dispatcher.ClearSelection();
         }
 
         private void SetMapModel(IMainModel model)
@@ -676,7 +676,7 @@
         private void SelectFromTag(object tag)
         {
             IMapItemTag t = (IMapItemTag)tag;
-            t.SelectItem(this.model);
+            t.SelectItem(this.dispatcher);
         }
     }
 }

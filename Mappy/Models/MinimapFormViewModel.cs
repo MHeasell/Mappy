@@ -5,16 +5,18 @@
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
 
+    using Mappy.Services;
+
     public class MinimapFormViewModel : IMinimapFormViewModel
     {
-        private readonly CoreModel model;
+        private readonly Dispatcher dispatcher;
 
         // subjects from user events
         private readonly ISubject<Point> mousePosition = new Subject<Point>();
 
         private readonly ISubject<bool> mouseDown = new BehaviorSubject<bool>(false);
 
-        public MinimapFormViewModel(CoreModel model)
+        public MinimapFormViewModel(CoreModel model, Dispatcher dispatcher)
         {
             // set up observables from properties
             var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
@@ -55,7 +57,7 @@
                 .Pausable(this.mouseDown)
                 .Subscribe(model.SetViewportLocation);
 
-            this.model = model;
+            this.dispatcher = dispatcher;
         }
 
         public IObservable<bool> MinimapVisible { get; }
@@ -82,7 +84,7 @@
 
         public void FormCloseButtonClick()
         {
-            this.model.HideMinimap();
+            this.dispatcher.HideMinimap();
         }
 
         private static IObservable<Point> ScaleToMinimap(

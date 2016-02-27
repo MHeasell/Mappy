@@ -136,162 +136,162 @@
 
         public void ToggleHeightMapMenuItemClick()
         {
-            this.model.ToggleHeightmap();
+            this.dispatcher.ToggleHeightmap();
         }
 
         public void ToggleMinimapMenuItemClick()
         {
-            this.model.ToggleMinimap();
+            this.dispatcher.ToggleMinimap();
         }
 
         public void ToggleFeaturesMenuItemClick()
         {
-            this.model.ToggleFeatures();
+            this.dispatcher.ToggleFeatures();
         }
 
         public void PreferencesMenuItemClick()
         {
-            this.model.OpenPreferences();
+            this.dispatcher.OpenPreferences();
         }
 
         public void AboutMenuItemClick()
         {
-            this.model.ShowAbout();
+            this.dispatcher.ShowAbout();
         }
 
         public void MapAttributesMenuItemClick()
         {
-            this.model.OpenMapAttributes();
+            this.dispatcher.OpenMapAttributes();
         }
 
         public void GridColorMenuItemClick()
         {
-            this.model.ChooseColor();
+            this.dispatcher.ChooseColor();
         }
 
-        public bool NewMenuItemClick()
+        public void NewMenuItemClick()
         {
-            return this.model.New();
+            this.dispatcher.New();
         }
 
-        public bool OpenMenuItemClick()
+        public void OpenMenuItemClick()
         {
-            return this.model.Open();
+            this.dispatcher.Open();
         }
 
-        public bool DragDropFile(string filename)
+        public void DragDropFile(string filename)
         {
-            return this.model.OpenFromDragDrop(filename);
+            this.dispatcher.OpenFromDragDrop(filename);
         }
 
-        public bool SaveMenuItemClick()
+        public void SaveMenuItemClick()
         {
-            return this.model.Save();
+            this.dispatcher.Save();
         }
 
-        public bool SaveAsMenuItemClick()
+        public void SaveAsMenuItemClick()
         {
-            return this.model.SaveAs();
+            this.dispatcher.SaveAs();
         }
 
         public void CloseMenuItemClick()
         {
-            this.model.CloseMap();
+            this.dispatcher.CloseMap();
         }
 
         public void UndoMenuItemClick()
         {
-            this.model.Undo();
+            this.dispatcher.Undo();
         }
 
         public void RedoMenuItemClick()
         {
-            this.model.Redo();
+            this.dispatcher.Redo();
         }
 
         public void FormCloseButtonClick()
         {
-            this.model.Close();
+            this.dispatcher.Close();
         }
 
         public void ExitMenuItemClick()
         {
-            this.model.Close();
+            this.dispatcher.Close();
         }
 
         public void GenerateMinimapMenuItemClick()
         {
-            this.model.RefreshMinimap();
+            this.dispatcher.RefreshMinimap();
         }
 
         public void GenerateMinimapHighQualityMenuItemClick()
         {
-            this.model.RefreshMinimapHighQualityWithProgress();
+            this.dispatcher.RefreshMinimapHighQualityWithProgress();
         }
 
         public void GridOffMenuItemClick()
         {
-            this.model.HideGrid();
+            this.dispatcher.HideGrid();
         }
 
         public void GridMenuItemClick(Size s)
         {
-            this.model.EnableGridWithSize(s);
+            this.dispatcher.EnableGridWithSize(s);
         }
 
         public void SeaLevelTrackBarValueChanged(int value)
         {
-            this.model.SetSeaLevel(value);
+            this.dispatcher.SetSeaLevel(value);
         }
 
         public void SeaLevelTrackBarMouseUp()
         {
-            this.model.FlushSeaLevel();
+            this.dispatcher.FlushSeaLevel();
         }
 
         public void CopyMenuItemClick()
         {
-            this.model.CopySelectionToClipboard();
+            this.dispatcher.CopySelectionToClipboard();
         }
 
         public void CutMenuItemClick()
         {
-            this.model.CutSelectionToClipboard();
+            this.dispatcher.CutSelectionToClipboard();
         }
 
         public void PasteMenuItemClick()
         {
-            this.model.PasteFromClipboard();
+            this.dispatcher.PasteFromClipboard();
         }
 
         public void ImportMinimapMenuItemClick()
         {
-            this.model.ImportMinimap();
+            this.dispatcher.ImportMinimap();
         }
 
         public void ExportMinimapMenuItemClick()
         {
-            this.model.ExportMinimap();
+            this.dispatcher.ExportMinimap();
         }
 
         public void ImportHeightmapMenuItemClick()
         {
-            this.model.ImportHeightmap();
+            this.dispatcher.ImportHeightmap();
         }
 
         public void ExportHeightmapMenuItemClick()
         {
-            this.model.ExportHeightmap();
+            this.dispatcher.ExportHeightmap();
         }
 
         public void ExportMapImageMenuItemClick()
         {
-            this.model.ExportMapImage();
+            this.dispatcher.ExportMapImage();
         }
 
         public void ImportCustomSectionMenuItemClick()
         {
-            this.model.ImportCustomSection();
+            this.dispatcher.ImportCustomSection();
         }
 
         public void Load()

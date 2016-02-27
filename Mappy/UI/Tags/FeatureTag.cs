@@ -2,7 +2,7 @@
 {
     using System;
 
-    using Mappy.Models;
+    using Mappy.Services;
 
     public class FeatureTag : IMapItemTag
     {
@@ -13,9 +13,9 @@
 
         public Guid FeatureId { get; }
 
-        public void SelectItem(CoreModel model)
+        public void SelectItem(Dispatcher dispatcher)
         {
-            model.SelectFeature(this.FeatureId);
+            dispatcher.SelectFeature(this.FeatureId);
         }
     }
 }
