@@ -9,8 +9,10 @@
     using System.Linq;
     using System.Windows.Forms;
 
+    using Mappy.Collections;
     using Mappy.Data;
     using Mappy.IO;
+    using Mappy.Maybe;
     using Mappy.Models;
 
     using TAUtil;
@@ -333,36 +335,8 @@
             var w = map.BaseTile.HeightGrid.Width;
             var h = map.BaseTile.HeightGrid.Height;
 
-            var loc = this.dialogService.AskUserToChooseHeightmap(w, h);
-            if (loc == null)
-            {
-                return;
-            }
-
-            try
-            {
-                Bitmap bmp;
-                using (var s = File.OpenRead(loc))
-                {
-                    bmp = (Bitmap)Image.FromStream(s);
-                }
-
-                if (bmp.Width != w || bmp.Height != h)
-                {
-                    var msg = string.Format(
-                        "Heightmap has incorrect dimensions. The required dimensions are {0}x{1}.",
-                        w,
-                        h);
-                    this.dialogService.ShowError(msg);
-                    return;
-                }
-
-                map.ReplaceHeightmap(Mappy.Util.Util.ReadHeightmap(bmp));
-            }
-            catch (Exception)
-            {
-                this.dialogService.ShowError("There was a problem importing the selected heightmap");
-            }
+            var newHeightmap = this.LoadHeightmapFromUser(w, h);
+            newHeightmap.IfSome(x => map.ReplaceHeightmap(x));
         }
 
         public void ImportMinimap()
@@ -599,6 +573,41 @@
         private void OpenSct(string filename)
         {
             this.model.Map = this.mapLoadingService.CreateFromSct(filename);
+        }
+
+        private Maybe<Grid<int>> LoadHeightmapFromUser(int width, int height)
+        {
+            var loc = this.dialogService.AskUserToChooseHeightmap(width, height);
+            if (loc == null)
+            {
+                return Maybe.None<Grid<int>>();
+            }
+
+            try
+            {
+                Bitmap bmp;
+                using (var s = File.OpenRead(loc))
+                {
+                    bmp = (Bitmap)Image.FromStream(s);
+                }
+
+                if (bmp.Width != width || bmp.Height != height)
+                {
+                    var msg = string.Format(
+                        "Heightmap has incorrect dimensions. The required dimensions are {0}x{1}.",
+                        width,
+                        height);
+                    this.dialogService.ShowError(msg);
+                    return Maybe.None<Grid<int>>();
+                }
+
+                return Maybe.Some(Mappy.Util.Util.ReadHeightmap(bmp));
+            }
+            catch (Exception)
+            {
+                this.dialogService.ShowError("There was a problem importing the selected heightmap");
+                return Maybe.None<Grid<int>>();
+            }
         }
     }
 }
