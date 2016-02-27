@@ -41,8 +41,8 @@
             var dispatcher = new Dispatcher(model, svc, sectionsService, featureService);
             mainForm.SetModel(new MainFormViewModel(model, dispatcher));
 
-            mainForm.SectionView.SetModel(new SectionViewViewModel(model, sectionsService));
-            mainForm.FeatureView.SetModel(new FeatureViewViewModel(model, featureService));
+            mainForm.SectionView.SetModel(new SectionViewViewModel(sectionsService));
+            mainForm.FeatureView.SetModel(new FeatureViewViewModel(featureService));
 
             mainForm.MapViewPanel.SetModel(new MapViewViewModel(model, dispatcher, featureService));
 

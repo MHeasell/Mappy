@@ -11,8 +11,6 @@
     {
         private const string ProgramName = "Mappy";
 
-        private readonly IReadOnlyApplicationModel model;
-
         private readonly Dispatcher dispatcher;
 
         public MainFormViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher)
@@ -80,7 +78,6 @@
 
             this.TitleText = titleText;
 
-            this.model = model;
             this.dispatcher = dispatcher;
         }
 
