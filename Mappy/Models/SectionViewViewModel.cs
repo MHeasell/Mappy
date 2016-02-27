@@ -6,6 +6,7 @@
     using System.Reactive.Subjects;
 
     using Mappy.Data;
+    using Mappy.Services;
 
     public class SectionViewViewModel : ISectionViewViewModel
     {
@@ -17,21 +18,13 @@
 
         private readonly Subject<int> selectCategoryEvent = new Subject<int>();
 
-        private readonly BehaviorSubject<IList<Section>> rawSections;
+        private readonly SectionsService sectionsService;
 
         private readonly BehaviorSubject<IEnumerable<ListViewItem>> sections = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>());
 
-        public SectionViewViewModel(CoreModel model)
+        public SectionViewViewModel(CoreModel model, SectionsService sectionsService)
         {
-            this.rawSections = model.PropertyAsObservable(x => x.Sections, "Sections");
-
-            this.rawSections.Subscribe(
-                sections =>
-                    {
-                        this.UpdateWorlds();
-                        this.UpdateCategories();
-                        this.UpdateSections();
-                    });
+            sectionsService.SectionsChanged += this.OnSectionsChanged;
 
             this.selectWorldEvent.Subscribe(
                 i =>
@@ -49,6 +42,8 @@
 
                         this.UpdateSections();
                     });
+
+            this.sectionsService = sectionsService;
         }
 
         public IObservable<ComboBoxViewModel> ComboBox1Model => this.worlds;
@@ -67,62 +62,41 @@
             this.selectCategoryEvent.OnNext(index);
         }
 
-        private static IEnumerable<string> EnumerateWorlds(IEnumerable<Section> sections)
-        {
-            return sections
-                .Select(x => x.World)
-                .Distinct(StringComparer.InvariantCultureIgnoreCase)
-                .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
-        }
-
-        private static IEnumerable<string> EnumerateCategories(IEnumerable<Section> sections, string world)
-        {
-            return sections
-                .Where(x => x.World == world)
-                .Select(x => x.Category)
-                .Distinct(StringComparer.InvariantCultureIgnoreCase)
-                .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
-        }
-
-        private static IEnumerable<Section> FilterSections(IEnumerable<Section> sections, string world, string category)
-        {
-            return sections
-                .Where(x => x.World == world && x.Category == category)
-                .OrderBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase);
-        }
-
-        private static ListViewItem ToItem(Section s)
+        private static ListViewItem ToItem(int id, Section s)
         {
             var label = $"{s.Name} ({s.PixelWidth}x{s.PixelHeight})";
-            return new ListViewItem(label, s.Minimap, s.Id.ToString());
+            return new ListViewItem(label, s.Minimap, id.ToString());
         }
 
         private void UpdateWorlds()
         {
-            var sections = this.rawSections.Value;
-
-            var worlds = EnumerateWorlds(sections).ToList();
-            var worldsModel = new ComboBoxViewModel(worlds);
+            var worlds = this.sectionsService.EnumerateWorlds();
+            var worldsModel = new ComboBoxViewModel(worlds.ToList());
             this.worlds.OnNext(worldsModel);
         }
 
         private void UpdateCategories()
         {
-            var sections = this.rawSections.Value;
-            var worldsModel = this.worlds.Value;
+            var world = this.worlds.Value.SelectedItem;
 
-            var categories = EnumerateCategories(sections, worldsModel.SelectedItem).ToList();
-            var categoriesModel = new ComboBoxViewModel(categories);
+            var categories = this.sectionsService.EnumerateCategories(world);
+            var categoriesModel = new ComboBoxViewModel(categories.ToList());
             this.categories.OnNext(categoriesModel);
         }
 
         private void UpdateSections()
         {
-            var filteredSections = FilterSections(
-                this.rawSections.Value,
-                this.worlds.Value.SelectedItem,
-                this.categories.Value.SelectedItem);
-            this.sections.OnNext(filteredSections.Select(ToItem));
+            var world = this.worlds.Value.SelectedItem;
+            var category = this.categories.Value.SelectedItem;
+            var sections = this.sectionsService.EnumerateSections(world, category);
+            this.sections.OnNext(sections.Select(x => ToItem(x.Key, x.Value)).ToList());
+        }
+
+        private void OnSectionsChanged(object sender, EventArgs e)
+        {
+            this.UpdateWorlds();
+            this.UpdateCategories();
+            this.UpdateSections();
         }
     }
 }

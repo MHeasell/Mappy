@@ -24,7 +24,7 @@
     public class CoreModel : Notifier
     {
         private readonly FeatureService featureRecords;
-        private readonly IList<Section> sections;
+        private readonly SectionsService sections;
 
         private readonly SectionFactory sectionFactory;
 
@@ -46,12 +46,12 @@
         private int viewportWidth;
         private int viewportHeight;
 
-        public CoreModel(IDialogService dialogService, FeatureService featureService)
+        public CoreModel(IDialogService dialogService, FeatureService featureService, SectionsService sectionsService)
         {
             this.dialogService = dialogService;
 
             this.featureRecords = featureService;
-            this.sections = new List<Section>();
+            this.sections = sectionsService;
 
             this.sectionFactory = new SectionFactory();
             this.mapModelFactory = new MapModelFactory();
@@ -92,8 +92,6 @@
         public bool CanPaste => this.Map != null;
 
         public bool CanCut => this.Map != null && this.Map.CanCut;
-
-        public IList<Section> Sections => this.sections;
 
         public bool HeightmapVisible
         {
@@ -256,14 +254,7 @@
 
                 var sectionResult = (SectionFeatureLoadResult)args.Result;
 
-                int nextId = 0;
-                foreach (var s in sectionResult.Sections)
-                {
-                    s.Id = nextId++;
-                    this.Sections.Add(s);
-                }
-
-                this.FireChange("Sections");
+                this.sections.AddSections(sectionResult.Sections);
 
                 foreach (var f in sectionResult.Features)
                 {
@@ -536,7 +527,7 @@
 
         public void DragDropSection(int sectionId, int x, int y)
         {
-            var section = this.sections[sectionId].GetTile();
+            var section = this.sections.Get(sectionId).GetTile();
             this.Map?.DragDropTile(section, x, y);
         }
 

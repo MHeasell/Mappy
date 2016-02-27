@@ -57,7 +57,8 @@
         public IEnumerable<Feature> EnumerateFeatures(string world, string category) =>
             this.records
                 .Select(x => x.Value)
-                .Where(x => x.World == world && x.Category == category)
+                .Where(x => string.Equals(x.World, world, StringComparison.InvariantCultureIgnoreCase)
+                    && string.Equals(x.Category, category, StringComparison.InvariantCultureIgnoreCase))
                 .OrderBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase);
     }
 }

@@ -36,10 +36,11 @@
             var mainForm = new MainForm();
             var svc = new DialogService(mainForm);
             var featureService = new FeatureService();
-            var model = new CoreModel(svc, featureService);
+            var sectionsService = new SectionsService();
+            var model = new CoreModel(svc, featureService, sectionsService);
             mainForm.SetModel(new MainFormViewModel(model));
 
-            mainForm.SectionView.SetModel(new SectionViewViewModel(model));
+            mainForm.SectionView.SetModel(new SectionViewViewModel(model, sectionsService));
             mainForm.FeatureView.SetModel(new FeatureViewViewModel(model, featureService));
 
             mainForm.MapViewPanel.SetModel(new MapViewViewModel(model, featureService));

@@ -24,8 +24,6 @@ namespace Mappy.Data
             this.cachedTilePath = path;
         }
 
-        public int Id { get; set; }
-
         public string World { get; set; }
 
         public string Category { get; set; }
