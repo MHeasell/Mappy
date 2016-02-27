@@ -50,6 +50,8 @@
 
         private readonly CoreModel model;
 
+        private readonly Dispatcher dispatcher;
+
         private readonly FeatureService featureService;
 
         private IMainModel mapModel;
@@ -77,7 +79,7 @@
             }
         }
 
-        public MapViewViewModel(CoreModel model, FeatureService featureService)
+        public MapViewViewModel(CoreModel model, Dispatcher dispatcher, FeatureService featureService)
         {
             var heightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, nameof(model.HeightmapVisible));
             var gridVisible = model.PropertyAsObservable(x => x.GridVisible, nameof(model.GridVisible));
@@ -122,6 +124,7 @@
                 .Subscribe(x => x.CollectionChanged += this.SelectedFeaturesCollectionChanged);
 
             this.model = model;
+            this.dispatcher = dispatcher;
             this.featureService = featureService;
         }
 
@@ -162,7 +165,7 @@
                 int id;
                 if (int.TryParse(dataString, out id))
                 {
-                    this.model.DragDropSection(id, location.X, location.Y);
+                    this.dispatcher.DragDropSection(id, location.X, location.Y);
                 }
                 else
                 {

@@ -10,6 +10,8 @@
 
     public class Dispatcher
     {
+        private readonly CoreModel model;
+
         private readonly IDialogService dialogService;
 
         private readonly SectionsService sectionsService;
@@ -17,10 +19,12 @@
         private readonly FeatureService featureService;
 
         public Dispatcher(
+            CoreModel model,
             IDialogService dialogService,
             SectionsService sectionsService,
             FeatureService featureService)
         {
+            this.model = model;
             this.dialogService = dialogService;
             this.sectionsService = sectionsService;
             this.featureService = featureService;
@@ -120,6 +124,12 @@
             worker.RunWorkerAsync();
 
             dlg.Display();
+        }
+
+        public void DragDropSection(int sectionId, int x, int y)
+        {
+            var section = this.sectionsService.Get(sectionId).GetTile();
+            this.model.Map?.DragDropTile(section, x, y);
         }
     }
 }

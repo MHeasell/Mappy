@@ -12,7 +12,6 @@
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.IO;
-    using Mappy.Services;
     using Mappy.Util;
 
     using TAUtil;
@@ -23,9 +22,6 @@
 
     public class CoreModel : Notifier
     {
-        private readonly FeatureService featureRecords;
-        private readonly SectionsService sections;
-
         private readonly SectionFactory sectionFactory;
 
         private readonly MapModelFactory mapModelFactory;
@@ -46,12 +42,9 @@
         private int viewportWidth;
         private int viewportHeight;
 
-        public CoreModel(IDialogService dialogService, FeatureService featureService, SectionsService sectionsService)
+        public CoreModel(IDialogService dialogService)
         {
             this.dialogService = dialogService;
-
-            this.featureRecords = featureService;
-            this.sections = sectionsService;
 
             this.sectionFactory = new SectionFactory();
             this.mapModelFactory = new MapModelFactory();
@@ -427,12 +420,6 @@
         public void SetStartPosition(int positionNumber, int x, int y)
         {
             this.Map?.DragDropStartPosition(positionNumber, x, y);
-        }
-
-        public void DragDropSection(int sectionId, int x, int y)
-        {
-            var section = this.sections.Get(sectionId).GetTile();
-            this.Map?.DragDropTile(section, x, y);
         }
 
         public void DragDropFeature(string featureName, int x, int y)

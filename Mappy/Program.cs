@@ -37,14 +37,14 @@
             var svc = new DialogService(mainForm);
             var featureService = new FeatureService();
             var sectionsService = new SectionsService();
-            var dispatcher = new Dispatcher(svc, sectionsService, featureService);
-            var model = new CoreModel(svc, featureService, sectionsService);
+            var model = new CoreModel(svc);
+            var dispatcher = new Dispatcher(model, svc, sectionsService, featureService);
             mainForm.SetModel(new MainFormViewModel(model, dispatcher));
 
             mainForm.SectionView.SetModel(new SectionViewViewModel(model, sectionsService));
             mainForm.FeatureView.SetModel(new FeatureViewViewModel(model, featureService));
 
-            mainForm.MapViewPanel.SetModel(new MapViewViewModel(model, featureService));
+            mainForm.MapViewPanel.SetModel(new MapViewViewModel(model, dispatcher, featureService));
 
             var minimapForm = new MinimapForm();
             minimapForm.Owner = mainForm;
