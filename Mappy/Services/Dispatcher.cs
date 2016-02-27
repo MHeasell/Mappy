@@ -301,7 +301,40 @@
 
         public void RefreshMinimapHighQualityWithProgress()
         {
-            this.model.Map?.RefreshMinimapHighQualityWithProgress();
+            var map = this.model.Map;
+            if (map == null)
+            {
+                return;
+            }
+
+            var worker = Mappy.Util.Util.RenderMinimapWorker();
+
+            var dlg = this.dialogService.CreateProgressView();
+            dlg.Title = "Generating Minimap";
+            dlg.MessageText = "Generating high quality minimap...";
+
+            dlg.CancelPressed += (o, args) => worker.CancelAsync();
+            worker.ProgressChanged += (o, args) => dlg.Progress = args.ProgressPercentage;
+            worker.RunWorkerCompleted += delegate(object o, RunWorkerCompletedEventArgs args)
+            {
+                if (args.Error != null)
+                {
+                    Program.HandleUnexpectedException(args.Error);
+                    Application.Exit();
+                    return;
+                }
+
+                if (!args.Cancelled)
+                {
+                    var img = (Bitmap)args.Result;
+                    map.SetMinimap(img);
+                }
+
+                dlg.Close();
+            };
+
+            worker.RunWorkerAsync(this.model);
+            dlg.Display();
         }
 
         public void ExportHeightmap()
