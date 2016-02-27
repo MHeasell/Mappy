@@ -324,7 +324,45 @@
 
         public void ImportHeightmap()
         {
-            this.model.Map?.ImportHeightmap();
+            var map = this.model.Map;
+            if (map == null)
+            {
+                return;
+            }
+
+            var w = map.BaseTile.HeightGrid.Width;
+            var h = map.BaseTile.HeightGrid.Height;
+
+            var loc = this.dialogService.AskUserToChooseHeightmap(w, h);
+            if (loc == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Bitmap bmp;
+                using (var s = File.OpenRead(loc))
+                {
+                    bmp = (Bitmap)Image.FromStream(s);
+                }
+
+                if (bmp.Width != w || bmp.Height != h)
+                {
+                    var msg = string.Format(
+                        "Heightmap has incorrect dimensions. The required dimensions are {0}x{1}.",
+                        w,
+                        h);
+                    this.dialogService.ShowError(msg);
+                    return;
+                }
+
+                map.ReplaceHeightmap(Mappy.Util.Util.ReadHeightmap(bmp));
+            }
+            catch (Exception)
+            {
+                this.dialogService.ShowError("There was a problem importing the selected heightmap");
+            }
         }
 
         public void ImportMinimap()

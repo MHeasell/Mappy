@@ -280,43 +280,6 @@
                 new SelectStartPositionOperation(this.model, index)));
         }
 
-        public void ImportHeightmap()
-        {
-            var w = this.model.Tile.HeightGrid.Width;
-            var h = this.model.Tile.HeightGrid.Height;
-
-            var loc = this.dialogService.AskUserToChooseHeightmap(w, h);
-            if (loc == null)
-            {
-                return;
-            }
-
-            try
-            {
-                Bitmap bmp;
-                using (var s = File.OpenRead(loc))
-                {
-                    bmp = (Bitmap)Image.FromStream(s);
-                }
-
-                if (bmp.Width != w || bmp.Height != h)
-                {
-                    var msg = string.Format(
-                        "Heightmap has incorrect dimensions. The required dimensions are {0}x{1}.",
-                        w,
-                        h);
-                    this.dialogService.ShowError(msg);
-                    return;
-                }
-
-                this.ReplaceHeightmap(Mappy.Util.Util.ReadHeightmap(bmp));
-            }
-            catch (Exception)
-            {
-                this.dialogService.ShowError("There was a problem importing the selected heightmap");
-            }
-        }
-
         public void ImportMinimap()
         {
             var loc = this.dialogService.AskUserToChooseMinimap();
@@ -787,6 +750,28 @@
             this.bandboxBehaviour.CommitBandbox();
         }
 
+        public void ReplaceHeightmap(Grid<int> heightmap)
+        {
+            if (heightmap.Width != this.model.Tile.HeightGrid.Width
+                || heightmap.Height != this.model.Tile.HeightGrid.Height)
+            {
+                throw new ArgumentException(
+                    "Dimensions do not match map heightmap",
+                    nameof(heightmap));
+            }
+
+            var op = new CopyAreaOperation<int>(
+                heightmap,
+                this.model.Tile.HeightGrid,
+                0,
+                0,
+                0,
+                0,
+                heightmap.Width,
+                heightmap.Height);
+            this.undoManager.Execute(op);
+        }
+
         private static void DeduplicateTiles(IGrid<Bitmap> tiles)
         {
             var len = tiles.Width * tiles.Height;
@@ -843,28 +828,6 @@
                 this.dialogService.ShowError("Error saving map: " + e.Message);
                 return false;
             }
-        }
-
-        private void ReplaceHeightmap(Grid<int> heightmap)
-        {
-            if (heightmap.Width != this.model.Tile.HeightGrid.Width
-                || heightmap.Height != this.model.Tile.HeightGrid.Height)
-            {
-                throw new ArgumentException(
-                    "Dimensions do not match map heightmap",
-                    nameof(heightmap));
-            }
-
-            var op = new CopyAreaOperation<int>(
-                heightmap,
-                this.model.Tile.HeightGrid,
-                0,
-                0,
-                0,
-                0,
-                heightmap.Width,
-                heightmap.Height);
-            this.undoManager.Execute(op);
         }
 
         private void SaveHpi(string filename)
