@@ -14,6 +14,8 @@
     using Mappy.UI.Tags;
     using Collections;
 
+    using Mappy.Services;
+
     public class MapViewViewModel : IMapViewViewModel
     {
         private const int BandboxDepth = 100000000;
@@ -48,6 +50,8 @@
 
         private readonly CoreModel model;
 
+        private readonly FeatureService featureService;
+
         private IMainModel mapModel;
 
         private bool mouseDown;
@@ -73,7 +77,7 @@
             }
         }
 
-        public MapViewViewModel(CoreModel model)
+        public MapViewViewModel(CoreModel model, FeatureService featureService)
         {
             var heightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, nameof(model.HeightmapVisible));
             var gridVisible = model.PropertyAsObservable(x => x.GridVisible, nameof(model.GridVisible));
@@ -118,6 +122,7 @@
                 .Subscribe(x => x.CollectionChanged += this.SelectedFeaturesCollectionChanged);
 
             this.model = model;
+            this.featureService = featureService;
         }
 
         public IObservable<Size> CanvasSize { get; }
@@ -629,7 +634,7 @@
             var coords = f.Location;
             int index = this.ToFeatureIndex(coords);
 
-            var featureRecord = this.model.FeatureRecords.TryGetFeature(f.FeatureName).Or(DefaultFeatureRecord);
+            var featureRecord = this.featureService.TryGetFeature(f.FeatureName).Or(DefaultFeatureRecord);
 
             Rectangle r = featureRecord.GetDrawBounds(this.mapModel.BaseTile.HeightGrid, coords.X, coords.Y);
             DrawableItemCollection.Item i = new DrawableItemCollection.Item(

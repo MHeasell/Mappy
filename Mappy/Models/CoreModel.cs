@@ -93,8 +93,6 @@
 
         public bool CanCut => this.Map != null && this.Map.CanCut;
 
-        public FeatureService FeatureRecords => this.featureRecords;
-
         public IList<Section> Sections => this.sections;
 
         public bool HeightmapVisible
@@ -269,10 +267,10 @@
 
                 foreach (var f in sectionResult.Features)
                 {
-                    this.FeatureRecords.AddFeature(f);
+                    this.featureRecords.AddFeature(f);
                 }
 
-                this.FeatureRecords.NotifyChanges();
+                this.featureRecords.NotifyChanges();
 
                 if (sectionResult.Errors.Count > 0 || sectionResult.FileErrors.Count > 0)
                 {

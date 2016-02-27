@@ -42,7 +42,7 @@
             mainForm.SectionView.SetModel(new SectionViewViewModel(model));
             mainForm.FeatureView.SetModel(new FeatureViewViewModel(model, featureService));
 
-            mainForm.MapViewPanel.SetModel(new MapViewViewModel(model));
+            mainForm.MapViewPanel.SetModel(new MapViewViewModel(model, featureService));
 
             var minimapForm = new MinimapForm();
             minimapForm.Owner = mainForm;
