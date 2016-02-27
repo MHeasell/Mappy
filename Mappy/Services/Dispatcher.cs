@@ -293,7 +293,29 @@
 
         public void ExportHeightmap()
         {
-            this.model.Map?.ExportHeightmap();
+            if (this.model.Map == null)
+            {
+                return;
+            }
+
+            var loc = this.dialogService.AskUserToSaveHeightmap();
+            if (loc == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var b = Mappy.Util.Util.ExportHeightmap(this.model.Map.BaseTile.HeightGrid);
+                using (var s = File.Create(loc))
+                {
+                    b.Save(s, ImageFormat.Png);
+                }
+            }
+            catch (Exception)
+            {
+                this.dialogService.ShowError("There was a problem saving the heightmap.");
+            }
         }
 
         public void ExportMinimap()
