@@ -277,63 +277,6 @@
                 new SelectStartPositionOperation(this.model, index)));
         }
 
-        public void ImportCustomSection()
-        {
-            var paths = this.dialogService.AskUserToChooseSectionImportPaths();
-            if (paths == null)
-            {
-                return;
-            }
-
-            var dlg = this.dialogService.CreateProgressView();
-
-            var bg = new BackgroundWorker();
-            bg.WorkerSupportsCancellation = true;
-            bg.WorkerReportsProgress = true;
-            bg.DoWork += delegate(object sender, DoWorkEventArgs args)
-            {
-                var w = (BackgroundWorker)sender;
-                var sect = ImageImport.ImportSection(
-                    paths.GraphicPath,
-                    paths.HeightmapPath,
-                    w.ReportProgress,
-                    () => w.CancellationPending);
-                if (sect == null)
-                {
-                    args.Cancel = true;
-                    return;
-                }
-
-                args.Result = sect;
-            };
-
-            bg.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage;
-            dlg.CancelPressed += (sender, args) => bg.CancelAsync();
-
-            bg.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
-            {
-                dlg.Close();
-
-                if (args.Error != null)
-                {
-                    this.dialogService.ShowError(
-                        "There was a problem importing the section: " + args.Error.Message);
-                    return;
-                }
-
-                if (args.Cancelled)
-                {
-                    return;
-                }
-
-                this.PasteMapTileNoDeduplicateTopLeft((IMapTile)args.Result);
-            };
-
-            bg.RunWorkerAsync();
-
-            dlg.Display();
-        }
-
         public void ExportMapImage()
         {
             var loc = this.dialogService.AskUserToSaveMapImage();
@@ -738,6 +681,14 @@
             this.undoManager.Execute(op);
         }
 
+        public void PasteMapTileNoDeduplicateTopLeft(IMapTile tile)
+        {
+            int x = this.ViewportLocation.X;
+            int y = this.ViewportLocation.Y;
+
+            this.AddAndSelectTile(tile, x, y);
+        }
+
         private static void DeduplicateTiles(IGrid<Bitmap> tiles)
         {
             var len = tiles.Width * tiles.Height;
@@ -745,14 +696,6 @@
             {
                 tiles[i] = Globals.TileCache.GetOrAddBitmap(tiles[i]);
             }
-        }
-
-        private void PasteMapTileNoDeduplicateTopLeft(IMapTile tile)
-        {
-            int x = this.ViewportLocation.X;
-            int y = this.ViewportLocation.Y;
-
-            this.AddAndSelectTile(tile, x, y);
         }
 
         private bool SaveHelper(string filename)

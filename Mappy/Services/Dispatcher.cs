@@ -14,6 +14,7 @@
     using Mappy.IO;
     using Mappy.Maybe;
     using Mappy.Models;
+    using Mappy.Util;
 
     using TAUtil;
     using TAUtil.Gdi.Palette;
@@ -323,7 +324,65 @@
 
         public void ImportCustomSection()
         {
-            this.model.Map?.ImportCustomSection();
+            var map = this.model.Map;
+            if (map == null)
+            {
+                return;
+            }
+
+            var paths = this.dialogService.AskUserToChooseSectionImportPaths();
+            if (paths == null)
+            {
+                return;
+            }
+
+            var dlg = this.dialogService.CreateProgressView();
+
+            var bg = new BackgroundWorker();
+            bg.WorkerSupportsCancellation = true;
+            bg.WorkerReportsProgress = true;
+            bg.DoWork += delegate(object sender, DoWorkEventArgs args)
+            {
+                var w = (BackgroundWorker)sender;
+                var sect = ImageImport.ImportSection(
+                    paths.GraphicPath,
+                    paths.HeightmapPath,
+                    w.ReportProgress,
+                    () => w.CancellationPending);
+                if (sect == null)
+                {
+                    args.Cancel = true;
+                    return;
+                }
+
+                args.Result = sect;
+            };
+
+            bg.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage;
+            dlg.CancelPressed += (sender, args) => bg.CancelAsync();
+
+            bg.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+            {
+                dlg.Close();
+
+                if (args.Error != null)
+                {
+                    this.dialogService.ShowError(
+                        "There was a problem importing the section: " + args.Error.Message);
+                    return;
+                }
+
+                if (args.Cancelled)
+                {
+                    return;
+                }
+
+                map.PasteMapTileNoDeduplicateTopLeft((IMapTile)args.Result);
+            };
+
+            bg.RunWorkerAsync();
+
+            dlg.Display();
         }
 
         public void ImportHeightmap()
