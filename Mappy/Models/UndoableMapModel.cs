@@ -20,9 +20,6 @@
     using Mappy.Util;
     using Mappy.Util.ImageSampling;
 
-    using TAUtil.Gdi.Palette;
-    using TAUtil.Tnt;
-
     public class UndoableMapModel : Notifier, IMainModel, IBandboxModel
     {
         private readonly OperationManager undoManager = new OperationManager();
@@ -148,7 +145,18 @@
 
         public bool IsMarked => this.undoManager.IsMarked;
 
-        public Bitmap Minimap => this.model.Minimap;
+        public Bitmap Minimap
+        {
+            get
+            {
+                return this.model.Minimap;
+            }
+
+            set
+            {
+                this.model.Minimap = value;
+            }
+        }
 
         public int SeaLevel => this.model.SeaLevel;
 
@@ -278,43 +286,6 @@
             this.undoManager.Execute(new CompositeOperation(
                 OperationFactory.CreateDeselectAndMergeOperation(this.model),
                 new SelectStartPositionOperation(this.model, index)));
-        }
-
-        public void ImportMinimap()
-        {
-            var loc = this.dialogService.AskUserToChooseMinimap();
-            if (loc == null)
-            {
-                return;
-            }
-
-            try
-            {
-                Bitmap bmp;
-                using (var s = File.OpenRead(loc))
-                {
-                    bmp = (Bitmap)Image.FromStream(s);
-                }
-
-                if (bmp.Width > TntConstants.MaxMinimapWidth
-                    || bmp.Height > TntConstants.MaxMinimapHeight)
-                {
-                    var msg = string.Format(
-                        "Minimap dimensions too large. The maximum size is {0}x{1}.",
-                        TntConstants.MaxMinimapWidth,
-                        TntConstants.MaxMinimapHeight);
-
-                    this.dialogService.ShowError(msg);
-                    return;
-                }
-
-                Quantization.ToTAPalette(bmp);
-                this.SetMinimap(bmp);
-            }
-            catch (Exception)
-            {
-                this.dialogService.ShowError("There was a problem importing the selected minimap.");
-            }
         }
 
         public void ImportCustomSection()

@@ -16,7 +16,9 @@
     using Mappy.Models;
 
     using TAUtil;
+    using TAUtil.Gdi.Palette;
     using TAUtil.Hpi;
+    using TAUtil.Tnt;
 
     public class Dispatcher
     {
@@ -341,7 +343,44 @@
 
         public void ImportMinimap()
         {
-            this.model.Map?.ImportMinimap();
+            if (this.model.Map == null)
+            {
+                return;
+            }
+
+            var loc = this.dialogService.AskUserToChooseMinimap();
+            if (loc == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Bitmap bmp;
+                using (var s = File.OpenRead(loc))
+                {
+                    bmp = (Bitmap)Image.FromStream(s);
+                }
+
+                if (bmp.Width > TntConstants.MaxMinimapWidth
+                    || bmp.Height > TntConstants.MaxMinimapHeight)
+                {
+                    var msg = string.Format(
+                        "Minimap dimensions too large. The maximum size is {0}x{1}.",
+                        TntConstants.MaxMinimapWidth,
+                        TntConstants.MaxMinimapHeight);
+
+                    this.dialogService.ShowError(msg);
+                    return;
+                }
+
+                Quantization.ToTAPalette(bmp);
+                this.model.Map.Minimap = bmp;
+            }
+            catch (Exception)
+            {
+                this.dialogService.ShowError("There was a problem importing the selected minimap.");
+            }
         }
 
         public void ToggleFeatures()
