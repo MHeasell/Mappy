@@ -1,12 +1,10 @@
 ﻿namespace Mappy.Models
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Reactive.Linq;
 
-    using Mappy.Data;
     using Mappy.Services;
 
     public class MainFormViewModel : IMainFormViewModel
