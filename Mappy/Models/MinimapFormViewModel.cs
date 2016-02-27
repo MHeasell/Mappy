@@ -16,7 +16,7 @@
 
         private readonly ISubject<bool> mouseDown = new BehaviorSubject<bool>(false);
 
-        public MinimapFormViewModel(CoreModel model, Dispatcher dispatcher)
+        public MinimapFormViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher)
         {
             // set up observables from properties
             var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
@@ -55,7 +55,7 @@
 
             newMapViewportLocation
                 .Pausable(this.mouseDown)
-                .Subscribe(model.SetViewportLocation);
+                .Subscribe(dispatcher.SetViewportLocation);
 
             this.dispatcher = dispatcher;
         }

@@ -160,6 +160,7 @@
     <Compile Include="Models\IMainModel.cs" />
     <Compile Include="Models\IMapViewViewModel.cs" />
     <Compile Include="Models\IMinimapFormViewModel.cs" />
+    <Compile Include="Models\IReadOnlyApplicationModel.cs" />
     <Compile Include="Models\ISectionViewViewModel.cs" />
     <Compile Include="Models\ISelectionModel.cs" />
     <Compile Include="Models\ListViewItem.cs" />

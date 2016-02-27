@@ -11,11 +11,11 @@
     {
         private const string ProgramName = "Mappy";
 
-        private readonly CoreModel model;
+        private readonly IReadOnlyApplicationModel model;
 
         private readonly Dispatcher dispatcher;
 
-        public MainFormViewModel(CoreModel model, Dispatcher dispatcher)
+        public MainFormViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher)
         {
             var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
             var mapOpen = map.Select(x => x != null);

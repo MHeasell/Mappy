@@ -22,7 +22,7 @@
 
         private readonly BehaviorSubject<IEnumerable<ListViewItem>> sections = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>());
 
-        public SectionViewViewModel(CoreModel model, SectionsService sectionsService)
+        public SectionViewViewModel(IReadOnlyApplicationModel model, SectionsService sectionsService)
         {
             sectionsService.SectionsChanged += this.OnSectionsChanged;
 

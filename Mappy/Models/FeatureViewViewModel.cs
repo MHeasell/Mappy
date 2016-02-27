@@ -30,7 +30,7 @@
         private readonly ISubject<bool> categoriesInvalidated = new Subject<bool>();
         private readonly ISubject<bool> featuresInvalidated = new Subject<bool>();
 
-        public FeatureViewViewModel(CoreModel model, FeatureService featureService)
+        public FeatureViewViewModel(IReadOnlyApplicationModel model, FeatureService featureService)
         {
             featureService.FeaturesChanged += this.OnFeaturesChanged;
 

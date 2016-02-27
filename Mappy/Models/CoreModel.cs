@@ -5,7 +5,7 @@
 
     using Mappy.Util;
 
-    public class CoreModel : Notifier
+    public class CoreModel : Notifier, IReadOnlyApplicationModel
     {
         private UndoableMapModel map;
 

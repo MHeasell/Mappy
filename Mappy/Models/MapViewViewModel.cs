@@ -48,7 +48,7 @@
         private readonly BehaviorSubject<SelectableItemsLayer> itemsLayer =
             new BehaviorSubject<SelectableItemsLayer>(new SelectableItemsLayer(0, 0));
 
-        private readonly CoreModel model;
+        private readonly IReadOnlyApplicationModel model;
 
         private readonly Dispatcher dispatcher;
 
@@ -79,7 +79,7 @@
             }
         }
 
-        public MapViewViewModel(CoreModel model, Dispatcher dispatcher, FeatureService featureService)
+        public MapViewViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher, FeatureService featureService)
         {
             var heightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, nameof(model.HeightmapVisible));
             var gridVisible = model.PropertyAsObservable(x => x.GridVisible, nameof(model.GridVisible));
@@ -178,12 +178,12 @@
 
         public void ClientSizeChanged(Size size)
         {
-            this.model.SetViewportSize(size);
+            this.dispatcher.SetViewportSize(size);
         }
 
         public void ScrollPositionChanged(Point position)
         {
-            this.model.SetViewportLocation(position);
+            this.dispatcher.SetViewportLocation(position);
         }
 
         public void MouseDown(Point location)
