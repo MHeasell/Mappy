@@ -6,7 +6,7 @@
 
     using Mappy.Data;
 
-    public class SectionsService
+    public class SectionService
     {
         private readonly Dictionary<int, Section> sections = new Dictionary<int, Section>();
 

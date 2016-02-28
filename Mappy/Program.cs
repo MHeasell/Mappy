@@ -36,7 +36,7 @@
             var mainForm = new MainForm();
             var dialogService = new DialogService(mainForm);
             var featureService = new FeatureService();
-            var sectionsService = new SectionsService();
+            var sectionsService = new SectionService();
             var mapLoadingService = new MapLoadingService();
             var model = new CoreModel();
             var dispatcher = new Dispatcher(model, dialogService, sectionsService, featureService, mapLoadingService);

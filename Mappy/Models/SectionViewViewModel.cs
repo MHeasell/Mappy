@@ -18,13 +18,13 @@
 
         private readonly Subject<int> selectCategoryEvent = new Subject<int>();
 
-        private readonly SectionsService sectionsService;
+        private readonly SectionService sectionService;
 
         private readonly BehaviorSubject<IEnumerable<ListViewItem>> sections = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>());
 
-        public SectionViewViewModel(SectionsService sectionsService)
+        public SectionViewViewModel(SectionService sectionService)
         {
-            sectionsService.SectionsChanged += this.OnSectionsChanged;
+            sectionService.SectionsChanged += this.OnSectionsChanged;
 
             this.selectWorldEvent.Subscribe(
                 i =>
@@ -43,7 +43,7 @@
                         this.UpdateSections();
                     });
 
-            this.sectionsService = sectionsService;
+            this.sectionService = sectionService;
         }
 
         public IObservable<ComboBoxViewModel> ComboBox1Model => this.worlds;
@@ -70,7 +70,7 @@
 
         private void UpdateWorlds()
         {
-            var worlds = this.sectionsService.EnumerateWorlds();
+            var worlds = this.sectionService.EnumerateWorlds();
             var worldsModel = new ComboBoxViewModel(worlds.ToList());
             this.worlds.OnNext(worldsModel);
         }
@@ -79,7 +79,7 @@
         {
             var world = this.worlds.Value.SelectedItem;
 
-            var categories = this.sectionsService.EnumerateCategories(world);
+            var categories = this.sectionService.EnumerateCategories(world);
             var categoriesModel = new ComboBoxViewModel(categories.ToList());
             this.categories.OnNext(categoriesModel);
         }
@@ -88,7 +88,7 @@
         {
             var world = this.worlds.Value.SelectedItem;
             var category = this.categories.Value.SelectedItem;
-            var sections = this.sectionsService.EnumerateSections(world, category);
+            var sections = this.sectionService.EnumerateSections(world, category);
             this.sections.OnNext(sections.Select(x => ToItem(x.Key, x.Value)).ToList());
         }
 

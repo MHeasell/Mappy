@@ -28,7 +28,7 @@
 
         private readonly IDialogService dialogService;
 
-        private readonly SectionsService sectionsService;
+        private readonly SectionService sectionService;
 
         private readonly FeatureService featureService;
 
@@ -39,13 +39,13 @@
         public Dispatcher(
             CoreModel model,
             IDialogService dialogService,
-            SectionsService sectionsService,
+            SectionService sectionService,
             FeatureService featureService,
             MapLoadingService mapLoadingService)
         {
             this.model = model;
             this.dialogService = dialogService;
-            this.sectionsService = sectionsService;
+            this.sectionService = sectionService;
             this.featureService = featureService;
             this.mapLoadingService = mapLoadingService;
             this.mapSaver = new MapSaver();
@@ -118,7 +118,7 @@
 
                 var sectionResult = (SectionFeatureLoadResult)args.Result;
 
-                this.sectionsService.AddSections(sectionResult.Sections);
+                this.sectionService.AddSections(sectionResult.Sections);
 
                 this.featureService.AddFeatures(sectionResult.Features);
 
@@ -275,7 +275,7 @@
 
         public void DragDropSection(int sectionId, int x, int y)
         {
-            var section = this.sectionsService.Get(sectionId).GetTile();
+            var section = this.sectionService.Get(sectionId).GetTile();
             this.model.Map?.DragDropTile(section, x, y);
         }
 
