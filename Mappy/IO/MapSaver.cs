@@ -14,7 +14,7 @@
     /// </summary>
     public class MapSaver
     {
-        public void SaveTnt(IMapModel map, string filename)
+        public void SaveTnt(IReadOnlyMapModel map, string filename)
         {
             using (var s = new TntWriter(File.Create(filename)))
             {
@@ -30,7 +30,7 @@
             }
         }
 
-        public void SaveHpi(IMapModel map, string filename)
+        public void SaveHpi(IReadOnlyMapModel map, string filename)
         {
             string namePart = Path.GetFileNameWithoutExtension(filename);
 

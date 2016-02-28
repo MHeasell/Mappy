@@ -17,7 +17,7 @@
     /// </summary>
     public class MapModelTntAdapter : ITntSource
     {
-        private readonly IMapModel model;
+        private readonly IReadOnlyMapModel model;
 
         private readonly Bitmap[] tiles;
 
@@ -27,7 +27,7 @@
 
         private readonly IDictionary<string, int> reverseFeatures;
 
-        public MapModelTntAdapter(IMapModel model)
+        public MapModelTntAdapter(IReadOnlyMapModel model)
         {
             this.model = model;
             this.tiles = Util.GetUsedTiles(model.Tile).ToArray();

@@ -18,21 +18,11 @@
 
         private readonly MapModelFactory mapModelFactory = new MapModelFactory();
 
-        // FIXME: We only need a reference to this service
-        // because UndoableMapModel requires it.
-        // UndoableMapModel should be refactored to remove the dependency.
-        private readonly IDialogService dialogService;
-
-        public MapLoadingService(IDialogService dialogService)
-        {
-            this.dialogService = dialogService;
-        }
-
         public UndoableMapModel CreateMap(int width, int height)
         {
             var map = new MapModel(width, height);
             GridMethods.Fill(map.Tile.TileGrid, Globals.DefaultTile);
-            return new UndoableMapModel(map, this.dialogService, null, false);
+            return new UndoableMapModel(map, null, false);
         }
 
         public UndoableMapModel CreateFromSct(string filename)
@@ -43,7 +33,7 @@
                 t = this.sectionFactory.TileFromSct(s);
             }
 
-            return new UndoableMapModel(new MapModel(t), this.dialogService, filename, true);
+            return new UndoableMapModel(new MapModel(t), filename, true);
         }
 
         public UndoableMapModel CreateFromTnt(string filename)
@@ -72,7 +62,7 @@
                 }
             }
 
-            return new UndoableMapModel(m, this.dialogService, filename, false);
+            return new UndoableMapModel(m, filename, false);
         }
 
         public UndoableMapModel CreateFromHpi(string hpipath, string mappath, bool readOnly = false)
@@ -96,7 +86,7 @@
                 }
             }
 
-            return new UndoableMapModel(m, this.dialogService, hpipath, readOnly);
+            return new UndoableMapModel(m, hpipath, readOnly);
         }
     }
 }

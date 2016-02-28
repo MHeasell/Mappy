@@ -6,25 +6,19 @@
     using System.Collections.Specialized;
     using System.ComponentModel;
     using System.Drawing;
-    using System.IO;
     using System.Linq;
     using System.Windows.Forms;
 
     using Mappy.Collections;
     using Mappy.Data;
-    using Mappy.IO;
     using Mappy.Models.BandboxBehaviours;
     using Mappy.Operations;
     using Mappy.Operations.SelectionModel;
     using Mappy.Util;
 
-    public class UndoableMapModel : Notifier, IMainModel, IBandboxModel
+    public class UndoableMapModel : Notifier, IMainModel, IBandboxModel, IReadOnlyMapModel
     {
         private readonly OperationManager undoManager = new OperationManager();
-
-        private readonly IDialogService dialogService;
-
-        private readonly MapSaver mapSaver;
 
         private readonly IBandboxBehaviour bandboxBehaviour;
 
@@ -48,14 +42,10 @@
 
         private bool canCopy;
 
-        public UndoableMapModel(ISelectionModel model, IDialogService svc, string path, bool readOnly)
+        public UndoableMapModel(ISelectionModel model, string path, bool readOnly)
         {
             this.FilePath = path;
             this.IsFileReadOnly = readOnly;
-
-            this.mapSaver = new MapSaver();
-
-            this.dialogService = svc;
 
             this.model = model;
 
@@ -151,6 +141,8 @@
 
         public IMapTile BaseTile => this.model.Tile;
 
+        IMapTile IReadOnlyMapModel.Tile => this.model.Tile;
+
         public int MapWidth => this.model.Tile.TileGrid.Width;
 
         public int MapHeight => this.model.Tile.TileGrid.Height;
@@ -158,6 +150,10 @@
         public int FeatureGridWidth => this.model.FeatureGridWidth;
 
         public int FeatureGridHeight => this.model.FeatureGridHeight;
+
+        public ISparseGrid<bool> Voids => this.model.Voids;
+
+        public MapAttributes Attributes => this.model.Attributes;
 
         public IList<Positioned<IMapTile>> FloatingTiles => this.model.FloatingTiles;
 
@@ -179,28 +175,6 @@
         public ObservableCollection<Guid> SelectedFeatures => this.model.SelectedFeatures;
 
         public int? SelectedTile => this.model.SelectedTile;
-
-        public bool Save()
-        {
-            if (this.FilePath == null || this.IsFileReadOnly)
-            {
-                return this.SaveAs();
-            }
-
-            return this.SaveHelper(this.FilePath);
-        }
-
-        public bool SaveAs()
-        {
-            string path = this.dialogService.AskUserToSaveFile();
-
-            if (path == null)
-            {
-                return false;
-            }
-
-            return this.SaveHelper(path);
-        }
 
         public void Undo()
         {
@@ -554,6 +528,13 @@
             this.undoManager.Execute(new ChangeAttributesOperation(this.model, newAttrs));
         }
 
+        public void MarkSaved(string filename)
+        {
+            this.FilePath = filename;
+            this.IsFileReadOnly = false;
+            this.undoManager.SetNowAsMark();
+        }
+
         private static void DeduplicateTiles(IGrid<Bitmap> tiles)
         {
             var len = tiles.Width * tiles.Height;
@@ -561,75 +542,6 @@
             {
                 tiles[i] = Globals.TileCache.GetOrAddBitmap(tiles[i]);
             }
-        }
-
-        private bool SaveHelper(string filename)
-        {
-            if (filename == null)
-            {
-                throw new ArgumentNullException(nameof(filename));
-            }
-
-            string extension = Path.GetExtension(filename).ToUpperInvariant();
-
-            try
-            {
-                switch (extension)
-                {
-                    case ".TNT":
-                        this.Save(filename);
-                        return true;
-                    case ".HPI":
-                    case ".UFO":
-                    case ".CCX":
-                    case ".GPF":
-                    case ".GP3":
-                        this.SaveHpi(filename);
-                        return true;
-                    default:
-                        this.dialogService.ShowError("Unrecognized file extension: " + extension);
-                        return false;
-                }
-            }
-            catch (IOException e)
-            {
-                this.dialogService.ShowError("Error saving map: " + e.Message);
-                return false;
-            }
-        }
-
-        private void SaveHpi(string filename)
-        {
-            // flatten before save --- only the base tile is written to disk
-            IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.model);
-            flatten.Execute();
-
-            this.mapSaver.SaveHpi(this.model, filename);
-
-            flatten.Undo();
-
-            this.undoManager.SetNowAsMark();
-
-            this.FilePath = filename;
-            this.IsFileReadOnly = false;
-        }
-
-        private void Save(string filename)
-        {
-            // flatten before save --- only the base tile is written to disk
-            IReplayableOperation flatten = OperationFactory.CreateFlattenOperation(this.model);
-            flatten.Execute();
-
-            var otaName = filename.Substring(0, filename.Length - 4) + ".ota";
-            this.mapSaver.SaveTnt(this.model, filename);
-            this.mapSaver.SaveOta(this.model.Attributes, otaName);
-
-            flatten.Undo();
-
-            this.undoManager.SetNowAsMark();
-
-            this.FilePath = filename;
-            this.IsFileReadOnly = false;
         }
 
         private void PasteFeature(FeatureClipboardRecord feature, int x, int y)

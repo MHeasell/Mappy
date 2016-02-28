@@ -34,6 +34,8 @@
 
         private readonly MapLoadingService mapLoadingService;
 
+        private readonly MapSaver mapSaver;
+
         public Dispatcher(
             CoreModel model,
             IDialogService dialogService,
@@ -46,6 +48,7 @@
             this.sectionsService = sectionsService;
             this.featureService = featureService;
             this.mapLoadingService = mapLoadingService;
+            this.mapSaver = new MapSaver();
         }
 
         public void Initialize()
@@ -221,14 +224,97 @@
             this.OpenMap(filename);
         }
 
-        public void Save()
+        public bool Save()
         {
-            this.model.Map?.Save();
+            var map = this.model.Map;
+            if (map == null)
+            {
+                return false;
+            }
+
+            if (map.FilePath == null || map.IsFileReadOnly)
+            {
+                return this.SaveAs();
+            }
+
+            return this.SaveHelper(map, map.FilePath);
         }
 
-        public void SaveAs()
+        public bool SaveAs()
         {
-            this.model.Map?.SaveAs();
+            if (this.model.Map == null)
+            {
+                return false;
+            }
+
+            string path = this.dialogService.AskUserToSaveFile();
+
+            if (path == null)
+            {
+                return false;
+            }
+
+            return this.SaveHelper(this.model.Map, path);
+        }
+
+        private bool SaveHelper(UndoableMapModel map, string filename)
+        {
+            if (filename == null)
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
+
+            string extension = Path.GetExtension(filename).ToUpperInvariant();
+
+            try
+            {
+                switch (extension)
+                {
+                    case ".TNT":
+                        this.Save(map, filename);
+                        return true;
+                    case ".HPI":
+                    case ".UFO":
+                    case ".CCX":
+                    case ".GPF":
+                    case ".GP3":
+                        this.SaveHpi(map, filename);
+                        return true;
+                    default:
+                        this.dialogService.ShowError("Unrecognized file extension: " + extension);
+                        return false;
+                }
+            }
+            catch (IOException e)
+            {
+                this.dialogService.ShowError("Error saving map: " + e.Message);
+                return false;
+            }
+        }
+
+        private void SaveHpi(UndoableMapModel map, string filename)
+        {
+            // flatten before save --- only the base tile is written to disk
+            map.ClearSelection();
+
+            this.mapSaver.SaveHpi(map, filename);
+
+            map.Undo();
+            map.MarkSaved(filename);
+        }
+
+        private void Save(UndoableMapModel map, string filename)
+        {
+            // flatten before save --- only the base tile is written to disk
+            map.ClearSelection();
+
+            var otaName = filename.Substring(0, filename.Length - 4) + ".ota";
+            this.mapSaver.SaveTnt(map, filename);
+            this.mapSaver.SaveOta(map.Attributes, otaName);
+
+            map.Undo();
+
+            map.MarkSaved(filename);
         }
 
         public void OpenPreferences()
@@ -768,7 +854,7 @@
             switch (r)
             {
                 case DialogResult.Yes:
-                    return this.model.Map.Save();
+                    return this.Save();
                 case DialogResult.Cancel:
                     return false;
                 case DialogResult.No:
