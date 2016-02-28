@@ -257,66 +257,6 @@
             return this.SaveHelper(this.model.Map, path);
         }
 
-        private bool SaveHelper(UndoableMapModel map, string filename)
-        {
-            if (filename == null)
-            {
-                throw new ArgumentNullException(nameof(filename));
-            }
-
-            string extension = Path.GetExtension(filename).ToUpperInvariant();
-
-            try
-            {
-                switch (extension)
-                {
-                    case ".TNT":
-                        this.Save(map, filename);
-                        return true;
-                    case ".HPI":
-                    case ".UFO":
-                    case ".CCX":
-                    case ".GPF":
-                    case ".GP3":
-                        this.SaveHpi(map, filename);
-                        return true;
-                    default:
-                        this.dialogService.ShowError("Unrecognized file extension: " + extension);
-                        return false;
-                }
-            }
-            catch (IOException e)
-            {
-                this.dialogService.ShowError("Error saving map: " + e.Message);
-                return false;
-            }
-        }
-
-        private void SaveHpi(UndoableMapModel map, string filename)
-        {
-            // flatten before save --- only the base tile is written to disk
-            map.ClearSelection();
-
-            this.mapSaver.SaveHpi(map, filename);
-
-            map.Undo();
-            map.MarkSaved(filename);
-        }
-
-        private void Save(UndoableMapModel map, string filename)
-        {
-            // flatten before save --- only the base tile is written to disk
-            map.ClearSelection();
-
-            var otaName = filename.Substring(0, filename.Length - 4) + ".ota";
-            this.mapSaver.SaveTnt(map, filename);
-            this.mapSaver.SaveOta(map.Attributes, otaName);
-
-            map.Undo();
-
-            map.MarkSaved(filename);
-        }
-
         public void OpenPreferences()
         {
             this.dialogService.CapturePreferences();
@@ -763,6 +703,66 @@
             return hpi.GetFiles("maps")
                 .Where(x => x.Name.EndsWith(".tnt", StringComparison.OrdinalIgnoreCase))
                 .Select(x => x.Name.Substring(0, x.Name.Length - 4));
+        }
+
+        private bool SaveHelper(UndoableMapModel map, string filename)
+        {
+            if (filename == null)
+            {
+                throw new ArgumentNullException(nameof(filename));
+            }
+
+            string extension = Path.GetExtension(filename).ToUpperInvariant();
+
+            try
+            {
+                switch (extension)
+                {
+                    case ".TNT":
+                        this.Save(map, filename);
+                        return true;
+                    case ".HPI":
+                    case ".UFO":
+                    case ".CCX":
+                    case ".GPF":
+                    case ".GP3":
+                        this.SaveHpi(map, filename);
+                        return true;
+                    default:
+                        this.dialogService.ShowError("Unrecognized file extension: " + extension);
+                        return false;
+                }
+            }
+            catch (IOException e)
+            {
+                this.dialogService.ShowError("Error saving map: " + e.Message);
+                return false;
+            }
+        }
+
+        private void SaveHpi(UndoableMapModel map, string filename)
+        {
+            // flatten before save --- only the base tile is written to disk
+            map.ClearSelection();
+
+            this.mapSaver.SaveHpi(map, filename);
+
+            map.Undo();
+            map.MarkSaved(filename);
+        }
+
+        private void Save(UndoableMapModel map, string filename)
+        {
+            // flatten before save --- only the base tile is written to disk
+            map.ClearSelection();
+
+            var otaName = filename.Substring(0, filename.Length - 4) + ".ota";
+            this.mapSaver.SaveTnt(map, filename);
+            this.mapSaver.SaveOta(map.Attributes, otaName);
+
+            map.Undo();
+
+            map.MarkSaved(filename);
         }
 
         private void OpenMap(string filename)
