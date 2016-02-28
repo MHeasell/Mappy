@@ -120,12 +120,7 @@
 
                 this.sectionsService.AddSections(sectionResult.Sections);
 
-                foreach (var f in sectionResult.Features)
-                {
-                    this.featureService.AddFeature(f);
-                }
-
-                this.featureService.NotifyChanges();
+                this.featureService.AddFeatures(sectionResult.Features);
 
                 if (sectionResult.Errors.Count > 0 || sectionResult.FileErrors.Count > 0)
                 {

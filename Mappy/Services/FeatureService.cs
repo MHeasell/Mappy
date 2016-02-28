@@ -20,13 +20,13 @@
 
         public Feature Get(string name) => this.records[name];
 
-        public void AddFeature(Feature f)
+        public void AddFeatures(IEnumerable<Feature> features)
         {
-            this.records[f.Name] = f;
-        }
+            foreach (var f in features)
+            {
+                this.AddFeature(f);
+            }
 
-        public void NotifyChanges()
-        {
             this.FeaturesChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -60,5 +60,10 @@
                 .Where(x => string.Equals(x.World, world, StringComparison.InvariantCultureIgnoreCase)
                     && string.Equals(x.Category, category, StringComparison.InvariantCultureIgnoreCase))
                 .OrderBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase);
+
+        private void AddFeature(Feature f)
+        {
+            this.records[f.Name] = f;
+        }
     }
 }
