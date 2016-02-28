@@ -10,7 +10,7 @@
     using Mappy.Data;
     using Mappy.Util;
 
-    public class MapModel : Notifier, IMapModel, ISelectionModel
+    public class MapModel : Notifier, ISelectionModel
     {
         private readonly SparseGrid<FeatureInstance> featureLocationIndex;
 
