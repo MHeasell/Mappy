@@ -34,12 +34,12 @@
             Application.SetCompatibleTextRenderingDefault(false);
 
             var mainForm = new MainForm();
-            var svc = new DialogService(mainForm);
+            var dialogService = new DialogService(mainForm);
             var featureService = new FeatureService();
             var sectionsService = new SectionsService();
             var mapLoadingService = new MapLoadingService();
             var model = new CoreModel();
-            var dispatcher = new Dispatcher(model, svc, sectionsService, featureService, mapLoadingService);
+            var dispatcher = new Dispatcher(model, dialogService, sectionsService, featureService, mapLoadingService);
             mainForm.SetModel(new MainFormViewModel(model, dispatcher));
 
             mainForm.SectionView.SetModel(new SectionViewViewModel(sectionsService));
