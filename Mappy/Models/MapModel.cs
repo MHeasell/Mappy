@@ -205,7 +205,7 @@
         }
 
         /// <summary>
-        /// <see cref="IMapModel.GetFeatureInstance"/>
+        /// <see cref="IReadOnlyMapModel.GetFeatureInstance"/>
         /// </summary>
         public FeatureInstance GetFeatureInstance(Guid id)
         {
@@ -213,7 +213,7 @@
         }
 
         /// <summary>
-        /// <see cref="IMapModel.GetFeatureInstanceAt"/>
+        /// <see cref="IReadOnlyMapModel.GetFeatureInstanceAt"/>
         /// </summary>
         public FeatureInstance GetFeatureInstanceAt(int x, int y)
         {
@@ -259,7 +259,7 @@
         }
 
         /// <summary>
-        /// <see cref="IMapModel.HasFeatureInstanceAt"/>
+        /// <see cref="IReadOnlyMapModel.HasFeatureInstanceAt"/>
         /// </summary>
         public bool HasFeatureInstanceAt(int x, int y)
         {
@@ -267,7 +267,7 @@
         }
 
         /// <summary>
-        /// <see cref="IMapModel.EnumerateFeatureInstances"/>
+        /// <see cref="IReadOnlyMapModel.EnumerateFeatureInstances"/>
         /// </summary>
         public IEnumerable<FeatureInstance> EnumerateFeatureInstances()
         {
