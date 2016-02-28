@@ -1,10 +1,11 @@
-﻿namespace Mappy.Models
+namespace Mappy.Services
 {
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Windows.Forms;
 
+    using Mappy.Models;
     using Mappy.UI.Forms;
     using Mappy.Views;
 

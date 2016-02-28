@@ -150,12 +150,10 @@
     <Compile Include="Models\BandboxMode.cs" />
     <Compile Include="Models\ComboBoxViewModel.cs" />
     <Compile Include="Models\CoreModel.cs" />
-    <Compile Include="Models\DialogService.cs" />
     <Compile Include="Models\FeatureClipboardRecord.cs" />
     <Compile Include="Models\FeatureInstance.cs" />
     <Compile Include="Models\FeatureInstanceEventArgs.cs" />
     <Compile Include="Models\FeatureViewViewModel.cs" />
-    <Compile Include="Models\IDialogService.cs" />
     <Compile Include="Models\IMainFormViewModel.cs" />
     <Compile Include="Models\IMainModel.cs" />
     <Compile Include="Models\IMapViewViewModel.cs" />
@@ -192,8 +190,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\Dispatcher.cs" />
     <Compile Include="Services\FeatureService.cs" />
+    <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\MapLoadingService.cs" />
     <Compile Include="Services\SectionsService.cs" />
     <Compile Include="UI\Controls\AbstractLayer.cs" />
