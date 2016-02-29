@@ -4,6 +4,8 @@
     using System.ComponentModel;
     using System.Reactive.Linq;
 
+    using Mappy.Maybe;
+
     public static class ExtensionMethods
     {
         public static IObservable<TField> PropertyAsObservable<TSource, TField>(this TSource source, Func<TSource, TField> accessor, string name)
@@ -48,6 +50,23 @@
         {
             var defaultObservable = Observable.Return(defaultValue);
             return source.Select(x => x?.PropertyAsObservable(accessor, name) ?? defaultObservable)
+                .Switch();
+        }
+
+        /// <summary>
+        /// Creates an observable that streams the value of the selected property
+        /// of the value contained in source.
+        /// If the source becomes None, the default value is emitted instead.
+        /// </summary>
+        public static IObservable<TValue> ObservePropertyOrDefault<TSource, TValue>(
+            this IObservable<Maybe<TSource>> source,
+            Func<TSource, TValue> accessor,
+            string name,
+            TValue defaultValue)
+            where TSource : INotifyPropertyChanged
+        {
+            var defaultObservable = Observable.Return(defaultValue);
+            return source.Select(x => x.Match(y => y.PropertyAsObservable(accessor, name), () => defaultObservable))
                 .Switch();
         }
     }

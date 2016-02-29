@@ -3,11 +3,12 @@
     using System.ComponentModel;
     using System.Drawing;
 
+    using Mappy.Maybe;
     using Mappy.Util;
 
     public class CoreModel : Notifier, IReadOnlyApplicationModel
     {
-        private UndoableMapModel map;
+        private Maybe<UndoableMapModel> map;
 
         private bool heightmapVisible;
         private bool featuresVisible = true;
@@ -21,7 +22,7 @@
         private int viewportWidth;
         private int viewportHeight;
 
-        public UndoableMapModel Map
+        public Maybe<UndoableMapModel> Map
         {
             get
             {
@@ -32,10 +33,7 @@
             {
                 if (this.SetField(ref this.map, value, "Map"))
                 {
-                    if (this.Map != null)
-                    {
-                        this.Map.PropertyChanged += this.MapOnPropertyChanged;
-                    }
+                    this.Map.IfSome(x => x.PropertyChanged += this.MapOnPropertyChanged);
 
                     this.FireChange("CanUndo");
                     this.FireChange("CanRedo");
@@ -47,15 +45,15 @@
             }
         }
 
-        public bool CanUndo => this.Map != null && this.Map.CanUndo;
+        public bool CanUndo => this.Map.Match(x => x.CanUndo, () => false);
 
-        public bool CanRedo => this.Map != null && this.Map.CanRedo;
+        public bool CanRedo => this.Map.Match(x => x.CanRedo, () => false);
 
-        public bool CanCopy => this.Map != null && this.Map.CanCopy;
+        public bool CanCopy => this.Map.Match(x => x.CanCopy, () => false);
 
-        public bool CanPaste => this.Map != null;
+        public bool CanPaste => this.Map.IsSome;
 
-        public bool CanCut => this.Map != null && this.Map.CanCut;
+        public bool CanCut => this.Map.Match(x => x.CanCut, () => false);
 
         public bool HeightmapVisible
         {
@@ -137,15 +135,14 @@
 
         public void SetViewportLocation(Point location)
         {
-            if (this.Map == null)
-            {
-                return;
-            }
+            this.Map.IfSome(
+                map =>
+                    {
+                        location.X = Util.Clamp(location.X, 0, (map.MapWidth * 32) - this.ViewportWidth);
+                        location.Y = Util.Clamp(location.Y, 0, (map.MapHeight * 32) - this.ViewportHeight);
 
-            location.X = Util.Clamp(location.X, 0, (this.Map.MapWidth * 32) - this.ViewportWidth);
-            location.Y = Util.Clamp(location.Y, 0, (this.Map.MapHeight * 32) - this.ViewportHeight);
-
-            this.Map.ViewportLocation = location;
+                        map.ViewportLocation = location;
+                    });
         }
 
         public void SetViewportSize(Size size)

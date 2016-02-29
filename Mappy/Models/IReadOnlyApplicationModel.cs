@@ -3,9 +3,11 @@
     using System.ComponentModel;
     using System.Drawing;
 
+    using Mappy.Maybe;
+
     public interface IReadOnlyApplicationModel : INotifyPropertyChanged
     {
-        UndoableMapModel Map { get; }
+        Maybe<UndoableMapModel> Map { get; }
 
         bool CanUndo { get; }
 

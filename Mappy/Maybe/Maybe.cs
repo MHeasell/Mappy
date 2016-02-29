@@ -56,6 +56,16 @@
             return this.hasValue ? $"Some({this.value})" : "None";
         }
 
+        public T GetUnsafe()
+        {
+            if (!this.hasValue)
+            {
+                throw new MaybeWasNoneException();
+            }
+
+            return this.value;
+        }
+
         public TR Match<TR>(Func<T, TR> some, Func<TR> none)
         {
             if (some == null)

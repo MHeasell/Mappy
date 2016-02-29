@@ -16,7 +16,7 @@
         public MainFormViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher)
         {
             var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
-            var mapOpen = map.Select(x => x != null);
+            var mapOpen = map.Select(x => x.IsSome);
             var isDirty = map.ObservePropertyOrDefault(x => x.IsMarked, "IsMarked", true).Select(x => !x);
             var filePath = map.ObservePropertyOrDefault(x => x.FilePath, "FilePath", null);
             var isFileReadOnly = map.ObservePropertyOrDefault(x => x.IsFileReadOnly, "IsFileReadOnly", false);

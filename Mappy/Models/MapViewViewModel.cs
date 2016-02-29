@@ -14,6 +14,7 @@
     using Mappy.UI.Tags;
     using Collections;
 
+    using Mappy.Maybe;
     using Mappy.Services;
 
     public class MapViewViewModel : IMapViewViewModel
@@ -119,7 +120,9 @@
             map.ObservePropertyOrDefault(x => x.SelectedStartPosition, "SelectedStartPosition", null)
                 .Subscribe(_ => this.RefreshSelection());
 
-            map.Where(x => x != null)
+            map
+                .Where(x => x.IsSome)
+                .Select(x => x.GetUnsafe()) // will never be null due to where clause
                 .Select(x => x.SelectedFeatures)
                 .Subscribe(x => x.CollectionChanged += this.SelectedFeaturesCollectionChanged);
 
@@ -263,9 +266,9 @@
             this.dispatcher.ClearSelection();
         }
 
-        private void SetMapModel(IMainModel model)
+        private void SetMapModel(Maybe<UndoableMapModel> model)
         {
-            this.mapModel = model;
+            this.mapModel = model.Or(null);
             this.WireMapModel();
             this.ResetView();
         }
