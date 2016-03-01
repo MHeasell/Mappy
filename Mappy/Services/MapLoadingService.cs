@@ -65,7 +65,12 @@
             return new UndoableMapModel(m, filename, false);
         }
 
-        public UndoableMapModel CreateFromHpi(string hpipath, string mappath, bool readOnly = false)
+        public UndoableMapModel CreateFromHpi(string hpipath, string mappath)
+        {
+            return this.CreateFromHpi(hpipath, mappath, false);
+        }
+
+        public UndoableMapModel CreateFromHpi(string hpipath, string mappath, bool readOnly)
         {
             MapModel m;
 
