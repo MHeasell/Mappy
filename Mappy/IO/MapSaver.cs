@@ -12,9 +12,9 @@
     /// Provides methods for writing out a IMapModel instance
     /// as TNT or HPI.
     /// </summary>
-    public class MapSaver
+    public static class MapSaver
     {
-        public void SaveTnt(IReadOnlyMapModel map, string filename)
+        public static void SaveTnt(IReadOnlyMapModel map, string filename)
         {
             using (var s = new TntWriter(File.Create(filename)))
             {
@@ -22,7 +22,7 @@
             }
         }
 
-        public void SaveOta(MapAttributes attrs, string filename)
+        public static void SaveOta(MapAttributes attrs, string filename)
         {
             using (Stream s = File.Create(filename))
             {
@@ -30,7 +30,7 @@
             }
         }
 
-        public void SaveHpi(IReadOnlyMapModel map, string filename)
+        public static void SaveHpi(IReadOnlyMapModel map, string filename)
         {
             string namePart = Path.GetFileNameWithoutExtension(filename);
 

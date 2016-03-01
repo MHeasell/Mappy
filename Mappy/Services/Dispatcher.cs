@@ -34,8 +34,6 @@
 
         private readonly MapLoadingService mapLoadingService;
 
-        private readonly MapSaver mapSaver;
-
         public Dispatcher(
             CoreModel model,
             IDialogService dialogService,
@@ -48,7 +46,6 @@
             this.sectionService = sectionService;
             this.featureService = featureService;
             this.mapLoadingService = mapLoadingService;
-            this.mapSaver = new MapSaver();
         }
 
         public void Initialize()
@@ -564,7 +561,7 @@
             // flatten before save --- only the base tile is written to disk
             map.ClearSelection();
 
-            this.mapSaver.SaveHpi(map, filename);
+            MapSaver.SaveHpi(map, filename);
 
             map.Undo();
             map.MarkSaved(filename);
@@ -576,8 +573,8 @@
             map.ClearSelection();
 
             var otaName = filename.Substring(0, filename.Length - 4) + ".ota";
-            this.mapSaver.SaveTnt(map, filename);
-            this.mapSaver.SaveOta(map.Attributes, otaName);
+            MapSaver.SaveTnt(map, filename);
+            MapSaver.SaveOta(map.Attributes, otaName);
 
             map.Undo();
 
