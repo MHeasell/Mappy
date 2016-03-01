@@ -21,12 +21,12 @@
             get; private set;
         }
 
-        private void NewMapForm_Validating(object sender, CancelEventArgs e)
+        private void FormValidating(object sender, CancelEventArgs e)
         {
             try
             {
-                int w = Convert.ToInt32(this.textBox1.Text);
-                int h = Convert.ToInt32(this.textBox2.Text);
+                int w = Convert.ToInt32(this.widthTextBox.Text);
+                int h = Convert.ToInt32(this.heightTextBox.Text);
 
                 if (w < 1 || h < 1)
                 {
@@ -48,8 +48,8 @@
         {
             try
             {
-                int w = Convert.ToInt32(this.textBox1.Text);
-                int h = Convert.ToInt32(this.textBox2.Text);
+                int w = Convert.ToInt32(this.widthTextBox.Text);
+                int h = Convert.ToInt32(this.heightTextBox.Text);
 
                 if (w < 1 || h < 1)
                 {
@@ -77,32 +77,32 @@
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void WidthTextChanged(object sender, EventArgs e)
         {
             int valX;
-            if (!int.TryParse(this.textBox1.Text, out valX))
+            if (!int.TryParse(this.widthTextBox.Text, out valX))
             {
-                this.label3.Text = string.Empty;
+                this.convertedWidthLabel.Text = string.Empty;
                 return;
             }
 
             float convertedX = (valX * 32) / 512.0f;
 
-            this.label3.Text = $"({convertedX})";
+            this.convertedWidthLabel.Text = $"({convertedX})";
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
+        private void HeightTextChanged(object sender, EventArgs e)
         {
             int valY;
-            if (!int.TryParse(this.textBox2.Text, out valY))
+            if (!int.TryParse(this.heightTextBox.Text, out valY))
             {
-                this.label4.Text = string.Empty;
+                this.convertedHeightLabel.Text = string.Empty;
                 return;
             }
 
             float convertedY = (valY * 32) / 512.0f;
 
-            this.label4.Text = $"({convertedY})";
+            this.convertedHeightLabel.Text = $"({convertedY})";
         }
     }
 }
