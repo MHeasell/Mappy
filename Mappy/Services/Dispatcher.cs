@@ -61,78 +61,79 @@
             var worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
-            worker.DoWork += delegate(object sender, DoWorkEventArgs args)
-            {
-                var w = (BackgroundWorker)sender;
+            worker.DoWork += (sender, args) =>
+                {
+                    var w = (BackgroundWorker)sender;
 
-                LoadResult<Section> result;
-                if (!SectionLoadingUtils.LoadSections(
+                    LoadResult<Section> result;
+                    if (!SectionLoadingUtils.LoadSections(
                         i => w.ReportProgress((50 * i) / 100),
                         () => w.CancellationPending,
                         out result))
-                {
-                    args.Cancel = true;
-                    return;
-                }
+                    {
+                        args.Cancel = true;
+                        return;
+                    }
 
-                LoadResult<Feature> featureResult;
-                if (!FeatureLoadingUtils.LoadFeatures(
-                    i => w.ReportProgress(50 + ((50 * i) / 100)),
-                    () => w.CancellationPending,
-                    out featureResult))
-                {
-                    args.Cancel = true;
-                    return;
-                }
+                    LoadResult<Feature> featureResult;
+                    if (!FeatureLoadingUtils.LoadFeatures(
+                        i => w.ReportProgress(50 + ((50 * i) / 100)),
+                        () => w.CancellationPending,
+                        out featureResult))
+                    {
+                        args.Cancel = true;
+                        return;
+                    }
 
-                args.Result = new SectionFeatureLoadResult
-                {
-                    Sections = result.Records,
-                    Features = featureResult.Records,
-                    Errors = result.Errors
-                        .Concat(featureResult.Errors)
-                        .GroupBy(x => x.HpiPath)
-                        .Select(x => x.First())
-                        .ToList(),
-                    FileErrors = result.FileErrors
-                        .Concat(featureResult.FileErrors)
-                        .ToList(),
+                    args.Result = new SectionFeatureLoadResult
+                        {
+                            Sections = result.Records,
+                            Features = featureResult.Records,
+                            Errors = result.Errors
+                                .Concat(featureResult.Errors)
+                                .GroupBy(x => x.HpiPath)
+                                .Select(x => x.First())
+                                .ToList(),
+                            FileErrors = result.FileErrors
+                                .Concat(featureResult.FileErrors)
+                                .ToList(),
+                        };
                 };
-            };
 
             worker.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage;
-            worker.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
-            {
-                if (args.Error != null)
+            worker.RunWorkerCompleted += (sender, args) =>
                 {
-                    Program.HandleUnexpectedException(args.Error);
-                    Application.Exit();
-                    return;
-                }
+                    if (args.Error != null)
+                    {
+                        Program.HandleUnexpectedException(args.Error);
+                        Application.Exit();
+                        return;
+                    }
 
-                if (args.Cancelled)
-                {
-                    Application.Exit();
-                    return;
-                }
+                    if (args.Cancelled)
+                    {
+                        Application.Exit();
+                        return;
+                    }
 
-                var sectionResult = (SectionFeatureLoadResult)args.Result;
+                    var sectionResult = (SectionFeatureLoadResult)args.Result;
 
-                this.sectionService.AddSections(sectionResult.Sections);
+                    this.sectionService.AddSections(sectionResult.Sections);
 
-                this.featureService.AddFeatures(sectionResult.Features);
+                    this.featureService.AddFeatures(sectionResult.Features);
 
-                if (sectionResult.Errors.Count > 0 || sectionResult.FileErrors.Count > 0)
-                {
-                    var hpisList = sectionResult.Errors.Select(x => x.HpiPath);
-                    var filesList = sectionResult.FileErrors.Select(x => x.HpiPath + "\\" + x.FeaturePath);
-                    this.dialogService.ShowError("Failed to load the following files:\n\n"
-                        + string.Join("\n", hpisList) + "\n"
-                        + string.Join("\n", filesList));
-                }
+                    if (sectionResult.Errors.Count > 0 || sectionResult.FileErrors.Count > 0)
+                    {
+                        var hpisList = sectionResult.Errors.Select(x => x.HpiPath);
+                        var filesList = sectionResult.FileErrors.Select(x => x.HpiPath + "\\" + x.FeaturePath);
+                        this.dialogService.ShowError(
+                            "Failed to load the following files:\n\n"
+                                + string.Join("\n", hpisList) + "\n"
+                                + string.Join("\n", filesList));
+                    }
 
-                dlg.Close();
-            };
+                    dlg.Close();
+                };
 
             dlg.CancelPressed += (sender, args) => worker.CancelAsync();
 
@@ -780,23 +781,23 @@
 
             dlg.CancelPressed += (o, args) => worker.CancelAsync();
             worker.ProgressChanged += (o, args) => dlg.Progress = args.ProgressPercentage;
-            worker.RunWorkerCompleted += delegate(object o, RunWorkerCompletedEventArgs args)
-            {
-                if (args.Error != null)
+            worker.RunWorkerCompleted += (o, args) =>
                 {
-                    Program.HandleUnexpectedException(args.Error);
-                    Application.Exit();
-                    return;
-                }
+                    if (args.Error != null)
+                    {
+                        Program.HandleUnexpectedException(args.Error);
+                        Application.Exit();
+                        return;
+                    }
 
-                if (!args.Cancelled)
-                {
-                    var img = (Bitmap)args.Result;
-                    map.SetMinimap(img);
-                }
+                    if (!args.Cancelled)
+                    {
+                        var img = (Bitmap)args.Result;
+                        map.SetMinimap(img);
+                    }
 
-                dlg.Close();
-            };
+                    dlg.Close();
+                };
 
             worker.RunWorkerAsync(this.model);
             dlg.Display();
@@ -860,7 +861,7 @@
             var bg = new BackgroundWorker();
             bg.WorkerReportsProgress = true;
             bg.WorkerSupportsCancellation = true;
-            bg.DoWork += delegate(object sender, DoWorkEventArgs args)
+            bg.DoWork += (sender, args) =>
                 {
                     var worker = (BackgroundWorker)sender;
                     using (var s = File.Create(tempLoc))
@@ -877,7 +878,7 @@
             bg.ProgressChanged += (sender, args) => pv.Progress = args.ProgressPercentage;
             pv.CancelPressed += (sender, args) => bg.CancelAsync();
 
-            bg.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+            bg.RunWorkerCompleted += (sender, args) =>
                 {
                     try
                     {
@@ -929,7 +930,7 @@
             var bg = new BackgroundWorker();
             bg.WorkerSupportsCancellation = true;
             bg.WorkerReportsProgress = true;
-            bg.DoWork += delegate(object sender, DoWorkEventArgs args)
+            bg.DoWork += (sender, args) =>
                 {
                     var w = (BackgroundWorker)sender;
                     var sect = ImageImport.ImportSection(
@@ -949,7 +950,7 @@
             bg.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage;
             dlg.CancelPressed += (sender, args) => bg.CancelAsync();
 
-            bg.RunWorkerCompleted += delegate(object sender, RunWorkerCompletedEventArgs args)
+            bg.RunWorkerCompleted += (sender, args) =>
                 {
                     dlg.Close();
 

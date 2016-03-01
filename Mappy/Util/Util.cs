@@ -154,7 +154,7 @@ namespace Mappy.Util
             var worker = new BackgroundWorker();
             worker.WorkerReportsProgress = true;
             worker.WorkerSupportsCancellation = true;
-            worker.DoWork += delegate(object sender, DoWorkEventArgs args)
+            worker.DoWork += (sender, args) =>
                 {
                     var w = (BackgroundWorker)sender;
                     var m = (IMapModel)args.Argument;
