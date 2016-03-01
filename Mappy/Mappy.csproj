@@ -208,6 +208,7 @@
     <Compile Include="UI\Controls\DummyLayer.cs" />
     <Compile Include="UI\Controls\GridLayer.cs" />
     <Compile Include="UI\Controls\GuideLayer.cs" />
+    <Compile Include="UI\Controls\DrawableItem.cs" />
     <Compile Include="UI\Controls\PainterLayer.cs" />
     <Compile Include="UI\Controls\ILayer.cs" />
     <Compile Include="UI\Controls\DrawableItemCollection.cs" />

@@ -6,7 +6,7 @@
 
     public class SelectableItemsLayer : AbstractLayer
     {
-        private readonly HashSet<DrawableItemCollection.Item> selectedItems = new HashSet<DrawableItemCollection.Item>();
+        private readonly HashSet<DrawableItem> selectedItems = new HashSet<DrawableItem>();
 
         public SelectableItemsLayer(int width, int height)
         {
@@ -16,19 +16,19 @@
 
         public DrawableItemCollection Items { get; }
 
-        public DrawableItemCollection.Item HitTest(int x, int y)
+        public DrawableItem HitTest(int x, int y)
         {
             return this.Items.HitTest(new Point(x, y));
         }
 
-        public void AddToSelection(DrawableItemCollection.Item item)
+        public void AddToSelection(DrawableItem item)
         {
             this.InvalidateSelectionRect(item);
 
             this.selectedItems.Add(item);
         }
 
-        public void RemoveFromSelection(DrawableItemCollection.Item item)
+        public void RemoveFromSelection(DrawableItem item)
         {
             if (this.selectedItems.Remove(item))
             {
@@ -36,7 +36,7 @@
             }
         }
 
-        public bool SelectedItemsContains(DrawableItemCollection.Item item)
+        public bool SelectedItemsContains(DrawableItem item)
         {
             return this.selectedItems.Contains(item);
         }
@@ -88,7 +88,7 @@
                 case NotifyCollectionChangedAction.Add:
                     foreach (var i in e.NewItems)
                     {
-                        this.OnAddItem((DrawableItemCollection.Item)i);
+                        this.OnAddItem((DrawableItem)i);
                     }
 
                     break;
@@ -96,7 +96,7 @@
                 case NotifyCollectionChangedAction.Remove:
                     foreach (var i in e.OldItems)
                     {
-                        this.OnRemoveItem((DrawableItemCollection.Item)i);
+                        this.OnRemoveItem((DrawableItem)i);
                     }
 
                     break;
@@ -104,25 +104,25 @@
                 case NotifyCollectionChangedAction.Replace:
                     foreach (var i in e.OldItems)
                     {
-                        this.OnRemoveItem((DrawableItemCollection.Item)i);
+                        this.OnRemoveItem((DrawableItem)i);
                     }
 
                     foreach (var i in e.NewItems)
                     {
-                        this.OnAddItem((DrawableItemCollection.Item)i);
+                        this.OnAddItem((DrawableItem)i);
                     }
 
                     break;
             }
         }
 
-        private void OnAddItem(DrawableItemCollection.Item item)
+        private void OnAddItem(DrawableItem item)
         {
             item.AreaChanged += this.ItemAreaChanged;
             this.OnLayerChanged(item.Bounds);
         }
 
-        private void OnRemoveItem(DrawableItemCollection.Item item)
+        private void OnRemoveItem(DrawableItem item)
         {
             item.AreaChanged -= this.ItemAreaChanged;
             this.OnLayerChanged(item.Bounds);
@@ -133,7 +133,7 @@
             this.OnLayerChanged(e.ChangedRectangle);
         }
 
-        private void InvalidateSelectionRect(DrawableItemCollection.Item item)
+        private void InvalidateSelectionRect(DrawableItem item)
         {
             var r = item.Bounds;
             this.OnLayerChanged(new Rectangle(r.Left, r.Top, r.Width, 1));

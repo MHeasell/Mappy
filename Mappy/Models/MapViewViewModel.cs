@@ -35,12 +35,12 @@
             Image = Mappy.Properties.Resources.nofeature
         };
 
-        private readonly List<DrawableItemCollection.Item> tileMapping = new List<DrawableItemCollection.Item>();
+        private readonly List<DrawableItem> tileMapping = new List<DrawableItem>();
 
-        private readonly IDictionary<Guid, DrawableItemCollection.Item> featureMapping =
-            new Dictionary<Guid, DrawableItemCollection.Item>();
+        private readonly IDictionary<Guid, DrawableItem> featureMapping =
+            new Dictionary<Guid, DrawableItem>();
 
-        private readonly DrawableItemCollection.Item[] startPositionMapping = new DrawableItemCollection.Item[10];
+        private readonly DrawableItem[] startPositionMapping = new DrawableItem[10];
 
         private readonly GridLayer grid = new GridLayer(16, Color.Black);
 
@@ -63,11 +63,11 @@
 
         private bool bandboxMode;
 
-        private DrawableItemCollection.Item bandboxMapping;
+        private DrawableItem bandboxMapping;
 
         private DrawableTile baseTile;
 
-        private DrawableItemCollection.Item baseItem;
+        private DrawableItem baseItem;
 
         private bool featuresVisible;
 
@@ -347,7 +347,7 @@
             this.baseTile.BackgroundColor = Color.CornflowerBlue;
             this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
             this.baseTile.SeaLevel = this.mapModel.SeaLevel;
-            this.baseItem = new DrawableItemCollection.Item(
+            this.baseItem = new DrawableItem(
                 0,
                 0,
                 -1,
@@ -436,7 +436,7 @@
                 BandboxFillColor,
                 BandboxBorderColor);
 
-            this.bandboxMapping = new DrawableItemCollection.Item(
+            this.bandboxMapping = new DrawableItem(
                 this.mapModel.BandboxRectangle.X,
                 this.mapModel.BandboxRectangle.Y,
                 BandboxDepth,
@@ -521,7 +521,7 @@
             if (p.HasValue)
             {
                 IDrawable img = StartPositionImages[index];
-                var i = new DrawableItemCollection.Item(
+                var i = new DrawableItem(
                     p.Value.X - (img.Width / 2),
                     p.Value.Y - 58,
                     int.MaxValue,
@@ -601,7 +601,7 @@
         {
             var drawable = new DrawableTile(t.Item);
             drawable.BackgroundColor = Color.CornflowerBlue;
-            DrawableItemCollection.Item i = new DrawableItemCollection.Item(
+            DrawableItem i = new DrawableItem(
                     t.Location.X * 32,
                     t.Location.Y * 32,
                     index,
@@ -618,7 +618,7 @@
 
         private void RemoveTile(int index)
         {
-            DrawableItemCollection.Item item = this.tileMapping[index];
+            DrawableItem item = this.tileMapping[index];
             this.itemsLayer.Value.Items.Remove(item);
             this.itemsLayer.Value.RemoveFromSelection(item);
             this.tileMapping.RemoveAt(index);
@@ -643,7 +643,7 @@
             var featureRecord = this.featureService.TryGetFeature(f.FeatureName).Or(DefaultFeatureRecord);
 
             Rectangle r = featureRecord.GetDrawBounds(this.mapModel.BaseTile.HeightGrid, coords.X, coords.Y);
-            DrawableItemCollection.Item i = new DrawableItemCollection.Item(
+            DrawableItem i = new DrawableItem(
                     r.X,
                     r.Y,
                     index + 1000, // magic number to separate from tiles
@@ -669,7 +669,7 @@
         {
             if (this.featureMapping.ContainsKey(id))
             {
-                DrawableItemCollection.Item item = this.featureMapping[id];
+                DrawableItem item = this.featureMapping[id];
                 this.itemsLayer.Value.Items.Remove(item);
                 this.itemsLayer.Value.RemoveFromSelection(item);
                 this.featureMapping.Remove(id);

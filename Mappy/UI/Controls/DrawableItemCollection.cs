@@ -1,6 +1,5 @@
 namespace Mappy.UI.Controls
 {
-    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Collections.Specialized;
@@ -8,16 +7,14 @@ namespace Mappy.UI.Controls
     using System.Linq;
 
     using Mappy.Collections;
-    using Mappy.UI.Drawables;
-    using Mappy.Util;
 
-    public class DrawableItemCollection : ICollection<DrawableItemCollection.Item>, INotifyCollectionChanged
+    public class DrawableItemCollection : ICollection<DrawableItem>, INotifyCollectionChanged
     {
-        private QuadTree<Item> items;
+        private QuadTree<DrawableItem> items;
 
         public DrawableItemCollection(int width, int height)
         {
-            this.items = new QuadTree<Item>(new Rectangle(0, 0, width, height));
+            this.items = new QuadTree<DrawableItem>(new Rectangle(0, 0, width, height));
         }
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
@@ -26,18 +23,18 @@ namespace Mappy.UI.Controls
 
         public bool IsReadOnly => false;
 
-        public void Add(Item item)
+        public void Add(DrawableItem item)
         {
             this.items.Add(item);
             this.OnAdd(item);
         }
 
-        public void CopyTo(Item[] array, int arrayIndex)
+        public void CopyTo(DrawableItem[] array, int arrayIndex)
         {
             this.items.CopyTo(array, arrayIndex);
         }
 
-        public bool Remove(Item item)
+        public bool Remove(DrawableItem item)
         {
             bool success = this.items.Remove(item);
 
@@ -55,17 +52,17 @@ namespace Mappy.UI.Controls
             this.OnClear();
         }
 
-        public bool Contains(Item item)
+        public bool Contains(DrawableItem item)
         {
             return this.items.Contains(item);
         }
 
-        public IEnumerable<Item> EnumerateIntersecting(Rectangle rect)
+        public IEnumerable<DrawableItem> EnumerateIntersecting(Rectangle rect)
         {
             return this.items.FindInArea(rect).Where(x => x.Visible).OrderBy(x => x.Z);
         }
 
-        public Item HitTest(Point p)
+        public DrawableItem HitTest(Point p)
         {
             return this.items.FindAtPoint(p)
                 .Where(x => !x.Locked && x.Visible)
@@ -75,10 +72,10 @@ namespace Mappy.UI.Controls
 
         public void Resize(int newWidth, int newHeight)
         {
-            this.items = new QuadTree<Item>(new Rectangle(0, 0, newWidth, newHeight), this.items);
+            this.items = new QuadTree<DrawableItem>(new Rectangle(0, 0, newWidth, newHeight), this.items);
         }
 
-        public IEnumerator<Item> GetEnumerator()
+        public IEnumerator<DrawableItem> GetEnumerator()
         {
             return this.items.GetEnumerator();
         }
@@ -88,7 +85,7 @@ namespace Mappy.UI.Controls
             return this.GetEnumerator();
         }
 
-        protected virtual void OnAdd(Item item)
+        protected virtual void OnAdd(DrawableItem item)
         {
             var e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, item);
             this.CollectionChanged?.Invoke(this, e);
@@ -100,89 +97,10 @@ namespace Mappy.UI.Controls
             this.CollectionChanged?.Invoke(this, e);
         }
 
-        protected virtual void OnRemove(Item item)
+        protected virtual void OnRemove(DrawableItem item)
         {
             var e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, item);
             this.CollectionChanged?.Invoke(this, e);
-        }
-
-        public class Item : Notifier, IQuadTreeItem
-        {
-            private bool visible = true;
-            private bool locked;
-
-            public Item(int x, int y, int z, IDrawable drawable)
-            {
-                this.X = x;
-                this.Y = y;
-                this.Z = z;
-                this.Drawable = drawable;
-                drawable.AreaChanged += this.DrawableOnAreaChanged;
-            }
-
-            public event EventHandler<AreaChangedEventArgs> AreaChanged;
-
-            public int X { get; }
-
-            public int Y { get; }
-
-            public int Z { get; }
-
-            public IDrawable Drawable { get; }
-
-            public Rectangle Bounds => new Rectangle(
-                this.X,
-                this.Y,
-                this.Drawable.Width,
-                this.Drawable.Height);
-
-            public bool Locked
-            {
-                get { return this.locked; }
-                set { this.SetField(ref this.locked, value, "Locked"); }
-            }
-
-            public bool Visible
-            {
-                get
-                {
-                    return this.visible;
-                }
-
-                set
-                {
-                    if (this.SetField(ref this.visible, value, "Visible"))
-                    {
-                        this.AreaChanged?.Invoke(this, new AreaChangedEventArgs(this.Bounds));
-                    }
-                }
-            }
-
-            public object Tag { get; set; }
-
-            public Rectangle GetRect()
-            {
-                return new Rectangle(
-                    this.X,
-                    this.Y,
-                    this.Drawable.Width,
-                    this.Drawable.Height);
-            }
-
-            public void Draw(Graphics g, Rectangle clip)
-            {
-                g.TranslateTransform(this.X, this.Y);
-                clip.Offset(-this.X, -this.Y);
-                this.Drawable.Draw(g, clip);
-                g.TranslateTransform(-this.X, -this.Y);
-            }
-
-            private void DrawableOnAreaChanged(object sender, AreaChangedEventArgs areaChangedEventArgs)
-            {
-                var rect = areaChangedEventArgs.ChangedRectangle;
-                rect.Offset(this.X, this.Y);
-                this.AreaChanged?.Invoke(this, new AreaChangedEventArgs(rect));
-            }
         }
     }
 }
