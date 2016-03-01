@@ -32,20 +32,16 @@
 
         private readonly FeatureService featureService;
 
-        private readonly MapLoadingService mapLoadingService;
-
         public Dispatcher(
             CoreModel model,
             IDialogService dialogService,
             SectionService sectionService,
-            FeatureService featureService,
-            MapLoadingService mapLoadingService)
+            FeatureService featureService)
         {
             this.model = model;
             this.dialogService = dialogService;
             this.sectionService = sectionService;
             this.featureService = featureService;
-            this.mapLoadingService = mapLoadingService;
         }
 
         public void Initialize()
@@ -672,12 +668,12 @@
             }
 
             var tntPath = HpiPath.Combine("maps", mapName + ".tnt");
-            this.model.Map = Maybe.Some(this.mapLoadingService.CreateFromHpi(filename, tntPath, readOnly));
+            this.model.Map = Maybe.Some(MapLoadingService.CreateFromHpi(filename, tntPath, readOnly));
         }
 
         private void OpenTnt(string filename)
         {
-            this.model.Map = Maybe.Some(this.mapLoadingService.CreateFromTnt(filename));
+            this.model.Map = Maybe.Some(MapLoadingService.CreateFromTnt(filename));
         }
 
         private bool CheckOkayDiscard()
@@ -708,12 +704,12 @@
 
         private void New(int width, int height)
         {
-            this.model.Map = Maybe.Some(this.mapLoadingService.CreateMap(width, height));
+            this.model.Map = Maybe.Some(MapLoadingService.CreateMap(width, height));
         }
 
         private void OpenSct(string filename)
         {
-            this.model.Map = Maybe.Some(this.mapLoadingService.CreateFromSct(filename));
+            this.model.Map = Maybe.Some(MapLoadingService.CreateFromSct(filename));
         }
 
         private Maybe<Grid<int>> LoadHeightmapFromUser(int width, int height)

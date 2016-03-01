@@ -12,16 +12,16 @@
     using TAUtil.Tdf;
     using TAUtil.Tnt;
 
-    public class MapLoadingService
+    public static class MapLoadingService
     {
-        public UndoableMapModel CreateMap(int width, int height)
+        public static UndoableMapModel CreateMap(int width, int height)
         {
             var map = new MapModel(width, height);
             GridMethods.Fill(map.Tile.TileGrid, Globals.DefaultTile);
             return new UndoableMapModel(map, null, false);
         }
 
-        public UndoableMapModel CreateFromSct(string filename)
+        public static UndoableMapModel CreateFromSct(string filename)
         {
             MapTile t;
             using (var s = new SctReader(filename))
@@ -32,7 +32,7 @@
             return new UndoableMapModel(new MapModel(t), filename, true);
         }
 
-        public UndoableMapModel CreateFromTnt(string filename)
+        public static UndoableMapModel CreateFromTnt(string filename)
         {
             MapModel m;
 
@@ -61,12 +61,12 @@
             return new UndoableMapModel(m, filename, false);
         }
 
-        public UndoableMapModel CreateFromHpi(string hpipath, string mappath)
+        public static UndoableMapModel CreateFromHpi(string hpipath, string mappath)
         {
-            return this.CreateFromHpi(hpipath, mappath, false);
+            return CreateFromHpi(hpipath, mappath, false);
         }
 
-        public UndoableMapModel CreateFromHpi(string hpipath, string mappath, bool readOnly)
+        public static UndoableMapModel CreateFromHpi(string hpipath, string mappath, bool readOnly)
         {
             MapModel m;
 
