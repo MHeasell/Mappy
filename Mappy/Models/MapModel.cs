@@ -155,12 +155,12 @@
         }
 
         /// <summary>
-        /// <see cref="IMapModel.FeatureGridWidth"/>
+        /// <see cref="IReadOnlyMapModel.FeatureGridWidth"/>
         /// </summary>
         public int FeatureGridWidth => this.Tile.HeightGrid.Width;
 
         /// <summary>
-        /// <see cref="IMapModel.FeatureGridHeight"/>
+        /// <see cref="IReadOnlyMapModel.FeatureGridHeight"/>
         /// </summary>
         public int FeatureGridHeight => this.Tile.HeightGrid.Height;
 
