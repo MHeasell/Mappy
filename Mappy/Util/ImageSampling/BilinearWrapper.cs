@@ -17,15 +17,12 @@
 
         public int Height { get; }
 
-        public Color this[int x, int y]
+        public Color Get(int x, int y)
         {
-            get
-            {
-                var rect = this.GetRect(x, y);
-                var sampledColor = this.SampleArea(rect.X, rect.Y, rect.Width, rect.Height);
+            var rect = this.GetRect(x, y);
+            var sampledColor = this.SampleArea(rect.X, rect.Y, rect.Width, rect.Height);
 
-                return sampledColor;
-            }
+            return sampledColor;
         }
 
         private Rectangle GetRect(int x, int y)
@@ -69,7 +66,7 @@
             {
                 for (int dx = 0; dx < width; dx++)
                 {
-                    Color c = this.source[startX + dx, startY + dy];
+                    Color c = this.source.Get(startX + dx, startY + dy);
                     r += c.R;
                     g += c.G;
                     b += c.B;

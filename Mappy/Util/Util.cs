@@ -194,7 +194,7 @@ namespace Mappy.Util
 
                             for (int x = 0; x < wrapper.Width; x++)
                             {
-                                b.SetPixel(x, y, wrapper[x, y]);
+                                b.SetPixel(x, y, wrapper.Get(x, y));
                             }
 
                             int percentComplete = ((y + 1) * 100) / wrapper.Height;
@@ -216,7 +216,7 @@ namespace Mappy.Util
             {
                 for (int x = 0; x < map.Width; x++)
                 {
-                    b.SetPixel(x, y, map[x, y]);
+                    b.SetPixel(x, y, map.Get(x, y));
                 }
             }
 
@@ -287,7 +287,7 @@ namespace Mappy.Util
                 var line = new ImageLine(imgInfo);
                 for (int x = 0; x < img.Width; x++)
                 {
-                    var c = img[x, y];
+                    var c = img.Get(x, y);
                     var offset = x * 4;
                     line.Scanline[offset] = c.R;
                     line.Scanline[offset + 1] = c.G;

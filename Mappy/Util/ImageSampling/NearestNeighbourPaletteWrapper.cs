@@ -20,6 +20,6 @@
 
         public int Height => this.source.Height;
 
-        public Color this[int x, int y] => this.palette[this.palette.GetNearest(this.source[x, y])];
+        public Color Get(int x, int y) => this.palette[this.palette.GetNearest(this.source.Get(x, y))];
     }
 }

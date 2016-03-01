@@ -29,30 +29,27 @@
 
         public int Height => (this.map.Height * 32) - 128;
 
-        public Color this[int x, int y]
+        public Color Get(int x, int y)
         {
-            get
+            if (this.disposed)
             {
-                if (this.disposed)
-                {
-                    throw new ObjectDisposedException(null);
-                }
+                throw new ObjectDisposedException(null);
+            }
 
-                int tileX = x / 32;
-                int tileY = y / 32;
+            int tileX = x / 32;
+            int tileY = y / 32;
 
-                int tilePixelX = x % 32;
-                int tilePixelY = y % 32;
+            int tilePixelX = x % 32;
+            int tilePixelY = y % 32;
 
-                Bitmap bitmap = this.map.Get(tileX, tileY);
-                var data = this.GetOrLockData(bitmap);
+            Bitmap bitmap = this.map.Get(tileX, tileY);
+            var data = this.GetOrLockData(bitmap);
 
-                unsafe
-                {
-                    var ptr = (int*)data.Scan0;
-                    var color = ptr[(tilePixelY * 32) + tilePixelX];
-                    return Color.FromArgb(color);
-                }
+            unsafe
+            {
+                var ptr = (int*)data.Scan0;
+                var color = ptr[(tilePixelY * 32) + tilePixelX];
+                return Color.FromArgb(color);
             }
         }
 

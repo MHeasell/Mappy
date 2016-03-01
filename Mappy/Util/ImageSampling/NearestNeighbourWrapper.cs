@@ -17,18 +17,15 @@
 
         public int Height { get; }
 
-        public Color this[int x, int y]
+        public Color Get(int x, int y)
         {
-            get
-            {
-                // sample at the centre of each pixel
-                float ax = x + 0.5f;
-                float ay = y + 0.5f;
+            // sample at the centre of each pixel
+            float ax = x + 0.5f;
+            float ay = y + 0.5f;
 
-                int imageX = (int)((ax / this.Width) * this.source.Width);
-                int imageY = (int)((ay / this.Height) * this.source.Height);
-                return this.source[imageX, imageY];
-            }
+            int imageX = (int)((ax / this.Width) * this.source.Width);
+            int imageY = (int)((ay / this.Height) * this.source.Height);
+            return this.source.Get(imageX, imageY);
         }
-    }
+        }
 }

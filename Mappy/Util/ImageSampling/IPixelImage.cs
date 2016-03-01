@@ -8,6 +8,6 @@
 
         int Height { get; }
 
-        Color this[int x, int y] { get; }
+        Color Get(int x, int y);
     }
 }
