@@ -16,6 +16,10 @@
 
         public event EventHandler<AreaChangedEventArgs> AreaChanged;
 
+        public int Count => this.items.Count;
+
+        public bool IsReadOnly => false;
+
         public ILayer this[int index]
         {
             get
@@ -32,10 +36,6 @@
                 this.OnFullRedraw();
             }
         }
-
-        public int Count => this.items.Count;
-
-        public bool IsReadOnly => false;
 
         public IEnumerator<ILayer> GetEnumerator()
         {
