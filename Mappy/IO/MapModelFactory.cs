@@ -96,10 +96,21 @@
             }
         }
 
+        private static Bitmap ToBitmap(byte[] tile)
+        {
+            Bitmap bmp = BitmapConvert.ToBitmap(tile, MapConstants.TileWidth, MapConstants.TileHeight);
+            return Globals.TileCache.GetOrAddBitmap(bmp);
+        }
+
+        private static Bitmap ToBitmap(MinimapInfo minimap)
+        {
+            return BitmapConvert.ToBitmap(minimap.Data, minimap.Width, minimap.Height);
+        }
+
         private MapModel ReadTnt(ITntSource tnt, MapModel model)
         {
             List<Bitmap> tiles = new List<Bitmap>(tnt.TileCount);
-            tiles.AddRange(tnt.EnumerateTiles().Select(this.ToBitmap));
+            tiles.AddRange(tnt.EnumerateTiles().Select(ToBitmap));
 
             ReadData(tnt, model, tiles);
 
@@ -110,20 +121,9 @@
 
             model.SeaLevel = tnt.SeaLevel;
 
-            model.Minimap = this.ToBitmap(tnt.GetMinimap());
+            model.Minimap = ToBitmap(tnt.GetMinimap());
 
             return model;
-        }
-
-        private Bitmap ToBitmap(byte[] tile)
-        {
-            Bitmap bmp = BitmapConvert.ToBitmap(tile, MapConstants.TileWidth, MapConstants.TileHeight);
-            return Globals.TileCache.GetOrAddBitmap(bmp);
-        }
-
-        private Bitmap ToBitmap(MinimapInfo minimap)
-        {
-            return BitmapConvert.ToBitmap(minimap.Data, minimap.Width, minimap.Height);
         }
     }
 }
