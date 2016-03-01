@@ -33,6 +33,10 @@
             }
         }
 
+        public int Count => this.items.Count;
+
+        public bool IsReadOnly => false;
+
         public IEnumerator<ILayer> GetEnumerator()
         {
             return this.items.GetEnumerator();
@@ -85,10 +89,6 @@
 
             return success;
         }
-
-        public int Count => this.items.Count;
-
-        public bool IsReadOnly => false;
 
         public int IndexOf(ILayer item)
         {
