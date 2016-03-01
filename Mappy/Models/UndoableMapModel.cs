@@ -7,7 +7,6 @@
     using System.ComponentModel;
     using System.Drawing;
     using System.Linq;
-    using System.Windows.Forms;
 
     using Mappy.Collections;
     using Mappy.Data;
@@ -299,42 +298,6 @@
             return this.model.EnumerateFeatureInstances();
         }
 
-        public void CopySelectionToClipboard()
-        {
-            this.TryCopyToClipboard();
-        }
-
-        public void CutSelectionToClipboard()
-        {
-            if (this.TryCopyToClipboard())
-            {
-                this.DeleteSelection();
-            }
-        }
-
-        public void PasteFromClipboard(int x, int y)
-        {
-            var data = Clipboard.GetData(DataFormats.Serializable);
-            if (data == null)
-            {
-                return;
-            }
-
-            var tile = data as IMapTile;
-            if (tile != null)
-            {
-                this.PasteMapTile(tile, x, y);
-            }
-            else
-            {
-                var record = data as FeatureClipboardRecord;
-                if (record != null)
-                {
-                    this.PasteFeature(record, x, y);
-                }
-            }
-        }
-
         public void DragDropFeature(string name, int x, int y)
         {
             Point? featurePos = this.ScreenToHeightIndex(x, y);
@@ -535,6 +498,12 @@
             this.undoManager.SetNowAsMark();
         }
 
+        public void PasteMapTile(IMapTile tile, int x, int y)
+        {
+            DeduplicateTiles(tile.TileGrid);
+            this.PasteMapTileNoDeduplicate(tile, x, y);
+        }
+
         private static void DeduplicateTiles(IGrid<Bitmap> tiles)
         {
             var len = tiles.Width * tiles.Height;
@@ -542,17 +511,6 @@
             {
                 tiles[i] = Globals.TileCache.GetOrAddBitmap(tiles[i]);
             }
-        }
-
-        private void PasteFeature(FeatureClipboardRecord feature, int x, int y)
-        {
-            this.DragDropFeature(feature.FeatureName, x, y);
-        }
-
-        private void PasteMapTile(IMapTile tile, int x, int y)
-        {
-            DeduplicateTiles(tile.TileGrid);
-            this.PasteMapTileNoDeduplicate(tile, x, y);
         }
 
         private void PasteMapTileNoDeduplicate(IMapTile tile, int x, int y)
@@ -564,27 +522,6 @@
             normY -= tile.TileGrid.Height / 2;
 
             this.AddAndSelectTile(tile, normX, normY);
-        }
-
-        private bool TryCopyToClipboard()
-        {
-            if (this.SelectedFeatures.Count > 0)
-            {
-                var id = this.SelectedFeatures.First();
-                var inst = this.GetFeatureInstance(id);
-                var rec = new FeatureClipboardRecord(inst.FeatureName);
-                Clipboard.SetData(DataFormats.Serializable, rec);
-                return true;
-            }
-
-            if (this.SelectedTile.HasValue)
-            {
-                var tile = this.FloatingTiles[this.SelectedTile.Value].Item;
-                Clipboard.SetData(DataFormats.Serializable, tile);
-                return true;
-            }
-
-            return false;
         }
 
         private void FloatingTilesOnListChanged(object sender, ListChangedEventArgs e)

@@ -284,12 +284,19 @@
 
         public void CopySelectionToClipboard()
         {
-            this.model.Map.IfSome(x => x.CopySelectionToClipboard());
+            this.model.Map.IfSome(x => this.TryCopyToClipboard(x));
         }
 
         public void CutSelectionToClipboard()
         {
-            this.model.Map.IfSome(x => x.CutSelectionToClipboard());
+            this.model.Map.IfSome(
+                x =>
+                    {
+                        if (this.TryCopyToClipboard(x))
+                        {
+                            x.DeleteSelection();
+                        }
+                    });
         }
 
         public void PasteFromClipboard()
@@ -297,11 +304,29 @@
             this.model.Map.IfSome(
                 map =>
                     {
+                        var data = Clipboard.GetData(DataFormats.Serializable);
+                        if (data == null)
+                        {
+                            return;
+                        }
+
                         var loc = map.ViewportLocation;
                         loc.X += this.model.ViewportWidth / 2;
                         loc.Y += this.model.ViewportHeight / 2;
 
-                        map.PasteFromClipboard(loc.X, loc.Y);
+                        var tile = data as IMapTile;
+                        if (tile != null)
+                        {
+                            map.PasteMapTile(tile, loc.X, loc.Y);
+                        }
+                        else
+                        {
+                            var record = data as FeatureClipboardRecord;
+                            if (record != null)
+                            {
+                                map.DragDropFeature(record.FeatureName, loc.X, loc.Y);
+                            }
+                        }
                     });
         }
 
@@ -946,6 +971,27 @@
             bg.RunWorkerAsync();
 
             dlg.Display();
+        }
+
+        private bool TryCopyToClipboard(UndoableMapModel map)
+        {
+            if (map.SelectedFeatures.Count > 0)
+            {
+                var id = map.SelectedFeatures.First();
+                var inst = map.GetFeatureInstance(id);
+                var rec = new FeatureClipboardRecord(inst.FeatureName);
+                Clipboard.SetData(DataFormats.Serializable, rec);
+                return true;
+            }
+
+            if (map.SelectedTile.HasValue)
+            {
+                var tile = map.FloatingTiles[map.SelectedTile.Value].Item;
+                Clipboard.SetData(DataFormats.Serializable, tile);
+                return true;
+            }
+
+            return false;
         }
     }
 }
