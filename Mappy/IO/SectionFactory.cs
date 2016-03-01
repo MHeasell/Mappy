@@ -22,7 +22,7 @@
             MapTile tile = new MapTile(sct.DataWidth, sct.DataHeight);
 
             List<Bitmap> tiles = new List<Bitmap>(sct.TileCount);
-            tiles.AddRange(sct.EnumerateTiles().Select(this.TileToBitmap));
+            tiles.AddRange(sct.EnumerateTiles().Select(TileToBitmap));
 
             ReadData(sct, tile, tiles);
 
@@ -33,7 +33,7 @@
 
         public Bitmap MinimapFromSct(ISctSource sct)
         {
-            return this.MinimapToBitmap(sct.GetMinimap());
+            return MinimapToBitmap(sct.GetMinimap());
         }
 
         private static void ReadHeights(ISctSource sct, MapTile tile)
@@ -62,7 +62,7 @@
             }
         }
 
-        private Bitmap MinimapToBitmap(byte[] minimap)
+        private static Bitmap MinimapToBitmap(byte[] minimap)
         {
             return BitmapConvert.ToBitmap(
                 minimap,
@@ -70,7 +70,7 @@
                 SctReader.MinimapHeight);
         }
 
-        private Bitmap TileToBitmap(byte[] tile)
+        private static Bitmap TileToBitmap(byte[] tile)
         {
             Bitmap bmp = BitmapConvert.ToBitmap(
                 tile,
