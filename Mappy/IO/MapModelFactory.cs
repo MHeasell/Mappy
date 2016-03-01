@@ -25,7 +25,7 @@
             var attrs = MapAttributes.Load(ota);
             var model = new MapModel(tnt.DataWidth, tnt.DataHeight, attrs);
 
-            this.ReadTnt(tnt, model);
+            ReadTnt(tnt, model);
 
             var schemaData = ota.Keys["GlobalHeader"].Keys["Schema 0"];
             if (schemaData.Keys.ContainsKey("features"))
@@ -53,7 +53,7 @@
         {
             MapModel m = new MapModel(tnt.DataWidth, tnt.DataHeight);
 
-            return this.ReadTnt(tnt, m);
+            return ReadTnt(tnt, m);
         }
 
         private static void ReadFeatures(ITntSource tnt, MapModel model, List<string> features)
@@ -107,7 +107,7 @@
             return BitmapConvert.ToBitmap(minimap.Data, minimap.Width, minimap.Height);
         }
 
-        private MapModel ReadTnt(ITntSource tnt, MapModel model)
+        private static MapModel ReadTnt(ITntSource tnt, MapModel model)
         {
             List<Bitmap> tiles = new List<Bitmap>(tnt.TileCount);
             tiles.AddRange(tnt.EnumerateTiles().Select(ToBitmap));
