@@ -14,10 +14,6 @@
 
     public class MapLoadingService
     {
-        private readonly SectionFactory sectionFactory = new SectionFactory();
-
-        private readonly MapModelFactory mapModelFactory = new MapModelFactory();
-
         public UndoableMapModel CreateMap(int width, int height)
         {
             var map = new MapModel(width, height);
@@ -30,7 +26,7 @@
             MapTile t;
             using (var s = new SctReader(filename))
             {
-                t = this.sectionFactory.TileFromSct(s);
+                t = SectionFactory.TileFromSct(s);
             }
 
             return new UndoableMapModel(new MapModel(t), filename, true);
@@ -51,14 +47,14 @@
 
                 using (var s = new TntReader(filename))
                 {
-                    m = this.mapModelFactory.FromTntAndOta(s, attrs);
+                    m = MapModelFactory.FromTntAndOta(s, attrs);
                 }
             }
             else
             {
                 using (var s = new TntReader(filename))
                 {
-                    m = this.mapModelFactory.FromTnt(s);
+                    m = MapModelFactory.FromTnt(s);
                 }
             }
 
@@ -87,7 +83,7 @@
 
                 using (var s = new TntReader(hpi.ReadFile(mappath)))
                 {
-                    m = this.mapModelFactory.FromTntAndOta(s, n);
+                    m = MapModelFactory.FromTntAndOta(s, n);
                 }
             }
 

@@ -18,9 +18,9 @@
     /// Provides methods for creating a MapModel instance
     /// from TNT and OTA files.
     /// </summary>
-    public class MapModelFactory
+    public static class MapModelFactory
     {
-        public MapModel FromTntAndOta(ITntSource tnt, TdfNode ota)
+        public static MapModel FromTntAndOta(ITntSource tnt, TdfNode ota)
         {
             var attrs = MapAttributes.Load(ota);
             var model = new MapModel(tnt.DataWidth, tnt.DataHeight, attrs);
@@ -49,7 +49,7 @@
             return model;
         }
 
-        public MapModel FromTnt(ITntSource tnt)
+        public static MapModel FromTnt(ITntSource tnt)
         {
             MapModel m = new MapModel(tnt.DataWidth, tnt.DataHeight);
 

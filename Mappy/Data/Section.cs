@@ -61,8 +61,7 @@ namespace Mappy.Data
 
             using (var s = new SctReader(File.OpenRead(outpath)))
             {
-                SectionFactory factory = new SectionFactory();
-                this.cachedTile = factory.TileFromSct(s);
+                this.cachedTile = SectionFactory.TileFromSct(s);
             }
 
             File.Delete(outpath);

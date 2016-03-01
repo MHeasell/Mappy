@@ -12,20 +12,13 @@
 
     public class SectionLoader : AbstractHpiLoader<Section>
     {
-        private readonly SectionFactory factory;
-
-        public SectionLoader()
-        {
-            this.factory = new SectionFactory();
-        }
-
         protected override void LoadFile(HpiEntry file)
         {
             using (var s = new SctReader(file.Open()))
             {
                 var section = new Section(file.Reader.FileName, file.Name);
                 section.Name = HpiPath.GetFileNameWithoutExtension(file.Name);
-                section.Minimap = this.factory.MinimapFromSct(s);
+                section.Minimap = SectionFactory.MinimapFromSct(s);
                 section.DataWidth = s.DataWidth;
                 section.DataHeight = s.DataHeight;
 

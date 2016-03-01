@@ -15,9 +15,9 @@
     /// Provides methods for creating tiles and sections
     /// from SCT sources.
     /// </summary>
-    public class SectionFactory
+    public static class SectionFactory
     {
-        public MapTile TileFromSct(ISctSource sct)
+        public static MapTile TileFromSct(ISctSource sct)
         {
             MapTile tile = new MapTile(sct.DataWidth, sct.DataHeight);
 
@@ -31,7 +31,7 @@
             return tile;
         }
 
-        public Bitmap MinimapFromSct(ISctSource sct)
+        public static Bitmap MinimapFromSct(ISctSource sct)
         {
             return MinimapToBitmap(sct.GetMinimap());
         }
