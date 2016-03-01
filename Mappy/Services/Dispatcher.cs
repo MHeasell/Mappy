@@ -282,7 +282,7 @@
 
         public void CopySelectionToClipboard()
         {
-            this.model.Map.IfSome(x => this.TryCopyToClipboard(x));
+            this.model.Map.IfSome(x => TryCopyToClipboard(x));
         }
 
         public void CutSelectionToClipboard()
@@ -290,7 +290,7 @@
             this.model.Map.IfSome(
                 x =>
                     {
-                        if (this.TryCopyToClipboard(x))
+                        if (TryCopyToClipboard(x))
                         {
                             x.DeleteSelection();
                         }
@@ -544,6 +544,27 @@
             map.Undo();
 
             map.MarkSaved(filename);
+        }
+
+        private static bool TryCopyToClipboard(UndoableMapModel map)
+        {
+            if (map.SelectedFeatures.Count > 0)
+            {
+                var id = map.SelectedFeatures.First();
+                var inst = map.GetFeatureInstance(id);
+                var rec = new FeatureClipboardRecord(inst.FeatureName);
+                Clipboard.SetData(DataFormats.Serializable, rec);
+                return true;
+            }
+
+            if (map.SelectedTile.HasValue)
+            {
+                var tile = map.FloatingTiles[map.SelectedTile.Value].Item;
+                Clipboard.SetData(DataFormats.Serializable, tile);
+                return true;
+            }
+
+            return false;
         }
 
         private bool SaveHelper(UndoableMapModel map, string filename)
@@ -969,27 +990,6 @@
             bg.RunWorkerAsync();
 
             dlg.Display();
-        }
-
-        private bool TryCopyToClipboard(UndoableMapModel map)
-        {
-            if (map.SelectedFeatures.Count > 0)
-            {
-                var id = map.SelectedFeatures.First();
-                var inst = map.GetFeatureInstance(id);
-                var rec = new FeatureClipboardRecord(inst.FeatureName);
-                Clipboard.SetData(DataFormats.Serializable, rec);
-                return true;
-            }
-
-            if (map.SelectedTile.HasValue)
-            {
-                var tile = map.FloatingTiles[map.SelectedTile.Value].Item;
-                Clipboard.SetData(DataFormats.Serializable, tile);
-                return true;
-            }
-
-            return false;
         }
     }
 }
