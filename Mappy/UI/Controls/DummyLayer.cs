@@ -5,7 +5,11 @@
 
     public class DummyLayer : ILayer
     {
-        public event EventHandler<LayerChangedEventArgs> LayerChanged;
+        public event EventHandler<LayerChangedEventArgs> LayerChanged
+        {
+            add { }
+            remove { }
+        }
 
         public void Draw(Graphics graphics, Rectangle clipRectangle)
         {
