@@ -1,12 +1,9 @@
 namespace Mappy
 {
     using System.Drawing;
-    using Mappy.Services;
 
     public static class Globals
     {
-        public static readonly BitmapCache TileCache = new BitmapCache();
-
         public static readonly Bitmap DefaultTile = CreateWhiteBitmap(32, 32);
 
         private static Bitmap CreateWhiteBitmap(int width, int height)

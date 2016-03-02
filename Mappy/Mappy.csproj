@@ -195,6 +195,7 @@
     <Compile Include="Services\FeatureService.cs" />
     <Compile Include="Services\IDialogService.cs" />
     <Compile Include="Services\MapLoadingService.cs" />
+    <Compile Include="Services\SectionBitmapService.cs" />
     <Compile Include="Services\SectionService.cs" />
     <Compile Include="UI\Controls\AbstractLayer.cs" />
     <Compile Include="UI\Controls\AreaChangedEventArgs.cs" />

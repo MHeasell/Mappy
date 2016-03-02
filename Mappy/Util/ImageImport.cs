@@ -11,14 +11,22 @@
 
     using Mappy.Collections;
     using Mappy.Data;
+    using Mappy.Services;
 
     using TAUtil.Gdi.Palette;
 
     using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
-    public static class ImageImport
+    public class ImageImport
     {
-        public static IMapTile ImportSection(string pngFile, string heightFile, Action<int> progress, Func<bool> shouldCancel)
+        private readonly BitmapCache tileCache;
+
+        public ImageImport(BitmapCache tileCache)
+        {
+            this.tileCache = tileCache;
+        }
+
+        public IMapTile ImportSection(string pngFile, string heightFile, Action<int> progress, Func<bool> shouldCancel)
         {
             Bitmap heightBitmap;
             using (var s = File.OpenRead(heightFile))
@@ -43,7 +51,7 @@
                         "Graphic image dimensions are not a multiple of the heightmap");
                 }
 
-                grid = ImportFromPng(reader, progress, shouldCancel);
+                grid = this.ImportFromPng(reader, progress, shouldCancel);
 
                 if (grid == null)
                 {
@@ -56,7 +64,7 @@
             return new MapTile(grid, heightmap);
         }
 
-        public static Grid<Bitmap> ImportFromPng(PngReader reader, Action<int> progress, Func<bool> shouldCancel)
+        public Grid<Bitmap> ImportFromPng(PngReader reader, Action<int> progress, Func<bool> shouldCancel)
         {
             int w = reader.ImgInfo.Cols / 32;
             int h = reader.ImgInfo.Rows / 32;
@@ -70,7 +78,7 @@
                 }
 
                 int x = 0;
-                foreach (var bmp in ReadRowChunk(reader, y))
+                foreach (var bmp in this.ReadRowChunk(reader, y))
                 {
                     g.Set(x++, y, bmp);
                 }
@@ -79,32 +87,6 @@
             }
 
             return g;
-        }
-
-        private static IEnumerable<Bitmap> ReadRowChunk(PngReader reader, int chunkIndex)
-        {
-            if (!reader.ImgInfo.Indexed)
-            {
-                throw new ArgumentException("Only indexed color PNGs are supported.");
-            }
-
-            var lines = new byte[32][];
-            var pal = reader.GetMetadata().GetPLTE();
-
-            for (int i = 0; i < 32; i++)
-            {
-                lines[i] = reader.ReadRowByte(
-                    new byte[reader.ImgInfo.Cols],
-                    (chunkIndex * 32) + i);
-            }
-
-            var bitmapsPerRow = reader.ImgInfo.Cols / 32;
-            for (int i = 0; i < bitmapsPerRow; i++)
-            {
-                var bmp = ReadBitmap(i, lines, pal);
-                Globals.TileCache.GetOrAddBitmap(bmp);
-                yield return bmp;
-            }
         }
 
         private static unsafe Bitmap ReadBitmap(int bitmapIndex, byte[][] buf, PngChunkPLTE pal)
@@ -150,6 +132,32 @@
             }
 
             return bmp;
+        }
+
+        private IEnumerable<Bitmap> ReadRowChunk(PngReader reader, int chunkIndex)
+        {
+            if (!reader.ImgInfo.Indexed)
+            {
+                throw new ArgumentException("Only indexed color PNGs are supported.");
+            }
+
+            var lines = new byte[32][];
+            var pal = reader.GetMetadata().GetPLTE();
+
+            for (int i = 0; i < 32; i++)
+            {
+                lines[i] = reader.ReadRowByte(
+                    new byte[reader.ImgInfo.Cols],
+                    (chunkIndex * 32) + i);
+            }
+
+            var bitmapsPerRow = reader.ImgInfo.Cols / 32;
+            for (int i = 0; i < bitmapsPerRow; i++)
+            {
+                var bmp = ReadBitmap(i, lines, pal);
+                this.tileCache.GetOrAddBitmap(bmp);
+                yield return bmp;
+            }
         }
     }
 }

@@ -12,8 +12,18 @@
     using TAUtil.Tdf;
     using TAUtil.Tnt;
 
-    public static class MapLoadingService
+    public class MapLoadingService
     {
+        private readonly SectionFactory sectionFactory;
+
+        private readonly MapModelFactory mapModelFactory;
+
+        public MapLoadingService(SectionFactory sectionFactory, MapModelFactory mapModelFactory)
+        {
+            this.sectionFactory = sectionFactory;
+            this.mapModelFactory = mapModelFactory;
+        }
+
         public static UndoableMapModel CreateMap(int width, int height)
         {
             var map = new MapModel(width, height);
@@ -21,18 +31,18 @@
             return new UndoableMapModel(map, null, false);
         }
 
-        public static UndoableMapModel CreateFromSct(string filename)
+        public UndoableMapModel CreateFromSct(string filename)
         {
             MapTile t;
             using (var s = new SctReader(filename))
             {
-                t = SectionFactory.TileFromSct(s);
+                t = this.sectionFactory.TileFromSct(s);
             }
 
             return new UndoableMapModel(new MapModel(t), filename, true);
         }
 
-        public static UndoableMapModel CreateFromTnt(string filename)
+        public UndoableMapModel CreateFromTnt(string filename)
         {
             MapModel m;
 
@@ -47,26 +57,26 @@
 
                 using (var s = new TntReader(filename))
                 {
-                    m = MapModelFactory.FromTntAndOta(s, attrs);
+                    m = this.mapModelFactory.FromTntAndOta(s, attrs);
                 }
             }
             else
             {
                 using (var s = new TntReader(filename))
                 {
-                    m = MapModelFactory.FromTnt(s);
+                    m = this.mapModelFactory.FromTnt(s);
                 }
             }
 
             return new UndoableMapModel(m, filename, false);
         }
 
-        public static UndoableMapModel CreateFromHpi(string hpipath, string mappath)
+        public UndoableMapModel CreateFromHpi(string hpipath, string mappath)
         {
-            return CreateFromHpi(hpipath, mappath, false);
+            return this.CreateFromHpi(hpipath, mappath, false);
         }
 
-        public static UndoableMapModel CreateFromHpi(string hpipath, string mappath, bool readOnly)
+        public UndoableMapModel CreateFromHpi(string hpipath, string mappath, bool readOnly)
         {
             MapModel m;
 
@@ -83,7 +93,7 @@
 
                 using (var s = new TntReader(hpi.ReadFile(mappath)))
                 {
-                    m = MapModelFactory.FromTntAndOta(s, n);
+                    m = this.mapModelFactory.FromTntAndOta(s, n);
                 }
             }
 

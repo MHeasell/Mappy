@@ -29,18 +29,34 @@
 
         private readonly SectionService sectionService;
 
+        private readonly SectionBitmapService sectionBitmapService;
+
         private readonly FeatureService featureService;
+
+        private readonly MapLoadingService mapLoadingService;
+
+        private readonly ImageImport imageImportingService;
+
+        private readonly BitmapCache tileCache;
 
         public Dispatcher(
             CoreModel model,
             IDialogService dialogService,
             SectionService sectionService,
-            FeatureService featureService)
+            SectionBitmapService sectionBitmapService,
+            FeatureService featureService,
+            MapLoadingService mapLoadingService,
+            ImageImport imageImportingService,
+            BitmapCache tileCache)
         {
             this.model = model;
             this.dialogService = dialogService;
             this.sectionService = sectionService;
+            this.sectionBitmapService = sectionBitmapService;
             this.featureService = featureService;
+            this.mapLoadingService = mapLoadingService;
+            this.imageImportingService = imageImportingService;
+            this.tileCache = tileCache;
         }
 
         public void Initialize()
@@ -268,8 +284,9 @@
             this.model.Map.IfSome(
                 map =>
                     {
-                        var section = this.sectionService.Get(sectionId).GetTile();
-                        map.DragDropTile(section, x, y);
+                        var record = this.sectionService.Get(sectionId);
+                        var tile = this.sectionBitmapService.LoadSection(record.HpiFileName, record.SctFileName);
+                        map.DragDropTile(tile, x, y);
                     });
         }
 
@@ -308,6 +325,7 @@
                         var tile = data as IMapTile;
                         if (tile != null)
                         {
+                            this.DeduplicateTiles(tile.TileGrid);
                             map.PasteMapTile(tile, loc.X, loc.Y);
                         }
                         else
@@ -560,6 +578,15 @@
             return false;
         }
 
+        private void DeduplicateTiles(IGrid<Bitmap> tiles)
+        {
+            var len = tiles.Width * tiles.Height;
+            for (int i = 0; i < len; i++)
+            {
+                tiles[i] = this.tileCache.GetOrAddBitmap(tiles[i]);
+            }
+        }
+
         private bool SaveHelper(UndoableMapModel map, string filename)
         {
             if (filename == null)
@@ -665,12 +692,12 @@
             }
 
             var tntPath = HpiPath.Combine("maps", mapName + ".tnt");
-            this.model.Map = Maybe.Some(MapLoadingService.CreateFromHpi(filename, tntPath, readOnly));
+            this.model.Map = Maybe.Some(this.mapLoadingService.CreateFromHpi(filename, tntPath, readOnly));
         }
 
         private void OpenTnt(string filename)
         {
-            this.model.Map = Maybe.Some(MapLoadingService.CreateFromTnt(filename));
+            this.model.Map = Maybe.Some(this.mapLoadingService.CreateFromTnt(filename));
         }
 
         private bool CheckOkayDiscard()
@@ -706,7 +733,7 @@
 
         private void OpenSct(string filename)
         {
-            this.model.Map = Maybe.Some(MapLoadingService.CreateFromSct(filename));
+            this.model.Map = Maybe.Some(this.mapLoadingService.CreateFromSct(filename));
         }
 
         private Maybe<Grid<int>> LoadHeightmapFromUser(int width, int height)
@@ -944,7 +971,7 @@
             bg.DoWork += (sender, args) =>
                 {
                     var w = (BackgroundWorker)sender;
-                    var sect = ImageImport.ImportSection(
+                    var sect = this.imageImportingService.ImportSection(
                         paths.GraphicPath,
                         paths.HeightmapPath,
                         w.ReportProgress,

@@ -6,6 +6,7 @@
 
     using Mappy.Collections;
     using Mappy.Data;
+    using Mappy.Services;
 
     using TAUtil;
     using TAUtil.Gdi.Bitmap;
@@ -15,25 +16,32 @@
     /// Provides methods for creating tiles and sections
     /// from SCT sources.
     /// </summary>
-    public static class SectionFactory
+    public class SectionFactory
     {
-        public static MapTile TileFromSct(ISctSource sct)
+        private readonly BitmapCache tileCache;
+
+        public SectionFactory(BitmapCache tileCache)
+        {
+            this.tileCache = tileCache;
+        }
+
+        public static Bitmap MinimapFromSct(ISctSource sct)
+        {
+            return MinimapToBitmap(sct.GetMinimap());
+        }
+
+        public MapTile TileFromSct(ISctSource sct)
         {
             MapTile tile = new MapTile(sct.DataWidth, sct.DataHeight);
 
             List<Bitmap> tiles = new List<Bitmap>(sct.TileCount);
-            tiles.AddRange(sct.EnumerateTiles().Select(TileToBitmap));
+            tiles.AddRange(sct.EnumerateTiles().Select(this.TileToBitmap));
 
             ReadData(sct, tile, tiles);
 
             ReadHeights(sct, tile);
 
             return tile;
-        }
-
-        public static Bitmap MinimapFromSct(ISctSource sct)
-        {
-            return MinimapToBitmap(sct.GetMinimap());
         }
 
         private static void ReadHeights(ISctSource sct, MapTile tile)
@@ -70,14 +78,14 @@
                 SctReader.MinimapHeight);
         }
 
-        private static Bitmap TileToBitmap(byte[] tile)
+        private Bitmap TileToBitmap(byte[] tile)
         {
             Bitmap bmp = BitmapConvert.ToBitmap(
                 tile,
                 MapConstants.TileWidth,
                 MapConstants.TileHeight);
 
-            return Globals.TileCache.GetOrAddBitmap(bmp);
+            return this.tileCache.GetOrAddBitmap(bmp);
         }
     }
 }

@@ -499,17 +499,7 @@
 
         public void PasteMapTile(IMapTile tile, int x, int y)
         {
-            DeduplicateTiles(tile.TileGrid);
             this.PasteMapTileNoDeduplicate(tile, x, y);
-        }
-
-        private static void DeduplicateTiles(IGrid<Bitmap> tiles)
-        {
-            var len = tiles.Width * tiles.Height;
-            for (int i = 0; i < len; i++)
-            {
-                tiles[i] = Globals.TileCache.GetOrAddBitmap(tiles[i]);
-            }
         }
 
         private void PasteMapTileNoDeduplicate(IMapTile tile, int x, int y)

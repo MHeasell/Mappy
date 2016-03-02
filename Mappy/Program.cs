@@ -4,9 +4,11 @@
     using System.IO;
     using System.Windows.Forms;
 
+    using Mappy.IO;
     using Mappy.Models;
     using Mappy.Services;
     using Mappy.UI.Forms;
+    using Mappy.Util;
 
     public static class Program
     {
@@ -34,11 +36,25 @@
             Application.SetCompatibleTextRenderingDefault(false);
 
             var mainForm = new MainForm();
+            var tileCache = new BitmapCache();
             var dialogService = new DialogService(mainForm);
             var featureService = new FeatureService();
             var sectionsService = new SectionService();
+            var sectionFactory = new SectionFactory(tileCache);
+            var sectionBitmapService = new SectionBitmapService(sectionFactory);
+            var mapModelFactory = new MapModelFactory(tileCache);
+            var mapLoadingService = new MapLoadingService(sectionFactory, mapModelFactory);
+            var imageImportingService = new ImageImport(tileCache);
             var model = new CoreModel();
-            var dispatcher = new Dispatcher(model, dialogService, sectionsService, featureService);
+            var dispatcher = new Dispatcher(
+                model,
+                dialogService,
+                sectionsService,
+                sectionBitmapService,
+                featureService,
+                mapLoadingService,
+                imageImportingService,
+                tileCache);
             mainForm.SetModel(new MainFormViewModel(model, dispatcher));
 
             mainForm.SectionView.SetModel(new SectionViewViewModel(sectionsService));

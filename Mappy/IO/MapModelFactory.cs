@@ -8,6 +8,7 @@
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.Models;
+    using Mappy.Services;
 
     using TAUtil;
     using TAUtil.Gdi.Bitmap;
@@ -18,14 +19,21 @@
     /// Provides methods for creating a MapModel instance
     /// from TNT and OTA files.
     /// </summary>
-    public static class MapModelFactory
+    public class MapModelFactory
     {
-        public static MapModel FromTntAndOta(ITntSource tnt, TdfNode ota)
+        private readonly BitmapCache tileCache;
+
+        public MapModelFactory(BitmapCache tileCache)
+        {
+            this.tileCache = tileCache;
+        }
+
+        public MapModel FromTntAndOta(ITntSource tnt, TdfNode ota)
         {
             var attrs = MapAttributes.Load(ota);
             var model = new MapModel(tnt.DataWidth, tnt.DataHeight, attrs);
 
-            ReadTnt(tnt, model);
+            this.ReadTnt(tnt, model);
 
             var schemaData = ota.Keys["GlobalHeader"].Keys["Schema 0"];
             if (schemaData.Keys.ContainsKey("features"))
@@ -49,11 +57,11 @@
             return model;
         }
 
-        public static MapModel FromTnt(ITntSource tnt)
+        public MapModel FromTnt(ITntSource tnt)
         {
             MapModel m = new MapModel(tnt.DataWidth, tnt.DataHeight);
 
-            return ReadTnt(tnt, m);
+            return this.ReadTnt(tnt, m);
         }
 
         private static void ReadFeatures(ITntSource tnt, MapModel model, List<string> features)
@@ -96,21 +104,21 @@
             }
         }
 
-        private static Bitmap ToBitmap(byte[] tile)
-        {
-            Bitmap bmp = BitmapConvert.ToBitmap(tile, MapConstants.TileWidth, MapConstants.TileHeight);
-            return Globals.TileCache.GetOrAddBitmap(bmp);
-        }
-
         private static Bitmap ToBitmap(MinimapInfo minimap)
         {
             return BitmapConvert.ToBitmap(minimap.Data, minimap.Width, minimap.Height);
         }
 
-        private static MapModel ReadTnt(ITntSource tnt, MapModel model)
+        private Bitmap ToBitmap(byte[] tile)
+        {
+            Bitmap bmp = BitmapConvert.ToBitmap(tile, MapConstants.TileWidth, MapConstants.TileHeight);
+            return this.tileCache.GetOrAddBitmap(bmp);
+        }
+
+        private MapModel ReadTnt(ITntSource tnt, MapModel model)
         {
             List<Bitmap> tiles = new List<Bitmap>(tnt.TileCount);
-            tiles.AddRange(tnt.EnumerateTiles().Select(ToBitmap));
+            tiles.AddRange(tnt.EnumerateTiles().Select(this.ToBitmap));
 
             ReadData(tnt, model, tiles);
 
