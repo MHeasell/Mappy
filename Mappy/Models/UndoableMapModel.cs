@@ -15,7 +15,7 @@
     using Mappy.Operations.SelectionModel;
     using Mappy.Util;
 
-    public class UndoableMapModel : Notifier, IMainModel, IBandboxModel, IReadOnlyMapModel
+    public sealed class UndoableMapModel : Notifier, IMainModel, IBandboxModel, IReadOnlyMapModel
     {
         private readonly OperationManager undoManager = new OperationManager();
 
