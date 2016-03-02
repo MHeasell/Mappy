@@ -8,7 +8,7 @@
     using Mappy.Data;
     using Mappy.Services;
 
-    public class SectionViewViewModel : ISectionViewViewModel
+    public sealed class SectionViewViewModel : ISectionViewViewModel, IDisposable
     {
         private readonly BehaviorSubject<ComboBoxViewModel> worlds = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty);
 
@@ -60,6 +60,15 @@
         public void SelectComboBox2Item(int index)
         {
             this.selectCategoryEvent.OnNext(index);
+        }
+
+        public void Dispose()
+        {
+            this.worlds.Dispose();
+            this.categories.Dispose();
+            this.sections.Dispose();
+            this.selectWorldEvent.Dispose();
+            this.selectCategoryEvent.Dispose();
         }
 
         private static ListViewItem ToItem(int id, Section s)
