@@ -87,7 +87,7 @@
 
         private TileAttr GetAttr(int x, int y)
         {
-            TileAttr attr = new TileAttr();
+            TileAttr attr = default(TileAttr);
 
             attr.Height = (byte)this.model.Tile.HeightGrid.Get(x, y);
 
