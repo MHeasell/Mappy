@@ -7,14 +7,14 @@
 
     using Mappy.Services;
 
-    public class MinimapFormViewModel : IMinimapFormViewModel
+    public sealed class MinimapFormViewModel : IMinimapFormViewModel, IDisposable
     {
         private readonly Dispatcher dispatcher;
 
         // subjects from user events
-        private readonly ISubject<Point> mousePosition = new Subject<Point>();
+        private readonly Subject<Point> mousePosition = new Subject<Point>();
 
-        private readonly ISubject<bool> mouseDown = new BehaviorSubject<bool>(false);
+        private readonly BehaviorSubject<bool> mouseDown = new BehaviorSubject<bool>(false);
 
         public MinimapFormViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher)
         {
@@ -65,6 +65,12 @@
         public IObservable<Bitmap> MinimapImage { get; }
 
         public IObservable<Rectangle> MinimapRect { get; }
+
+        public void Dispose()
+        {
+            this.mousePosition.Dispose();
+            this.mouseDown.Dispose();
+        }
 
         public void MouseDown(Point location)
         {
