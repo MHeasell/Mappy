@@ -14,13 +14,13 @@
 
         private readonly BehaviorSubject<ComboBoxViewModel> categories = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty);
 
+        private readonly BehaviorSubject<IEnumerable<ListViewItem>> sections = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>());
+
         private readonly Subject<int> selectWorldEvent = new Subject<int>();
 
         private readonly Subject<int> selectCategoryEvent = new Subject<int>();
 
         private readonly SectionService sectionService;
-
-        private readonly BehaviorSubject<IEnumerable<ListViewItem>> sections = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>());
 
         public SectionViewViewModel(SectionService sectionService)
         {
