@@ -29,7 +29,7 @@
 
         public int Height => this.map.Height * 32;
 
-        public Color Get(int x, int y)
+        public Color GetPixel(int x, int y)
         {
             if (this.disposed)
             {

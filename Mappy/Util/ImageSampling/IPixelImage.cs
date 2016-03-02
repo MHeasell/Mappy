@@ -8,6 +8,6 @@
 
         int Height { get; }
 
-        Color Get(int x, int y);
+        Color GetPixel(int x, int y);
     }
 }

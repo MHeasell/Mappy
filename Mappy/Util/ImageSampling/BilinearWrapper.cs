@@ -17,7 +17,7 @@
 
         public int Height { get; }
 
-        public Color Get(int x, int y)
+        public Color GetPixel(int x, int y)
         {
             var rect = this.GetRect(x, y);
             var sampledColor = this.SampleArea(rect.X, rect.Y, rect.Width, rect.Height);
@@ -66,7 +66,7 @@
             {
                 for (int dx = 0; dx < width; dx++)
                 {
-                    Color c = this.source.Get(startX + dx, startY + dy);
+                    Color c = this.source.GetPixel(startX + dx, startY + dy);
                     r += c.R;
                     g += c.G;
                     b += c.B;

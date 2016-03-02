@@ -17,7 +17,7 @@
 
         public int Height { get; }
 
-        public Color Get(int x, int y)
+        public Color GetPixel(int x, int y)
         {
             // sample at the centre of each pixel
             float ax = x + 0.5f;
@@ -25,7 +25,7 @@
 
             int imageX = (int)((ax / this.Width) * this.source.Width);
             int imageY = (int)((ay / this.Height) * this.source.Height);
-            return this.source.Get(imageX, imageY);
+            return this.source.GetPixel(imageX, imageY);
         }
         }
 }
