@@ -154,14 +154,8 @@
             }
         }
 
-        /// <summary>
-        /// <see cref="IReadOnlyMapModel.FeatureGridWidth"/>
-        /// </summary>
         public int FeatureGridWidth => this.Tile.HeightGrid.Width;
 
-        /// <summary>
-        /// <see cref="IReadOnlyMapModel.FeatureGridHeight"/>
-        /// </summary>
         public int FeatureGridHeight => this.Tile.HeightGrid.Height;
 
         public int? SelectedStartPosition
