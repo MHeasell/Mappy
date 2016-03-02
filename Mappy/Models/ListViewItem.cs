@@ -2,7 +2,7 @@
 {
     using System.Drawing;
 
-    public struct ListViewItem
+    public class ListViewItem
     {
         public ListViewItem(string name, Bitmap image, object tag)
         {
