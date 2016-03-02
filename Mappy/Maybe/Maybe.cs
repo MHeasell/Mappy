@@ -5,23 +5,19 @@
 
     public struct Maybe<T> : IEquatable<Maybe<T>>
     {
-        private readonly bool hasValue;
-
-        private readonly T value;
-
         internal Maybe(T value)
         {
-            this.value = value;
-            this.hasValue = this.value != null;
+            this.UnsafeValue = value;
+            this.HasValue = this.UnsafeValue != null;
         }
 
-        public bool IsNone => !this.hasValue;
+        public bool HasValue { get; }
 
-        public bool HasValue => this.hasValue;
+        public T UnsafeValue { get; }
 
-        public bool IsSome => this.hasValue;
+        public bool IsNone => !this.HasValue;
 
-        public T UnsafeValue => this.value;
+        public bool IsSome => this.HasValue;
 
         public static bool operator ==(Maybe<T> left, Maybe<T> right)
         {
@@ -35,12 +31,12 @@
 
         public bool Equals(Maybe<T> other)
         {
-            if (this.hasValue && other.hasValue)
+            if (this.HasValue && other.HasValue)
             {
-                return EqualityComparer<T>.Default.Equals(this.value, other.value);
+                return EqualityComparer<T>.Default.Equals(this.UnsafeValue, other.UnsafeValue);
             }
 
-            return this.hasValue == other.hasValue;
+            return this.HasValue == other.HasValue;
         }
 
         public override bool Equals(object obj)
@@ -50,12 +46,12 @@
 
         public override int GetHashCode()
         {
-            return this.hasValue ? this.value.GetHashCode() : 0;
+            return this.HasValue ? this.UnsafeValue.GetHashCode() : 0;
         }
 
         public override string ToString()
         {
-            return this.hasValue ? $"Some({this.value})" : "None";
+            return this.HasValue ? $"Some({this.UnsafeValue})" : "None";
         }
 
         public TR Match<TR>(Func<T, TR> some, Func<TR> none)
@@ -70,7 +66,7 @@
                 throw new ArgumentNullException(nameof(none));
             }
 
-            return this.hasValue ? some(this.value) : none();
+            return this.HasValue ? some(this.UnsafeValue) : none();
         }
 
         public void Match(Action<T> some, Action none)
@@ -85,9 +81,9 @@
                 throw new ArgumentNullException(nameof(none));
             }
 
-            if (this.hasValue)
+            if (this.HasValue)
             {
-                some(this.value);
+                some(this.UnsafeValue);
             }
             else
             {
@@ -97,12 +93,12 @@
 
         public Maybe<T> Or(Maybe<T> other)
         {
-            return this.hasValue ? this : other;
+            return this.HasValue ? this : other;
         }
 
         public T Or(T otherValue)
         {
-            return this.hasValue ? this.value : otherValue;
+            return this.HasValue ? this.UnsafeValue : otherValue;
         }
 
         public T GetOrDefault(T defaultValue)
@@ -117,7 +113,7 @@
                 throw new ArgumentNullException(nameof(f));
             }
 
-            return this.hasValue ? new Maybe<TR>(f(this.value)) : Maybe.None<TR>();
+            return this.HasValue ? new Maybe<TR>(f(this.UnsafeValue)) : Maybe.None<TR>();
         }
 
         public Maybe<TR> Select<TR>(Func<T, TR> f)
@@ -132,7 +128,7 @@
                 throw new ArgumentNullException(nameof(f));
             }
 
-            return this.hasValue ? f(this.value) : Maybe.None<TR>();
+            return this.HasValue ? f(this.UnsafeValue) : Maybe.None<TR>();
         }
 
         public Maybe<TR> SelectMany<TR>(Func<T, Maybe<TR>> f)
@@ -152,7 +148,7 @@
                 throw new ArgumentNullException(nameof(filter));
             }
 
-            return this.hasValue && filter(this.value) ? this : Maybe.None<T>();
+            return this.HasValue && filter(this.UnsafeValue) ? this : Maybe.None<T>();
         }
 
         public Maybe<T> Filter(Predicate<T> filter)
@@ -162,15 +158,15 @@
 
         public void IfSome(Action<T> action)
         {
-            if (this.hasValue)
+            if (this.HasValue)
             {
-                action(this.value);
+                action(this.UnsafeValue);
             }
         }
 
         public void IfNone(Action action)
         {
-            if (!this.hasValue)
+            if (!this.HasValue)
             {
                 action();
             }
