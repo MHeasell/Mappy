@@ -35,7 +35,7 @@
 
         private readonly MapLoadingService mapLoadingService;
 
-        private readonly ImageImport imageImportingService;
+        private readonly ImageImportService imageImportingService;
 
         private readonly BitmapCache tileCache;
 
@@ -46,7 +46,7 @@
             SectionBitmapService sectionBitmapService,
             FeatureService featureService,
             MapLoadingService mapLoadingService,
-            ImageImport imageImportingService,
+            ImageImportService imageImportingService,
             BitmapCache tileCache)
         {
             this.model = model;

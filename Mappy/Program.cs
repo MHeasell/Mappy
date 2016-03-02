@@ -44,7 +44,7 @@
             var sectionBitmapService = new SectionBitmapService(sectionFactory);
             var mapModelFactory = new MapModelFactory(tileCache);
             var mapLoadingService = new MapLoadingService(sectionFactory, mapModelFactory);
-            var imageImportingService = new ImageImport(tileCache);
+            var imageImportingService = new ImageImportService(tileCache);
             var model = new CoreModel();
             var dispatcher = new Dispatcher(
                 model,

@@ -17,11 +17,11 @@
 
     using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
-    public class ImageImport
+    public class ImageImportService
     {
         private readonly BitmapCache tileCache;
 
-        public ImageImport(BitmapCache tileCache)
+        public ImageImportService(BitmapCache tileCache)
         {
             this.tileCache = tileCache;
         }
