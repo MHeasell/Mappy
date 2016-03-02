@@ -10,7 +10,7 @@
     using Mappy.Data;
     using Mappy.Services;
 
-    public class FeatureViewViewModel : ISectionViewViewModel
+    public sealed class FeatureViewViewModel : ISectionViewViewModel, IDisposable
     {
         private readonly BehaviorSubject<ComboBoxViewModel> worlds = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty);
         private readonly BehaviorSubject<ComboBoxViewModel> categories = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty);
@@ -74,6 +74,20 @@
         public void SelectComboBox2Item(int index)
         {
             this.selectCategoryEvent.OnNext(index);
+        }
+
+        public void Dispose()
+        {
+            this.worlds.Dispose();
+            this.categories.Dispose();
+            this.features.Dispose();
+
+            this.selectWorldEvent.Dispose();
+            this.selectCategoryEvent.Dispose();
+
+            this.worldsInvalidated.Dispose();
+            this.categoriesInvalidated.Dispose();
+            this.featuresInvalidated.Dispose();
         }
 
         private static Bitmap RescaleImage(Bitmap img)
