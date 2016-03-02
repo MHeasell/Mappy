@@ -2,7 +2,7 @@ namespace Mappy.Models
 {
     using System.Collections.Generic;
 
-    public struct ComboBoxViewModel
+    public class ComboBoxViewModel
     {
         public static readonly ComboBoxViewModel Empty = new ComboBoxViewModel(new List<string>(), -1);
 
