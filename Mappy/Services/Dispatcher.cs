@@ -837,7 +837,7 @@
                     dlg.Close();
                 };
 
-            worker.RunWorkerAsync(this.model);
+            worker.RunWorkerAsync(map);
             dlg.Display();
         }
 
