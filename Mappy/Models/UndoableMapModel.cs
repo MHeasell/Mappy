@@ -95,7 +95,7 @@
                 return this.canCopy;
             }
 
-            set
+            private set
             {
                 this.SetField(ref this.canCopy, value, "CanCopy");
             }
@@ -108,7 +108,7 @@
                 return this.canCut;
             }
 
-            set
+            private set
             {
                 this.SetField(ref this.canCut, value, "CanCopy");
             }
