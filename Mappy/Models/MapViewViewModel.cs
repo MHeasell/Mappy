@@ -8,13 +8,12 @@
     using System.Reactive.Subjects;
     using System.Windows.Forms;
 
+    using Mappy.Collections;
     using Mappy.Data;
+    using Mappy.Services;
     using Mappy.UI.Controls;
     using Mappy.UI.Drawables;
     using Mappy.UI.Tags;
-    using Collections;
-
-    using Mappy.Services;
 
     public class MapViewViewModel : IMapViewViewModel
     {
