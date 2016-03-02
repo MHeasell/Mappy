@@ -2,6 +2,7 @@ namespace Mappy
 {
     using System.Drawing;
     using Mappy.IO;
+    using Mappy.Services;
 
     public static class Globals
     {

@@ -125,7 +125,6 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="IO\AbstractHpiLoader.cs" />
-    <Compile Include="IO\BitmapCache.cs" />
     <Compile Include="IO\FeatureBitmapLoader.cs" />
     <Compile Include="IO\FeatureRenderLoader.cs" />
     <Compile Include="IO\FeatureTdfLoader.cs" />
@@ -190,6 +189,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\BitmapCache.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\Dispatcher.cs" />
     <Compile Include="Services\FeatureService.cs" />

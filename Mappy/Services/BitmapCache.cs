@@ -1,4 +1,4 @@
-﻿namespace Mappy.IO
+﻿namespace Mappy.Services
 {
     using System;
     using System.Collections.Generic;
