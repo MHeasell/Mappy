@@ -13,22 +13,19 @@
     public class FeatureViewViewModel : ISectionViewViewModel
     {
         private readonly BehaviorSubject<ComboBoxViewModel> worlds = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty);
-
         private readonly BehaviorSubject<ComboBoxViewModel> categories = new BehaviorSubject<ComboBoxViewModel>(ComboBoxViewModel.Empty);
+        private readonly BehaviorSubject<IEnumerable<ListViewItem>> features = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>());
+
+        private readonly Subject<bool> worldsInvalidated = new Subject<bool>();
+        private readonly Subject<bool> categoriesInvalidated = new Subject<bool>();
+        private readonly Subject<bool> featuresInvalidated = new Subject<bool>();
 
         private readonly Subject<int> selectWorldEvent = new Subject<int>();
-
         private readonly Subject<int> selectCategoryEvent = new Subject<int>();
-
-        private readonly BehaviorSubject<IEnumerable<ListViewItem>> features = new BehaviorSubject<IEnumerable<ListViewItem>>(Enumerable.Empty<ListViewItem>());
 
         private readonly Dictionary<string, Bitmap> rescaledImageMap = new Dictionary<string, Bitmap>();
 
         private readonly FeatureService featureService;
-
-        private readonly ISubject<bool> worldsInvalidated = new Subject<bool>();
-        private readonly ISubject<bool> categoriesInvalidated = new Subject<bool>();
-        private readonly ISubject<bool> featuresInvalidated = new Subject<bool>();
 
         public FeatureViewViewModel(FeatureService featureService)
         {
