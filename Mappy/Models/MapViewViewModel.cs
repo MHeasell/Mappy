@@ -25,7 +25,7 @@
 
         private static readonly Color BandboxBorderColor = Color.FromArgb(127, Color.Black);
 
-        private static readonly IDrawable[] StartPositionImages = new IDrawable[10];
+        private static readonly IDrawable[] StartPositionImages = LoadStartPositionImages();
 
         private static readonly Feature DefaultFeatureRecord = new Feature
         {
@@ -70,15 +70,6 @@
         private DrawableItem baseItem;
 
         private bool featuresVisible;
-
-        static MapViewViewModel()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                var image = new DrawableBitmap(Mappy.Util.Util.GetStartImage(i + 1));
-                StartPositionImages[i] = image;
-            }
-        }
 
         public MapViewViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher, FeatureService featureService)
         {
@@ -264,6 +255,18 @@
         public void LeaveFocus()
         {
             this.dispatcher.ClearSelection();
+        }
+
+        private static IDrawable[] LoadStartPositionImages()
+        {
+            var arr = new IDrawable[10];
+            for (int i = 0; i < 10; i++)
+            {
+                var image = new DrawableBitmap(Mappy.Util.Util.GetStartImage(i + 1));
+                arr[i] = image;
+            }
+
+            return arr;
         }
 
         private void SetMapModel(Maybe<UndoableMapModel> model)
