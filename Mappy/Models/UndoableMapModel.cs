@@ -340,7 +340,6 @@
             {
                 // TODO: restore old behaviour
                 // where heightmap is taken into account when placing features
-
                 this.deltaX += x;
                 this.deltaY += y;
 
