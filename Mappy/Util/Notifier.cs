@@ -15,11 +15,11 @@ namespace Mappy.Util
             }
 
             field = value;
-            this.FireChange(propertyName);
+            this.OnPropertyChanged(propertyName);
             return true;
         }
 
-        protected void FireChange(string name)
+        protected void OnPropertyChanged(string name)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }

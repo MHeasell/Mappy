@@ -35,12 +35,12 @@
                 {
                     this.Map.IfSome(x => x.PropertyChanged += this.MapOnPropertyChanged);
 
-                    this.FireChange("CanUndo");
-                    this.FireChange("CanRedo");
+                    this.OnPropertyChanged("CanUndo");
+                    this.OnPropertyChanged("CanRedo");
 
-                    this.FireChange("CanCut");
-                    this.FireChange("CanCopy");
-                    this.FireChange("CanPaste");
+                    this.OnPropertyChanged("CanCut");
+                    this.OnPropertyChanged("CanCopy");
+                    this.OnPropertyChanged("CanPaste");
                 }
             }
         }
@@ -160,7 +160,7 @@
                 case "CanCut":
                 case "CanCopy":
                 case "CanPaste":
-                    this.FireChange(propertyChangedEventArgs.PropertyName);
+                    this.OnPropertyChanged(propertyChangedEventArgs.PropertyName);
                     break;
             }
         }

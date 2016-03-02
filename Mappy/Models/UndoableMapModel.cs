@@ -713,7 +713,7 @@
             switch (e.PropertyName)
             {
                 case "BandboxRectangle":
-                    this.FireChange("BandboxRectangle");
+                    this.OnPropertyChanged("BandboxRectangle");
                     break;
             }
         }
@@ -736,22 +736,22 @@
 
         private void UndoManagerOnIsMarkedChanged(object sender, EventArgs eventArgs)
         {
-            this.FireChange("IsMarked");
+            this.OnPropertyChanged("IsMarked");
         }
 
         private void UndoManagerOnCanRedoChanged(object sender, EventArgs eventArgs)
         {
-            this.FireChange("CanRedo");
+            this.OnPropertyChanged("CanRedo");
         }
 
         private void UndoManagerOnCanUndoChanged(object sender, EventArgs eventArgs)
         {
-            this.FireChange("CanUndo");
+            this.OnPropertyChanged("CanUndo");
         }
 
         private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            this.FireChange(propertyChangedEventArgs.PropertyName);
+            this.OnPropertyChanged(propertyChangedEventArgs.PropertyName);
 
             switch (propertyChangedEventArgs.PropertyName)
             {
