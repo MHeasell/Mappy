@@ -78,19 +78,17 @@
                         return;
                     }
 
-                    args.Result = new SectionFeatureLoadResult
-                        {
-                            Sections = result.Records,
-                            Features = featureResult.Records,
-                            Errors = result.Errors
+                    args.Result = new SectionFeatureLoadResult(
+                            result.Records,
+                            featureResult.Records,
+                            result.Errors
                                 .Concat(featureResult.Errors)
                                 .GroupBy(x => x.HpiPath)
                                 .Select(x => x.First())
                                 .ToList(),
-                            FileErrors = result.FileErrors
+                            result.FileErrors
                                 .Concat(featureResult.FileErrors)
-                                .ToList(),
-                        };
+                                .ToList());
                 };
 
             worker.ProgressChanged += (sender, args) => dlg.Progress = args.ProgressPercentage;
