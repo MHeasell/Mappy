@@ -25,6 +25,7 @@
         public ActionType Action { get; set; }
 
         /// <summary>
+        /// Gets or sets the indices of the items before they were moved.
         /// Only set when the operation is a move.
         /// </summary>
         public IEnumerable<int> OriginalIndexes { get; set; }
