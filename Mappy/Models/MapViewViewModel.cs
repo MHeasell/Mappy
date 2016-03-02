@@ -122,7 +122,7 @@
 
             map
                 .Where(x => x.IsSome)
-                .Select(x => x.GetUnsafe()) // will never be null due to where clause
+                .Select(x => x.UnsafeValue) // will never be null due to where clause
                 .Select(x => x.SelectedFeatures)
                 .Subscribe(x => x.CollectionChanged += this.SelectedFeaturesCollectionChanged);
 

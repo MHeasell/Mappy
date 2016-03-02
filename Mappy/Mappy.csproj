@@ -145,7 +145,6 @@
     <Compile Include="IO\SectionLoadingUtils.cs" />
     <Compile Include="MappySettings.cs" />
     <Compile Include="Maybe\Maybe.cs" />
-    <Compile Include="Maybe\MaybeWasNoneException.cs" />
     <Compile Include="Models\BandboxBehaviours\IBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxBehaviours\TileBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxMode.cs" />

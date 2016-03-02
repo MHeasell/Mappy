@@ -21,6 +21,8 @@
 
         public bool IsSome => this.hasValue;
 
+        public T UnsafeValue => this.value;
+
         public static bool operator ==(Maybe<T> left, Maybe<T> right)
         {
             return left.Equals(right);
@@ -54,16 +56,6 @@
         public override string ToString()
         {
             return this.hasValue ? $"Some({this.value})" : "None";
-        }
-
-        public T GetUnsafe()
-        {
-            if (!this.hasValue)
-            {
-                throw new MaybeWasNoneException();
-            }
-
-            return this.value;
         }
 
         public TR Match<TR>(Func<T, TR> some, Func<TR> none)
