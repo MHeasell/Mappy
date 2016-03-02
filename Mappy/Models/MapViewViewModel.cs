@@ -143,17 +143,13 @@
                 }
 
                 this.dispatcher.OpenFromDragDrop(files[0]);
-                return;
             }
-
-            if (data.GetDataPresent(typeof(StartPositionDragData)))
+            else if (data.GetDataPresent(typeof(StartPositionDragData)))
             {
                 StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
                 this.dispatcher.SetStartPosition(posData.PositionNumber, location.X, location.Y);
-                return;
             }
-
-            if (data.GetDataPresent(DataFormats.Text))
+            else if (data.GetDataPresent(DataFormats.Text))
             {
                 var dataString = (string)data.GetData(DataFormats.Text);
                 int id;
@@ -165,8 +161,6 @@
                 {
                     this.dispatcher.DragDropFeature(dataString, location.X, location.Y);
                 }
-
-                return;
             }
         }
 
