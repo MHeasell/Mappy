@@ -5,7 +5,6 @@
     using System.Linq;
 
     using Mappy.Data;
-    using Mappy.Maybe;
 
     public class FeatureService
     {

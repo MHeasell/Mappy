@@ -4,8 +4,6 @@
     using System.ComponentModel;
     using System.Reactive.Linq;
 
-    using Mappy.Maybe;
-
     public static class ExtensionMethods
     {
         public static IObservable<TField> PropertyAsObservable<TSource, TField>(this TSource source, Func<TSource, TField> accessor, string name)

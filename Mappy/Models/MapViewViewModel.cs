@@ -14,7 +14,6 @@
     using Mappy.UI.Tags;
     using Collections;
 
-    using Mappy.Maybe;
     using Mappy.Services;
 
     public class MapViewViewModel : IMapViewViewModel

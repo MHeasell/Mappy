@@ -3,8 +3,6 @@
     using System.ComponentModel;
     using System.Drawing;
 
-    using Mappy.Maybe;
-
     public interface IReadOnlyApplicationModel : INotifyPropertyChanged
     {
         Maybe<UndoableMapModel> Map { get; }

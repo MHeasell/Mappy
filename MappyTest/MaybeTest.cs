@@ -2,7 +2,7 @@
 {
     using System;
 
-    using Mappy.Maybe;
+    using Mappy;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

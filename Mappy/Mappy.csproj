@@ -143,7 +143,7 @@
     <Compile Include="IO\SectionLoader.cs" />
     <Compile Include="IO\SectionLoadingUtils.cs" />
     <Compile Include="MappySettings.cs" />
-    <Compile Include="Maybe\Maybe.cs" />
+    <Compile Include="Maybe.cs" />
     <Compile Include="Models\BandboxBehaviours\IBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxBehaviours\TileBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxMode.cs" />
@@ -427,6 +427,7 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-rc2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-rc2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>python $(ProjectDir)..\GenerateAssemblyInfo.py $(ProjectDir)</PreBuildEvent>

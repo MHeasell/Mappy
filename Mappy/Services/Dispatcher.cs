@@ -12,7 +12,6 @@
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.IO;
-    using Mappy.Maybe;
     using Mappy.Models;
     using Mappy.Util;
     using Mappy.Util.ImageSampling;

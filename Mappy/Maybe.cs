@@ -1,4 +1,4 @@
-﻿namespace Mappy.Maybe
+﻿namespace Mappy
 {
     using System;
     using System.Collections.Generic;

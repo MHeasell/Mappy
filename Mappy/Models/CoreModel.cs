@@ -3,7 +3,6 @@
     using System.ComponentModel;
     using System.Drawing;
 
-    using Mappy.Maybe;
     using Mappy.Util;
 
     public class CoreModel : Notifier, IReadOnlyApplicationModel
