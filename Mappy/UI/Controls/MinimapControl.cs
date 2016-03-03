@@ -4,7 +4,7 @@
     using System.Drawing;
     using System.Windows.Forms;
 
-    public class MinimapControl : Control
+    public sealed class MinimapControl : Control
     {
         private bool rectVisible = true;
         private Color rectColor = Color.Black;
