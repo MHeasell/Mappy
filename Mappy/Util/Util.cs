@@ -157,7 +157,7 @@ namespace Mappy.Util
             worker.DoWork += (sender, args) =>
                 {
                     var w = (BackgroundWorker)sender;
-                    var m = (IMapModel)args.Argument;
+                    var m = (IReadOnlyMapModel)args.Argument;
 
                     using (var map = new MapPixelImageAdapter(m.Tile.TileGrid))
                     {
