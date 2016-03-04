@@ -118,7 +118,7 @@
 
                     if (args.Cancelled)
                     {
-                        Application.Exit();
+                        dlg.Close();
                         return;
                     }
 
