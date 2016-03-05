@@ -9,6 +9,20 @@
 
     public sealed class MinimapFormViewModel : IMinimapFormViewModel, IDisposable
     {
+        private static readonly Color[] StartPositionColors = new[]
+            {
+                Color.FromArgb(0, 0, 255),
+                Color.FromArgb(255, 0, 0),
+                Color.FromArgb(255, 255, 255),
+                Color.FromArgb(0, 255, 0),
+                Color.FromArgb(0, 0, 128),
+                Color.FromArgb(128, 0, 255),
+                Color.FromArgb(255, 255, 0),
+                Color.FromArgb(0, 0, 0),
+                Color.FromArgb(128, 128, 255),
+                Color.FromArgb(255, 180, 140),
+            };
+
         private readonly Dispatcher dispatcher;
 
         // subjects from user events
