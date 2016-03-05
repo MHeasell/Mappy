@@ -67,5 +67,11 @@
             return source.Select(x => x.Match(y => y.PropertyAsObservable(accessor, name), () => defaultObservable))
                 .Switch();
         }
+
+        public static Maybe<T> ToMaybe<T>(this T? item)
+            where T : struct
+        {
+            return Maybe.From(item);
+        }
     }
 }

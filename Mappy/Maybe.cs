@@ -191,8 +191,15 @@
         }
 
         public static Maybe<T> From<T>(T value)
+            where T : class
         {
             return new Maybe<T>(value);
+        }
+
+        public static Maybe<T> From<T>(T? value)
+           where T : struct
+        {
+            return value.HasValue ? Some(value.Value) : None<T>();
         }
 
         public static Maybe<T> None<T>()
