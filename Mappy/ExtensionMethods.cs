@@ -2,6 +2,7 @@
 {
     using System;
     using System.ComponentModel;
+    using System.Reactive;
     using System.Reactive.Linq;
 
     public static class ExtensionMethods
@@ -21,6 +22,16 @@
                             .Select(_ => accessor(source));
                         return values.Subscribe(observer);
                     });
+        }
+
+        public static IObservable<Unit> PropertyChangedObservable<T>(this T source, string name)
+            where T : INotifyPropertyChanged
+        {
+            return Observable.FromEventPattern<PropertyChangedEventHandler, PropertyChangedEventArgs>(
+                    x => source.PropertyChanged += x,
+                    x => source.PropertyChanged -= x)
+                .Where(x => x.EventArgs.PropertyName == name)
+                .Select(_ => Unit.Default);
         }
 
         /// <summary>
