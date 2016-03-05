@@ -2,12 +2,13 @@
 {
     using System;
     using System.Drawing;
+    using System.Reactive;
     using System.Reactive.Linq;
-    using System.Reactive.Subjects;
 
     using Mappy.Services;
+    using Mappy.Util;
 
-    public sealed class MinimapFormViewModel : IMinimapFormViewModel, IDisposable
+    public sealed class MinimapFormViewModel : Notifier, IMinimapFormViewModel
     {
         private static readonly Color[] StartPositionColors = new[]
             {
@@ -23,83 +24,121 @@
                 Color.FromArgb(255, 180, 140),
             };
 
+        private readonly IReadOnlyApplicationModel model;
+
         private readonly Dispatcher dispatcher;
 
-        // subjects from user events
-        private readonly Subject<Point> mousePosition = new Subject<Point>();
+        private bool minimapVisible;
 
-        private readonly BehaviorSubject<bool> mouseDown = new BehaviorSubject<bool>(false);
+        private Maybe<Bitmap> minimapImage;
+
+        private Rectangle minimapRect;
+
+        private bool mouseDown;
 
         public MinimapFormViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher)
         {
-            // set up observables from properties
-            var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
-
-            var viewportLocation = map.ObservePropertyOrDefault(
-                x => x.ViewportLocation,
-                "ViewportLocation",
-                Point.Empty);
-            var viewportWidth = model.PropertyAsObservable(x => x.ViewportWidth, "ViewportWidth");
-            var viewportHeight = model.PropertyAsObservable(x => x.ViewportHeight, "ViewportHeight");
-
-            var mapWidth = map.ObservePropertyOrDefault(x => x.MapWidth, "MapWidth", 0);
-            var mapHeight = map.ObservePropertyOrDefault(x => x.MapHeight, "MapHeight", 0);
-
-            this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, "MinimapVisible");
-
-            this.MinimapImage = map.ObservePropertyOrDefault(x => x.Minimap, "Minimap", null);
-
-            // set up some computed observables
-            var viewportSize = viewportWidth.CombineLatest(viewportHeight, (w, h) => new Size(w, h));
-            var mapSize = mapWidth.CombineLatest(mapHeight, (w, h) => new Size(w, h));
-            var mapVisiblePixelSize = mapSize.Select(s => new Size((s.Width * 32) - 32, (s.Height * 32) - 128));
-            var minimapSize = this.MinimapImage.Select(x => x?.Size);
-
-            // set up the minimap rectangle observable
-            var minimapRectSize = ScaleToMinimap(viewportSize, mapVisiblePixelSize, minimapSize);
-            var minimapRectLocation = ScaleToMinimap(viewportLocation, mapVisiblePixelSize, minimapSize);
-            this.MinimapRect = minimapRectLocation
-                .CombineLatest(minimapRectSize, (l, s) => new Rectangle(l, s));
-
-            // wire up user events to the model
-            var minimapRectExtents = minimapRectSize.Select(s => new Size(s.Width / 2, s.Height / 2));
-            var minimapViewportTopLeft = this.mousePosition
-                .CombineLatest(minimapRectExtents, (l, e) => new Point(l.X - e.Width, l.Y - e.Height));
-            var newMapViewportLocation = ScaleToMap(minimapViewportTopLeft, mapVisiblePixelSize, minimapSize);
-
-            newMapViewportLocation
-                .Pausable(this.mouseDown)
-                .Subscribe(dispatcher.SetViewportLocation);
-
+            this.model = model;
             this.dispatcher = dispatcher;
+
+            // set up basic properties as observables
+            var minimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, nameof(model.MinimapVisible));
+            var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
+            var minimap = map.Select(x => x.Match(
+                    y => y.PropertyAsObservable(z => z.Minimap, nameof(y.Minimap)),
+                    () => Observable.Return<Bitmap>(null)))
+                .Switch();
+
+            // set up observables for property change notifications
+            var mapChanged = model.PropertyChangedObservable(nameof(model.Map));
+            var viewportWidthChanged = model.PropertyChangedObservable(nameof(model.ViewportWidth));
+            var viewportHeightChanged = model.PropertyChangedObservable(nameof(model.ViewportHeight));
+            var minimapChanged = map.Select(
+                    x => x.Match(
+                        y => y.PropertyChangedObservable(nameof(y.Minimap)),
+                        Observable.Empty<Unit>))
+                .Switch();
+            var viewportLocationChanged = map.Select(
+                    x => x.Match(
+                        y => y.PropertyChangedObservable(nameof(y.ViewportLocation)),
+                        Observable.Empty<Unit>))
+                .Switch();
+
+            // wire up the simple properties
+            minimapVisible.Subscribe(x => this.MinimapVisible = x);
+            minimap.Subscribe(x => this.MinimapImage = Maybe.From(x));
+
+            // listen for changes that affect the minimap viewport rectangle
+            mapChanged.Subscribe(_ => this.UpdateMinimapRectangle());
+            minimapChanged.Subscribe(_ => this.UpdateMinimapRectangle());
+            viewportLocationChanged.Subscribe(_ => this.UpdateMinimapRectangle());
+            viewportWidthChanged.Subscribe(_ => this.UpdateMinimapRectangle());
+            viewportHeightChanged.Subscribe(_ => this.UpdateMinimapRectangle());
+
+            // do the initial rect update
+            this.UpdateMinimapRectangle();
         }
 
-        public IObservable<bool> MinimapVisible { get; }
+        public bool MinimapVisible
+        {
+            get
+            {
+                return this.minimapVisible;
+            }
 
-        public IObservable<Bitmap> MinimapImage { get; }
+            private set
+            {
+                this.SetField(ref this.minimapVisible, value, nameof(this.MinimapVisible));
+            }
+        }
 
-        public IObservable<Rectangle> MinimapRect { get; }
+        public Maybe<Bitmap> MinimapImage
+        {
+            get
+            {
+                return this.minimapImage;
+            }
+
+            private set
+            {
+                this.SetField(ref this.minimapImage, value, nameof(this.MinimapImage));
+            }
+        }
+
+        public Rectangle MinimapRect
+        {
+            get
+            {
+                return this.minimapRect;
+            }
+
+            private set
+            {
+                this.SetField(ref this.minimapRect, value, nameof(this.MinimapRect));
+            }
+        }
 
         public void Dispose()
         {
-            this.mousePosition.Dispose();
-            this.mouseDown.Dispose();
         }
 
         public void MouseDown(Point location)
         {
-            this.mouseDown.OnNext(true);
-            this.mousePosition.OnNext(location);
+            this.mouseDown = true;
+            this.UpdateMapViewportLocation(location);
         }
 
         public void MouseMove(Point location)
         {
-            this.mousePosition.OnNext(location);
+            if (this.mouseDown)
+            {
+                this.UpdateMapViewportLocation(location);
+            }
         }
 
         public void MouseUp()
         {
-            this.mouseDown.OnNext(false);
+            this.mouseDown = false;
         }
 
         public void FormCloseButtonClick()
@@ -107,38 +146,87 @@
             this.dispatcher.HideMinimap();
         }
 
-        private static IObservable<Point> ScaleToMinimap(
-            IObservable<Point> value,
-            IObservable<Size> mapWidth,
-            IObservable<Size?> minimapWidth)
+        private static Size GetVisiblePixelSize(UndoableMapModel map)
         {
-            var newMinimapWidth = minimapWidth.Select(x => x ?? Size.Empty);
-
-            return value
-                .CombineLatest(newMinimapWidth, (v, w) => new Point(v.X * w.Width, v.Y * w.Height))
-                .CombineLatest(mapWidth, (v, w) => new Point(v.X / w.Width, v.Y / w.Height));
+            var w = map.MapWidth;
+            var h = map.MapHeight;
+            return new Size((w * 32) - 32, (h * 32) - 128);
         }
 
-        private static IObservable<Size> ScaleToMinimap(
-            IObservable<Size> value,
-            IObservable<Size> mapWidth,
-            IObservable<Size?> minimapWidth)
+        private static Point ScaleToMinimap(Point value, Size mapSize, Size minimapSize)
         {
-            var newMinimapWidth = minimapWidth.Select(x => x ?? Size.Empty);
-
-            return value
-                .CombineLatest(newMinimapWidth, (v, w) => new Size(v.Width * w.Width, v.Height * w.Height))
-                .CombineLatest(mapWidth, (v, w) => new Size(v.Width / w.Width, v.Height / w.Height));
+            return new Point(
+                (value.X * minimapSize.Width) / mapSize.Width,
+                (value.Y * minimapSize.Height) / mapSize.Height);
         }
 
-        private static IObservable<Point> ScaleToMap(
-            IObservable<Point> value,
-            IObservable<Size> mapSize,
-            IObservable<Size?> minimapSize)
+        private static Size ScaleToMinimap(Size value, Size mapSize, Size minimapSize)
         {
-            return value
-                .CombineLatest(mapSize, (v, w) => new Point(v.X * w.Width, v.Y * w.Height))
-                .CombineLatest(minimapSize, (v, w) => w.HasValue ? new Point(v.X / w.Value.Width, v.Y / w.Value.Height) : Point.Empty);
+            return new Size(
+                (value.Width * minimapSize.Width) / mapSize.Width,
+                (value.Height * minimapSize.Height) / mapSize.Height);
+        }
+
+        private static Point ScaleToMap(Point value, Size mapSize, Size minimapSize)
+        {
+            return new Point(
+                (value.X * mapSize.Width) / minimapSize.Width,
+                (value.Y * mapSize.Height) / minimapSize.Height);
+        }
+
+        private void UpdateMapViewportLocation(Point minimapLocation)
+        {
+            if (this.model.Map.IsNone)
+            {
+                return;
+            }
+
+            var map = this.model.Map.UnsafeValue;
+
+            if (this.MinimapImage.IsNone)
+            {
+                return;
+            }
+
+            var minimap = this.MinimapImage.UnsafeValue;
+
+            var mapSize = GetVisiblePixelSize(map);
+            var minimapSize = minimap.Size;
+            var viewportSize = this.MinimapRect.Size;
+            var minimapExtents = new Size(viewportSize.Width / 2, viewportSize.Height / 2);
+            var minimapTopLeftLocation = minimapLocation - minimapExtents;
+            var mapLocation = ScaleToMap(minimapTopLeftLocation, mapSize, minimapSize);
+
+            this.dispatcher.SetViewportLocation(mapLocation);
+        }
+
+        private void UpdateMinimapRectangle()
+        {
+            Console.WriteLine("updating minimap rect");
+
+            if (this.model.Map.IsNone)
+            {
+                this.MinimapRect = Rectangle.Empty;
+                return;
+            }
+
+            var map = this.model.Map.UnsafeValue;
+            var minimap = map.Minimap;
+
+            if (minimap == null)
+            {
+                this.MinimapRect = Rectangle.Empty;
+                return;
+            }
+
+            var mapViewportLocation = map.ViewportLocation;
+            var mapViewportSize = new Size(this.model.ViewportWidth, this.model.ViewportHeight);
+
+            var mapSize = GetVisiblePixelSize(map);
+            var minimapSize = minimap.Size;
+            var minimapViewportLocation = ScaleToMinimap(mapViewportLocation, mapSize, minimapSize);
+            var minimapViewportSize = ScaleToMinimap(mapViewportSize, mapSize, minimapSize);
+            this.MinimapRect = new Rectangle(minimapViewportLocation, minimapViewportSize);
         }
     }
 }

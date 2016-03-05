@@ -1,6 +1,7 @@
 ﻿namespace Mappy.UI.Forms
 {
     using System;
+    using System.Reactive.Linq;
     using System.Windows.Forms;
 
     using Mappy.Models;
@@ -16,9 +17,15 @@
 
         public void SetModel(IMinimapFormViewModel model)
         {
-            model.MinimapVisible.Subscribe(x => this.Visible = x);
-            model.MinimapImage.Subscribe(x => this.minimapControl.BackgroundImage = x);
-            model.MinimapRect.Subscribe(x => this.minimapControl.ViewportRect = x);
+            model.PropertyAsObservable(x => x.MinimapVisible, nameof(model.MinimapVisible))
+                .Subscribe(x => this.Visible = x);
+
+            model.PropertyAsObservable(x => x.MinimapImage, nameof(model.MinimapImage))
+                .Select(x => x.Or(null))
+                .Subscribe(x => this.minimapControl.BackgroundImage = x);
+
+            model.PropertyAsObservable(x => x.MinimapRect, nameof(model.MinimapRect))
+                .Subscribe(x => this.minimapControl.ViewportRect = x);
 
             this.model = model;
         }

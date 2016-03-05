@@ -1,15 +1,15 @@
 ﻿namespace Mappy.Models
 {
-    using System;
     using System.Drawing;
+    using System.ComponentModel;
 
-    public interface IMinimapFormViewModel
+    public interface IMinimapFormViewModel : INotifyPropertyChanged
     {
-        IObservable<bool> MinimapVisible { get; }
+        bool MinimapVisible { get; }
 
-        IObservable<Bitmap> MinimapImage { get; }
+        Maybe<Bitmap> MinimapImage { get; }
 
-        IObservable<Rectangle> MinimapRect { get; }
+        Rectangle MinimapRect { get; }
 
         void MouseDown(Point location);
 
