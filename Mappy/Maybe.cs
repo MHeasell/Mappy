@@ -69,7 +69,7 @@
             return this.HasValue ? some(this.UnsafeValue) : none();
         }
 
-        public void Match(Action<T> some, Action none)
+        public void Do(Action<T> some, Action none)
         {
             if (some == null)
             {

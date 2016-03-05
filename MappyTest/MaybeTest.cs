@@ -13,7 +13,7 @@
         public void TestFromValue()
         {
             var i = Maybe.From("asdf");
-            i.Match(
+            i.Do(
                 some: x => Assert.AreEqual("asdf", x),
                 none: Assert.Fail);
         }
@@ -40,7 +40,7 @@
             Assert.IsTrue(i.IsSome);
             Assert.IsFalse(i.IsNone);
 
-            i.Match(
+            i.Do(
                 some: x => Assert.AreEqual(2, x),
                 none: Assert.Fail);
         }
@@ -64,7 +64,7 @@
         {
             var i = Maybe.Some(2);
             var j = i.Map(x => x.ToString());
-            j.Match(
+            j.Do(
                 some: x => Assert.AreEqual("2", x),
                 none: Assert.Fail);
         }
@@ -76,7 +76,7 @@
             var j = i.Map(x => x.ToString());
 
             bool passed = false;
-            j.Match(
+            j.Do(
                 some: x => Assert.Fail(),
                 none: () => passed = true);
             Assert.IsTrue(passed);
@@ -97,7 +97,7 @@
             var i = Maybe.Some(1);
             var j = i.Where(_ => true);
 
-            j.Match(
+            j.Do(
                 some: x => Assert.AreEqual(1, x),
                 none: Assert.Fail);
         }
