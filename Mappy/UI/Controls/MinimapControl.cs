@@ -128,17 +128,17 @@
         {
             base.OnPaint(e);
 
+            foreach (var marker in this.markers.Select(x => x.Value))
+            {
+                DrawMarker(e.Graphics, marker.Position, marker.Color);
+            }
+
             if (this.RectVisible)
             {
                 using (Pen p = new Pen(this.RectColor, this.RectThickness))
                 {
                     e.Graphics.DrawRectangle(p, this.ViewportRect);
                 }
-            }
-
-            foreach (var marker in this.markers.Select(x => x.Value))
-            {
-                DrawMarker(e.Graphics, marker.Position, marker.Color);
             }
         }
 
@@ -147,7 +147,7 @@
             var bounds = GetMarkerBounds(position);
             using (Brush b = new SolidBrush(color))
             {
-                g.FillEllipse(b, bounds);
+                g.FillRectangle(b, bounds);
             }
         }
 
