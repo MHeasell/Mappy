@@ -45,6 +45,8 @@
 
         IObservable<bool> HeightmapVisible { get; }
 
+        IObservable<bool> VoidsVisible { get; }
+
         IObservable<bool> FeaturesVisible { get; }
 
         IObservable<bool> MinimapVisible { get; }
@@ -56,6 +58,8 @@
         IObservable<string> TitleText { get; }
 
         void ToggleHeightMapMenuItemClick();
+
+        void ToggleVoidsMenuItemClick();
 
         void ToggleMinimapMenuItemClick();
 

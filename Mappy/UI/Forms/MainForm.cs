@@ -68,6 +68,7 @@
             // view menu bindings
             model.MinimapVisible.Subscribe(x => this.toggleMinimapMenuItem.Checked = x);
             model.HeightmapVisible.Subscribe(x => this.toggleHeightmapMenuItem.Checked = x);
+            model.VoidsVisible.Subscribe(x => this.toggleVoidsMenuItem.Checked = x);
             model.FeaturesVisible.Subscribe(x => this.toggleFeaturesMenuItem.Checked = x);
 
             // sea level widget bindings
@@ -278,6 +279,11 @@
 
                 this.model.DragDropFile(data[0]);
             }
+        }
+
+        private void ToggleVoidsMenuItemClick(object sender, EventArgs e)
+        {
+            this.model.ToggleVoidsMenuItemClick();
         }
     }
 }

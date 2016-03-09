@@ -19,6 +19,8 @@
 
         bool HeightmapVisible { get; }
 
+        bool VoidsVisible { get; }
+
         bool FeaturesVisible { get; }
 
         int ViewportWidth { get; }

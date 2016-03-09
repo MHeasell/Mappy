@@ -68,6 +68,7 @@
             this.preferencesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleHeightmapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleVoidsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleMinimapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridOffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,16 +85,16 @@
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sidebarTabs = new System.Windows.Forms.TabControl();
             this.sectionsTab = new System.Windows.Forms.TabPage();
+            this.sectionsView = new Mappy.UI.Controls.SectionView();
             this.featuresTab = new System.Windows.Forms.TabPage();
+            this.featureView = new Mappy.UI.Controls.SectionView();
             this.startPositionsTab = new System.Windows.Forms.TabPage();
+            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             this.attributesTab = new System.Windows.Forms.TabPage();
             this.seaLevelValueLabel = new System.Windows.Forms.Label();
             this.seaLevelLabel = new System.Windows.Forms.Label();
             this.seaLevelTrackbar = new System.Windows.Forms.TrackBar();
             this.mapViewPanel = new Mappy.UI.Controls.MapViewPanel();
-            this.sectionsView = new Mappy.UI.Controls.SectionView();
-            this.featureView = new Mappy.UI.Controls.SectionView();
-            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -406,6 +407,7 @@
             this.viewMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toggleHeightmapMenuItem,
             this.toggleMinimapMenuItem,
+            this.toggleVoidsMenuItem,
             this.gridMenuItem,
             this.toggleFeaturesMenuItem});
             this.viewMenuItem.Name = "viewMenuItem";
@@ -419,6 +421,13 @@
             this.toggleHeightmapMenuItem.Size = new System.Drawing.Size(177, 22);
             this.toggleHeightmapMenuItem.Text = "&Heightmap";
             this.toggleHeightmapMenuItem.Click += new System.EventHandler(this.ToggleHeightmapMenuItemClick);
+            // 
+            // toggleVoidsMenuItem
+            // 
+            this.toggleVoidsMenuItem.Name = "toggleVoidsMenuItem";
+            this.toggleVoidsMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.toggleVoidsMenuItem.Text = "Voids";
+            this.toggleVoidsMenuItem.Click += new System.EventHandler(this.ToggleVoidsMenuItemClick);
             // 
             // toggleMinimapMenuItem
             // 
@@ -567,6 +576,16 @@
             this.sectionsTab.Text = "Sections";
             this.sectionsTab.UseVisualStyleBackColor = true;
             // 
+            // sectionsView
+            // 
+            this.sectionsView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sectionsView.ImageSize = new System.Drawing.Size(128, 128);
+            this.sectionsView.Location = new System.Drawing.Point(3, 3);
+            this.sectionsView.Margin = new System.Windows.Forms.Padding(4);
+            this.sectionsView.Name = "sectionsView";
+            this.sectionsView.Size = new System.Drawing.Size(201, 506);
+            this.sectionsView.TabIndex = 3;
+            // 
             // featuresTab
             // 
             this.featuresTab.Controls.Add(this.featureView);
@@ -578,6 +597,16 @@
             this.featuresTab.Text = "Features";
             this.featuresTab.UseVisualStyleBackColor = true;
             // 
+            // featureView
+            // 
+            this.featureView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.featureView.ImageSize = new System.Drawing.Size(64, 64);
+            this.featureView.Location = new System.Drawing.Point(3, 3);
+            this.featureView.Margin = new System.Windows.Forms.Padding(4);
+            this.featureView.Name = "featureView";
+            this.featureView.Size = new System.Drawing.Size(201, 506);
+            this.featureView.TabIndex = 0;
+            // 
             // startPositionsTab
             // 
             this.startPositionsTab.Controls.Add(this.startPositionsView1);
@@ -588,6 +617,15 @@
             this.startPositionsTab.TabIndex = 2;
             this.startPositionsTab.Text = "Starts";
             this.startPositionsTab.UseVisualStyleBackColor = true;
+            // 
+            // startPositionsView1
+            // 
+            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
+            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
+            this.startPositionsView1.Name = "startPositionsView1";
+            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
+            this.startPositionsView1.TabIndex = 0;
             // 
             // attributesTab
             // 
@@ -648,35 +686,6 @@
             this.mapViewPanel.Name = "mapViewPanel";
             this.mapViewPanel.Size = new System.Drawing.Size(569, 538);
             this.mapViewPanel.TabIndex = 5;
-            // 
-            // sectionsView
-            // 
-            this.sectionsView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sectionsView.ImageSize = new System.Drawing.Size(128, 128);
-            this.sectionsView.Location = new System.Drawing.Point(3, 3);
-            this.sectionsView.Margin = new System.Windows.Forms.Padding(4);
-            this.sectionsView.Name = "sectionsView";
-            this.sectionsView.Size = new System.Drawing.Size(201, 506);
-            this.sectionsView.TabIndex = 3;
-            // 
-            // featureView
-            // 
-            this.featureView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.featureView.ImageSize = new System.Drawing.Size(64, 64);
-            this.featureView.Location = new System.Drawing.Point(3, 3);
-            this.featureView.Margin = new System.Windows.Forms.Padding(4);
-            this.featureView.Name = "featureView";
-            this.featureView.Size = new System.Drawing.Size(201, 506);
-            this.featureView.TabIndex = 0;
-            // 
-            // startPositionsView1
-            // 
-            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
-            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
-            this.startPositionsView1.Name = "startPositionsView1";
-            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
-            this.startPositionsView1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -763,6 +772,7 @@
         private System.Windows.Forms.ToolStripMenuItem exportMapImageMenuItem;
         private System.Windows.Forms.ToolStripMenuItem importCustomSectionMenuItem;
         private MapViewPanel mapViewPanel;
+        private System.Windows.Forms.ToolStripMenuItem toggleVoidsMenuItem;
     }
 }
 

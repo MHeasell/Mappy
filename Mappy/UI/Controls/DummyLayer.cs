@@ -1,17 +1,10 @@
 ﻿namespace Mappy.UI.Controls
 {
-    using System;
     using System.Drawing;
 
-    public class DummyLayer : ILayer
+    public class DummyLayer : AbstractLayer
     {
-        public event EventHandler<LayerChangedEventArgs> LayerChanged
-        {
-            add { }
-            remove { }
-        }
-
-        public void Draw(Graphics graphics, Rectangle clipRectangle)
+        protected override void DoDraw(Graphics graphics, Rectangle clipRectangle)
         {
             // do nothing
         }

@@ -47,7 +47,7 @@
         private readonly BehaviorSubject<SelectableItemsLayer> itemsLayer =
             new BehaviorSubject<SelectableItemsLayer>(new SelectableItemsLayer(0, 0));
 
-        private readonly BehaviorSubject<ILayer> voidLayer = new BehaviorSubject<ILayer>(new DummyLayer());
+        private readonly BehaviorSubject<AbstractLayer> voidLayer = new BehaviorSubject<AbstractLayer>(new DummyLayer());
 
         private readonly IReadOnlyApplicationModel model;
 
@@ -74,6 +74,7 @@
         public MapViewViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher, FeatureService featureService)
         {
             var heightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, nameof(model.HeightmapVisible));
+            var voidsVisible = model.PropertyAsObservable(x => x.VoidsVisible, nameof(model.VoidsVisible));
             var gridVisible = model.PropertyAsObservable(x => x.GridVisible, nameof(model.GridVisible));
             var gridColor = model.PropertyAsObservable(x => x.GridColor, nameof(model.GridColor));
             var gridSize = model.PropertyAsObservable(x => x.GridSize, nameof(model.GridSize));
@@ -95,6 +96,7 @@
             // FIXME: this should not ignore height
             gridSize.Subscribe(x => this.grid.CellSize = x.Width);
             heightmapVisible.Subscribe(this.RefreshHeightmapVisibility);
+            voidsVisible.Subscribe(x => this.voidLayer.Value.Enabled = x);
             featuresVisible.Subscribe(x => this.featuresVisible = x);
 
             this.CanvasSize = mapWidth.CombineLatest(mapHeight, (w, h) => new Size(w * 32, h * 32));
@@ -118,8 +120,8 @@
                 .Subscribe(x => x.CollectionChanged += this.SelectedFeaturesCollectionChanged);
 
             map.Select(
-                x => x.Match<ILayer>(
-                    y => new VoidLayer(y),
+                x => x.Match<AbstractLayer>(
+                    y => new VoidLayer(y) { Enabled = model.VoidsVisible },
                     () => new DummyLayer()))
                 .Subscribe(this.voidLayer);
 

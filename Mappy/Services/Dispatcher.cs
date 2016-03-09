@@ -412,6 +412,11 @@
             this.model.HeightmapVisible = !this.model.HeightmapVisible;
         }
 
+        public void ToggleVoids()
+        {
+            this.model.VoidsVisible = !this.model.VoidsVisible;
+        }
+
         public void ToggleMinimap()
         {
             this.model.MinimapVisible = !this.model.MinimapVisible;
