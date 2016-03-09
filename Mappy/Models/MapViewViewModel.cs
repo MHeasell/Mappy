@@ -119,7 +119,7 @@
 
             map.Select(
                 x => x.Match<ILayer>(
-                    y => new VoidLayer(new BindingGrid<bool>(y.Voids)),
+                    y => new VoidLayer(y),
                     () => new DummyLayer()))
                 .Subscribe(this.voidLayer);
 

@@ -5,6 +5,7 @@
     using System.Reactive.Linq;
 
     using Mappy.Collections;
+    using Mappy.Models;
     using Mappy.UI.Painters;
 
     public sealed class VoidLayer : AbstractLayer, IDisposable
@@ -15,14 +16,22 @@
 
         private readonly IDisposable eventSubscription;
 
-        public VoidLayer(BindingGrid<bool> grid)
+        public VoidLayer(UndoableMapModel map)
         {
-            this.painter = new VoidPainter(grid, new Size(CellSize, CellSize));
+            var grid = new BindingGrid<bool>(map.Voids);
+            this.painter = new VoidPainter(map.Voids, map.BaseTile.HeightGrid, new Size(CellSize, CellSize));
 
-            this.eventSubscription = Observable.FromEventPattern<GridEventArgs>(
+            var voidChangeEvents = Observable.FromEventPattern<GridEventArgs>(
                 e => grid.CellsChanged += e,
                 e => grid.CellsChanged -= e)
-                .Select(e => new GridCoordinates(e.EventArgs.X, e.EventArgs.Y))
+                .Select(e => new GridCoordinates(e.EventArgs.X, e.EventArgs.Y));
+
+            var heightchangeEvents = Observable.FromEventPattern<GridEventArgs>(
+                e => map.BaseTileHeightChanged += e,
+                e => map.BaseTileHeightChanged -= e)
+                .Select(e => new GridCoordinates(e.EventArgs.X, e.EventArgs.Y));
+
+            this.eventSubscription = voidChangeEvents.Merge(heightchangeEvents)
                 .Select(GetCellRectangle)
                 .Subscribe(this.OnLayerChanged);
         }
@@ -39,7 +48,14 @@
 
         private static Rectangle GetCellRectangle(GridCoordinates cell)
         {
-            return new Rectangle(cell.X * CellSize, cell.Y * CellSize, CellSize, CellSize);
+            // Due to the projection, one cell could influence the rendering
+            // of a strip containing up to 8 cells in screen space,
+            // covering the heights from 0 to 255.
+            return new Rectangle(
+                cell.X * CellSize,
+                (cell.Y - 8) * CellSize,
+                CellSize,
+                CellSize * 8);
         }
     }
 }
