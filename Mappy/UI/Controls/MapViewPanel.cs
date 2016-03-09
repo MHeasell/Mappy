@@ -19,6 +19,7 @@
             this.mapView.Layers.Add(new DummyLayer());
             this.mapView.Layers.Add(new DummyLayer());
             this.mapView.Layers.Add(new DummyLayer());
+            this.mapView.Layers.Add(new DummyLayer());
         }
 
         public void SetModel(IMapViewViewModel model)
@@ -27,8 +28,9 @@
             model.ViewportLocation.Subscribe(x => this.mapView.AutoScrollPosition = x);
 
             model.ItemsLayer.Subscribe(x => this.mapView.Layers[0] = x);
-            this.mapView.Layers[1] = model.GridLayer;
-            this.mapView.Layers[2] = model.GuidesLayer;
+            model.VoidLayer.Subscribe(x => this.mapView.Layers[1] = x);
+            this.mapView.Layers[2] = model.GridLayer;
+            this.mapView.Layers[3] = model.GuidesLayer;
 
             this.model = model;
         }

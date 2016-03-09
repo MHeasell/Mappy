@@ -47,6 +47,8 @@
         private readonly BehaviorSubject<SelectableItemsLayer> itemsLayer =
             new BehaviorSubject<SelectableItemsLayer>(new SelectableItemsLayer(0, 0));
 
+        private readonly BehaviorSubject<ILayer> voidLayer = new BehaviorSubject<ILayer>(new DummyLayer());
+
         private readonly IReadOnlyApplicationModel model;
 
         private readonly Dispatcher dispatcher;
@@ -115,6 +117,12 @@
                 .Select(x => x.SelectedFeatures)
                 .Subscribe(x => x.CollectionChanged += this.SelectedFeaturesCollectionChanged);
 
+            map.Select(
+                x => x.Match<ILayer>(
+                    y => new VoidLayer(new BindingGrid<bool>(y.Voids)),
+                    () => new DummyLayer()))
+                .Subscribe(this.voidLayer);
+
             this.model = model;
             this.dispatcher = dispatcher;
             this.featureService = featureService;
@@ -125,6 +133,8 @@
         public IObservable<Point> ViewportLocation { get; }
 
         public IObservable<ILayer> ItemsLayer => this.itemsLayer;
+
+        public IObservable<ILayer> VoidLayer => this.voidLayer;
 
         public ILayer GridLayer => this.grid;
 

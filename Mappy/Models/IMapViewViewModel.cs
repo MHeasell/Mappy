@@ -12,6 +12,8 @@
 
         IObservable<ILayer> ItemsLayer { get; }
 
+        IObservable<ILayer> VoidLayer { get; }
+
         ILayer GuidesLayer { get; }
 
         ILayer GridLayer { get; }
