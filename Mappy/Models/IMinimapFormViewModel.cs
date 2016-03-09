@@ -1,8 +1,8 @@
 ﻿namespace Mappy.Models
 {
     using System.Collections.Generic;
-    using System.Drawing;
     using System.ComponentModel;
+    using System.Drawing;
     using System.Reactive.Subjects;
 
     public interface IMinimapFormViewModel : INotifyPropertyChanged
