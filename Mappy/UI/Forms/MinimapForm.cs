@@ -1,6 +1,7 @@
 ﻿namespace Mappy.UI.Forms
 {
     using System;
+    using System.Drawing;
     using System.Reactive.Linq;
     using System.Windows.Forms;
 
@@ -8,6 +9,20 @@
 
     public partial class MinimapForm : Form
     {
+        private static readonly Color[] StartPositionColors = new[]
+            {
+                Color.FromArgb(0, 0, 255),
+                Color.FromArgb(255, 0, 0),
+                Color.FromArgb(255, 255, 255),
+                Color.FromArgb(0, 255, 0),
+                Color.FromArgb(0, 0, 128),
+                Color.FromArgb(128, 0, 255),
+                Color.FromArgb(255, 255, 0),
+                Color.FromArgb(0, 0, 0),
+                Color.FromArgb(128, 128, 255),
+                Color.FromArgb(255, 180, 140),
+            };
+
         private IMinimapFormViewModel model;
 
         public MinimapForm()
@@ -26,6 +41,15 @@
 
             model.PropertyAsObservable(x => x.MinimapRect, nameof(model.MinimapRect))
                 .Subscribe(x => this.minimapControl.ViewportRect = x);
+
+            for (var i = 0; i < model.StartPositions.Count; i++)
+            {
+                var i1 = i;
+                var pos = model.StartPositions[i];
+                pos.Subscribe(x => x.Do(
+                            y => this.minimapControl.SetMarker(i1, y, StartPositionColors[i1]),
+                            () => this.minimapControl.RemoveMarker(i1)));
+            }
 
             this.model = model;
         }
