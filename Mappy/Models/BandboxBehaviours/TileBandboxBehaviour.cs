@@ -122,9 +122,4 @@
             this.BandboxRectangle = new Rectangle(minX * 32, minY * 32, width * 32, height * 32);
         }
     }
-
-    public interface IBandboxModel
-    {
-        void LiftAndSelectArea(int x, int y, int width, int height);
-    }
 }
