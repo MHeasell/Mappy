@@ -542,7 +542,20 @@
             // flatten before save --- only the base tile is written to disk
             map.ClearSelection();
 
-            MapSaver.SaveHpi(map, filename);
+            var tmpFileName = filename + ".mappytemp";
+            try
+            {
+                MapSaver.SaveHpi(map, tmpFileName);
+                File.Delete(filename);
+                File.Move(tmpFileName, filename);
+            }
+            catch
+            {
+                // Normally the temp file is deleted by File.Replace.
+                // Ensure that it is always deleted if an error occurs.
+                File.Delete(tmpFileName);
+                throw;
+            }
 
             map.Undo();
             map.MarkSaved(filename);
@@ -553,9 +566,29 @@
             // flatten before save --- only the base tile is written to disk
             map.ClearSelection();
 
-            var otaName = filename.Substring(0, filename.Length - 4) + ".ota";
-            MapSaver.SaveTnt(map, filename);
-            MapSaver.SaveOta(map.Attributes, otaName);
+            var tntName = filename;
+            var otaName = Path.ChangeExtension(filename, ".ota");
+
+            string tmpTntName = tntName + ".mappytemp";
+            string tmpOtaName = otaName + ".mappytemp";
+
+            try
+            {
+                MapSaver.SaveTnt(map, tmpTntName);
+                MapSaver.SaveOta(map.Attributes, tmpOtaName);
+                File.Delete(tntName);
+                File.Delete(otaName);
+                File.Move(tmpTntName, tntName);
+                File.Move(tmpOtaName, otaName);
+            }
+            catch
+            {
+                // Normally the temp files are deleted by File.Replace.
+                // Ensure that they are always deleted if an error occurs.
+                File.Delete(tmpTntName);
+                File.Delete(tmpOtaName);
+                throw;
+            }
 
             map.Undo();
 
