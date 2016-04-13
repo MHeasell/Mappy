@@ -557,7 +557,6 @@
                 throw;
             }
 
-            map.Undo();
             map.MarkSaved(filename);
         }
 
@@ -589,8 +588,6 @@
                 File.Delete(tmpOtaName);
                 throw;
             }
-
-            map.Undo();
 
             map.MarkSaved(filename);
         }
