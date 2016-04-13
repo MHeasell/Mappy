@@ -54,6 +54,7 @@
                 isFileReadOnly.Select(x => !x))
                 .Select(x => x.All(y => y))
                 .Replay(1);
+            canSave.Connect();
             this.CanSave = canSave;
 
             // set up TitleText observable
