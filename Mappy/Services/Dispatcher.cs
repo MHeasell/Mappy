@@ -39,6 +39,8 @@
 
         private readonly BitmapCache tileCache;
 
+        private readonly Random rng = new Random();
+
         public Dispatcher(
             CoreModel model,
             IDialogService dialogService,
@@ -537,29 +539,6 @@
                 .Select(x => x.Name.Substring(0, x.Name.Length - 4));
         }
 
-        private static void SaveHpi(UndoableMapModel map, string filename)
-        {
-            // flatten before save --- only the base tile is written to disk
-            map.ClearSelection();
-
-            var tmpFileName = filename + ".mappytemp";
-            try
-            {
-                MapSaver.SaveHpi(map, tmpFileName);
-                File.Delete(filename);
-                File.Move(tmpFileName, filename);
-            }
-            catch
-            {
-                // Normally the temp file is deleted by File.Replace.
-                // Ensure that it is always deleted if an error occurs.
-                File.Delete(tmpFileName);
-                throw;
-            }
-
-            map.MarkSaved(filename);
-        }
-
         private static void Save(UndoableMapModel map, string filename)
         {
             // flatten before save --- only the base tile is written to disk
@@ -613,6 +592,32 @@
             return false;
         }
 
+        private void SaveHpi(UndoableMapModel map, string filename)
+        {
+            // flatten before save --- only the base tile is written to disk
+            map.ClearSelection();
+
+            var randomValue = this.rng.Next(1000);
+            var tmpExtension = $".mappytemp-{randomValue}";
+
+            var tmpFileName = Path.ChangeExtension(filename, tmpExtension);
+            try
+            {
+                MapSaver.SaveHpi(map, tmpFileName);
+                File.Delete(filename);
+                File.Move(tmpFileName, filename);
+            }
+            catch
+            {
+                // Normally the temp file is deleted by File.Replace.
+                // Ensure that it is always deleted if an error occurs.
+                File.Delete(tmpFileName);
+                throw;
+            }
+
+            map.MarkSaved(filename);
+        }
+
         private void DeduplicateTiles(IGrid<Bitmap> tiles)
         {
             var len = tiles.Width * tiles.Height;
@@ -643,7 +648,7 @@
                     case ".CCX":
                     case ".GPF":
                     case ".GP3":
-                        SaveHpi(map, filename);
+                        this.SaveHpi(map, filename);
                         return true;
                     default:
                         this.dialogService.ShowError("Unrecognized file extension: " + extension);
