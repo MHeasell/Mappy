@@ -527,10 +527,19 @@
             Point? p = this.mapModel.GetStartPosition(index);
             if (p.HasValue)
             {
+                int heightX = p.Value.X / 16;
+                int heightY = p.Value.Y / 16;
+                int heightValue = 0;
+                if (heightX >= 0 && heightX < this.mapModel.BaseTile.HeightGrid.Width
+                    && heightY >= 0 && heightY < this.mapModel.BaseTile.HeightGrid.Height)
+                {
+                    heightValue = this.mapModel.BaseTile.HeightGrid.Get(heightX, heightY);
+                }
+
                 IDrawable img = StartPositionImages[index];
                 var i = new DrawableItem(
                     p.Value.X - (img.Width / 2),
-                    p.Value.Y - 58,
+                    p.Value.Y - 58 - (heightValue / 2),
                     int.MaxValue,
                     img);
                 i.Tag = new StartPositionTag(index);
