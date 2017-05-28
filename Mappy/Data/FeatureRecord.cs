@@ -1,5 +1,7 @@
 ﻿namespace Mappy.Data
 {
+    using System;
+
     using Mappy.Util;
 
     using TAUtil.Tdf;
@@ -24,13 +26,36 @@
 
         public static FeatureRecord FromTdfNode(TdfNode n)
         {
+            // At least one Cavedog feature has a bad footprintz
+            // (CCDATA.CCX/features/Water/CORALS.TDF, Coral20)
+            // so we have to cope with them without complaining.
+            int footprintX = 1;
+            try
+            {
+                footprintX = TdfConvert.ToInt32(n.Entries.GetOrDefault("footprintx", "0"));
+            }
+            catch (FormatException)
+            {
+                // silently ignore
+            }
+
+            int footprintZ = 1;
+            try
+            {
+                footprintZ = TdfConvert.ToInt32(n.Entries.GetOrDefault("footprintz", "0"));
+            }
+            catch (FormatException)
+            {
+                // silently ignore
+            }
+
             return new FeatureRecord
                 {
                     Name = n.Name,
                     World = n.Entries.GetOrDefault("world", string.Empty),
                     Category = n.Entries.GetOrDefault("category", string.Empty),
-                    FootprintX = TdfConvert.ToInt32(n.Entries.GetOrDefault("footprintx", "0")),
-                    FootprintY = TdfConvert.ToInt32(n.Entries.GetOrDefault("footprintz", "0")),
+                    FootprintX = footprintX,
+                    FootprintY = footprintZ,
                     AnimFileName = n.Entries.GetOrDefault("filename", string.Empty),
                     SequenceName = n.Entries.GetOrDefault("seqname", string.Empty),
                     ObjectName = n.Entries.GetOrDefault("object", string.Empty)
