@@ -26,9 +26,9 @@ namespace Mappy.Data
         public Rectangle GetDrawBounds(IGrid<int> heightmap, int xPos, int yPos)
         {
             int accum = 0;
-            for (int y = 0; y <= this.Footprint.Width; y++)
+            for (int y = 0; y <= this.Footprint.Height; y++)
             {
-                for (int x = 0; x <= this.Footprint.Height; x++)
+                for (int x = 0; x <= this.Footprint.Width; x++)
                 {
                     int accX = xPos + x;
                     int accY = yPos + y;
