@@ -30,7 +30,7 @@
                     World = n.Entries.GetOrDefault("world", string.Empty),
                     Category = n.Entries.GetOrDefault("category", string.Empty),
                     FootprintX = TdfConvert.ToInt32(n.Entries.GetOrDefault("footprintx", "0")),
-                    FootprintY = TdfConvert.ToInt32(n.Entries.GetOrDefault("footprintx", "0")),
+                    FootprintY = TdfConvert.ToInt32(n.Entries.GetOrDefault("footprintz", "0")),
                     AnimFileName = n.Entries.GetOrDefault("filename", string.Empty),
                     SequenceName = n.Entries.GetOrDefault("seqname", string.Empty),
                     ObjectName = n.Entries.GetOrDefault("object", string.Empty)
