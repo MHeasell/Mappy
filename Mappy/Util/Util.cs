@@ -383,6 +383,16 @@ namespace Mappy.Util
             return grid;
         }
 
+        public static int ComputeMidpointHeight(IGrid<int> grid, int x, int y)
+        {
+            int topLeft = grid.Get(x, y);
+            int topRight = grid.Get(x + 1, y);
+            int bottomLeft = grid.Get(x, y + 1);
+            int bottomRight = grid.Get(x + 1, y + 1);
+
+            return (topLeft + topRight + bottomLeft + bottomRight) / 4;
+        }
+
         private static Rectangle2D ComputeBoundingBox(IEnumerable<Line2D> lines)
         {
             return ComputeBoundingBox(ToPoints(lines));

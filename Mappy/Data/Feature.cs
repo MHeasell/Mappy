@@ -4,6 +4,7 @@ namespace Mappy.Data
     using System.Drawing;
 
     using Mappy.Collections;
+    using Mappy.Util;
 
     /// <summary>
     /// Represents the "blueprint" for a feature.
@@ -23,32 +24,18 @@ namespace Mappy.Data
 
         public Bitmap Image { get; set; }
 
-        public Rectangle GetDrawBounds(IGrid<int> heightmap, int xPos, int yPos)
+        public Rectangle GetDrawBounds(IGrid<int> heightmap, int posX, int posY)
         {
-            int accum = 0;
-            for (int y = 0; y <= this.Footprint.Height; y++)
+            int height = 0;
+            if (posX >= 0 && posX < heightmap.Width - 1 && posY >= 0 && posY < heightmap.Height - 1)
             {
-                for (int x = 0; x <= this.Footprint.Width; x++)
-                {
-                    int accX = xPos + x;
-                    int accY = yPos + y;
-
-                    // avoid crashing if we try to draw a feature too close to the map edge
-                    if (accX < 0 || accY < 0 || accX >= heightmap.Width || accY >= heightmap.Height)
-                    {
-                        continue;
-                    }
-
-                    accum += heightmap.Get(xPos + x, yPos + y);
-                }
+                height = Util.ComputeMidpointHeight(heightmap, posX, posY);
             }
 
-            int avg = accum / ((this.Footprint.Width + 1) * (this.Footprint.Height + 1));
+            int projectedPosX = (posX * 16) + (this.Footprint.Width * 8);
+            int projectedPosY = (posY * 16) + (this.Footprint.Height * 8) - (height / 2);
 
-            float posX = ((float)xPos + (this.Footprint.Width / 2.0f)) * 16;
-            float posY = (((float)yPos + (this.Footprint.Height / 2.0f)) * 16) - (avg / 2);
-
-            Point pos = new Point((int)Math.Round(posX) - this.Offset.X, (int)Math.Round(posY) - this.Offset.Y);
+            Point pos = new Point(projectedPosX - this.Offset.X, projectedPosY - this.Offset.Y);
             return new Rectangle(pos, this.Image.Size);
         }
     }
