@@ -40,12 +40,15 @@
 
             try
             {
-                using (var h = new HpiReader(hpiFileName))
+                byte[] fileBuffer;
+                using (var h = new HpiArchive(hpiFileName))
                 {
-                    h.ExtractFile(sctFileName, outpath);
+                    var fileInfo = h.FindFile(sctFileName);
+                    fileBuffer = new byte[fileInfo.Size];
+                    h.Extract(fileInfo, fileBuffer);
                 }
 
-                using (var s = new SctReader(File.OpenRead(outpath)))
+                using (var s = new SctReader(new MemoryStream(fileBuffer)))
                 {
                     return this.sectionFactory.TileFromSct(s);
                 }

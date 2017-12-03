@@ -80,18 +80,24 @@
         {
             MapModel m;
 
-            using (HpiReader hpi = new HpiReader(hpipath))
+            using (var hpi = new HpiArchive(hpipath))
             {
                 string otaPath = HpiPath.ChangeExtension(mappath, ".ota");
 
                 TdfNode n;
 
-                using (var ota = hpi.ReadTextFile(otaPath))
+                var otaFileInfo = hpi.FindFile(otaPath);
+                var otaFileBuffer = new byte[otaFileInfo.Size];
+                hpi.Extract(otaFileInfo, otaFileBuffer);
+                using (var ota = new MemoryStream(otaFileBuffer))
                 {
                     n = TdfNode.LoadTdf(ota);
                 }
 
-                using (var s = new TntReader(hpi.ReadFile(mappath)))
+                var tntFileInfo = hpi.FindFile(mappath);
+                var tntFileBuffer = new byte[tntFileInfo.Size];
+                hpi.Extract(tntFileInfo, tntFileBuffer);
+                using (var s = new TntReader(new MemoryStream(tntFileBuffer)))
                 {
                     m = this.mapModelFactory.FromTntAndOta(s, n);
                 }

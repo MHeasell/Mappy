@@ -5,7 +5,7 @@
     using Mappy.Data;
     using Mappy.Models;
 
-    using TAUtil.Hpi;
+    using TAUtil.HpiUtil;
     using TAUtil.Tnt;
 
     /// <summary>

@@ -532,11 +532,11 @@
             this.model.Map.IfSome(x => x.SelectStartPosition(index));
         }
 
-        private static IEnumerable<string> GetMapNames(HpiReader hpi)
+        private static IEnumerable<string> GetMapNames(HpiArchive hpi)
         {
             return hpi.GetFiles("maps")
                 .Where(x => x.Name.EndsWith(".tnt", StringComparison.OrdinalIgnoreCase))
-                .Select(x => x.Name.Substring(0, x.Name.Length - 4));
+                .Select(x => HpiPath.GetFileNameWithoutExtension(x.Name));
         }
 
         private static void Save(UndoableMapModel map, string filename)
@@ -704,7 +704,7 @@
             List<string> maps;
             bool readOnly;
 
-            using (HpiReader h = new HpiReader(filename))
+            using (var h = new HpiArchive(filename))
             {
                 maps = GetMapNames(h).ToList();
             }

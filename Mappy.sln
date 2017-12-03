@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mappy", "Mappy\Mappy.csproj", "{EA26A863-F126-4809-8B32-09829D21B4CE}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WireframeViewer", "Wirefram
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAUtil.Gdi", "TAUtil\TAUtil.Gdi\TAUtil.Gdi.csproj", "{CBF5CEC6-3710-4F40-8A8E-EF57870B7793}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAUtil.Hpi", "TAUtil\TAUtil.Hpi\TAUtil.Hpi.csproj", "{A13082E4-3557-4666-BF02-B376C9907B69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TAUtil.Hpi", "TAUtil\TAUtil.HpiUtil\TAUtil.HpiUtil.csproj", "{A13082E4-3557-4666-BF02-B376C9907B69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,6 +104,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F24727C6-2BF1-48C1-9747-FC9E8F0D42C3}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Mappy\Mappy.vsmdi

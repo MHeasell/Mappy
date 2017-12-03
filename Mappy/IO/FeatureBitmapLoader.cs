@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.IO;
     using System.Linq;
 
     using Mappy.Data;
@@ -22,16 +23,18 @@
             this.filenameFeatureMap = filenameFeatureMap;
         }
 
-        protected override IEnumerable<HpiEntry> EnumerateFiles(HpiReader r)
+        protected override IEnumerable<HpiArchive.FileInfo> EnumerateFiles(HpiArchive r)
         {
             return r.GetFilesRecursive("anims").Where(this.IsNeededFile);
         }
 
-        protected override void LoadFile(HpiEntry file)
+        protected override void LoadFile(HpiArchive archive, HpiArchive.FileInfo file)
         {
             // extract and read the file
+            var fileBuffer = new byte[file.Size];
+            archive.Extract(file, fileBuffer);
             var adapter = new GafEntryArrayAdapter();
-            using (var b = new GafReader(file.Open(), adapter))
+            using (var b = new GafReader(new MemoryStream(fileBuffer), adapter))
             {
                 b.Read();
             }
@@ -79,7 +82,7 @@
             }
         }
 
-        private bool IsNeededFile(HpiEntry entry)
+        private bool IsNeededFile(HpiArchive.FileInfo entry)
         {
             var file = entry.Name;
             return file.EndsWith(".gaf", StringComparison.OrdinalIgnoreCase)
