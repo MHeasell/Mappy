@@ -53,7 +53,7 @@ dist_files = [
 
 project_name = "mappy"
 
-tag = check_output(["git", "describe", "--dirty=-d"]).strip()
+tag = check_output(["git", "describe", "--dirty=-d"], universal_newlines=True).strip()
 
 dist_name = project_name + "-" + tag
 if not release_mode:
