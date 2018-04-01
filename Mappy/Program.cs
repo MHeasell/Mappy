@@ -16,7 +16,8 @@
 
         private static readonly string CrashLogDir = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-            @"Mappy/Crashes");
+            "Mappy",
+            "Crashes");
 
         /// <summary>
         /// The main entry point for the application.
