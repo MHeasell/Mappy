@@ -4,7 +4,7 @@ rem Use python 3, not python 2
 SET PATH=C:\Python36-x64;%PATH%
 
 nuget restore Mappy.sln || goto :error
-msbuild Mappy.sln /p:Configuration=%Configuration% /t:Build /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" || goto :error
+msbuild Mappy.sln /p:Configuration=%Configuration% /m /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" || goto :error
 
 cd dist || goto :error
 IF "%Configuration%"=="Release" (
