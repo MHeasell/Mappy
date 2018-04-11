@@ -19,19 +19,28 @@
             "Mappy",
             "Crashes");
 
+        private static Bugsnag.Client bugsnagClient;
+
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         public static void Main()
         {
-            RemoveOldVersionSettings();
+            bugsnagClient = new Bugsnag.Client(new Bugsnag.Configuration
+            {
+                ApiKey = "fa43381b116de659fcf1cfda14884d98",
+                AppVersion = Application.ProductVersion,
+                AutoNotify = false
+            });
 
             // install custom handler for fatal exceptions
             AppDomain.CurrentDomain.UnhandledException += UnhandledException;
 
             // route UI thread exceptions to the fatal exception handler
             Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
+
+            RemoveOldVersionSettings();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -117,15 +126,28 @@
 
             string errString = "A fatal error has occurred. "
                 + "Technical details have been logged to:\n\n" + fullPath + "\n\n"
-                + "If you'd like to get this fixed, email the log file to:\n\n" + AuthorEmail + "\n\n"
-                + "Include any relevant information, "
-                + "such as what map you had open and what you were doing when the error occurred.";
+                + "You may optionally send a crash report to the developer of Mappy. "
+                + "This will help them to fix this problem in a future version.\n\n"
+                + "If you choose to send a report, the technical details in the log file will be uploaded to the Internet.\n\n"
+                + "Would you like to send a crash report?";
 
-            MessageBox.Show(
+            var result = MessageBox.Show(
                 errString,
                 "Fatal Error",
-                MessageBoxButtons.OK,
+                MessageBoxButtons.YesNo,
                 MessageBoxIcon.Error);
+            if (result == DialogResult.Yes)
+            {
+                // Technically doesn't send the report,
+                // but rather queues it to be sent on Bugsnag's worker thread.
+                // Unfortunately there's no way to know whether this succeeded.
+                bugsnagClient.Notify(ex);
+                MessageBox.Show(
+                    "Attempted to send the report. Thanks for your help to improve Mappy.",
+                    "Report Sent",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
         }
 
         private static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
