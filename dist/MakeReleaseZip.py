@@ -24,6 +24,7 @@ else:
     bindir = join(projdir, "bin/Debug")
 
 dist_files = [
+        join(bindir, "Bugsnag.dll"),
         join(bindir, "Geometry.dll"),
         join(bindir, "Geometry.pdb"),
         join(bindir, "HPIUtil.dll"),
