@@ -19,7 +19,9 @@ Mappy is a modern map editor for Total Annihilation, seeking to replace the curr
 How to Use Mappy
 ----------------
 
-Mappy is distributed as-is in a zip archive without an installer. Extract the archive to a folder of your choice and run `Mappy.exe` to launch the program.
+Download and run MappySetup, then follow the on-screen instructions to install Mappy. Once Mappy is installed, run it from the start menu.
+
+Alternatively, download the zip distribution and extract it to a folder of your choice. Then double-click on Mappy.exe to launch the program.
 
 When you first run Mappy, no map tilesets or features will be available. First, you should tell Mappy where they are. Go to `Edit -> Preferences` and add the folders that your tilesets and features live in to Mappy's search paths. The next time Mappy starts, it will automatically load any tilesets and features it finds in those folders.
 
