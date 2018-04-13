@@ -13,6 +13,7 @@ IF "%Configuration%"=="Release" (
     python MakeReleaseZip.py || goto :error
 )
 for %%i in (*.zip) do appveyor PushArtifact %%i
+for %%i in (*.exe) do appveyor PushArtifact %%i
 
 goto :EOF
 

@@ -1,0 +1,21 @@
+[Setup]
+AppName=Mappy
+AppVersion=(PROJECT_VERSION)
+AppPublisher=Armoured Fish
+AppPublisherURL=https://github.com/MHeasell/Mappy
+DefaultDirName={pf}\Mappy
+; Since no icons will be created in "{group}", we don't need the wizard
+; to ask for a Start Menu folder name:
+DisableProgramGroupPage=yes
+UninstallDisplayName=Mappy
+UninstallDisplayIcon={app}\Mappy.exe
+Compression=lzma2
+SolidCompression=yes
+OutputDir=.
+OutputBaseFilename=MappySetup-(PROJECT_VERSION)
+
+[Files]
+Source: "mappy-(PROJECT_VERSION)\*"; DestDir: "{app}"
+
+[Icons]
+Name: "{commonprograms}\Mappy"; Filename: "{app}\Mappy.exe"

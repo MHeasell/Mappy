@@ -1,3 +1,4 @@
+import subprocess
 from subprocess import check_output
 import zipfile
 
@@ -55,10 +56,11 @@ dist_files = [
 project_name = "mappy"
 
 tag = check_output(["git", "describe", "--dirty=-d"], universal_newlines=True).strip()
-
-dist_name = project_name + "-" + tag
+version = tag
 if not release_mode:
-    dist_name += "-DEBUG"
+    version += "-DEBUG"
+
+dist_name = project_name + "-" + version
 
 zip_name = dist_name + ".zip"
 
@@ -81,3 +83,12 @@ for (dirpath, dirnames, filenames) in os.walk(dist_dir):
     for f in filenames:
         zip_file.write(join(dirpath, f))
 zip_file.close()
+
+# create the installer
+with open("install.iss.tmpl") as iss_tmpl:
+    with open("install.iss", "w") as iss_file:
+        for line in iss_tmpl:
+            iss_file.write((line.replace("(PROJECT_VERSION)", version)))
+
+iscc = "C:/Program Files (x86)/Inno Setup 5/ISCC.exe"
+subprocess.run([iscc, "install.iss"], check=True)
