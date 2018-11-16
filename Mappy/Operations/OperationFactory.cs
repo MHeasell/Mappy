@@ -1,5 +1,6 @@
 ﻿namespace Mappy.Operations
 {
+    using System;
     using System.Drawing;
 
     using Mappy.Collections;
@@ -23,6 +24,12 @@
 
             // clip to boundaries
             rect.Intersect(new Rectangle(0, 0, dst.TileGrid.Width, dst.TileGrid.Height));
+
+            // we assume the tiles do actually overlap
+            if (rect.IsEmpty)
+            {
+                throw new ArgumentException("src and dst tiles do not overlap");
+            }
 
             int srcX = rect.X - x;
             int srcY = rect.Y - y;

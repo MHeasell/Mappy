@@ -535,6 +535,26 @@
 
         private void AddAndSelectTile(IMapTile tile, int x, int y)
         {
+            if (x < 0)
+            {
+                x = 0;
+            }
+
+            if (y < 0)
+            {
+                y = 0;
+            }
+
+            if (x >= this.MapWidth)
+            {
+                x = this.MapWidth - 1;
+            }
+
+            if (y >= this.MapHeight)
+            {
+                y = this.MapHeight - 1;
+            }
+
             var floatingSection = new Positioned<IMapTile>(tile, new Point(x, y));
             var addOp = new AddFloatingTileOperation(this.model, floatingSection);
 
