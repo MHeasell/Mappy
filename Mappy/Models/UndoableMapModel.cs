@@ -474,8 +474,8 @@
 
         public void PasteMapTileNoDeduplicateTopLeft(IMapTile tile)
         {
-            int x = this.ViewportLocation.X;
-            int y = this.ViewportLocation.Y;
+            int x = this.ViewportLocation.X / 32;
+            int y = this.ViewportLocation.Y / 32;
 
             this.AddAndSelectTile(tile, x, y);
         }
