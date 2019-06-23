@@ -40,7 +40,7 @@ namespace Mappy.UI.Controls
         public bool Locked
         {
             get { return this.locked; }
-            set { this.SetField(ref this.locked, value, "Locked"); }
+            set { this.SetField(ref this.locked, value, nameof(this.Locked)); }
         }
 
         public bool Visible
@@ -52,7 +52,7 @@ namespace Mappy.UI.Controls
 
             set
             {
-                if (this.SetField(ref this.visible, value, "Visible"))
+                if (this.SetField(ref this.visible, value, nameof(this.Visible)))
                 {
                     this.AreaChanged?.Invoke(this, new AreaChangedEventArgs(this.Bounds));
                 }

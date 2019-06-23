@@ -31,7 +31,7 @@
 
             set
             {
-                if (this.SetField(ref this.map, value, "Map"))
+                if (this.SetField(ref this.map, value, nameof(this.Map)))
                 {
                     this.Map.IfSome(x => x.PropertyChanged += this.MapOnPropertyChanged);
 
@@ -58,7 +58,7 @@
         public bool HeightmapVisible
         {
             get { return this.heightmapVisible; }
-            set { this.SetField(ref this.heightmapVisible, value, "HeightmapVisible"); }
+            set { this.SetField(ref this.heightmapVisible, value, nameof(this.HeightmapVisible)); }
         }
 
         public bool VoidsVisible
@@ -70,7 +70,7 @@
         public bool FeaturesVisible
         {
             get { return this.featuresVisible; }
-            set { this.SetField(ref this.featuresVisible, value, "FeaturesVisible"); }
+            set { this.SetField(ref this.featuresVisible, value, nameof(this.FeaturesVisible)); }
         }
 
         public int ViewportWidth
@@ -82,7 +82,7 @@
 
             set
             {
-                this.SetField(ref this.viewportWidth, value, "ViewportWidth");
+                this.SetField(ref this.viewportWidth, value, nameof(this.ViewportWidth));
             }
         }
 
@@ -95,7 +95,7 @@
 
             set
             {
-                this.SetField(ref this.viewportHeight, value, "ViewportHeight");
+                this.SetField(ref this.viewportHeight, value, nameof(this.ViewportHeight));
             }
         }
 
@@ -108,20 +108,20 @@
 
             set
             {
-                this.SetField(ref this.minimapVisible, value, "MinimapVisible");
+                this.SetField(ref this.minimapVisible, value, nameof(this.MinimapVisible));
             }
         }
 
         public bool GridVisible
         {
             get { return this.gridVisible; }
-            set { this.SetField(ref this.gridVisible, value, "GridVisible"); }
+            set { this.SetField(ref this.gridVisible, value, nameof(this.GridVisible)); }
         }
 
         public Size GridSize
         {
             get { return this.gridSize; }
-            set { this.SetField(ref this.gridSize, value, "GridSize"); }
+            set { this.SetField(ref this.gridSize, value, nameof(this.GridSize)); }
         }
 
         public Color GridColor
@@ -135,7 +135,7 @@
             {
                 MappySettings.Settings.GridColor = value;
                 MappySettings.SaveSettings();
-                this.SetField(ref this.gridColor, value, "GridColor");
+                this.SetField(ref this.gridColor, value, nameof(this.GridColor));
             }
         }
 

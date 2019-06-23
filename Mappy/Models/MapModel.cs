@@ -137,7 +137,7 @@
 
             set
             {
-                this.SetField(ref this.seaLevel, value, "SeaLevel");
+                this.SetField(ref this.seaLevel, value, nameof(this.SeaLevel));
             }
         }
 
@@ -150,7 +150,7 @@
 
             set
             {
-                this.SetField(ref this.minimap, value, "Minimap");
+                this.SetField(ref this.minimap, value, nameof(this.Minimap));
             }
         }
 
@@ -167,7 +167,7 @@
 
             private set
             {
-                this.SetField(ref this.selectedStartPosition, value, "SelectedStartPosition");
+                this.SetField(ref this.selectedStartPosition, value, nameof(this.SelectedStartPosition));
             }
         }
 
@@ -180,7 +180,7 @@
 
             private set
             {
-                this.SetField(ref this.selectedTile, value, "SelectedTile");
+                this.SetField(ref this.selectedTile, value, nameof(this.SelectedTile));
             }
         }
 

@@ -97,7 +97,7 @@
 
             private set
             {
-                this.SetField(ref this.canCopy, value, "CanCopy");
+                this.SetField(ref this.canCopy, value, nameof(this.CanCopy));
             }
         }
 
@@ -110,20 +110,20 @@
 
             private set
             {
-                this.SetField(ref this.canCut, value, "CanCopy");
+                this.SetField(ref this.canCut, value, nameof(this.CanCopy));
             }
         }
 
         public string FilePath
         {
             get { return this.openFilePath; }
-            private set { this.SetField(ref this.openFilePath, value, "FilePath"); }
+            private set { this.SetField(ref this.openFilePath, value, nameof(this.FilePath)); }
         }
 
         public bool IsFileReadOnly
         {
             get { return this.isFileReadOnly; }
-            private set { this.SetField(ref this.isFileReadOnly, value, "IsFileReadOnly"); }
+            private set { this.SetField(ref this.isFileReadOnly, value, nameof(this.IsFileReadOnly)); }
         }
 
         public bool CanUndo => this.undoManager.CanUndo;
@@ -167,7 +167,7 @@
 
             set
             {
-                this.SetField(ref this.viewportLocation, value, "ViewportLocation");
+                this.SetField(ref this.viewportLocation, value, nameof(this.ViewportLocation));
             }
         }
 

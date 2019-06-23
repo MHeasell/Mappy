@@ -21,17 +21,17 @@
             var filePath = map.ObservePropertyOrDefault(x => x.FilePath, "FilePath", null);
             var isFileReadOnly = map.ObservePropertyOrDefault(x => x.IsFileReadOnly, "IsFileReadOnly", false);
 
-            this.CanUndo = model.PropertyAsObservable(x => x.CanUndo, "CanUndo");
-            this.CanRedo = model.PropertyAsObservable(x => x.CanRedo, "CanRedo");
-            this.CanCut = model.PropertyAsObservable(x => x.CanCut, "CanCut");
-            this.CanCopy = model.PropertyAsObservable(x => x.CanCopy, "CanCopy");
-            this.CanPaste = model.PropertyAsObservable(x => x.CanPaste, "CanPaste");
-            this.GridVisible = model.PropertyAsObservable(x => x.GridVisible, "GridVisible");
-            this.GridSize = model.PropertyAsObservable(x => x.GridSize, "GridSize");
-            this.HeightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, "HeightmapVisible");
+            this.CanUndo = model.PropertyAsObservable(x => x.CanUndo, nameof(model.CanUndo));
+            this.CanRedo = model.PropertyAsObservable(x => x.CanRedo, nameof(model.CanRedo));
+            this.CanCut = model.PropertyAsObservable(x => x.CanCut, nameof(model.CanCut));
+            this.CanCopy = model.PropertyAsObservable(x => x.CanCopy, nameof(model.CanCopy));
+            this.CanPaste = model.PropertyAsObservable(x => x.CanPaste, nameof(model.CanPaste));
+            this.GridVisible = model.PropertyAsObservable(x => x.GridVisible, nameof(model.GridVisible));
+            this.GridSize = model.PropertyAsObservable(x => x.GridSize, nameof(model.GridSize));
+            this.HeightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, nameof(model.HeightmapVisible));
             this.VoidsVisible = model.PropertyAsObservable(x => x.VoidsVisible, nameof(model.VoidsVisible));
-            this.FeaturesVisible = model.PropertyAsObservable(x => x.FeaturesVisible, "FeaturesVisible");
-            this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, "MinimapVisible");
+            this.FeaturesVisible = model.PropertyAsObservable(x => x.FeaturesVisible, nameof(model.FeaturesVisible));
+            this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, nameof(model.MinimapVisible));
             this.SeaLevel = map.ObservePropertyOrDefault(x => x.SeaLevel, "SeaLevel", 0);
 
             this.CanSaveAs = mapOpen;

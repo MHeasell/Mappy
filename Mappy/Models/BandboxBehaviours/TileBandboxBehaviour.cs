@@ -38,7 +38,7 @@
 
             private set
             {
-                this.SetField(ref this.bandboxRectangle, value, "BandboxRectangle");
+                this.SetField(ref this.bandboxRectangle, value, nameof(this.BandboxRectangle));
             }
         }
 
