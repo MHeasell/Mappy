@@ -23,10 +23,7 @@
 
         public Size CanvasSize
         {
-            get
-            {
-                return this.canvasSize;
-            }
+            get => this.canvasSize;
 
             set
             {

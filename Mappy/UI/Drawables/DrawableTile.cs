@@ -29,23 +29,13 @@ namespace Mappy.UI.Drawables
 
         public Color BackgroundColor
         {
-            get
-            {
-                return this.painter.BackgroundColor;
-            }
-
-            set
-            {
-                this.painter.BackgroundColor = value;
-            }
+            get => this.painter.BackgroundColor;
+            set => this.painter.BackgroundColor = value;
         }
 
         public bool DrawHeightMap
         {
-            get
-            {
-                return this.drawHeightmap;
-            }
+            get => this.drawHeightmap;
 
             set
             {
@@ -59,10 +49,7 @@ namespace Mappy.UI.Drawables
 
         public int SeaLevel
         {
-            get
-            {
-                return this.heightPainter.SeaLevel;
-            }
+            get => this.heightPainter.SeaLevel;
 
             set
             {

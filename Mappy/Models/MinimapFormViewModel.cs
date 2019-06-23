@@ -87,41 +87,20 @@
 
         public bool MinimapVisible
         {
-            get
-            {
-                return this.minimapVisible;
-            }
-
-            private set
-            {
-                this.SetField(ref this.minimapVisible, value, nameof(this.MinimapVisible));
-            }
+            get => this.minimapVisible;
+            private set => this.SetField(ref this.minimapVisible, value, nameof(this.MinimapVisible));
         }
 
         public Maybe<Bitmap> MinimapImage
         {
-            get
-            {
-                return this.minimapImage;
-            }
-
-            private set
-            {
-                this.SetField(ref this.minimapImage, value, nameof(this.MinimapImage));
-            }
+            get => this.minimapImage;
+            private set => this.SetField(ref this.minimapImage, value, nameof(this.MinimapImage));
         }
 
         public Rectangle MinimapRect
         {
-            get
-            {
-                return this.minimapRect;
-            }
-
-            private set
-            {
-                this.SetField(ref this.minimapRect, value, nameof(this.MinimapRect));
-            }
+            get => this.minimapRect;
+            private set => this.SetField(ref this.minimapRect, value, nameof(this.MinimapRect));
         }
 
         public IList<BehaviorSubject<Maybe<Point>>> StartPositions => this.startPositions;

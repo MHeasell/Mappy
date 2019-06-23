@@ -24,10 +24,7 @@
 
         public Maybe<UndoableMapModel> Map
         {
-            get
-            {
-                return this.map;
-            }
+            get => this.map;
 
             set
             {
@@ -57,80 +54,55 @@
 
         public bool HeightmapVisible
         {
-            get { return this.heightmapVisible; }
-            set { this.SetField(ref this.heightmapVisible, value, nameof(this.HeightmapVisible)); }
+            get => this.heightmapVisible;
+            set => this.SetField(ref this.heightmapVisible, value, nameof(this.HeightmapVisible));
         }
 
         public bool VoidsVisible
         {
-            get { return this.voidsVisible; }
-            set { this.SetField(ref this.voidsVisible, value, nameof(this.VoidsVisible)); }
+            get => this.voidsVisible;
+            set => this.SetField(ref this.voidsVisible, value, nameof(this.VoidsVisible));
         }
 
         public bool FeaturesVisible
         {
-            get { return this.featuresVisible; }
-            set { this.SetField(ref this.featuresVisible, value, nameof(this.FeaturesVisible)); }
+            get => this.featuresVisible;
+            set => this.SetField(ref this.featuresVisible, value, nameof(this.FeaturesVisible));
         }
 
         public int ViewportWidth
         {
-            get
-            {
-                return this.viewportWidth;
-            }
-
-            set
-            {
-                this.SetField(ref this.viewportWidth, value, nameof(this.ViewportWidth));
-            }
+            get => this.viewportWidth;
+            set => this.SetField(ref this.viewportWidth, value, nameof(this.ViewportWidth));
         }
 
         public int ViewportHeight
         {
-            get
-            {
-                return this.viewportHeight;
-            }
-
-            set
-            {
-                this.SetField(ref this.viewportHeight, value, nameof(this.ViewportHeight));
-            }
+            get => this.viewportHeight;
+            set => this.SetField(ref this.viewportHeight, value, nameof(this.ViewportHeight));
         }
 
         public bool MinimapVisible
         {
-            get
-            {
-                return this.minimapVisible;
-            }
-
-            set
-            {
-                this.SetField(ref this.minimapVisible, value, nameof(this.MinimapVisible));
-            }
+            get => this.minimapVisible;
+            set => this.SetField(ref this.minimapVisible, value, nameof(this.MinimapVisible));
         }
 
         public bool GridVisible
         {
-            get { return this.gridVisible; }
-            set { this.SetField(ref this.gridVisible, value, nameof(this.GridVisible)); }
+            get => this.gridVisible;
+            set => this.SetField(ref this.gridVisible, value, nameof(this.GridVisible));
         }
 
         public Size GridSize
         {
-            get { return this.gridSize; }
-            set { this.SetField(ref this.gridSize, value, nameof(this.GridSize)); }
+            get => this.gridSize;
+            set => this.SetField(ref this.gridSize, value, nameof(this.GridSize));
         }
 
         public Color GridColor
         {
-            get
-            {
-                return this.gridColor;
-            }
-
+            get => this.gridColor;
             set
             {
                 MappySettings.Settings.GridColor = value;

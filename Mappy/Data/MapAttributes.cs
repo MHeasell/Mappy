@@ -78,128 +78,128 @@
 
         public string Name
         {
-            get { return this.name; }
-            set { this.SetField(ref this.name, value, nameof(this.Name)); }
+            get => this.name;
+            set => this.SetField(ref this.name, value, nameof(this.Name));
         }
 
         public string Description
         {
-            get { return this.description; }
-            set { this.SetField(ref this.description, value, nameof(this.Description)); }
+            get => this.description;
+            set => this.SetField(ref this.description, value, nameof(this.Description));
         }
 
         public string Planet
         {
-            get { return this.planet; }
-            set { this.SetField(ref this.planet, value, nameof(this.Planet)); }
+            get => this.planet;
+            set => this.SetField(ref this.planet, value, nameof(this.Planet));
         }
 
         public int Gravity
         {
-            get { return this.gravity; }
-            set { this.SetField(ref this.gravity, value, nameof(this.Gravity)); }
+            get => this.gravity;
+            set => this.SetField(ref this.gravity, value, nameof(this.Gravity));
         }
 
         public string Memory
         {
-            get { return this.memory; }
-            set { this.SetField(ref this.memory, value, nameof(this.Memory)); }
+            get => this.memory;
+            set => this.SetField(ref this.memory, value, nameof(this.Memory));
         }
 
         public string NumPlayers
         {
-            get { return this.numPlayers; }
-            set { this.SetField(ref this.numPlayers, value, nameof(this.NumPlayers)); }
+            get => this.numPlayers;
+            set => this.SetField(ref this.numPlayers, value, nameof(this.NumPlayers));
         }
 
         public string AiProfile
         {
-            get { return this.aiProfile; }
-            set { this.SetField(ref this.aiProfile, value, nameof(this.AiProfile)); }
+            get => this.aiProfile;
+            set => this.SetField(ref this.aiProfile, value, nameof(this.AiProfile));
         }
 
         public int SurfaceMetal
         {
-            get { return this.surfaceMetal; }
-            set { this.SetField(ref this.surfaceMetal, value, nameof(this.SurfaceMetal)); }
+            get => this.surfaceMetal;
+            set => this.SetField(ref this.surfaceMetal, value, nameof(this.SurfaceMetal));
         }
 
         public int MohoMetal
         {
-            get { return this.mohoMetal; }
-            set { this.SetField(ref this.mohoMetal, value, nameof(this.MohoMetal)); }
+            get => this.mohoMetal;
+            set => this.SetField(ref this.mohoMetal, value, nameof(this.MohoMetal));
         }
 
         public int TidalStrength
         {
-            get { return this.tidalStrength; }
-            set { this.SetField(ref this.tidalStrength, value, nameof(this.TidalStrength)); }
+            get => this.tidalStrength;
+            set => this.SetField(ref this.tidalStrength, value, nameof(this.TidalStrength));
         }
 
         public int SolarStrength
         {
-            get { return this.solarStrength; }
-            set { this.SetField(ref this.solarStrength, value, nameof(this.SolarStrength)); }
+            get => this.solarStrength;
+            set => this.SetField(ref this.solarStrength, value, nameof(this.SolarStrength));
         }
 
         public int MinWindSpeed
         {
-            get { return this.minWindSpeed; }
-            set { this.SetField(ref this.minWindSpeed, value, nameof(this.MinWindSpeed)); }
+            get => this.minWindSpeed;
+            set => this.SetField(ref this.minWindSpeed, value, nameof(this.MinWindSpeed));
         }
 
         public bool LavaWorld
         {
-            get { return this.lavaWorld; }
-            set { this.SetField(ref this.lavaWorld, value, nameof(this.LavaWorld)); }
+            get => this.lavaWorld;
+            set => this.SetField(ref this.lavaWorld, value, nameof(this.LavaWorld));
         }
 
         public bool WaterDoesDamage
         {
-            get { return this.waterDoesDamage; }
-            set { this.SetField(ref this.waterDoesDamage, value, nameof(this.WaterDoesDamage)); }
+            get => this.waterDoesDamage;
+            set => this.SetField(ref this.waterDoesDamage, value, nameof(this.WaterDoesDamage));
         }
 
         public int MaxWindSpeed
         {
-            get { return this.maxWindSpeed; }
-            set { this.SetField(ref this.maxWindSpeed, value, nameof(this.MaxWindSpeed)); }
+            get => this.maxWindSpeed;
+            set => this.SetField(ref this.maxWindSpeed, value, nameof(this.MaxWindSpeed));
         }
 
         public int WaterDamage
         {
-            get { return this.waterDamage; }
-            set { this.SetField(ref this.waterDamage, value, nameof(this.WaterDamage)); }
+            get => this.waterDamage;
+            set => this.SetField(ref this.waterDamage, value, nameof(this.WaterDamage));
         }
 
         public string MeteorWeapon
         {
-            get { return this.meteorWeapon; }
-            set { this.SetField(ref this.meteorWeapon, value, nameof(this.MeteorWeapon)); }
+            get => this.meteorWeapon;
+            set => this.SetField(ref this.meteorWeapon, value, nameof(this.MeteorWeapon));
         }
 
         public int MeteorRadius
         {
-            get { return this.meteorRadius; }
-            set { this.SetField(ref this.meteorRadius, value, nameof(this.MeteorRadius)); }
+            get => this.meteorRadius;
+            set => this.SetField(ref this.meteorRadius, value, nameof(this.MeteorRadius));
         }
 
         public int MeteorDuration
         {
-            get { return this.meteorDuration; }
-            set { this.SetField(ref this.meteorDuration, value, nameof(this.MeteorDuration)); }
+            get => this.meteorDuration;
+            set => this.SetField(ref this.meteorDuration, value, nameof(this.MeteorDuration));
         }
 
         public double MeteorDensity
         {
-            get { return this.meteorDensity; }
-            set { this.SetField(ref this.meteorDensity, value, nameof(this.MeteorDensity)); }
+            get => this.meteorDensity;
+            set => this.SetField(ref this.meteorDensity, value, nameof(this.MeteorDensity));
         }
 
         public int MeteorInterval
         {
-            get { return this.meteorInterval; }
-            set { this.SetField(ref this.meteorInterval, value, nameof(this.MeteorInterval)); }
+            get => this.meteorInterval;
+            set => this.SetField(ref this.meteorInterval, value, nameof(this.MeteorInterval));
         }
 
         public static MapAttributes Load(TdfNode n)

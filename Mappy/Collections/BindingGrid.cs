@@ -25,10 +25,7 @@
 
         public T this[int index]
         {
-            get
-            {
-                return this.grid[index];
-            }
+            get => this.grid[index];
 
             set
             {

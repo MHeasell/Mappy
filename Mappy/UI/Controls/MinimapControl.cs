@@ -23,10 +23,7 @@
         [DefaultValue(true)]
         public bool RectVisible
         {
-            get
-            {
-                return this.rectVisible;
-            }
+            get => this.rectVisible;
 
             set
             {
@@ -38,10 +35,7 @@
         [DefaultValue(typeof(Color), "Black")]
         public Color RectColor
         {
-            get
-            {
-                return this.rectColor;
-            }
+            get => this.rectColor;
 
             set
             {
@@ -53,10 +47,7 @@
         [DefaultValue(1.0f)]
         public float RectThickness
         {
-            get
-            {
-                return this.rectThickness;
-            }
+            get => this.rectThickness;
 
             set
             {
@@ -67,10 +58,7 @@
 
         public Rectangle ViewportRect
         {
-            get
-            {
-                return this.viewportRect;
-            }
+            get => this.viewportRect;
 
             set
             {
@@ -82,10 +70,7 @@
 
         public override Image BackgroundImage
         {
-            get
-            {
-                return base.BackgroundImage;
-            }
+            get => base.BackgroundImage;
 
             set
             {

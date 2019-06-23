@@ -16,10 +16,7 @@
 
         public int CellSize
         {
-            get
-            {
-                return this.painter.CellSize;
-            }
+            get => this.painter.CellSize;
 
             set
             {
@@ -33,10 +30,7 @@
 
         public Color Color
         {
-            get
-            {
-                return this.painter.Pen.Color;
-            }
+            get => this.painter.Pen.Color;
 
             set
             {

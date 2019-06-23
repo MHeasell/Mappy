@@ -31,15 +31,8 @@
 
         public Rectangle BandboxRectangle
         {
-            get
-            {
-                return this.bandboxRectangle;
-            }
-
-            private set
-            {
-                this.SetField(ref this.bandboxRectangle, value, nameof(this.BandboxRectangle));
-            }
+            get => this.bandboxRectangle;
+            private set => this.SetField(ref this.bandboxRectangle, value, nameof(this.BandboxRectangle));
         }
 
         public void StartBandbox(int x, int y)

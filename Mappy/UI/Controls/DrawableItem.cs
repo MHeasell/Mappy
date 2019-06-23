@@ -39,16 +39,13 @@ namespace Mappy.UI.Controls
 
         public bool Locked
         {
-            get { return this.locked; }
-            set { this.SetField(ref this.locked, value, nameof(this.Locked)); }
+            get => this.locked;
+            set => this.SetField(ref this.locked, value, nameof(this.Locked));
         }
 
         public bool Visible
         {
-            get
-            {
-                return this.visible;
-            }
+            get => this.visible;
 
             set
             {

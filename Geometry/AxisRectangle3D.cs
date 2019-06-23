@@ -18,49 +18,29 @@
         /// </summary>
         public Vector3D Extents { get; set; }
 
-        public Vector3D TopLeft
-        {
-            get
-            {
-                return new Vector3D(
-                    this.Position.X - this.Extents.X,
-                    this.Position.Y - this.Extents.Y,
-                    this.Position.Z);
-            }
-        }
+        public Vector3D TopLeft =>
+            new Vector3D(
+                this.Position.X - this.Extents.X,
+                this.Position.Y - this.Extents.Y,
+                this.Position.Z);
 
-        public Vector3D TopRight
-        {
-            get
-            {
-                return new Vector3D(
-                    this.Position.X + this.Extents.X,
-                    this.Position.Y - this.Extents.Y,
-                    this.Position.Z);
-            }
-        }
+        public Vector3D TopRight =>
+            new Vector3D(
+                this.Position.X + this.Extents.X,
+                this.Position.Y - this.Extents.Y,
+                this.Position.Z);
 
-        public Vector3D BottomLeft
-        {
-            get
-            {
-                return new Vector3D(
-                    this.Position.X - this.Extents.X,
-                    this.Position.Y + this.Extents.Y,
-                    this.Position.Z);
-            }
-        }
+        public Vector3D BottomLeft =>
+            new Vector3D(
+                this.Position.X - this.Extents.X,
+                this.Position.Y + this.Extents.Y,
+                this.Position.Z);
 
-        public Vector3D BottomRight
-        {
-            get
-            {
-                return new Vector3D(
-                    this.Position.X + this.Extents.X,
-                    this.Position.Y + this.Extents.Y,
-                    this.Position.Z);
-            }
-        }
+        public Vector3D BottomRight =>
+            new Vector3D(
+                this.Position.X + this.Extents.X,
+                this.Position.Y + this.Extents.Y,
+                this.Position.Z);
 
         public static AxisRectangle3D FromTLBR(double t, double l, double b, double r)
         {

@@ -9,15 +9,8 @@
         [XmlIgnore]
         public Color GridColor
         {
-            get
-            {
-                return Color.FromArgb(this.GridColorArgb);
-            }
-
-            set
-            {
-                this.GridColorArgb = value.ToArgb();
-            }
+            get => Color.FromArgb(this.GridColorArgb);
+            set => this.GridColorArgb = value.ToArgb();
         }
 
         [XmlElement(ElementName = "GridColor")]

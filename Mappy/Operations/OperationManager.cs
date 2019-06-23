@@ -22,10 +22,7 @@
 
         public bool IsMarked
         {
-            get
-            {
-                return this.isMarked;
-            }
+            get => this.isMarked;
 
             private set
             {
@@ -39,10 +36,7 @@
 
         public bool CanUndo
         {
-            get
-            {
-                return this.canUndo;
-            }
+            get => this.canUndo;
 
             private set
             {
@@ -57,10 +51,7 @@
 
         public bool CanRedo
         {
-            get
-            {
-                return this.canRedo;
-            }
+            get => this.canRedo;
 
             private set
             {
@@ -75,10 +66,7 @@
 
         private int MarkCounter
         {
-            get
-            {
-                return this.markCounter;
-            }
+            get => this.markCounter;
 
             set
             {

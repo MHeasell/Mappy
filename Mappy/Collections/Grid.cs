@@ -27,15 +27,8 @@
 
         public T this[int index]
         {
-            get
-            {
-                return this.arr[index];
-            }
-
-            set
-            {
-                this.arr[index] = value;
-            }
+            get => this.arr[index];
+            set => this.arr[index] = value;
         }
 
         public IEnumerator<T> GetEnumerator()

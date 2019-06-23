@@ -77,53 +77,33 @@
 
         public event EventHandler<FeatureInstanceEventArgs> FeatureInstanceChanged
         {
-            add
-            {
-                this.model.FeatureInstanceChanged += value;
-            }
+            add => this.model.FeatureInstanceChanged += value;
 
-            remove
-            {
-                this.model.FeatureInstanceChanged -= value;
-            }
+            remove => this.model.FeatureInstanceChanged -= value;
         }
 
         public bool CanCopy
         {
-            get
-            {
-                return this.canCopy;
-            }
-
-            private set
-            {
-                this.SetField(ref this.canCopy, value, nameof(this.CanCopy));
-            }
+            get => this.canCopy;
+            private set => this.SetField(ref this.canCopy, value, nameof(this.CanCopy));
         }
 
         public bool CanCut
         {
-            get
-            {
-                return this.canCut;
-            }
-
-            private set
-            {
-                this.SetField(ref this.canCut, value, nameof(this.CanCopy));
-            }
+            get => this.canCut;
+            private set => this.SetField(ref this.canCut, value, nameof(this.CanCopy));
         }
 
         public string FilePath
         {
-            get { return this.openFilePath; }
-            private set { this.SetField(ref this.openFilePath, value, nameof(this.FilePath)); }
+            get => this.openFilePath;
+            private set => this.SetField(ref this.openFilePath, value, nameof(this.FilePath));
         }
 
         public bool IsFileReadOnly
         {
-            get { return this.isFileReadOnly; }
-            private set { this.SetField(ref this.isFileReadOnly, value, nameof(this.IsFileReadOnly)); }
+            get => this.isFileReadOnly;
+            private set => this.SetField(ref this.isFileReadOnly, value, nameof(this.IsFileReadOnly));
         }
 
         public bool CanUndo => this.undoManager.CanUndo;
@@ -160,15 +140,8 @@
 
         public Point ViewportLocation
         {
-            get
-            {
-                return this.viewportLocation;
-            }
-
-            set
-            {
-                this.SetField(ref this.viewportLocation, value, nameof(this.ViewportLocation));
-            }
+            get => this.viewportLocation;
+            set => this.SetField(ref this.viewportLocation, value, nameof(this.ViewportLocation));
         }
 
         public ObservableCollection<Guid> SelectedFeatures => this.model.SelectedFeatures;

@@ -70,54 +70,26 @@
 
         public event EventHandler<GridEventArgs> TileGridChanged
         {
-            add
-            {
-                this.tile.TileGridChanged += value;
-            }
-
-            remove
-            {
-                this.tile.TileGridChanged -= value;
-            }
+            add => this.tile.TileGridChanged += value;
+            remove => this.tile.TileGridChanged -= value;
         }
 
         public event EventHandler<GridEventArgs> HeightGridChanged
         {
-            add
-            {
-                this.tile.HeightGridChanged += value;
-            }
-
-            remove
-            {
-                this.tile.HeightGridChanged -= value;
-            }
+            add => this.tile.HeightGridChanged += value;
+            remove => this.tile.HeightGridChanged -= value;
         }
 
         public event ListChangedEventHandler FloatingTilesChanged
         {
-            add
-            {
-                this.floatingTiles.ListChanged += value;
-            }
-
-            remove
-            {
-                this.floatingTiles.ListChanged -= value;
-            }
+            add => this.floatingTiles.ListChanged += value;
+            remove => this.floatingTiles.ListChanged -= value;
         }
 
         public event EventHandler<SparseGridEventArgs> VoidsChanged
         {
-            add
-            {
-                this.voids.EntriesChanged += value;
-            }
-
-            remove
-            {
-                this.voids.EntriesChanged -= value;
-            }
+            add => this.voids.EntriesChanged += value;
+            remove => this.voids.EntriesChanged -= value;
         }
 
         public MapAttributes Attributes { get; }
@@ -130,28 +102,14 @@
 
         public int SeaLevel
         {
-            get
-            {
-                return this.seaLevel;
-            }
-
-            set
-            {
-                this.SetField(ref this.seaLevel, value, nameof(this.SeaLevel));
-            }
+            get => this.seaLevel;
+            set => this.SetField(ref this.seaLevel, value, nameof(this.SeaLevel));
         }
 
         public Bitmap Minimap
         {
-            get
-            {
-                return this.minimap;
-            }
-
-            set
-            {
-                this.SetField(ref this.minimap, value, nameof(this.Minimap));
-            }
+            get => this.minimap;
+            set => this.SetField(ref this.minimap, value, nameof(this.Minimap));
         }
 
         public int FeatureGridWidth => this.Tile.HeightGrid.Width;
@@ -160,28 +118,14 @@
 
         public int? SelectedStartPosition
         {
-            get
-            {
-                return this.selectedStartPosition;
-            }
-
-            private set
-            {
-                this.SetField(ref this.selectedStartPosition, value, nameof(this.SelectedStartPosition));
-            }
+            get => this.selectedStartPosition;
+            private set => this.SetField(ref this.selectedStartPosition, value, nameof(this.SelectedStartPosition));
         }
 
         public int? SelectedTile
         {
-            get
-            {
-                return this.selectedTile;
-            }
-
-            private set
-            {
-                this.SetField(ref this.selectedTile, value, nameof(this.SelectedTile));
-            }
+            get => this.selectedTile;
+            private set => this.SetField(ref this.selectedTile, value, nameof(this.SelectedTile));
         }
 
         public ObservableCollection<Guid> SelectedFeatures => this.selectedFeatures;
