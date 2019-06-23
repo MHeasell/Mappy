@@ -13,108 +13,32 @@
         public static bool LoadFeatures(
             Action<int> progressCallback,
             Func<bool> cancelCallback,
-            out LoadResult<Feature> result)
+            out LoadResult<FeatureInfo> result)
         {
             var recordLoader = new FeatureTdfLoader();
-            if (!recordLoader.LoadFiles(i => progressCallback((i * 33) / 100), cancelCallback))
+            if (!recordLoader.LoadFiles(progressCallback, cancelCallback))
             {
                 result = null;
                 return false;
             }
 
-            var records = new Dictionary<string, FeatureRecord>();
-            foreach (var f in recordLoader.Records)
-            {
-                records[f.Name] = f;
-            }
-
-            var filenameMap = records.Values
-                .GroupBy(x => x.AnimFileName, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList(), StringComparer.OrdinalIgnoreCase);
-
-            var bitmapLoader = new FeatureBitmapLoader(filenameMap);
-            if (!bitmapLoader.LoadFiles(i => progressCallback(33 + ((i * 33) / 100)), cancelCallback))
-            {
-                result = null;
-                return false;
-            }
-
-            var frames = new Dictionary<string, OffsetBitmap>();
-            foreach (var f in bitmapLoader.Records)
-            {
-                frames[f.Key] = f.Value;
-            }
-
-            var objectMap = records.Values
-                .GroupBy(x => x.ObjectName, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(x => x.Key, x => (IList<FeatureRecord>)x.ToList(), StringComparer.OrdinalIgnoreCase);
-
-            var renderLoader = new FeatureRenderLoader(objectMap);
-            if (!renderLoader.LoadFiles(i => progressCallback(66 + ((i * 33) / 100)), cancelCallback))
-            {
-                result = null;
-                return false;
-            }
-
-            var renders = new Dictionary<string, OffsetBitmap>();
-            foreach (var r in renderLoader.Records)
-            {
-                renders[r.Key] = r.Value;
-            }
-
-            var features = LoadFeatureObjects(records.Values, frames, renders).ToList();
+            var features = LoadFeatureObjects(recordLoader.Records).ToList();
             progressCallback(100);
 
-            result = new LoadResult<Feature>
+            result = new LoadResult<FeatureInfo>
                 {
                     Records = features,
-                    Errors =
-                        recordLoader.HpiErrors
-                            .Concat(bitmapLoader.HpiErrors)
-                            .Concat(renderLoader.HpiErrors)
-                            .GroupBy(x => x.HpiPath)
-                            .Select(x => x.First())
-                            .ToList(),
-                    FileErrors =
-                        recordLoader.FileErrors
-                            .Concat(bitmapLoader.FileErrors)
-                            .Concat(renderLoader.FileErrors)
-                            .ToList(),
+                    Errors = recordLoader.HpiErrors,
+                    FileErrors = recordLoader.FileErrors
                 };
             return true;
         }
 
-        private static IEnumerable<Feature> LoadFeatureObjects(
-            IEnumerable<FeatureRecord> records,
-            IDictionary<string, OffsetBitmap> frames,
-            IDictionary<string, OffsetBitmap> objects)
+        private static IEnumerable<FeatureInfo> LoadFeatureObjects(
+            IEnumerable<FeatureRecord> records)
         {
             foreach (var record in records)
             {
-                Bitmap image;
-                var offsetX = 0;
-                var offsetY = 0;
-
-                if (frames.ContainsKey(record.Name))
-                {
-                    var frame = frames[record.Name];
-                    image = frame.Bitmap;
-                    offsetX = -frame.OffsetX;
-                    offsetY = -frame.OffsetY;
-                }
-                else if (objects.ContainsKey(record.Name))
-                {
-                    var render = objects[record.Name];
-                    image = render.Bitmap;
-                    offsetX = -render.OffsetX;
-                    offsetY = -render.OffsetY;
-                }
-                else
-                {
-                    // no graphic for this feature... bail
-                    image = Mappy.Properties.Resources.nofeature;
-                }
-
                 var reclaimInfo = record.Reclaimable ?
                     Maybe.Return(new Feature.ReclaimInfoStruct
                     {
@@ -122,16 +46,19 @@
                         MetalValue = record.Metal
                     }) : Maybe.None<Feature.ReclaimInfoStruct>();
 
-                yield return new Feature
+                yield return new FeatureInfo
                     {
                         Name = record.Name,
-                        Image = image,
-                        Offset = new Point(offsetX, offsetY),
                         Footprint = new Size(record.FootprintX, record.FootprintY),
                         World = record.World,
                         Category = record.Category,
+
                         ReclaimInfo = reclaimInfo,
                         Permanent = record.Permanent,
+
+                        AnimFileName = record.AnimFileName,
+                        SequenceName = record.SequenceName,
+                        ObjectName = record.ObjectName,
                     };
             }
         }

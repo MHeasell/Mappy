@@ -9,7 +9,7 @@
     {
         public SectionFeatureLoadResult(
             IList<SectionInfo> sections,
-            IList<Feature> features,
+            IList<FeatureInfo> features,
             List<HpiErrorInfo> errors,
             List<HpiInnerFileErrorInfo> fileErrors)
         {
@@ -21,7 +21,7 @@
 
         public IList<SectionInfo> Sections { get; }
 
-        public IList<Feature> Features { get; }
+        public IList<FeatureInfo> Features { get; }
 
         public List<HpiErrorInfo> Errors { get; }
 

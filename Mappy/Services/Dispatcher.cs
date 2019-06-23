@@ -84,11 +84,10 @@
                         return;
                     }
 
-                    LoadResult<Feature> featureResult;
                     if (!FeatureLoadingUtils.LoadFeatures(
                         i => w.ReportProgress(50 + ((50 * i) / 100)),
                         () => w.CancellationPending,
-                        out featureResult))
+                        out var featureResult))
                     {
                         args.Cancel = true;
                         return;

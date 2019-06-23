@@ -122,6 +122,7 @@
     <Compile Include="Configuration.cs" />
     <Compile Include="Data\BindingMapTile.cs" />
     <Compile Include="Data\Feature.cs" />
+    <Compile Include="Data\FeatureInfo.cs" />
     <Compile Include="Data\FeatureRecord.cs" />
     <Compile Include="Data\IMapTile.cs" />
     <Compile Include="Data\MapAttributes.cs" />
