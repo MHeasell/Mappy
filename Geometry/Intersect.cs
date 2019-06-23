@@ -10,20 +10,16 @@
             var acLine = new Line3D(t.A, t.C);
             var bcLine = new Line3D(t.B, t.C);
 
-            double abIntersect;
-            double acIntersect;
-            double bcIntersect;
-
-            if (plane.IntersectLine(abLine, out abIntersect))
+            if (plane.IntersectLine(abLine, out var abIntersect))
             {
-                if (plane.IntersectLine(acLine, out acIntersect))
+                if (plane.IntersectLine(acLine, out var acIntersect))
                 {
                     intersect = new Line3D(
                         abLine.PointAt(abIntersect),
                         acLine.PointAt(acIntersect));
                     return true;
                 }
-                else if (plane.IntersectLine(bcLine, out bcIntersect))
+                else if (plane.IntersectLine(bcLine, out var bcIntersect))
                 {
                     intersect = new Line3D(
                         abLine.PointAt(abIntersect),
@@ -36,9 +32,9 @@
                     return false;
                 }
             }
-            else if (plane.IntersectLine(bcLine, out bcIntersect))
+            else if (plane.IntersectLine(bcLine, out var bcIntersect))
             {
-                if (plane.IntersectLine(acLine, out acIntersect))
+                if (plane.IntersectLine(acLine, out var acIntersect))
                 {
                     intersect = new Line3D(
                         bcLine.PointAt(bcIntersect),
