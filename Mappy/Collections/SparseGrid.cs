@@ -67,8 +67,8 @@
 
         public IEnumerator<T> GetEnumerator()
         {
-            int len = this.Width * this.Height;
-            for (int i = 0; i < len; i++)
+            var len = this.Width * this.Height;
+            for (var i = 0; i < len; i++)
             {
                 yield return this[i];
             }

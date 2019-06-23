@@ -18,18 +18,18 @@
 
         public void Paint(Graphics g, Rectangle clipRectangle)
         {
-            int startX = clipRectangle.X - Util.Mod(clipRectangle.X, this.CellSize);
-            int startY = clipRectangle.Y - Util.Mod(clipRectangle.Y, this.CellSize);
+            var startX = clipRectangle.X - Util.Mod(clipRectangle.X, this.CellSize);
+            var startY = clipRectangle.Y - Util.Mod(clipRectangle.Y, this.CellSize);
 
-            int maxX = clipRectangle.X + clipRectangle.Width;
-            int maxY = clipRectangle.Y + clipRectangle.Height;
+            var maxX = clipRectangle.X + clipRectangle.Width;
+            var maxY = clipRectangle.Y + clipRectangle.Height;
 
-            for (int x = startX; x < maxX; x += this.CellSize)
+            for (var x = startX; x < maxX; x += this.CellSize)
             {
                 g.DrawLine(this.Pen, x, clipRectangle.Y, x, maxY);
             }
 
-            for (int y = startY; y < maxY; y += this.CellSize)
+            for (var y = startY; y < maxY; y += this.CellSize)
             {
                 g.DrawLine(this.Pen, clipRectangle.X, y, maxX, y);
             }

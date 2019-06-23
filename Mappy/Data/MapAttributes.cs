@@ -204,11 +204,11 @@
 
         public static MapAttributes Load(TdfNode n)
         {
-            TdfNode r = n.Keys["GlobalHeader"];
+            var r = n.Keys["GlobalHeader"];
 
-            TdfNode schema = r.Keys["Schema 0"];
+            var schema = r.Keys["Schema 0"];
 
-            MapAttributes m = new MapAttributes();
+            var m = new MapAttributes();
 
             m.Name = r.Entries.GetOrDefault("missionname", string.Empty);
             m.Description = r.Entries.GetOrDefault("missiondescription", string.Empty);
@@ -234,7 +234,7 @@
 
             if (schema.Keys.ContainsKey("specials"))
             {
-                TdfNode specials = schema.Keys["specials"];
+                var specials = schema.Keys["specials"];
 
                 foreach (var special in specials.Keys.Values)
                 {
@@ -244,9 +244,9 @@
                         continue;
                     }
 
-                    int id = TdfConvert.ToInt32(type.Substring(8));
-                    int x = TdfConvert.ToInt32(special.Entries.GetOrDefault("XPos", "0"));
-                    int y = TdfConvert.ToInt32(special.Entries.GetOrDefault("ZPos", "0"));
+                    var id = TdfConvert.ToInt32(type.Substring(8));
+                    var x = TdfConvert.ToInt32(special.Entries.GetOrDefault("XPos", "0"));
+                    var y = TdfConvert.ToInt32(special.Entries.GetOrDefault("ZPos", "0"));
                     m.SetStartPosition(id - 1, new Point(x, y));
                 }
             }
@@ -270,9 +270,9 @@
 
         public void WriteOta(Stream st)
         {
-            TdfNode r = new TdfNode("GlobalHeader");
+            var r = new TdfNode("GlobalHeader");
 
-            TdfNode s = new TdfNode("Schema 0");
+            var s = new TdfNode("Schema 0");
             r.Keys["Schema 0"] = s;
 
             r.Entries["missionname"] = this.Name;
@@ -314,19 +314,19 @@
             s.Entries["MeteorDuration"] = TdfConvert.ToString(this.MeteorDuration);
             s.Entries["MeteorInterval"] = TdfConvert.ToString(this.MeteorInterval);
 
-            TdfNode specials = new TdfNode("specials");
+            var specials = new TdfNode("specials");
             s.Keys["specials"] = specials;
 
-            int count = 0;
-            for (int i = 0; i < 10; i++)
+            var count = 0;
+            for (var i = 0; i < 10; i++)
             {
-                Point? p = this.GetStartPosition(i);
+                var p = this.GetStartPosition(i);
                 if (!p.HasValue)
                 {
                     continue;
                 }
 
-                TdfNode spec = new TdfNode("special" + count);
+                var spec = new TdfNode("special" + count);
                 spec.Entries["specialwhat"] = "StartPos" + (i + 1);
                 spec.Entries["XPos"] = TdfConvert.ToString(p.Value.X);
                 spec.Entries["ZPos"] = TdfConvert.ToString(p.Value.Y);

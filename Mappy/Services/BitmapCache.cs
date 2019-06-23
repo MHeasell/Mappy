@@ -20,7 +20,7 @@
 
         public Bitmap GetOrAddBitmap(Bitmap bitmap)
         {
-            string hash = ComputeHash(bitmap);
+            var hash = ComputeHash(bitmap);
 
             WeakReference weakRef;
             if (!this.dictionary.TryGetValue(hash, out weakRef))
@@ -31,7 +31,7 @@
             }
 
             // we found a ref, see if we still have the bitmap
-            Bitmap b = weakRef.Target as Bitmap;
+            var b = weakRef.Target as Bitmap;
             if (b == null)
             {
                 // it's gone, replace it with the one we were given
@@ -46,13 +46,13 @@
 
         private static string ComputeHash(Bitmap bitmap)
         {
-            BitmapData data = bitmap.LockBits(
+            var data = bitmap.LockBits(
             new Rectangle(0, 0, bitmap.Width, bitmap.Height),
             ImageLockMode.ReadOnly,
             PixelFormat.Format32bppArgb);
 
-            int length = bitmap.Width * bitmap.Height * sizeof(int);
-            byte[] managedData = new byte[length];
+            var length = bitmap.Width * bitmap.Height * sizeof(int);
+            var managedData = new byte[length];
 
             Marshal.Copy(data.Scan0, managedData, 0, length);
 

@@ -54,9 +54,9 @@
                 throw new ArgumentException("destination area overlaps destination bounds");
             }
 
-            for (int dy = 0; dy < height; dy++)
+            for (var dy = 0; dy < height; dy++)
             {
-                for (int dx = 0; dx < width; dx++)
+                for (var dx = 0; dx < width; dx++)
                 {
                     dest.Set(destX + dx, destY + dy, src.Get(sourceX + dx, sourceY + dy));
                 }
@@ -127,9 +127,9 @@
                 throw new ArgumentException("fill area overlaps boundary");
             }
 
-            for (int dy = 0; dy < height; dy++)
+            for (var dy = 0; dy < height; dy++)
             {
-                for (int dx = 0; dx < width; dx++)
+                for (var dx = 0; dx < width; dx++)
                 {
                     grid.Set(x + dx, y + dy, value);
                 }

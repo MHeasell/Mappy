@@ -26,16 +26,16 @@ namespace Mappy.Data
 
         public Rectangle GetDrawBounds(IGrid<int> heightmap, int posX, int posY)
         {
-            int height = 0;
+            var height = 0;
             if (posX >= 0 && posX < heightmap.Width - 1 && posY >= 0 && posY < heightmap.Height - 1)
             {
                 height = Util.ComputeMidpointHeight(heightmap, posX, posY);
             }
 
-            int projectedPosX = (posX * 16) + (this.Footprint.Width * 8);
-            int projectedPosY = (posY * 16) + (this.Footprint.Height * 8) - (height / 2);
+            var projectedPosX = (posX * 16) + (this.Footprint.Width * 8);
+            var projectedPosY = (posY * 16) + (this.Footprint.Height * 8) - (height / 2);
 
-            Point pos = new Point(projectedPosX - this.Offset.X, projectedPosY - this.Offset.Y);
+            var pos = new Point(projectedPosX - this.Offset.X, projectedPosY - this.Offset.Y);
             return new Rectangle(pos, this.Image.Size);
         }
     }

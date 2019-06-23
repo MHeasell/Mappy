@@ -44,11 +44,11 @@
 
         public static AxisRectangle3D FromTLBR(double t, double l, double b, double r)
         {
-            double centreX = (l + r) / 2.0;
-            double centreY = (t + b) / 2.0;
+            var centreX = (l + r) / 2.0;
+            var centreY = (t + b) / 2.0;
 
-            double extentsX = Math.Abs((r - l) / 2.0);
-            double extentsY = Math.Abs((t - b) / 2.0);
+            var extentsX = Math.Abs((r - l) / 2.0);
+            var extentsY = Math.Abs((t - b) / 2.0);
 
             var centreVector = new Vector3D(centreX, centreY, 0.0);
 
@@ -69,7 +69,7 @@
         {
             distance = this.Plane().Intersect(ray);
 
-            Vector3D relativePoint = ray.PointAt(distance) - this.Position;
+            var relativePoint = ray.PointAt(distance) - this.Position;
 
             return Math.Abs(relativePoint.X) <= this.Extents.X
                     && Math.Abs(relativePoint.Y) <= this.Extents.Y;

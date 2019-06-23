@@ -27,7 +27,7 @@
 
         public static void SaveSettings()
         {
-            string dir = Path.GetDirectoryName(ConfigFileLocation);
+            var dir = Path.GetDirectoryName(ConfigFileLocation);
             if (!Directory.Exists(dir))
             {
                 Directory.CreateDirectory(dir);
@@ -35,14 +35,14 @@
 
             using (Stream st = File.Create(ConfigFileLocation))
             {
-                XmlSerializer s = new XmlSerializer(typeof(Configuration));
+                var s = new XmlSerializer(typeof(Configuration));
                 s.Serialize(st, Settings);
             }
         }
 
         private static Configuration LoadSettings()
         {
-            XmlSerializer s = new XmlSerializer(typeof(Configuration));
+            var s = new XmlSerializer(typeof(Configuration));
 
             if (!File.Exists(ConfigFileLocation))
             {

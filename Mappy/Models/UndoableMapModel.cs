@@ -226,8 +226,8 @@
 
         public void DragDropTile(IMapTile tile, int x, int y)
         {
-            int quantX = x / 32;
-            int quantY = y / 32;
+            var quantX = x / 32;
+            var quantY = y / 32;
 
             this.AddAndSelectTile(tile, quantX, quantY);
         }
@@ -273,7 +273,7 @@
 
         public void DragDropFeature(string name, int x, int y)
         {
-            Point? featurePos = this.ScreenToHeightIndex(x, y);
+            var featurePos = this.ScreenToHeightIndex(x, y);
             if (featurePos.HasValue && !this.HasFeatureInstanceAt(featurePos.Value.X, featurePos.Value.Y))
             {
                 var inst = new FeatureInstance(Guid.NewGuid(), name, featurePos.Value.X, featurePos.Value.Y);
@@ -316,10 +316,10 @@
                 this.deltaX += x;
                 this.deltaY += y;
 
-                int quantX = this.deltaX / 16;
-                int quantY = this.deltaY / 16;
+                var quantX = this.deltaX / 16;
+                var quantY = this.deltaY / 16;
 
-                bool success = this.TranslateFeatureBatch(
+                var success = this.TranslateFeatureBatch(
                     this.SelectedFeatures,
                     quantX,
                     quantY);
@@ -447,8 +447,8 @@
 
         public void PasteMapTileNoDeduplicateTopLeft(IMapTile tile)
         {
-            int x = this.ViewportLocation.X / 32;
-            int y = this.ViewportLocation.Y / 32;
+            var x = this.ViewportLocation.X / 32;
+            var y = this.ViewportLocation.Y / 32;
 
             this.AddAndSelectTile(tile, x, y);
         }
@@ -477,8 +477,8 @@
 
         private void PasteMapTileNoDeduplicate(IMapTile tile, int x, int y)
         {
-            int normX = x / 32;
-            int normY = y / 32;
+            var normX = x / 32;
+            var normY = y / 32;
 
             normX -= tile.TileGrid.Width / 2;
             normY -= tile.TileGrid.Height / 2;
@@ -571,7 +571,7 @@
                     return false;
                 }
 
-                bool isBlocked = !coordSet.Contains(translatedPoint)
+                var isBlocked = !coordSet.Contains(translatedPoint)
                     && this.HasFeatureInstanceAt(translatedPoint.X, translatedPoint.Y);
                 if (isBlocked)
                 {
@@ -634,7 +634,7 @@
                 return;
             }
 
-            MoveTileOperation newOp = new MoveTileOperation(tile, x, y);
+            var newOp = new MoveTileOperation(tile, x, y);
 
             MoveTileOperation lastOp = null;
             if (this.undoManager.CanUndo)

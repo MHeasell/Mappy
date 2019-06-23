@@ -81,11 +81,11 @@
 
         public static void HandleUnexpectedException(Exception ex)
         {
-            string fileName = string.Format(
+            var fileName = string.Format(
                 "{0}Crash_{1}.log",
                 Application.ProductName,
                 DateTime.Now.ToString("yyyy-MM-dd_HH.mm.ss"));
-            string fullPath = Path.Combine(CrashLogDir, fileName);
+            var fullPath = Path.Combine(CrashLogDir, fileName);
 
             try
             {
@@ -109,7 +109,7 @@
             }
             catch (IOException e)
             {
-                string msg = "A fatal error has occurred which could not be logged. Reason: "
+                var msg = "A fatal error has occurred which could not be logged. Reason: "
                     + e.Message + "\n\n"
                     + "Technical details follow:\n\n"
                     + ex;
@@ -124,7 +124,7 @@
                 return;
             }
 
-            string errString = "A fatal error has occurred. "
+            var errString = "A fatal error has occurred. "
                 + "Technical details have been logged to:\n\n" + fullPath + "\n\n"
                 + "You may optionally send a crash report to the developer of Mappy. "
                 + "This will help them to fix this problem in a future version.\n\n"
@@ -157,8 +157,8 @@
 
         private static void RemoveOldVersionSettings()
         {
-            string appDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string oldDir = Path.Combine(appDir, @"Armoured_Fish");
+            var appDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var oldDir = Path.Combine(appDir, @"Armoured_Fish");
 
             try
             {

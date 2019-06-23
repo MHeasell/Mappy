@@ -36,7 +36,7 @@ namespace Mappy.UI.Controls
 
         public bool Remove(DrawableItem item)
         {
-            bool success = this.items.Remove(item);
+            var success = this.items.Remove(item);
 
             if (success)
             {

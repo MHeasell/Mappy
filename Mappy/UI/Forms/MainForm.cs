@@ -163,9 +163,9 @@
 
         private void GridMenuItemClick(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            int size = Convert.ToInt32(item.Tag);
-            Size s = new Size(size, size);
+            var item = (ToolStripMenuItem)sender;
+            var size = Convert.ToInt32(item.Tag);
+            var s = new Size(size, size);
 
             this.model.GridMenuItemClick(s);
         }

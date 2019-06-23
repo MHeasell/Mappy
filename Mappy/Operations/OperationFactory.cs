@@ -20,7 +20,7 @@
         public static IReplayableOperation CreateClipMergeTileOperation(IMapTile src, IMapTile dst, int x, int y)
         {
             // construct the destination target
-            Rectangle rect = new Rectangle(x, y, src.TileGrid.Width, src.TileGrid.Height);
+            var rect = new Rectangle(x, y, src.TileGrid.Width, src.TileGrid.Height);
 
             // clip to boundaries
             rect.Intersect(new Rectangle(0, 0, dst.TileGrid.Width, dst.TileGrid.Height));
@@ -31,8 +31,8 @@
                 throw new ArgumentException("src and dst tiles do not overlap");
             }
 
-            int srcX = rect.X - x;
-            int srcY = rect.Y - y;
+            var srcX = rect.X - x;
+            var srcY = rect.Y - y;
 
             return new CompositeOperation(
                 new CopyAreaOperation<Bitmap>(src.TileGrid, dst.TileGrid, srcX, srcY, rect.X, rect.Y, rect.Width, rect.Height),
@@ -41,10 +41,10 @@
 
         public static IReplayableOperation CreateFlattenOperation(IMapModel model)
         {
-            IReplayableOperation[] arr = new IReplayableOperation[model.FloatingTiles.Count + 1];
+            var arr = new IReplayableOperation[model.FloatingTiles.Count + 1];
 
-            int i = 0;
-            foreach (Positioned<IMapTile> t in model.FloatingTiles)
+            var i = 0;
+            foreach (var t in model.FloatingTiles)
             {
                 arr[i++] = CreateClipMergeTileOperation(t.Item, model.Tile, t.Location.X, t.Location.Y);
             }
@@ -72,7 +72,7 @@
             int width,
             int height)
         {
-            Rectangle rect = new Rectangle(x, y, width, height);
+            var rect = new Rectangle(x, y, width, height);
             rect.Intersect(new Rectangle(0, 0, map.Tile.TileGrid.Width, map.Tile.TileGrid.Height));
 
             return CreateLiftAreaOperation(map, rect.X, rect.Y, rect.Width, rect.Height);

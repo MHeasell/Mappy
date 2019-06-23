@@ -92,8 +92,8 @@
             foreach (var record in records)
             {
                 Bitmap image;
-                int offsetX = 0;
-                int offsetY = 0;
+                var offsetX = 0;
+                var offsetY = 0;
 
                 if (frames.ContainsKey(record.Name))
                 {

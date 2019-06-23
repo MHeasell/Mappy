@@ -22,17 +22,17 @@
 
         private void PopulateList()
         {
-            ImageList im = new ImageList();
+            var im = new ImageList();
             im.ImageSize = new Size(64, 64);
 
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
                 im.Images.Add(Util.GetStartImage(i + 1));
             }
 
             this.listView1.LargeImageList = im;
 
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
                 var item = new ListViewItem("Position " + (i + 1), i);
                 item.Tag = new StartPositionDragData(i);
@@ -42,7 +42,7 @@
 
         private void ListView1ItemDrag(object sender, ItemDragEventArgs e)
         {
-            ListViewItem item = (ListViewItem)e.Item;
+            var item = (ListViewItem)e.Item;
             this.listView1.DoDragDrop(item.Tag, DragDropEffects.Copy);
         }
     }

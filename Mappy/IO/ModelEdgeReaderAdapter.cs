@@ -42,7 +42,7 @@
                 return;
             }
 
-            for (int i = 1; i < vertexIndices.Length; i++)
+            for (var i = 1; i < vertexIndices.Length; i++)
             {
                 var vec0 = this.vertices[vertexIndices[i - 1]];
                 var vec1 = this.vertices[vertexIndices[i]];

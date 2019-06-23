@@ -29,9 +29,9 @@
         public bool LoadFiles(Action<int> progressCallback, Func<bool> cancelCallback)
         {
             var hpis = LoadingUtils.EnumerateSearchHpis().ToList();
-            int fileCount = 0;
+            var fileCount = 0;
 
-            foreach (string file in hpis)
+            foreach (var file in hpis)
             {
                 if (cancelCallback())
                 {
@@ -40,7 +40,7 @@
 
                 this.LoadHpi(file);
 
-                int progress = (++fileCount * 100) / hpis.Count;
+                var progress = (++fileCount * 100) / hpis.Count;
                 progressCallback(progress);
             }
 

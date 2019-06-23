@@ -66,18 +66,18 @@
 
         public Grid<Bitmap> ImportFromPng(PngReader reader, Action<int> progress, Func<bool> shouldCancel)
         {
-            int w = reader.ImgInfo.Cols / 32;
-            int h = reader.ImgInfo.Rows / 32;
+            var w = reader.ImgInfo.Cols / 32;
+            var h = reader.ImgInfo.Rows / 32;
             var g = new Grid<Bitmap>(w, h);
 
-            for (int y = 0; y < h; y++)
+            for (var y = 0; y < h; y++)
             {
                 if (shouldCancel())
                 {
                     return null;
                 }
 
-                int x = 0;
+                var x = 0;
                 foreach (var bmp in this.ReadRowChunk(reader, y))
                 {
                     g.Set(x++, y, bmp);
@@ -102,14 +102,14 @@
             {
                 var ptr = (int*)data.Scan0;
 
-                for (int y = 0; y < 32; y++)
+                for (var y = 0; y < 32; y++)
                 {
                     var line = buf[y];
 
-                    for (int x = 0; x < 32; x++)
+                    for (var x = 0; x < 32; x++)
                     {
-                        int offset = (bitmapIndex * 32) + x;
-                        int bmpOffset = (y * 32) + x;
+                        var offset = (bitmapIndex * 32) + x;
+                        var bmpOffset = (y * 32) + x;
                         int idx = line[offset];
 
                         var rgb = new int[3];
@@ -144,7 +144,7 @@
             var lines = new byte[32][];
             var pal = reader.GetMetadata().GetPLTE();
 
-            for (int i = 0; i < 32; i++)
+            for (var i = 0; i < 32; i++)
             {
                 lines[i] = reader.ReadRowByte(
                     new byte[reader.ImgInfo.Cols],
@@ -152,7 +152,7 @@
             }
 
             var bitmapsPerRow = reader.ImgInfo.Cols / 32;
-            for (int i = 0; i < bitmapsPerRow; i++)
+            for (var i = 0; i < bitmapsPerRow; i++)
             {
                 var bmp = ReadBitmap(i, lines, pal);
                 this.tileCache.GetOrAddBitmap(bmp);

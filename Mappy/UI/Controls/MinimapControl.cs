@@ -120,7 +120,7 @@
 
             if (this.RectVisible)
             {
-                using (Pen p = new Pen(this.RectColor, this.RectThickness))
+                using (var p = new Pen(this.RectColor, this.RectThickness))
                 {
                     e.Graphics.DrawRectangle(p, this.ViewportRect);
                 }

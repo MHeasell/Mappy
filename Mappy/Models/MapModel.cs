@@ -442,13 +442,13 @@
             var dst = this.Tile;
 
             // construct the destination target
-            Rectangle rect = new Rectangle(x, y, src.TileGrid.Width, src.TileGrid.Height);
+            var rect = new Rectangle(x, y, src.TileGrid.Width, src.TileGrid.Height);
 
             // clip to boundaries
             rect.Intersect(new Rectangle(0, 0, dst.TileGrid.Width, dst.TileGrid.Height));
 
-            int srcX = rect.X - x;
-            int srcY = rect.Y - y;
+            var srcX = rect.X - x;
+            var srcY = rect.Y - y;
 
             GridMethods.Copy(src.TileGrid, dst.TileGrid, srcX, srcY, rect.X, rect.Y, rect.Width, rect.Height);
             GridMethods.Copy(src.HeightGrid, dst.HeightGrid, srcX * 2, srcY * 2, rect.X * 2, rect.Y * 2, rect.Width * 2, rect.Height * 2);

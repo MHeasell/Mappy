@@ -73,7 +73,7 @@
 
         public void Normalize()
         {
-            double length = this.Length();
+            var length = this.Length();
 
             this.X /= length;
             this.Y /= length;
@@ -82,7 +82,7 @@
 
         public Vector3D Normalized()
         {
-            double length = this.Length();
+            var length = this.Length();
 
             return new Vector3D(
                 this.X / length,

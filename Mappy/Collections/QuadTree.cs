@@ -52,7 +52,7 @@ namespace Mappy.Collections
         public QuadTree(Rectangle bounds, IEnumerable<T> collection, int splitThreshold)
             : this(bounds, splitThreshold)
         {
-            foreach (T item in collection)
+            foreach (var item in collection)
             {
                 this.Add(item);
             }
@@ -69,7 +69,7 @@ namespace Mappy.Collections
             // If we have split, try to put this item into a subnode.
             if (this.HasSplit)
             {
-                int index = this.DetermineRegion(item.Bounds);
+                var index = this.DetermineRegion(item.Bounds);
                 if (index != -1)
                 {
                     this.nodes[index].Add(item);
@@ -95,7 +95,7 @@ namespace Mappy.Collections
                 {
                     var nextNode = curNode.Next;
 
-                    int index = this.DetermineRegion(curNode.Value.Bounds);
+                    var index = this.DetermineRegion(curNode.Value.Bounds);
                     if (index != -1)
                     {
                         this.nodes[index].Add(curNode.Value);
@@ -120,7 +120,7 @@ namespace Mappy.Collections
         {
             if (this.HasSplit)
             {
-                int index = this.DetermineRegion(item.Bounds);
+                var index = this.DetermineRegion(item.Bounds);
                 if (index != -1)
                 {
                     return this.nodes[index].Contains(item);
@@ -148,8 +148,8 @@ namespace Mappy.Collections
                     "number of elements to be copied exceeds the space available in the array");
             }
 
-            int i = 0;
-            foreach (T item in this)
+            var i = 0;
+            foreach (var item in this)
             {
                 array[arrayIndex + i] = item;
                 i++;
@@ -158,11 +158,11 @@ namespace Mappy.Collections
 
         public bool Remove(T item)
         {
-            bool success = false;
-            bool inSubTree = false;
+            var success = false;
+            var inSubTree = false;
             if (this.HasSplit)
             {
-                int index = this.DetermineRegion(item.Bounds);
+                var index = this.DetermineRegion(item.Bounds);
                 if (index != -1)
                 {
                     inSubTree = true;
@@ -182,9 +182,9 @@ namespace Mappy.Collections
 
             if (this.Count <= this.splitThreshold && this.HasSplit)
             {
-                foreach (QuadTree<T> t in this.nodes)
+                foreach (var t in this.nodes)
                 {
-                    foreach (T i in t)
+                    foreach (var i in t)
                     {
                         this.items.AddLast(i);
                     }
@@ -200,16 +200,16 @@ namespace Mappy.Collections
         {
             if (this.HasSplit)
             {
-                foreach (QuadTree<T> tree in this.nodes)
+                foreach (var tree in this.nodes)
                 {
-                    foreach (T item in tree)
+                    foreach (var item in tree)
                     {
                         yield return item;
                     }
                 }
             }
 
-            foreach (T item in this.items)
+            foreach (var item in this.items)
             {
                 yield return item;
             }
@@ -222,7 +222,7 @@ namespace Mappy.Collections
 
         public IEnumerable<T> FindInArea(Rectangle rect)
         {
-            foreach (T x in this.items.Where(x => x.Bounds.IntersectsWith(rect)))
+            foreach (var x in this.items.Where(x => x.Bounds.IntersectsWith(rect)))
             {
                 yield return x;
             }
@@ -231,19 +231,19 @@ namespace Mappy.Collections
             {
                 // If the area fits into a bin, go into that one.
                 // Otherwise, enumerate over all bins.
-                int index = this.DetermineRegion(rect);
+                var index = this.DetermineRegion(rect);
                 if (index != -1)
                 {
-                    foreach (T item in this.nodes[index].FindInArea(rect))
+                    foreach (var item in this.nodes[index].FindInArea(rect))
                     {
                         yield return item;
                     }
                 }
                 else
                 {
-                    foreach (QuadTree<T> tree in this.nodes)
+                    foreach (var tree in this.nodes)
                     {
-                        foreach (T item in tree.FindInArea(rect))
+                        foreach (var item in tree.FindInArea(rect))
                         {
                             yield return item;
                         }
@@ -254,15 +254,15 @@ namespace Mappy.Collections
 
         public IEnumerable<T> FindAtPoint(Point p)
         {
-            foreach (T x in this.items.Where(x => x.Bounds.Contains(p)))
+            foreach (var x in this.items.Where(x => x.Bounds.Contains(p)))
             {
                 yield return x;
             }
 
             if (this.HasSplit)
             {
-                int index = this.DetermineRegion(p);
-                foreach (T item in this.nodes[index].FindAtPoint(p))
+                var index = this.DetermineRegion(p);
+                foreach (var item in this.nodes[index].FindAtPoint(p))
                 {
                     yield return item;
                 }
@@ -271,12 +271,12 @@ namespace Mappy.Collections
 
         private void Split()
         {
-            int subWidth = this.bounds.Width / 2;
-            int subWidthRemainder = this.bounds.Width % 2;
-            int subHeight = this.bounds.Height / 2;
-            int subHeightRemainder = this.bounds.Height % 2;
-            int x = this.bounds.X;
-            int y = this.bounds.Y;
+            var subWidth = this.bounds.Width / 2;
+            var subWidthRemainder = this.bounds.Width % 2;
+            var subHeight = this.bounds.Height / 2;
+            var subHeightRemainder = this.bounds.Height % 2;
+            var x = this.bounds.X;
+            var y = this.bounds.Y;
 
             this.nodes[TopLeftIndex] = new QuadTree<T>(new Rectangle(x, y, subWidth, subHeight));
             this.nodes[TopRightIndex] = new QuadTree<T>(new Rectangle(x + subWidth, y, subWidth + subWidthRemainder, subHeight));
@@ -286,7 +286,7 @@ namespace Mappy.Collections
 
         private void UnSplit()
         {
-            for (int i = 0; i < this.nodes.Length; i++)
+            for (var i = 0; i < this.nodes.Length; i++)
             {
                 this.nodes[i] = null;
             }
@@ -299,8 +299,8 @@ namespace Mappy.Collections
                 return -1;
             }
 
-            int midX = this.bounds.X + (this.bounds.Width / 2);
-            int midY = this.bounds.Y + (this.bounds.Height / 2);
+            var midX = this.bounds.X + (this.bounds.Width / 2);
+            var midY = this.bounds.Y + (this.bounds.Height / 2);
 
             int region;
 
@@ -347,8 +347,8 @@ namespace Mappy.Collections
 
         private int DetermineRegion(Point p)
         {
-            int midX = this.bounds.X + (this.bounds.Width / 2);
-            int midY = this.bounds.Y + (this.bounds.Height / 2);
+            var midX = this.bounds.X + (this.bounds.Width / 2);
+            var midY = this.bounds.Y + (this.bounds.Height / 2);
 
             int region;
 

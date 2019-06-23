@@ -63,9 +63,9 @@
 
         public IEnumerable<TileAttr> EnumerateAttrs()
         {
-            for (int y = 0; y < this.model.Tile.HeightGrid.Height; y++)
+            for (var y = 0; y < this.model.Tile.HeightGrid.Height; y++)
             {
-                for (int x = 0; x < this.model.Tile.HeightGrid.Width; x++)
+                for (var x = 0; x < this.model.Tile.HeightGrid.Width; x++)
                 {
                     yield return this.GetAttr(x, y);
                 }
@@ -87,7 +87,7 @@
 
         private TileAttr GetAttr(int x, int y)
         {
-            TileAttr attr = default(TileAttr);
+            var attr = default(TileAttr);
 
             attr.Height = (byte)this.model.Tile.HeightGrid.Get(x, y);
 

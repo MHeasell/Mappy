@@ -39,7 +39,7 @@
                 b.Read();
             }
 
-            GafEntry[] gaf = adapter.Entries;
+            var gaf = adapter.Entries;
 
             var records = this.filenameFeatureMap[HpiPath.GetFileNameWithoutExtension(file.Name)];
 

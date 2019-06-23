@@ -40,7 +40,7 @@
 
             private set
             {
-                bool old = this.CanUndo;
+                var old = this.CanUndo;
                 this.canUndo = value;
                 if (value != old)
                 {
@@ -55,7 +55,7 @@
 
             private set
             {
-                bool old = this.CanRedo;
+                var old = this.CanRedo;
                 this.canRedo = value;
                 if (value != old)
                 {
@@ -98,7 +98,7 @@
 
         public void Undo()
         {
-            IReplayableOperation op = this.undoStack.Pop();
+            var op = this.undoStack.Pop();
             op.Undo();
             this.redoStack.Push(op);
 
@@ -109,7 +109,7 @@
 
         public void Redo()
         {
-            IReplayableOperation op = this.redoStack.Pop();
+            var op = this.redoStack.Pop();
             op.Execute();
             this.undoStack.Push(op);
 

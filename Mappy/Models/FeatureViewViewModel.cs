@@ -92,17 +92,17 @@
 
         private static Bitmap RescaleImage(Bitmap img)
         {
-            int outWidth = 64;
-            int outHeight = 64;
+            var outWidth = 64;
+            var outHeight = 64;
 
-            Bitmap thumb = new Bitmap(outWidth, outHeight);
-            Graphics g = Graphics.FromImage(thumb);
+            var thumb = new Bitmap(outWidth, outHeight);
+            var g = Graphics.FromImage(thumb);
 
-            double ratioX = outWidth / (double)img.Width;
-            double ratioY = outHeight / (double)img.Height;
+            var ratioX = outWidth / (double)img.Width;
+            var ratioY = outHeight / (double)img.Height;
 
             // use the smaller ratio
-            double ratio = Math.Min(ratioX, ratioY);
+            var ratio = Math.Min(ratioX, ratioY);
 
             int newWidth;
             int newHeight;
@@ -118,8 +118,8 @@
                 newHeight = (int)(img.Height * ratio);
             }
 
-            int posX = (outWidth - newWidth) / 2;
-            int posY = (outHeight - newHeight) / 2;
+            var posX = (outWidth - newWidth) / 2;
+            var posY = (outHeight - newHeight) / 2;
 
             g.DrawImage(img, posX, posY, newWidth, newHeight);
 

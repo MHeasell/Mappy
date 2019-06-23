@@ -26,9 +26,9 @@
                 section.DataWidth = s.DataWidth;
                 section.DataHeight = s.DataHeight;
 
-                string directoryString = HpiPath.GetDirectoryName(file.FullPath);
+                var directoryString = HpiPath.GetDirectoryName(file.FullPath);
                 Debug.Assert(directoryString != null, "Null directory for section in HPI.");
-                string[] directories = directoryString.Split('\\');
+                var directories = directoryString.Split('\\');
 
                 section.World = directories[1];
                 section.Category = directories[2];

@@ -29,12 +29,12 @@
             // At least one Cavedog feature has a bad footprintz
             // (CCDATA.CCX/features/Water/CORALS.TDF, Coral20)
             // so we have to cope with them without complaining.
-            if (!TdfConvert.TryToInt32(n.Entries.GetOrDefault("footprintx", "0"), out int footprintX))
+            if (!TdfConvert.TryToInt32(n.Entries.GetOrDefault("footprintx", "0"), out var footprintX))
             {
                 footprintX = 1;
             }
 
-            if (!TdfConvert.TryToInt32(n.Entries.GetOrDefault("footprintz", "0"), out int footprintZ))
+            if (!TdfConvert.TryToInt32(n.Entries.GetOrDefault("footprintz", "0"), out var footprintZ))
             {
                 footprintZ = 1;
             }

@@ -19,7 +19,7 @@
 
         public void Execute()
         {
-            foreach (IReplayableOperation op in this.ops)
+            foreach (var op in this.ops)
             {
                 op.Execute();
             }
@@ -27,7 +27,7 @@
 
         public void Undo()
         {
-            foreach (IReplayableOperation op in this.ops.Reverse())
+            foreach (var op in this.ops.Reverse())
             {
                 op.Undo();
             }

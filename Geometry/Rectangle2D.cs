@@ -80,10 +80,10 @@
             double maxX,
             double maxY)
         {
-            double centerX = (minX + maxX) / 2.0;
-            double centerY = (minY + maxY) / 2.0;
-            double halfWidth = Math.Abs((maxX - minX) / 2.0);
-            double halfHeight = Math.Abs((maxY - minY) / 2.0);
+            var centerX = (minX + maxX) / 2.0;
+            var centerY = (minY + maxY) / 2.0;
+            var halfWidth = Math.Abs((maxX - minX) / 2.0);
+            var halfHeight = Math.Abs((maxY - minY) / 2.0);
 
             return new Rectangle2D(
                 new Vector2D(centerX, centerY),

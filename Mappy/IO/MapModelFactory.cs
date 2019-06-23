@@ -41,7 +41,7 @@
                 var featureData = schemaData.Keys["features"];
                 foreach (var data in featureData.Keys)
                 {
-                    TdfNode node = data.Value;
+                    var node = data.Value;
                     var x = TdfConvert.ToInt32(node.Entries["XPos"]);
                     var y = TdfConvert.ToInt32(node.Entries["ZPos"]);
                     var name = node.Entries["Featurename"];
@@ -59,7 +59,7 @@
 
         public MapModel FromTnt(ITntSource tnt)
         {
-            MapModel m = new MapModel(tnt.DataWidth, tnt.DataHeight);
+            var m = new MapModel(tnt.DataWidth, tnt.DataHeight);
 
             return this.ReadTnt(tnt, m);
         }
@@ -67,9 +67,9 @@
         private static void ReadFeatures(ITntSource tnt, MapModel model, List<string> features)
         {
             var enumer = tnt.EnumerateAttrs().GetEnumerator();
-            for (int y = 0; y < tnt.DataHeight * 2; y++)
+            for (var y = 0; y < tnt.DataHeight * 2; y++)
             {
-                for (int x = 0; x < tnt.DataWidth * 2; x++)
+                for (var x = 0; x < tnt.DataWidth * 2; x++)
                 {
                     enumer.MoveNext();
                     model.Tile.HeightGrid.Set(x, y, enumer.Current.Height);
@@ -94,9 +94,9 @@
         private static void ReadData(ITntSource tnt, MapModel model, List<Bitmap> tiles)
         {
             var enumer = tnt.EnumerateData().GetEnumerator();
-            for (int y = 0; y < tnt.DataHeight; y++)
+            for (var y = 0; y < tnt.DataHeight; y++)
             {
-                for (int x = 0; x < tnt.DataWidth; x++)
+                for (var x = 0; x < tnt.DataWidth; x++)
                 {
                     enumer.MoveNext();
                     model.Tile.TileGrid.Set(x, y, tiles[enumer.Current]);
@@ -111,18 +111,18 @@
 
         private Bitmap ToBitmap(byte[] tile)
         {
-            Bitmap bmp = BitmapConvert.ToBitmap(tile, MapConstants.TileWidth, MapConstants.TileHeight);
+            var bmp = BitmapConvert.ToBitmap(tile, MapConstants.TileWidth, MapConstants.TileHeight);
             return this.tileCache.GetOrAddBitmap(bmp);
         }
 
         private MapModel ReadTnt(ITntSource tnt, MapModel model)
         {
-            List<Bitmap> tiles = new List<Bitmap>(tnt.TileCount);
+            var tiles = new List<Bitmap>(tnt.TileCount);
             tiles.AddRange(tnt.EnumerateTiles().Select(this.ToBitmap));
 
             ReadData(tnt, model, tiles);
 
-            List<string> features = new List<string>(tnt.AnimCount);
+            var features = new List<string>(tnt.AnimCount);
             features.AddRange(tnt.EnumerateAnims());
 
             ReadFeatures(tnt, model, features);

@@ -90,7 +90,7 @@
             var pos = this.mapView.AutoScrollPosition;
             if (pos != this.oldAutoScrollPos)
             {
-                Point loc = new Point(pos.X * -1, pos.Y * -1);
+                var loc = new Point(pos.X * -1, pos.Y * -1);
                 this.model.ScrollPositionChanged(loc);
                 this.oldAutoScrollPos = pos;
             }
