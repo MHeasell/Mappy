@@ -8,7 +8,7 @@
     public class SectionFeatureLoadResult
     {
         public SectionFeatureLoadResult(
-            IList<Section> sections,
+            IList<SectionInfo> sections,
             IList<Feature> features,
             List<HpiErrorInfo> errors,
             List<HpiInnerFileErrorInfo> fileErrors)
@@ -19,7 +19,7 @@
             this.FileErrors = fileErrors;
         }
 
-        public IList<Section> Sections { get; }
+        public IList<SectionInfo> Sections { get; }
 
         public IList<Feature> Features { get; }
 

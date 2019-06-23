@@ -3,38 +3,27 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.IO;
     using System.Linq;
 
     using Mappy.Data;
 
     using TAUtil.Hpi;
-    using TAUtil.Sct;
 
-    public class SectionLoader : AbstractHpiLoader<Section>
+    public class SectionLoader : AbstractHpiLoader<SectionInfo>
     {
         protected override void LoadFile(HpiArchive archive, HpiArchive.FileInfo file)
         {
-            var fileBuffer = new byte[file.Size];
-            archive.Extract(file, fileBuffer);
+            var directoryString = HpiPath.GetDirectoryName(file.FullPath);
+            Debug.Assert(directoryString != null, "Null directory for section in HPI.");
+            var directories = directoryString.Split('\\');
 
-            using (var s = new SctReader(new MemoryStream(fileBuffer)))
+            this.Records.Add(new SectionInfo
             {
-                var section = new Section(archive.FileName, file.FullPath);
-                section.Name = HpiPath.GetFileNameWithoutExtension(file.Name);
-                section.Minimap = SectionFactory.MinimapFromSct(s);
-                section.DataWidth = s.DataWidth;
-                section.DataHeight = s.DataHeight;
-
-                var directoryString = HpiPath.GetDirectoryName(file.FullPath);
-                Debug.Assert(directoryString != null, "Null directory for section in HPI.");
-                var directories = directoryString.Split('\\');
-
-                section.World = directories[1];
-                section.Category = directories[2];
-
-                this.Records.Add(section);
-            }
+                HpiFileName = archive.FileName,
+                SctFileName = file.FullPath,
+                World = directories[1],
+                Category = directories[2]
+            });
         }
 
         protected override IEnumerable<HpiArchive.FileInfo> EnumerateFiles(HpiArchive r)

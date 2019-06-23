@@ -75,11 +75,10 @@
                 {
                     var w = (BackgroundWorker)sender;
 
-                    LoadResult<Section> result;
                     if (!SectionLoadingUtils.LoadSections(
                         i => w.ReportProgress((50 * i) / 100),
                         () => w.CancellationPending,
-                        out result))
+                        out var result))
                     {
                         args.Cancel = true;
                         return;

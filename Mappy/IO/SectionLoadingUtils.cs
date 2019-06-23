@@ -9,7 +9,7 @@
         public static bool LoadSections(
             Action<int> progressCallback,
             Func<bool> cancelCallback,
-            out LoadResult<Section> result)
+            out LoadResult<SectionInfo> result)
         {
             var loader = new SectionLoader();
             if (!loader.LoadFiles(progressCallback, cancelCallback))
