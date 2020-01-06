@@ -17,6 +17,7 @@
 
         private bool suppressCombo1SelectedItemEvents;
         private bool suppressCombo2SelectedItemEvents;
+        private ListViewItem previousSelection;
 
         public SectionView()
         {
@@ -25,6 +26,7 @@
             this.control.ComboBox1.SelectedIndexChanged += this.ComboBox1SelectedIndexChanged;
             this.control.ComboBox2.SelectedIndexChanged += this.ComboBox2SelectedIndexChanged;
             this.control.ListView.ItemDrag += this.ListViewItemDrag;
+            this.control.ListView.SelectedIndexChanged += this.ListViewItemSelectionChanged;
         }
 
         public Size ImageSize { get; set; } = new Size(128, 128);
@@ -133,6 +135,32 @@
 
             var data = view.SelectedItems[0].Tag;
             view.DoDragDrop(data, DragDropEffects.Copy);
+        }
+
+        private void ListViewItemSelectionChanged(object sender, EventArgs e)
+        {
+            var view = (ListView)sender;
+            if (this.model.SectionType != SectionType.Feature || view.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            view.ItemSelectionChanged -= this.ListViewItemSelectionChanged;
+            var selItem = view.SelectedItems[0];
+
+            if (this.previousSelection == null)
+            {
+                this.previousSelection = selItem;
+            }
+
+            if (selItem != this.previousSelection)
+            {
+                view.Items[this.previousSelection.Index].Selected = false;
+                view.Items[selItem.Index].Selected = true;
+                this.previousSelection = selItem;
+            }
+
+            view.ItemSelectionChanged += this.ListViewItemSelectionChanged;
         }
     }
 }

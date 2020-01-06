@@ -3,8 +3,16 @@
     using System;
     using System.Collections.Generic;
 
+    public enum SectionType
+    {
+        Section,
+        Feature
+    }
+
     public interface ISectionViewViewModel
     {
+        SectionType SectionType { get; set; }
+
         IObservable<ComboBoxViewModel> ComboBox1Model { get; }
 
         IObservable<ComboBoxViewModel> ComboBox2Model { get; }
