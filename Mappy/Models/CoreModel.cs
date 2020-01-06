@@ -41,6 +41,7 @@
                     this.OnPropertyChanged("CanCut");
                     this.OnPropertyChanged("CanCopy");
                     this.OnPropertyChanged("CanPaste");
+                    this.OnPropertyChanged("CanFill");
                 }
             }
         }
@@ -54,6 +55,8 @@
         public bool CanPaste => this.Map.IsSome;
 
         public bool CanCut => this.Map.Match(x => x.CanCut, () => false);
+
+        public bool CanFill => this.Map.Match(x => x.CanFill, () => false);
 
         public bool HeightmapVisible
         {
@@ -166,6 +169,7 @@
                 case "CanCut":
                 case "CanCopy":
                 case "CanPaste":
+                case "CanFill":
                     this.OnPropertyChanged(propertyChangedEventArgs.PropertyName);
                     break;
             }

@@ -121,6 +121,8 @@
 
         public IObservable<bool> CanPaste { get; }
 
+        public IObservable<bool> CanFill { get; }
+
         public IObservable<bool> GridVisible { get; }
 
         public IObservable<Size> GridSize { get; }
@@ -268,6 +270,11 @@
         public void PasteMenuItemClick()
         {
             this.dispatcher.PasteFromClipboard();
+        }
+
+        public void FillMenuItemClick()
+        {
+            this.dispatcher.CutSelectionToClipboard();
         }
 
         public void ImportMinimapMenuItemClick()

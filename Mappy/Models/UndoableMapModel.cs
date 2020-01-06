@@ -41,6 +41,8 @@
 
         private bool canCopy;
 
+        private bool canFill;
+
         public UndoableMapModel(ISelectionModel model, string path, bool readOnly)
         {
             this.FilePath = path;
@@ -111,6 +113,19 @@
             private set
             {
                 this.SetField(ref this.canCut, value, "CanCopy");
+            }
+        }
+
+        public bool CanFill
+        {
+            get
+            {
+                return this.canFill;
+            }
+
+            private set
+            {
+                this.SetField(ref this.canFill, value, "CanFill");
             }
         }
 
@@ -743,6 +758,11 @@
             this.CanCut = this.SelectedTile.HasValue || this.SelectedFeatures.Count > 0;
         }
 
+        private void UpdateCanFill()
+        {
+            this.CanFill = this.SelectedTile.HasValue;
+        }
+
         private void UndoManagerOnIsMarkedChanged(object sender, EventArgs eventArgs)
         {
             this.OnPropertyChanged("IsMarked");
@@ -767,6 +787,7 @@
                 case "SelectedTile":
                     this.UpdateCanCut();
                     this.UpdateCanCopy();
+                    this.UpdateCanFill();
                     break;
             }
         }

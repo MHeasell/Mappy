@@ -109,6 +109,8 @@
 
         void CutMenuItemClick();
 
+        void FillMenuItemClick();
+
         void PasteMenuItemClick();
 
         void ImportMinimapMenuItemClick();
