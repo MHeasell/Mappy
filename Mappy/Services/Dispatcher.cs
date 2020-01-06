@@ -61,6 +61,12 @@
             this.tileCache = tileCache;
         }
 
+        public static IMapTile FillTile // I feel that this is almost completely the wrong place to put this, but have no better ideas.
+        {
+            get;
+            set;
+        }
+
         public void Initialize()
         {
             var dlg = this.dialogService.CreateProgressView();
@@ -346,9 +352,9 @@
             this.model.Map.IfSome(
                 map =>
                     {
-                        if (TryCopyToClipboard(map))
+                        if (TryCopyForFill(map))
                         {
-                            var data = Clipboard.GetData(DataFormats.Serializable);
+                            var data = FillTile;
                             if (data == null)
                             {
                                 return;
@@ -626,6 +632,17 @@
             {
                 var tile = map.FloatingTiles[map.SelectedTile.Value].Item;
                 Clipboard.SetData(DataFormats.Serializable, tile);
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryCopyForFill(UndoableMapModel map)
+        {
+            if (map.SelectedTile.HasValue)
+            {
+                FillTile = map.FloatingTiles[map.SelectedTile.Value].Item;
                 return true;
             }
 
