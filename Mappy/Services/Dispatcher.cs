@@ -13,6 +13,7 @@
     using Mappy.Data;
     using Mappy.IO;
     using Mappy.Models;
+    using Mappy.UI.Controls;
     using Mappy.Util;
     using Mappy.Util.ImageSampling;
 
@@ -41,6 +42,10 @@
 
         private readonly Random rng = new Random();
 
+        private readonly SectionView sectionView;
+
+        private readonly SectionView featureView;
+
         public Dispatcher(
             CoreModel model,
             IDialogService dialogService,
@@ -49,7 +54,9 @@
             FeatureService featureService,
             MapLoadingService mapLoadingService,
             ImageImportService imageImportingService,
-            BitmapCache tileCache)
+            BitmapCache tileCache,
+            SectionView sectionView,
+            SectionView featureView)
         {
             this.model = model;
             this.dialogService = dialogService;
@@ -59,13 +66,12 @@
             this.mapLoadingService = mapLoadingService;
             this.imageImportingService = imageImportingService;
             this.tileCache = tileCache;
+            this.sectionView = sectionView;
+            this.featureView = featureView;
         }
 
-        public static IMapTile FillTile // I feel that this is almost completely the wrong place to put this, but have no better ideas.
-        {
-            get;
-            set;
-        }
+        // I feel that this is almost completely the wrong place to put this, but have no better ideas.
+        public static IMapTile FillTile { get; set; }
 
         public void Initialize()
         {
@@ -516,6 +522,15 @@
         public void DragDropFeature(string featureName, int x, int y)
         {
             this.model.Map.IfSome(map => map.DragDropFeature(featureName, x, y));
+        }
+
+        public void PlaceFeature(int x, int y)
+        {
+            if (this.featureView.GetCurrentSelectedItem() != null)
+            {
+                string featName = this.featureView.GetCurrentSelectedItem().Text;
+                this.model.Map.IfSome(map => map.DragDropFeature(featName, x, y));
+            }
         }
 
         public void DeleteSelection()

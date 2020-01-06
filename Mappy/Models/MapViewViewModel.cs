@@ -205,6 +205,16 @@
             }
         }
 
+        public void RightMouseDown(MouseEventArgs e, Point location) {
+            this.mouseDown = true;
+            this.lastMousePos = location;
+
+            if (!this.itemsLayer.Value.IsInSelection(location.X, location.Y))
+            {
+                this.dispatcher.PlaceFeature(location.X, location.Y);
+            }
+        }
+
         public void MouseMove(Point location)
         {
             try

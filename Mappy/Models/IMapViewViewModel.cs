@@ -22,6 +22,8 @@
 
         void MouseDown(Point location);
 
+        void RightMouseDown(MouseEventArgs e, Point location);
+
         void MouseMove(Point locattion);
 
         void MouseUp();

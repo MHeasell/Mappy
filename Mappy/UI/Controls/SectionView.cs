@@ -8,7 +8,7 @@
     using System.Windows.Forms;
 
     using Mappy.Models;
-
+    using Mappy.Services;
     using ListViewItem = System.Windows.Forms.ListViewItem;
 
     public partial class SectionView : UserControl
@@ -40,6 +40,10 @@
             model.ListViewItems.Subscribe(this.UpdateListView);
 
             this.model = model;
+        }
+
+        public ListViewItem GetCurrentSelectedItem(){
+            return this.previousSelection;
         }
 
         private static void UpdateComboBox(ComboBox c, ComboBoxViewModel oldModel, ComboBoxViewModel newModel)
