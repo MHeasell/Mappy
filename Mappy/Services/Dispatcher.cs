@@ -354,10 +354,6 @@
                                 return;
                             }
 
-                            var loc = map.ViewportLocation;
-                            loc.X += this.model.ViewportWidth / 2;
-                            loc.Y += this.model.ViewportHeight / 2;
-
                             // Should never be anything but a tile section (no features etc.)
                             var tile = data as IMapTile;
                             if (tile != null)
@@ -373,11 +369,13 @@
                                 {
                                     for (int y = 0; y < yIterations; y++)
                                     {
-                                        int testLocX = (x * tile.TileGrid.Width); //+ loc.X;
-                                        int testLocY = (y * tile.TileGrid.Height); //+ loc.Y;
+                                        int testLocX = (x * tile.TileGrid.Width * 32) + (tile.TileGrid.Width * 16);
+                                        int testLocY = (y * tile.TileGrid.Height * 32) + (tile.TileGrid.Height * 16);
                                         map.PasteMapTile(tile, testLocX, testLocY);
                                     }
                                 }
+
+                                this.DeduplicateTiles(tile.TileGrid); // For good measure
                             }
                         }
                     });
