@@ -27,6 +27,7 @@
             this.control.ComboBox2.SelectedIndexChanged += this.ComboBox2SelectedIndexChanged;
             this.control.ListView.ItemDrag += this.ListViewItemDrag;
             this.control.ListView.SelectedIndexChanged += this.ListViewItemSelectionChanged;
+            this.control.ListView.Leave += this.ListViewLeave;
         }
 
         public Size ImageSize { get; set; } = new Size(128, 128);
@@ -160,11 +161,23 @@
             if (selItem != this.previousSelection)
             {
                 view.Items[this.previousSelection.Index].Selected = false;
+                view.Items[this.previousSelection.Index].BackColor = Color.White;
                 view.Items[selItem.Index].Selected = true;
                 this.previousSelection = selItem;
             }
 
             view.ItemSelectionChanged += this.ListViewItemSelectionChanged;
+        }
+
+        // Show visual cue to user about which feature will be placed when RightClicking
+        private void ListViewLeave(object sender, EventArgs e)
+        {
+            // Cheeky null check
+            if (this.model.SectionType == SectionType.Feature && this.previousSelection != null)
+            {
+                this.previousSelection.BackColor = Color.Orange;
+                this.previousSelection.ForeColor = Color.Black;
+            }
         }
     }
 }

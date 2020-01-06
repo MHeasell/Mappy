@@ -526,6 +526,7 @@
 
         public void PlaceFeature(int x, int y)
         {
+            // Cheeky null check
             if (this.featureView.GetCurrentSelectedItem() != null)
             {
                 string featName = this.featureView.GetCurrentSelectedItem().Text;
