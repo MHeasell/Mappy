@@ -62,6 +62,7 @@
 			this.cutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.copyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pasteMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.fillMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mapAttributesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.generateMinimapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.generateMinimapHighQualityMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,7 +96,6 @@
 			this.seaLevelLabel = new System.Windows.Forms.Label();
 			this.seaLevelTrackbar = new System.Windows.Forms.TrackBar();
 			this.mapViewPanel = new Mappy.UI.Controls.MapViewPanel();
-			this.fillMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -370,6 +370,15 @@
 			this.pasteMenuItem.Size = new System.Drawing.Size(250, 22);
 			this.pasteMenuItem.Text = "Paste";
 			this.pasteMenuItem.Click += new System.EventHandler(this.PasteMenuItemClick);
+			// 
+			// fillMenuItem
+			// 
+			this.fillMenuItem.Enabled = false;
+			this.fillMenuItem.Name = "fillMenuItem";
+			this.fillMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+			this.fillMenuItem.Size = new System.Drawing.Size(250, 22);
+			this.fillMenuItem.Text = "Fill Selection";
+            this.fillMenuItem.Click += new System.EventHandler(this.FillMenuItemClick);
 			// 
 			// mapAttributesMenuItem
 			// 
@@ -688,13 +697,6 @@
 			this.mapViewPanel.Name = "mapViewPanel";
 			this.mapViewPanel.Size = new System.Drawing.Size(569, 538);
 			this.mapViewPanel.TabIndex = 5;
-			// 
-			// fillMenuItem
-			// 
-			this.fillMenuItem.Name = "fillMenuItem";
-			this.fillMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-			this.fillMenuItem.Size = new System.Drawing.Size(250, 22);
-			this.fillMenuItem.Text = "Fill Selection";
 			// 
 			// MainForm
 			// 

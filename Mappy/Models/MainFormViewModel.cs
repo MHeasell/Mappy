@@ -274,7 +274,7 @@
 
         public void FillMenuItemClick()
         {
-            this.dispatcher.CutSelectionToClipboard();
+            this.dispatcher.FillSelection();
         }
 
         public void ImportMinimapMenuItemClick()

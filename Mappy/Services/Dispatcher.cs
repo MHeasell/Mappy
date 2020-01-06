@@ -341,6 +341,48 @@
                     });
         }
 
+        public void FillSelection()
+        {
+            this.model.Map.IfSome(
+                map =>
+                    {
+                        if (TryCopyToClipboard(map))
+                        {
+                            var data = Clipboard.GetData(DataFormats.Serializable);
+                            if (data == null)
+                            {
+                                return;
+                            }
+
+                            var loc = map.ViewportLocation;
+                            loc.X += this.model.ViewportWidth / 2;
+                            loc.Y += this.model.ViewportHeight / 2;
+
+                            // Should never be anything but a tile section (no features etc.)
+                            var tile = data as IMapTile;
+                            if (tile != null)
+                            {
+                                // Do some quick maffs, figure out how many iterations are needs for the current tile to fill the entire map.
+                                int xIterations = (int)Math.Ceiling((double)map.MapWidth / (double)tile.TileGrid.Width);
+                                int yIterations = (int)Math.Ceiling((double)map.MapHeight / (double)tile.TileGrid.Height);
+
+                                this.DeduplicateTiles(tile.TileGrid); // Is this needed within the loops? TODO: investigate
+
+                                // Maybe should start at 1? But can't assume the current selected tile is in top left (0,0)
+                                for (int x = 0; x < xIterations; x++)
+                                {
+                                    for (int y = 0; y < yIterations; y++)
+                                    {
+                                        int testLocX = (x * tile.TileGrid.Width); //+ loc.X;
+                                        int testLocY = (y * tile.TileGrid.Height); //+ loc.Y;
+                                        map.PasteMapTile(tile, testLocX, testLocY);
+                                    }
+                                }
+                            }
+                        }
+                    });
+        }
+
         public void RefreshMinimap()
         {
             this.model.Map.IfSome(
