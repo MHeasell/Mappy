@@ -26,7 +26,7 @@
             this.CanCut = model.PropertyAsObservable(x => x.CanCut, "CanCut");
             this.CanCopy = model.PropertyAsObservable(x => x.CanCopy, "CanCopy");
             this.CanPaste = model.PropertyAsObservable(x => x.CanPaste, "CanPaste");
-            this.CanFill = model.PropertyAsObservable(x => x.CanPaste, "CanFill");
+            this.CanFill = model.PropertyAsObservable(x => x.CanCopy, "CanFill");
             this.GridVisible = model.PropertyAsObservable(x => x.GridVisible, "GridVisible");
             this.GridSize = model.PropertyAsObservable(x => x.GridSize, "GridSize");
             this.HeightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, "HeightmapVisible");

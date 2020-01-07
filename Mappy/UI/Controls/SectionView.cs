@@ -6,9 +6,8 @@
     using System.Linq;
     using System.Reactive.Linq;
     using System.Windows.Forms;
-
     using Mappy.Models;
-    using Mappy.Services;
+
     using ListViewItem = System.Windows.Forms.ListViewItem;
 
     public partial class SectionView : UserControl
