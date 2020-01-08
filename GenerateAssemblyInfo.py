@@ -12,7 +12,7 @@ inpath = os.path.join(projectdir, "Properties\\AssemblyInfo.cs.tmpl")
 outpath = os.path.join(projectdir, "Properties\\AssemblyInfo.cs")
 
 # get the tag
-tag = check_output(["git", "describe", "--dirty=-d"], cwd=projectdir, universal_newlines=True) #WHY U FAIL??
+tag = check_output(["git", "describe", "--dirty=-d"], cwd=projectdir, universal_newlines=True)
 
 # grab main version blob (x.y.z) and git extras (w-<hash>)
 main_match = re.match("v([^\-]+)(?:-([0-9a-z\-]+))?", tag)
