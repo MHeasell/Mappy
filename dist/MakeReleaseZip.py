@@ -90,5 +90,5 @@ with open("install.iss.tmpl") as iss_tmpl:
         for line in iss_tmpl:
             iss_file.write((line.replace("(PROJECT_VERSION)", version)))
 
-iscc = "A:/Programs/Inno Setup 5/ISCC.exe"
+iscc = "C:/Program Files (x86)/Inno Setup 5/ISCC.exe"
 subprocess.run([iscc, "install.iss"], check=True)

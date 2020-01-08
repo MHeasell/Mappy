@@ -152,3 +152,7 @@ $RECYCLE.BIN/
 
 # More visual studio files
 /.vs/
+/GenerateAssemblyInfo.py.milk
+/GenerateAssemblyInfo.py.orig
+/dist/MakeReleaseZipMilk.py
+/dist/BuildAndReleaseMilk.bat
