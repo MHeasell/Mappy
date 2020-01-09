@@ -16,6 +16,7 @@
         public MainForm()
         {
             this.InitializeComponent();
+            this.sidebarTabs.SelectedIndexChanged += this.SidebarTabs_SelectedIndexChanged;
         }
 
         public MapViewPanel MapViewPanel => this.mapViewPanel;
@@ -23,6 +24,8 @@
         public SectionView SectionView => this.sectionsView;
 
         public SectionView FeatureView => this.featureView;
+
+        public ActiveTab ActiveTab { get; set; }
 
         public void SetModel(IMainFormViewModel model)
         {
@@ -86,6 +89,11 @@
             model.TitleText.Subscribe(x => this.Text = x);
 
             this.model = model;
+        }
+
+        private void SidebarTabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.ActiveTab = (ActiveTab)(sender as TabControl).SelectedIndex;
         }
 
         private void OpenMenuItemClick(object sender, EventArgs e)

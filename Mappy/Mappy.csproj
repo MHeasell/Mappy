@@ -194,6 +194,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\AccessibleFeatures.cs" />
     <Compile Include="Services\BitmapCache.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\Dispatcher.cs" />

@@ -2,6 +2,8 @@
 {
     public interface IBandboxModel
     {
-        void LiftAndSelectArea(int x, int y, int width, int height);
+        void LiftAndSelectSectionArea(int x, int y, int width, int height);
+
+        void LiftAndSelectFeatureArea(int x, int y, int width, int height);
     }
 }

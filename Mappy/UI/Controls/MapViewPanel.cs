@@ -22,6 +22,11 @@
             this.mapView.Layers.Add(new DummyLayer());
         }
 
+        public IMapViewViewModel Model
+        {
+            get { return this.model; }
+        }
+
         public void SetModel(IMapViewViewModel model)
         {
             model.CanvasSize.Subscribe(x => this.mapView.CanvasSize = x);

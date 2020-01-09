@@ -1,7 +1,9 @@
 namespace Mappy.Models.BandboxBehaviours
 {
+    using System;
     using System.ComponentModel;
     using System.Drawing;
+    using Mappy.UI.Controls;
 
     public interface IBandboxBehaviour : INotifyPropertyChanged
     {
@@ -11,6 +13,6 @@ namespace Mappy.Models.BandboxBehaviours
 
         void GrowBandbox(int x, int y);
 
-        void CommitBandbox();
+        void CommitBandbox(ActiveTab activeTab);
     }
 }

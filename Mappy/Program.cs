@@ -70,8 +70,7 @@
                 mapLoadingService,
                 imageImportingService,
                 tileCache,
-                mainForm.SectionView,
-                mainForm.FeatureView);
+                mainForm);
             mainForm.SetModel(new MainFormViewModel(model, dispatcher));
 
             mainForm.MapViewPanel.SetModel(new MapViewViewModel(model, dispatcher, featureService));

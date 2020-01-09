@@ -61,6 +61,11 @@ namespace Mappy.UI.Controls
 
         public object Tag { get; set; }
 
+        public Point GetMidPoint()
+        {
+            return new Point(this.X + (this.Drawable.Width / 2), this.Y + (this.Drawable.Height / 2));
+        }
+
         public Rectangle GetRect()
         {
             return new Rectangle(

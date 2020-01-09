@@ -13,6 +13,8 @@
     using Mappy.Models.BandboxBehaviours;
     using Mappy.Operations;
     using Mappy.Operations.SelectionModel;
+    using Mappy.Services;
+    using Mappy.UI.Tags;
     using Mappy.Util;
 
     public sealed class UndoableMapModel : Notifier, IMainModel, IBandboxModel, IReadOnlyMapModel
@@ -128,6 +130,10 @@
                 this.SetField(ref this.canFill, value, "CanFill");
             }
         }
+
+        public ActiveTab ActiveTab { get; set; }
+
+        public AccessibleFeatures AccessibleFeatures { get; private set; }
 
         public string FilePath
         {
@@ -436,12 +442,32 @@
             return this.model.Attributes.GetStartPosition(index);
         }
 
-        public void LiftAndSelectArea(int x, int y, int width, int height)
+        public void LiftAndSelectSectionArea(int x, int y, int width, int height)
         {
             var liftOp = OperationFactory.CreateClippedLiftAreaOperation(this.model, x, y, width, height);
             var index = this.FloatingTiles.Count;
             var selectOp = new SelectTileOperation(this.model, index);
             this.undoManager.Execute(new CompositeOperation(liftOp, selectOp));
+        }
+
+        public void LiftAndSelectFeatureArea(int x, int y, int width, int height)
+        {
+            var loc1 = new Point(x * 32, y * 32);
+            var loc2 = new Point((x + width) * 32, (y + height) * 32);
+
+            var validItems = this.AccessibleFeatures.Items.Where(i =>
+                                        (i.Tag is FeatureTag) &&
+                                        (i.GetMidPoint().X >= loc1.X && i.GetMidPoint().Y >= loc1.Y) &&
+                                        (i.GetMidPoint().X <= loc2.X && i.GetMidPoint().Y <= loc2.Y)).ToList();
+
+            List<IReplayableOperation> selections = new List<IReplayableOperation>();
+            for (int i = 0; i < validItems.Count(); i++)
+            {
+                FeatureTag tag = (FeatureTag)validItems.ElementAt(i).Tag;
+                selections.Add(new SelectFeatureOperation(this.model, tag.FeatureId));
+            }
+
+            this.undoManager.Execute(new CompositeOperation(selections));
         }
 
         public void StartBandbox(int x, int y)
@@ -454,9 +480,9 @@
             this.bandboxBehaviour.GrowBandbox(x, y);
         }
 
-        public void CommitBandbox()
+        public void CommitBandbox(ActiveTab activeTab)
         {
-            this.bandboxBehaviour.CommitBandbox();
+            this.bandboxBehaviour.CommitBandbox(activeTab);
         }
 
         public void ReplaceHeightmap(Grid<int> heightmap)
@@ -515,6 +541,11 @@
         public void PasteMapTile(IMapTile tile, int x, int y)
         {
             this.PasteMapTileNoDeduplicate(tile, x, y);
+        }
+
+        public void SetAccessibleFeatures(AccessibleFeatures ac)
+        {
+            this.AccessibleFeatures = ac;
         }
 
         private void PasteMapTileNoDeduplicate(IMapTile tile, int x, int y)

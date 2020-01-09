@@ -9,6 +9,14 @@ namespace Mappy.Models
     using Mappy.Collections;
     using Mappy.Data;
 
+    public enum ActiveTab
+    {
+        Sections,
+        Features,
+        Starts,
+        Attirbutes
+    }
+
     public interface IMainModel : INotifyPropertyChanged
     {
         event EventHandler<ListChangedEventArgs> TilesChanged;
@@ -44,6 +52,8 @@ namespace Mappy.Models
         int SeaLevel { get; }
 
         Point ViewportLocation { get; set; }
+
+        ActiveTab ActiveTab { get; set; }
 
         FeatureInstance GetFeatureInstance(Guid id);
 

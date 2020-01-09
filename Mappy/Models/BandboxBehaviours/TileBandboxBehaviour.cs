@@ -2,7 +2,7 @@
 {
     using System;
     using System.Drawing;
-
+    using Mappy.UI.Controls;
     using Mappy.Util;
 
     /// <summary>
@@ -84,7 +84,7 @@
             this.UpdateBandboxRectangle();
         }
 
-        public void CommitBandbox()
+        public void CommitBandbox(ActiveTab activeTab)
         {
             try
             {
@@ -96,11 +96,22 @@
                     return;
                 }
 
-                this.model.LiftAndSelectArea(
-                    this.BandboxRectangle.X / 32,
-                    this.BandboxRectangle.Y / 32,
-                    this.BandboxRectangle.Width / 32,
-                    this.bandboxRectangle.Height / 32);
+                if (activeTab == ActiveTab.Sections)
+                {
+                    this.model.LiftAndSelectSectionArea(
+                        this.BandboxRectangle.X / 32,
+                        this.BandboxRectangle.Y / 32,
+                        this.BandboxRectangle.Width / 32,
+                        this.bandboxRectangle.Height / 32);
+                }
+                else if (activeTab == ActiveTab.Features)
+                {
+                    this.model.LiftAndSelectFeatureArea(
+                        this.BandboxRectangle.X / 32,
+                        this.BandboxRectangle.Y / 32,
+                        this.BandboxRectangle.Width / 32,
+                        this.bandboxRectangle.Height / 32);
+                }
             }
             finally
             {

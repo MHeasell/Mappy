@@ -14,6 +14,7 @@
     using Mappy.IO;
     using Mappy.Models;
     using Mappy.UI.Controls;
+    using Mappy.UI.Forms;
     using Mappy.Util;
     using Mappy.Util.ImageSampling;
 
@@ -46,6 +47,10 @@
 
         private readonly SectionView featureView;
 
+        private readonly MainForm mainForm;
+
+        private readonly AccessibleFeatures accessibleFeatures;
+
         public Dispatcher(
             CoreModel model,
             IDialogService dialogService,
@@ -55,8 +60,7 @@
             MapLoadingService mapLoadingService,
             ImageImportService imageImportingService,
             BitmapCache tileCache,
-            SectionView sectionView,
-            SectionView featureView)
+            MainForm mainForm)
         {
             this.model = model;
             this.dialogService = dialogService;
@@ -66,8 +70,10 @@
             this.mapLoadingService = mapLoadingService;
             this.imageImportingService = imageImportingService;
             this.tileCache = tileCache;
-            this.sectionView = sectionView;
-            this.featureView = featureView;
+            this.mainForm = mainForm;
+            this.sectionView = mainForm.SectionView;
+            this.featureView = mainForm.FeatureView;
+            this.accessibleFeatures = new AccessibleFeatures();
         }
 
         // I feel that this is almost completely the wrong place to put this, but have no better ideas.
@@ -534,6 +540,11 @@
             }
         }
 
+        public void SubscribeToFeatures(IObservable<ILayer> source)
+        {
+            source.Subscribe(this.accessibleFeatures);
+        }
+
         public void DeleteSelection()
         {
             this.model.Map.IfSome(x => x.DeleteSelection());
@@ -566,7 +577,7 @@
 
         public void CommitBandbox()
         {
-            this.model.Map.IfSome(x => x.CommitBandbox());
+            this.model.Map.IfSome(x => x.CommitBandbox(this.mainForm.ActiveTab));
         }
 
         public void TranslateSelection(int x, int y)
@@ -750,17 +761,19 @@
                     case ".GPF":
                     case ".GP3":
                         this.OpenFromHapi(filename);
-                        return;
+                        break;
                     case ".TNT":
                         this.OpenTnt(filename);
-                        return;
+                        break;
                     case ".SCT":
                         this.OpenSct(filename);
-                        return;
+                        break;
                     default:
                         this.dialogService.ShowError($"Mappy doesn't know how to open {ext} files");
                         return;
                 }
+
+                this.SetAccessibleFeatures();
             }
             catch (IOException e)
             {
@@ -842,6 +855,7 @@
         private void New(int width, int height)
         {
             this.model.Map = Maybe.Some(MapLoadingService.CreateMap(width, height));
+            this.SetAccessibleFeatures();
         }
 
         private void OpenSct(string filename)
@@ -1123,6 +1137,14 @@
             bg.RunWorkerAsync();
 
             dlg.Display();
+        }
+
+        private void SetAccessibleFeatures()
+        {
+            if (this.model.Map.IsSome)
+            {
+                this.model.Map.UnsafeValue.SetAccessibleFeatures(this.accessibleFeatures);
+            }
         }
     }
 }

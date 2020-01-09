@@ -127,6 +127,7 @@
 
             this.model = model;
             this.dispatcher = dispatcher;
+            this.dispatcher.SubscribeToFeatures(this.ItemsLayer);
             this.featureService = featureService;
         }
 
@@ -205,7 +206,8 @@
             }
         }
 
-        public void RightMouseDown(MouseEventArgs e, Point location) {
+        public void RightMouseDown(MouseEventArgs e, Point location)
+        {
             this.mouseDown = true;
             this.lastMousePos = location;
 
