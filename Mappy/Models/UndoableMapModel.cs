@@ -252,11 +252,23 @@
                     new SelectFeatureOperation(this.model, id)));
         }
 
+        public void SelectFeatureWithoutDeselect(Guid id)
+        {
+            this.undoManager.Execute(
+                new CompositeOperation(new SelectFeatureOperation(this.model, id)));
+        }
+
         public void SelectStartPosition(int index)
         {
             this.undoManager.Execute(new CompositeOperation(
                 OperationFactory.CreateDeselectAndMergeOperation(this.model),
                 new SelectStartPositionOperation(this.model, index)));
+        }
+
+        public void Deselect()
+        {
+            this.undoManager.Execute(new CompositeOperation(
+                OperationFactory.CreateDeselectAndMergeOperation(this.model)));
         }
 
         public void DragDropStartPosition(int index, int x, int y)
@@ -329,6 +341,21 @@
                 var selectOp = new SelectFeatureOperation(this.model, inst.Id);
                 var op = new CompositeOperation(
                     OperationFactory.CreateDeselectAndMergeOperation(this.model),
+                    addOp,
+                    selectOp);
+                this.undoManager.Execute(op);
+            }
+        }
+
+        public void DragDropFeatureWithoutDeselect(string name, int x, int y)
+        {
+            Point? featurePos = this.ScreenToHeightIndex(x, y);
+            if (featurePos.HasValue && !this.HasFeatureInstanceAt(featurePos.Value.X, featurePos.Value.Y))
+            {
+                var inst = new FeatureInstance(Guid.NewGuid(), name, featurePos.Value.X, featurePos.Value.Y);
+                var addOp = new AddFeatureOperation(this.model, inst);
+                var selectOp = new SelectFeatureOperation(this.model, inst.Id);
+                var op = new CompositeOperation(
                     addOp,
                     selectOp);
                 this.undoManager.Execute(op);
