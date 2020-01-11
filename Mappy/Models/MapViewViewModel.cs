@@ -63,6 +63,8 @@
 
         private bool bandboxMode;
 
+        private bool shiftLeftDrag;
+
         private DrawableItem bandboxMapping;
 
         private DrawableTile baseTile;
@@ -185,7 +187,7 @@
             this.dispatcher.SetViewportLocation(position);
         }
 
-        public void MouseDown(Point location)
+        public void MouseDownLeft(Point location)
         {
             this.mouseDown = true;
             this.lastMousePos = location;
@@ -206,7 +208,7 @@
             }
         }
 
-        public void RightMouseDown(MouseEventArgs e, Point location)
+        public void MouseDownRight(MouseEventArgs e, Point location)
         {
             this.mouseDown = true;
             this.lastMousePos = location;
@@ -214,6 +216,23 @@
             if (!this.itemsLayer.Value.IsInSelection(location.X, location.Y))
             {
                 this.dispatcher.PlaceFeature(location.X, location.Y);
+            }
+        }
+
+        public void MouseDownShiftLeft(Point location)
+        {
+            if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
+            {
+                this.mouseDown = true;
+                this.lastMousePos = location;
+                this.dispatcher.ClearSelection();
+                this.dispatcher.StartBandbox(location.X, location.Y);
+                this.bandboxMode = true;
+                this.shiftLeftDrag = true;
+            }
+            else
+            {
+                this.MouseDownLeft(location);
             }
         }
 
@@ -251,8 +270,20 @@
 
             if (this.bandboxMode)
             {
-                this.dispatcher.CommitBandbox();
-                this.bandboxMode = false;
+                // More likely to happen -- so it comes first
+                if (!this.shiftLeftDrag)
+                {
+                    this.dispatcher.CommitBandbox();
+                    this.bandboxMode = false;
+                }
+                else
+                {
+                    this.InsertFeatureInLine();
+                    this.dispatcher.ClearSelection();
+                    this.dispatcher.CommitBandbox();
+                    this.bandboxMode = false;
+                    this.shiftLeftDrag = false;
+                }
             }
             else
             {
@@ -701,6 +732,29 @@
                 this.itemsLayer.Value.Items.Remove(item);
                 this.itemsLayer.Value.RemoveFromSelection(item);
                 this.featureMapping.Remove(id);
+            }
+        }
+
+        private void InsertFeatureInLine()
+        {
+            Maybe<Feature> unsafeFeat = this.dispatcher.FetchCurrentFeatureListSelection();
+            if (unsafeFeat.HasValue)
+            {
+                Feature feature = unsafeFeat.UnsafeValue;
+                int fWidth = feature.Image.Width;     // feature.Footprint.Width * 8;
+                int fHeight = feature.Image.Height;   // feature.Footprint.Height * 8;
+                Rectangle bandbox = this.dispatcher.FetchBandbox();
+
+                int wPlaceCount = bandbox.Width / fWidth;
+                int hPlaceCount = bandbox.Height / fHeight;
+
+                for (int w = 0; w < wPlaceCount; w++)
+                {
+                    for (int h = 0; h < hPlaceCount; h++)
+                    {
+                        this.dispatcher.DragDropFeature(feature.Name, bandbox.X + (w * fWidth), bandbox.Y + (h * fHeight));
+                    }
+                }
             }
         }
 

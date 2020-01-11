@@ -131,8 +131,6 @@
             }
         }
 
-        public ActiveTab ActiveTab { get; set; }
-
         public AccessibleFeatures AccessibleFeatures { get; private set; }
 
         public string FilePath
@@ -443,6 +441,8 @@
         {
             if (this.SelectedFeatures.Count > 0)
             {
+                // var curSel = this.SelectedFeatures.ToList();
+                // var curSelFeat = curSel.Select(x => this.GetFeatureInstance(x)).ToList();
                 var ops = new List<IReplayableOperation>();
                 ops.Add(new DeselectOperation(this.model));
                 ops.AddRange(this.SelectedFeatures.Select(x => new RemoveFeatureOperation(this.model, x)));

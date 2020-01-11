@@ -49,13 +49,24 @@
         private void MapViewMouseDown(object sender, MouseEventArgs e)
         {
             var loc = this.mapView.ToVirtualPoint(e.Location);
-            if (e.Button == MouseButtons.Left)
+
+            if (ModifierKeys == Keys.None)
             {
-                this.model.MouseDown(loc);
+                if (e.Button == MouseButtons.Left)
+                {
+                    this.model.MouseDownLeft(loc);
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    this.model.MouseDownRight(e, loc);
+                }
             }
-            else if (e.Button == MouseButtons.Right)
+            else
             {
-                this.model.RightMouseDown(e, loc);
+                if (ModifierKeys == Keys.Shift && e.Button == MouseButtons.Left)
+                {
+                    this.model.MouseDownShiftLeft(loc);
+                }
             }
         }
 

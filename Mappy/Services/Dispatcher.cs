@@ -79,8 +79,6 @@
         // I feel that this is almost completely the wrong place to put this, but have no better ideas.
         public static IMapTile FillTile { get; set; }
 
-        private bool ClipboardIsMultiPaste { get; set; }
-
         public void Initialize()
         {
             var dlg = this.dialogService.CreateProgressView();
@@ -554,10 +552,22 @@
         public void PlaceFeature(int x, int y)
         {
             // Cheeky null check
-            if (this.featureView.GetCurrentSelectedItem() != null)
+            if (this.featureView != null)
             {
                 string featName = this.featureView.GetCurrentSelectedItem().Text;
                 this.model.Map.IfSome(map => map.DragDropFeature(featName, x, y));
+            }
+        }
+
+        public Maybe<Feature> FetchCurrentFeatureListSelection()
+        {
+            try
+            {
+                return this.featureService.TryGetFeature(this.featureView.GetCurrentSelectedItem().Text);
+            }
+            catch (NullReferenceException)
+            {
+                return this.featureService.TryGetFeature(String.Empty);
             }
         }
 
@@ -599,6 +609,16 @@
         public void CommitBandbox()
         {
             this.model.Map.IfSome(x => x.CommitBandbox(this.mainForm.ActiveTab));
+        }
+
+        public Rectangle FetchBandbox()
+        {
+            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxRectangle : default;
+        }
+
+        public ActiveTab FetchActiveTab()
+        {
+            return this.mainForm.ActiveTab;
         }
 
         public void TranslateSelection(int x, int y)

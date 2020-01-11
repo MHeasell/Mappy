@@ -53,8 +53,6 @@ namespace Mappy.Models
 
         Point ViewportLocation { get; set; }
 
-        ActiveTab ActiveTab { get; set; }
-
         FeatureInstance GetFeatureInstance(Guid id);
 
         IEnumerable<FeatureInstance> EnumerateFeatureInstances();

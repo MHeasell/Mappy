@@ -42,7 +42,8 @@
             this.model = model;
         }
 
-        public ListViewItem GetCurrentSelectedItem(){
+        public ListViewItem GetCurrentSelectedItem()
+        {
             return this.previousSelection;
         }
 
@@ -152,7 +153,7 @@
             view.ItemSelectionChanged -= this.ListViewItemSelectionChanged;
             var selItem = view.SelectedItems[0];
 
-            if (this.previousSelection == null)
+            if (this.previousSelection == null || this.previousSelection.Index == -1 || view.Items[this.previousSelection.Index] == null)
             {
                 this.previousSelection = selItem;
             }
