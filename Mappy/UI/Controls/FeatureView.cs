@@ -13,9 +13,12 @@
 
         public FeaturePlacementMode ActiveFeaturePlacementMode { get; set; }
 
-        public int Magnitude { get { return this.mag; } }
+        public int Magnitude
+        {
+            get { return this.Mag; }
+        }
 
-        private int mag { get; set; }
+        private int Mag { get; set; }
 
         private void LineBtn_MouseClick(object sender, MouseEventArgs e) {
             this.ActiveFeaturePlacementMode = FeaturePlacementMode.Line;
@@ -40,13 +43,13 @@
                 this.magnitude.Value = 1;
                 this.magnitude.ValueChanged += this.Magnitude_ValueChanged;
             }
-            else if (this.magnitude.Value > 10)
+            else if (this.magnitude.Value > 20)
             {
                 this.magnitude.ValueChanged -= this.Magnitude_ValueChanged;
-                this.magnitude.Value = 10;
+                this.magnitude.Value = 20;
                 this.magnitude.ValueChanged += this.Magnitude_ValueChanged;
             }
-            this.mag = (int)this.magnitude.Value;
+            this.Mag = (int)this.magnitude.Value * 5;
         }
     }
 }

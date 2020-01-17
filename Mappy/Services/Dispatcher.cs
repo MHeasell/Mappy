@@ -628,6 +628,11 @@
             return this.featureView.ActiveFeaturePlacementMode;
         }
 
+        public int FetchMagnitude()
+        {
+            return this.featureView.Magnitude;
+        }
+
         public void TranslateSelection(int x, int y)
         {
             this.model.Map.IfSome(map => map.TranslateSelection(x, y));

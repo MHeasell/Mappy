@@ -320,7 +320,7 @@
                 }
                 else if (this.sporadicFillBandbox)
                 {
-                    var placedFeats = this.SporadicFillFeatureInBandbox(10);
+                    var placedFeats = this.SporadicFillFeatureInBandbox(this.dispatcher.FetchMagnitude());
                     this.dispatcher.CommitBandbox();
                     this.dispatcher.ClearSelection();
                     this.bandboxMode = false;
