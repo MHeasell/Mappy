@@ -8,6 +8,12 @@
         Attirbutes
     }
 
+    public enum BandboxMode
+    {
+        Tile,
+        Feature,
+    }
+
     public enum FeaturePlacementMode
     {
         Selection,
