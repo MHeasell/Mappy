@@ -66,6 +66,8 @@
 
         private bool fillBandbox;
 
+        private bool sporadicFillBandbox;
+
         private bool lineBandbox;
 
         private DrawableItem bandboxMapping;
@@ -211,6 +213,7 @@
                         break;
 
                     case FeaturePlacementMode.Sporadic:
+                        this.MouseDownSporadicFillArea(location);
                         break;
                 }
             }
@@ -275,6 +278,23 @@
             }
         }
 
+        public void MouseDownSporadicFillArea(Point location)
+        {
+            if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
+            {
+                this.mouseDown = true;
+                this.lastMousePos = location;
+                this.dispatcher.ClearSelection();
+                this.dispatcher.StartBandbox(location.X, location.Y);
+                this.bandboxMode = true;
+                this.sporadicFillBandbox = true;
+            }
+            else
+            {
+                this.MouseDownLeft(location);
+            }
+        }
+
         public void MouseDownLineArea(Point location)
         {
             if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
@@ -327,14 +347,23 @@
             if (this.bandboxMode)
             {
                 // More likely to happen -- so it comes first
-                if (!this.fillBandbox && !this.lineBandbox)
+                if (!this.fillBandbox && !this.lineBandbox && !this.sporadicFillBandbox)
                 {
                     this.dispatcher.CommitBandbox();
                     this.bandboxMode = false;
                 }
+                else if (this.sporadicFillBandbox)
+                {
+                    var placedFeats = this.SporadicFillFeatureInBandbox(10);
+                    this.dispatcher.CommitBandbox();
+                    this.dispatcher.ClearSelection();
+                    this.bandboxMode = false;
+                    this.sporadicFillBandbox = false;
+                    this.dispatcher.SelectFeatures(placedFeats.Where(x => x.HasValue).Select(x => x.UnsafeValue).ToList());
+                }
                 else if (this.fillBandbox)
                 {
-                    var placedFeats = this.FillFeatureInBandbox();
+                    var placedFeats = this.SporadicFillFeatureInBandbox(100);
                     this.dispatcher.CommitBandbox();
                     this.dispatcher.ClearSelection();
                     this.bandboxMode = false;
@@ -802,7 +831,7 @@
             }
         }
 
-        private List<Maybe<FeatureInstance>> FillFeatureInBandbox()
+        private List<Maybe<FeatureInstance>> SporadicFillFeatureInBandbox(int magnitude)
         {
             Maybe<Feature> unsafeFeat = this.dispatcher.FetchCurrentFeatureListSelection();
             if (unsafeFeat.HasValue)
@@ -812,17 +841,22 @@
                 int fHeight = feature.Image.Height;   // feature.Footprint.Height * 8;
                 Rectangle bandbox = this.dispatcher.FetchBandbox();
 
-                int wPlaceCount = bandbox.Width / fWidth;
-                int hPlaceCount = bandbox.Height / fHeight;
+                int wPlaceCount = (bandbox.Width / fWidth) + 1;
+                int hPlaceCount = (bandbox.Height / fHeight) + 1;
 
                 // Keep a track of all of the added features so they can be selected later.
                 List<Maybe<FeatureInstance>> placedFeats = new List<Maybe<FeatureInstance>>();
+
+                Random random = new Random();
 
                 for (int w = 0; w < wPlaceCount; w++)
                 {
                     for (int h = 0; h < hPlaceCount; h++)
                     {
-                       placedFeats.Add(this.dispatcher.DragDropFeature(feature.Name, bandbox.X + (w * fWidth), bandbox.Y + (h * fHeight)));
+                        if ((random.NextDouble() * 100) <= magnitude)
+                        {
+                            placedFeats.Add(this.dispatcher.DragDropFeature(feature.Name, bandbox.X + (w * fWidth), bandbox.Y + (h * fHeight)));
+                        }
                     }
                 }
 
