@@ -88,7 +88,7 @@
 			this.sectionsTab = new System.Windows.Forms.TabPage();
 			this.sectionsView = new Mappy.UI.Controls.SectionView();
 			this.featuresTab = new System.Windows.Forms.TabPage();
-			this.featureView = new Mappy.UI.Controls.SectionView();
+			this.featureView = new Mappy.UI.Controls.FeatureView();
 			this.startPositionsTab = new System.Windows.Forms.TabPage();
 			this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
 			this.attributesTab = new System.Windows.Forms.TabPage();
@@ -378,7 +378,7 @@
 			this.fillMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
 			this.fillMenuItem.Size = new System.Drawing.Size(250, 22);
 			this.fillMenuItem.Text = "Fill Selection";
-            this.fillMenuItem.Click += new System.EventHandler(this.FillMenuItemClick);
+			this.fillMenuItem.Click += new System.EventHandler(this.FillMenuItemClick);
 			// 
 			// mapAttributesMenuItem
 			// 
@@ -610,10 +610,10 @@
 			// 
 			// featureView
 			// 
+			this.featureView.ActiveFeaturePlacementMode = Mappy.Models.FeaturePlacementMode.Selection;
 			this.featureView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.featureView.ImageSize = new System.Drawing.Size(64, 64);
 			this.featureView.Location = new System.Drawing.Point(3, 3);
-			this.featureView.Margin = new System.Windows.Forms.Padding(4);
 			this.featureView.Name = "featureView";
 			this.featureView.Size = new System.Drawing.Size(201, 506);
 			this.featureView.TabIndex = 0;
@@ -752,7 +752,6 @@
         private System.Windows.Forms.TabControl sidebarTabs;
         private System.Windows.Forms.TabPage sectionsTab;
         private System.Windows.Forms.TabPage featuresTab;
-        private SectionView featureView;
         private System.Windows.Forms.ToolStripMenuItem gridMenuItem;
         private System.Windows.Forms.ToolStripMenuItem gridOffMenuItem;
         private System.Windows.Forms.ToolStripMenuItem grid16MenuItem;
@@ -785,6 +784,7 @@
         private MapViewPanel mapViewPanel;
         private System.Windows.Forms.ToolStripMenuItem toggleVoidsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fillMenuItem;
-    }
+		private FeatureView featureView;
+	}
 }
 

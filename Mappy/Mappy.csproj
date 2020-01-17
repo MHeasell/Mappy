@@ -154,6 +154,7 @@
     <Compile Include="Models\BandboxMode.cs" />
     <Compile Include="Models\ComboBoxViewModel.cs" />
     <Compile Include="Models\CoreModel.cs" />
+    <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\FeatureClipboardRecord.cs" />
     <Compile Include="Models\FeatureInstance.cs" />
     <Compile Include="Models\FeatureInstanceEventArgs.cs" />
@@ -231,6 +232,12 @@
     </Compile>
     <Compile Include="UI\Controls\MinimapControl.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\FeatureView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\FeatureView.Designer.cs">
+      <DependentUpon>FeatureView.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Controls\SectionView.cs">
       <SubType>UserControl</SubType>
@@ -346,6 +353,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Controls\MapViewPanel.resx">
       <DependentUpon>MapViewPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\FeatureView.resx">
+      <DependentUpon>FeatureView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Controls\StartPositionsView.resx">
       <DependentUpon>StartPositionsView.cs</DependentUpon>

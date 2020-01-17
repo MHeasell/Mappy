@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
+    using System.Linq;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Windows.Forms;
@@ -187,6 +188,38 @@
             this.dispatcher.SetViewportLocation(position);
         }
 
+        public void HandleMouseDownLeft(Point location, Keys modifierKeys)
+        {
+            var mode = this.dispatcher.FetchCurrentFeaturePlacementMode();
+
+            if (modifierKeys == Keys.None && mode == FeaturePlacementMode.Selection)
+            {
+                this.MouseDownLeft(location);
+            }
+            else if (mode != FeaturePlacementMode.Selection)
+            {
+                switch (mode)
+                {
+                    case FeaturePlacementMode.Line:
+                        break;
+
+                    case FeaturePlacementMode.Fill:
+                        this.MouseDownShiftLeft(location);
+                        break;
+
+                    case FeaturePlacementMode.Sporadic:
+                        break;
+                }
+            }
+            else if (modifierKeys != Keys.None)
+            {
+                if (modifierKeys == Keys.Shift)
+                {
+                    this.MouseDownShiftLeft(location);
+                }
+            }
+        }
+
         public void MouseDownLeft(Point location)
         {
             this.mouseDown = true;
@@ -278,11 +311,12 @@
                 }
                 else
                 {
-                    this.InsertFeatureInLine();
-                    this.dispatcher.ClearSelection();
+                    var placedFeats = this.FillFeatureInBandbox();
                     this.dispatcher.CommitBandbox();
+                    this.dispatcher.ClearSelection();
                     this.bandboxMode = false;
                     this.shiftLeftDrag = false;
+                    this.dispatcher.SelectFeatures(placedFeats.Where(x => x.HasValue).Select(x => x.UnsafeValue).ToList());
                 }
             }
             else
@@ -735,7 +769,7 @@
             }
         }
 
-        private void InsertFeatureInLine()
+        private List<Maybe<FeatureInstance>> FillFeatureInBandbox()
         {
             Maybe<Feature> unsafeFeat = this.dispatcher.FetchCurrentFeatureListSelection();
             if (unsafeFeat.HasValue)
@@ -748,14 +782,21 @@
                 int wPlaceCount = bandbox.Width / fWidth;
                 int hPlaceCount = bandbox.Height / fHeight;
 
+                // Keep a track of all of the added features so they can be selected later.
+                List<Maybe<FeatureInstance>> placedFeats = new List<Maybe<FeatureInstance>>();
+
                 for (int w = 0; w < wPlaceCount; w++)
                 {
                     for (int h = 0; h < hPlaceCount; h++)
                     {
-                        this.dispatcher.DragDropFeature(feature.Name, bandbox.X + (w * fWidth), bandbox.Y + (h * fHeight));
+                       placedFeats.Add(this.dispatcher.DragDropFeature(feature.Name, bandbox.X + (w * fWidth), bandbox.Y + (h * fHeight)));
                     }
                 }
+
+                return placedFeats;
             }
+
+            return new List<Maybe<FeatureInstance>>();
         }
 
         private void SelectFromTag(object tag)

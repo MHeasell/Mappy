@@ -23,7 +23,7 @@
 
         public SectionView SectionView => this.sectionsView;
 
-        public SectionView FeatureView => this.featureView;
+        public FeatureView FeatureView => this.featureView;
 
         public ActiveTab ActiveTab { get; set; }
 

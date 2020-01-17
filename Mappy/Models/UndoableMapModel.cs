@@ -329,7 +329,7 @@
             return this.model.EnumerateFeatureInstances();
         }
 
-        public void DragDropFeature(string name, int x, int y)
+        public Maybe<FeatureInstance> DragDropFeature(string name, int x, int y)
         {
             Point? featurePos = this.ScreenToHeightIndex(x, y);
             if (featurePos.HasValue && !this.HasFeatureInstanceAt(featurePos.Value.X, featurePos.Value.Y))
@@ -342,7 +342,9 @@
                     addOp,
                     selectOp);
                 this.undoManager.Execute(op);
+                return new Maybe<FeatureInstance>(inst);
             }
+            return new Maybe<FeatureInstance>(null);
         }
 
         public void DragDropFeatureWithoutDeselect(string name, int x, int y)

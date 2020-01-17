@@ -9,14 +9,6 @@ namespace Mappy.Models
     using Mappy.Collections;
     using Mappy.Data;
 
-    public enum ActiveTab
-    {
-        Sections,
-        Features,
-        Starts,
-        Attirbutes
-    }
-
     public interface IMainModel : INotifyPropertyChanged
     {
         event EventHandler<ListChangedEventArgs> TilesChanged;

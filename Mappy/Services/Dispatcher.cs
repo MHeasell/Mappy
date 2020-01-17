@@ -45,7 +45,7 @@
 
         private readonly SectionView sectionView;
 
-        private readonly SectionView featureView;
+        private readonly FeatureView featureView;
 
         private readonly MainForm mainForm;
 
@@ -544,9 +544,11 @@
             this.model.Map.IfSome(map => map.DragDropStartPosition(positionNumber, x, y));
         }
 
-        public void DragDropFeature(string featureName, int x, int y)
+        public Maybe<FeatureInstance> DragDropFeature(string featureName, int x, int y)
         {
-            this.model.Map.IfSome(map => map.DragDropFeature(featureName, x, y));
+            List<Maybe<FeatureInstance>> featsAdded = new List<Maybe<FeatureInstance>>();
+            this.model.Map.IfSome(map => featsAdded.Add(map.DragDropFeature(featureName, x, y)));
+            return featsAdded.FirstOrDefault();
         }
 
         public void PlaceFeature(int x, int y)
@@ -567,7 +569,7 @@
             }
             catch (NullReferenceException)
             {
-                return this.featureService.TryGetFeature(String.Empty);
+                return this.featureService.TryGetFeature(string.Empty);
             }
         }
 
@@ -621,6 +623,11 @@
             return this.mainForm.ActiveTab;
         }
 
+        public FeaturePlacementMode FetchCurrentFeaturePlacementMode()
+        {
+            return this.featureView.ActiveFeaturePlacementMode;
+        }
+
         public void TranslateSelection(int x, int y)
         {
             this.model.Map.IfSome(map => map.TranslateSelection(x, y));
@@ -639,6 +646,14 @@
         public void SelectFeature(Guid id)
         {
             this.model.Map.IfSome(x => x.SelectFeature(id));
+        }
+
+        public void SelectFeatures(List<FeatureInstance> features)
+        {
+            foreach (var f in features)
+            {
+                this.model.Map.IfSome(x => x.SelectFeatureWithoutDeselect(f.Id));
+            }
         }
 
         public void SelectStartPosition(int index)
