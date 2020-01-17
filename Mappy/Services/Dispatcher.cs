@@ -618,6 +618,16 @@
             return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxRectangle : default;
         }
 
+        public Point FetchBandboxStartLoc()
+        {
+            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxStart : default;
+        }
+
+        public Point FetchBandboxFinishLoc()
+        {
+            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxFinish : default;
+        }
+
         public ActiveTab FetchActiveTab()
         {
             return this.mainForm.ActiveTab;

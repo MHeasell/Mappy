@@ -9,6 +9,10 @@ namespace Mappy.Models.BandboxBehaviours
     {
         Rectangle BandboxRectangle { get; }
 
+        Point BandboxStart { get; }
+
+        Point BandboxFinish { get; }
+
         void StartBandbox(int x, int y);
 
         void GrowBandbox(int x, int y);

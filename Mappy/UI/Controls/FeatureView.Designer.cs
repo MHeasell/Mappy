@@ -62,6 +62,11 @@
             this.magnitude.Name = "magnitude";
             this.magnitude.Size = new System.Drawing.Size(36, 20);
             this.magnitude.TabIndex = 2;
+            this.magnitude.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             this.magnitude.ValueChanged += new System.EventHandler(this.Magnitude_ValueChanged);
             // 
             // SelectionBtn

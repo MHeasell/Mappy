@@ -157,6 +157,10 @@
 
         public Rectangle BandboxRectangle => this.bandboxBehaviour.BandboxRectangle;
 
+        public Point BandboxStart => this.bandboxBehaviour.BandboxStart;
+
+        public Point BandboxFinish => this.bandboxBehaviour.BandboxFinish;
+
         public IMapTile BaseTile => this.model.Tile;
 
         IMapTile IReadOnlyMapModel.Tile => this.model.Tile;

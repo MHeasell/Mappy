@@ -13,30 +13,30 @@
 
         public FeaturePlacementMode ActiveFeaturePlacementMode { get; set; }
 
-        public int Magnitude
+        public int Magnitude { get; private set; }
+
+        private void LineBtn_MouseClick(object sender, MouseEventArgs e)
         {
-            get { return this.Mag; }
-        }
-
-        private int Mag { get; set; }
-
-        private void LineBtn_MouseClick(object sender, MouseEventArgs e) {
             this.ActiveFeaturePlacementMode = FeaturePlacementMode.Line;
         }
 
-        private void SelectionBtn_MouseClick(object sender, MouseEventArgs e) {
+        private void SelectionBtn_MouseClick(object sender, MouseEventArgs e)
+        {
             this.ActiveFeaturePlacementMode = FeaturePlacementMode.Selection;
         }
 
-        private void FillBtn_MouseClick(object sender, MouseEventArgs e) {
+        private void FillBtn_MouseClick(object sender, MouseEventArgs e)
+        {
             this.ActiveFeaturePlacementMode = FeaturePlacementMode.Fill;
         }
 
-        private void SporadicBtn_MouseClick(object sender, MouseEventArgs e) {
+        private void SporadicBtn_MouseClick(object sender, MouseEventArgs e)
+        {
             this.ActiveFeaturePlacementMode = FeaturePlacementMode.Sporadic;
         }
 
-        private void Magnitude_ValueChanged(object sender, System.EventArgs e) {
+        private void Magnitude_ValueChanged(object sender, System.EventArgs e)
+        {
             if (this.magnitude.Value < 1)
             {
                 this.magnitude.ValueChanged -= this.Magnitude_ValueChanged;
@@ -49,7 +49,8 @@
                 this.magnitude.Value = 20;
                 this.magnitude.ValueChanged += this.Magnitude_ValueChanged;
             }
-            this.Mag = (int)this.magnitude.Value * 5;
+
+            this.Magnitude = (int)this.magnitude.Value * 5;
         }
     }
 }

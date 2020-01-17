@@ -838,8 +838,8 @@
             if (unsafeFeat.HasValue)
             {
                 Feature feat = unsafeFeat.UnsafeValue;
-                Point xPoints = new Point(rect.X, rect.Y);
-                Point yPoints = new Point(rect.X + rect.Width, rect.Y + rect.Height);
+                Point xPoints = this.dispatcher.FetchBandboxStartLoc();
+                Point yPoints = this.dispatcher.FetchBandboxFinishLoc();
 
                 int points = this.CalculatePointsNeeded(feat, rect.Width, rect.Height);
 
@@ -859,6 +859,13 @@
             return new List<Maybe<FeatureInstance>>();
         }
 
+        private int CalculatePointsNeeded(Feature feat, int width, int height)
+        {
+            int fWidth = feat.Image.Width;
+            int fHeight = feat.Image.Height;
+            return Math.Max(width / fWidth, height / fHeight);
+        }
+
         private float Lerp(float first, float second, float by)
         {
             return first + ((second - first) * by);
@@ -869,13 +876,6 @@
             float retX = this.Lerp(first.X, second.X, by);
             float retY = this.Lerp(first.Y, second.Y, by);
             return new PointF(retX, retY);
-        }
-
-        private int CalculatePointsNeeded(Feature feat, int width, int height)
-        {
-            int fWidth = feat.Image.Width;
-            int fHeight = feat.Image.Height;
-            return Math.Max(width / fWidth, height / fHeight);
         }
 
         private void SelectFromTag(object tag)

@@ -42,6 +42,22 @@
             }
         }
 
+        public Point BandboxStart
+        {
+            get
+            {
+                return new Point(this.startPoint.X * 32, this.startPoint.Y * 32);
+            }
+        }
+
+        public Point BandboxFinish
+        {
+            get
+            {
+                return new Point(this.finishPoint.X * 32, this.finishPoint.Y * 32);
+            }
+        }
+
         public void StartBandbox(int x, int y)
         {
             var p = new Point((x + 16) / 32, (y + 16) / 32);
