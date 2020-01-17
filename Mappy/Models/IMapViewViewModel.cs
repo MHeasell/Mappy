@@ -26,7 +26,7 @@
 
         void MouseDownRight(MouseEventArgs e, Point location);
 
-        void MouseDownFillArea(Point location);
+        void MouseDownBandboxEnableFlag(Point location, ref bool flag);
 
         void MouseMove(Point locattion);
 

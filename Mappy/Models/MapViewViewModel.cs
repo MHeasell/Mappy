@@ -205,15 +205,15 @@
                 switch (mode)
                 {
                     case FeaturePlacementMode.Line:
-                        this.MouseDownLineArea(location);
+                        this.MouseDownBandboxEnableFlag(location, ref this.lineBandbox);
                         break;
 
                     case FeaturePlacementMode.Fill:
-                        this.MouseDownFillArea(location);
+                        this.MouseDownBandboxEnableFlag(location, ref this.fillBandbox);
                         break;
 
                     case FeaturePlacementMode.Sporadic:
-                        this.MouseDownSporadicFillArea(location);
+                        this.MouseDownBandboxEnableFlag(location, ref this.sporadicFillBandbox);
                         break;
                 }
             }
@@ -221,7 +221,7 @@
             {
                 if (modifierKeys == Keys.Shift)
                 {
-                    this.MouseDownFillArea(location);
+                    this.MouseDownBandboxEnableFlag(location, ref this.fillBandbox);
                 }
             }
         }
@@ -261,7 +261,7 @@
             }
         }
 
-        public void MouseDownFillArea(Point location)
+        public void MouseDownBandboxEnableFlag(Point location, ref bool flag)
         {
             if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
             {
@@ -270,41 +270,7 @@
                 this.dispatcher.ClearSelection();
                 this.dispatcher.StartBandbox(location.X, location.Y);
                 this.bandboxMode = true;
-                this.fillBandbox = true;
-            }
-            else
-            {
-                this.MouseDownLeft(location);
-            }
-        }
-
-        public void MouseDownSporadicFillArea(Point location)
-        {
-            if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
-            {
-                this.mouseDown = true;
-                this.lastMousePos = location;
-                this.dispatcher.ClearSelection();
-                this.dispatcher.StartBandbox(location.X, location.Y);
-                this.bandboxMode = true;
-                this.sporadicFillBandbox = true;
-            }
-            else
-            {
-                this.MouseDownLeft(location);
-            }
-        }
-
-        public void MouseDownLineArea(Point location)
-        {
-            if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
-            {
-                this.mouseDown = true;
-                this.lastMousePos = location;
-                this.dispatcher.ClearSelection();
-                this.dispatcher.StartBandbox(location.X, location.Y);
-                this.bandboxMode = true;
-                this.lineBandbox = true;
+                flag = true;
             }
             else
             {
