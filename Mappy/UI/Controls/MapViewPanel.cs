@@ -53,9 +53,9 @@
             {
                 this.model.HandleMouseDownLeft(loc, ModifierKeys);
             }
-            else if (e.Button == MouseButtons.Left)
+            else if (e.Button == MouseButtons.Right)
             {
-
+                this.model.MouseDownRight(e, loc);
             }
         }
 

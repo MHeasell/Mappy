@@ -64,7 +64,9 @@
 
         private bool bandboxMode;
 
-        private bool shiftLeftDrag;
+        private bool fillBandbox;
+
+        private bool lineBandbox;
 
         private DrawableItem bandboxMapping;
 
@@ -201,10 +203,11 @@
                 switch (mode)
                 {
                     case FeaturePlacementMode.Line:
+                        this.MouseDownLineArea(location);
                         break;
 
                     case FeaturePlacementMode.Fill:
-                        this.MouseDownShiftLeft(location);
+                        this.MouseDownFillArea(location);
                         break;
 
                     case FeaturePlacementMode.Sporadic:
@@ -215,7 +218,7 @@
             {
                 if (modifierKeys == Keys.Shift)
                 {
-                    this.MouseDownShiftLeft(location);
+                    this.MouseDownFillArea(location);
                 }
             }
         }
@@ -243,16 +246,19 @@
 
         public void MouseDownRight(MouseEventArgs e, Point location)
         {
-            this.mouseDown = true;
-            this.lastMousePos = location;
-
-            if (!this.itemsLayer.Value.IsInSelection(location.X, location.Y))
+            if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
             {
-                this.dispatcher.PlaceFeature(location.X, location.Y);
+                this.mouseDown = true;
+                this.lastMousePos = location;
+
+                if (!this.itemsLayer.Value.IsInSelection(location.X, location.Y))
+                {
+                    this.dispatcher.PlaceFeature(location.X, location.Y);
+                }
             }
         }
 
-        public void MouseDownShiftLeft(Point location)
+        public void MouseDownFillArea(Point location)
         {
             if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
             {
@@ -261,7 +267,24 @@
                 this.dispatcher.ClearSelection();
                 this.dispatcher.StartBandbox(location.X, location.Y);
                 this.bandboxMode = true;
-                this.shiftLeftDrag = true;
+                this.fillBandbox = true;
+            }
+            else
+            {
+                this.MouseDownLeft(location);
+            }
+        }
+
+        public void MouseDownLineArea(Point location)
+        {
+            if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
+            {
+                this.mouseDown = true;
+                this.lastMousePos = location;
+                this.dispatcher.ClearSelection();
+                this.dispatcher.StartBandbox(location.X, location.Y);
+                this.bandboxMode = true;
+                this.lineBandbox = true;
             }
             else
             {
@@ -304,18 +327,28 @@
             if (this.bandboxMode)
             {
                 // More likely to happen -- so it comes first
-                if (!this.shiftLeftDrag)
+                if (!this.fillBandbox && !this.lineBandbox)
                 {
                     this.dispatcher.CommitBandbox();
                     this.bandboxMode = false;
                 }
-                else
+                else if (this.fillBandbox)
                 {
                     var placedFeats = this.FillFeatureInBandbox();
                     this.dispatcher.CommitBandbox();
                     this.dispatcher.ClearSelection();
                     this.bandboxMode = false;
-                    this.shiftLeftDrag = false;
+                    this.fillBandbox = false;
+                    this.dispatcher.SelectFeatures(placedFeats.Where(x => x.HasValue).Select(x => x.UnsafeValue).ToList());
+                }
+                else if (this.lineBandbox)
+                {
+                    var bb = this.dispatcher.FetchBandbox();
+                    this.dispatcher.CommitBandbox();
+                    var placedFeats = this.PlaceAlongLine(bb);
+                    this.bandboxMode = false;
+                    this.lineBandbox = false;
+                    this.dispatcher.ClearSelection();
                     this.dispatcher.SelectFeatures(placedFeats.Where(x => x.HasValue).Select(x => x.UnsafeValue).ToList());
                 }
             }
@@ -797,6 +830,52 @@
             }
 
             return new List<Maybe<FeatureInstance>>();
+        }
+
+        private List<Maybe<FeatureInstance>> PlaceAlongLine(Rectangle rect)
+        {
+            Maybe<Feature> unsafeFeat = this.dispatcher.FetchCurrentFeatureListSelection();
+            if (unsafeFeat.HasValue)
+            {
+                Feature feat = unsafeFeat.UnsafeValue;
+                Point xPoints = new Point(rect.X, rect.Y);
+                Point yPoints = new Point(rect.X + rect.Width, rect.Y + rect.Height);
+
+                int points = this.CalculatePointsNeeded(feat, rect.Width, rect.Height);
+
+                // Keep a track of all of the added features so they can be selected later.
+                List<Maybe<FeatureInstance>> placedFeats = new List<Maybe<FeatureInstance>>();
+
+                for (int i = 0; i < points; i++)
+                {
+                    float dist = i * (1.0f / ((float)points));
+                    PointF loc = this.Lerp2(xPoints, yPoints, dist);
+                    placedFeats.Add(this.dispatcher.DragDropFeature(feat.Name, (int)loc.X, (int)loc.Y));
+                }
+
+                return placedFeats;
+            }
+
+            return new List<Maybe<FeatureInstance>>();
+        }
+
+        private float Lerp(float first, float second, float by)
+        {
+            return first + ((second - first) * by);
+        }
+
+        private PointF Lerp2(Point first, Point second, float by)
+        {
+            float retX = this.Lerp(first.X, second.X, by);
+            float retY = this.Lerp(first.Y, second.Y, by);
+            return new PointF(retX, retY);
+        }
+
+        private int CalculatePointsNeeded(Feature feat, int width, int height)
+        {
+            int fWidth = feat.Image.Width;
+            int fHeight = feat.Image.Height;
+            return Math.Max(width / fWidth, height / fHeight);
         }
 
         private void SelectFromTag(object tag)

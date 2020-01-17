@@ -26,7 +26,7 @@
 
         void MouseDownRight(MouseEventArgs e, Point location);
 
-        void MouseDownShiftLeft(Point location);
+        void MouseDownFillArea(Point location);
 
         void MouseMove(Point locattion);
 
