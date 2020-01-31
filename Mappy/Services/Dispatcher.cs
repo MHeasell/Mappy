@@ -615,17 +615,17 @@
 
         public Rectangle FetchBandbox()
         {
-            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxRectangle : default;
+            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxRectangle : new Rectangle(); // default value type constructor throws a warning, but "default" cannot be used in PR
         }
 
         public Point FetchBandboxStartLoc()
         {
-            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxStart : default;
+            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxStart : new Point(-1, -1); // default value type constructor throws a warning, but "default" cannot be used in PR
         }
 
         public Point FetchBandboxFinishLoc()
         {
-            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxFinish : default;
+            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxFinish : new Point(-1, -1); // default value type constructor throws a warning, but "default" cannot be used in PR
         }
 
         public ActiveTab FetchActiveTab()
