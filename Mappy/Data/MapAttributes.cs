@@ -219,6 +219,8 @@
             m.MinWindSpeed = TdfConvert.ToInt32(r.Entries.GetOrDefault("minwindspeed", "0"));
             m.MaxWindSpeed = TdfConvert.ToInt32(r.Entries.GetOrDefault("maxwindspeed", "0"));
             m.Gravity = TdfConvert.ToInt32(r.Entries.GetOrDefault("gravity", "0"));
+            m.WaterDoesDamage = TdfConvert.ToBool(r.Entries.GetOrDefault("waterdoesdamage", "0"));
+            m.WaterDamage = TdfConvert.ToInt32(r.Entries.GetOrDefault("waterdamage", "0"));
             m.NumPlayers = r.Entries.GetOrDefault("numplayers", string.Empty);
             m.Memory = r.Entries.GetOrDefault("memory", string.Empty);
             m.AiProfile = schema.Entries.GetOrDefault("aiprofile", string.Empty);
@@ -290,6 +292,8 @@
             r.Entries["minwindspeed"] = TdfConvert.ToString(this.MinWindSpeed);
             r.Entries["maxwindspeed"] = TdfConvert.ToString(this.MaxWindSpeed);
             r.Entries["gravity"] = TdfConvert.ToString(this.Gravity);
+            r.Entries["waterdoesdamage"] = TdfConvert.ToString(this.WaterDoesDamage);
+            r.Entries["waterdamage"] = TdfConvert.ToString(this.WaterDamage);
             r.Entries["numplayers"] = this.numPlayers;
             r.Entries["size"] = string.Empty; // TODO
             r.Entries["memory"] = this.memory;
