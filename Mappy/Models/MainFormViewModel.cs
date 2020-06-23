@@ -21,12 +21,12 @@
             var filePath = map.ObservePropertyOrDefault(x => x.FilePath, "FilePath", null);
             var isFileReadOnly = map.ObservePropertyOrDefault(x => x.IsFileReadOnly, "IsFileReadOnly", false);
 
-            this.CanUndo = model.PropertyAsObservable(x => x.CanUndo, "CanUndo");
-            this.CanRedo = model.PropertyAsObservable(x => x.CanRedo, "CanRedo");
-            this.CanCut = model.PropertyAsObservable(x => x.CanCut, "CanCut");
-            this.CanCopy = model.PropertyAsObservable(x => x.CanCopy, "CanCopy");
-            this.CanPaste = model.PropertyAsObservable(x => x.CanPaste, "CanPaste");
-            this.CanFill = model.PropertyAsObservable(x => x.CanCopy, "CanFill");
+            this.CanUndo = map.ObservePropertyOrDefault(x => x.CanUndo, nameof(UndoableMapModel.CanUndo), false);
+            this.CanRedo = map.ObservePropertyOrDefault(x => x.CanRedo, nameof(UndoableMapModel.CanRedo), false);
+            this.CanCut = map.ObservePropertyOrDefault(x => x.CanCut, nameof(UndoableMapModel.CanCut), false);
+            this.CanCopy = map.ObservePropertyOrDefault(x => x.CanCopy, nameof(UndoableMapModel.CanCopy), false);
+            this.CanPaste = map.Select(x => x.IsSome);
+            this.CanFill = map.ObservePropertyOrDefault(x => x.CanCopy, nameof(UndoableMapModel.CanFill), false);
             this.GridVisible = model.PropertyAsObservable(x => x.GridVisible, "GridVisible");
             this.GridSize = model.PropertyAsObservable(x => x.GridSize, "GridSize");
             this.HeightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, "HeightmapVisible");

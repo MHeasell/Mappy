@@ -1,6 +1,5 @@
 ﻿namespace Mappy.Services
 {
-
     using System;
     using System.Linq;
     using Mappy.UI.Controls;

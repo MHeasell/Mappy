@@ -1,4 +1,5 @@
-﻿namespace Mappy.UI.Controls {
+﻿namespace Mappy.UI.Controls
+{
     using System.Windows.Forms;
     using Mappy.Models;
 
