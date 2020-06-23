@@ -2,7 +2,7 @@
 {
     using System;
     using System.Drawing;
-
+    using Mappy.UI.Controls;
     using Mappy.Util;
 
     /// <summary>
@@ -33,6 +33,22 @@
         {
             get => this.bandboxRectangle;
             private set => this.SetField(ref this.bandboxRectangle, value, nameof(this.BandboxRectangle));
+        }
+
+        public Point BandboxStart
+        {
+            get
+            {
+                return new Point(this.startPoint.X * 32, this.startPoint.Y * 32);
+            }
+        }
+
+        public Point BandboxFinish
+        {
+            get
+            {
+                return new Point(this.finishPoint.X * 32, this.finishPoint.Y * 32);
+            }
         }
 
         public void StartBandbox(int x, int y)
@@ -77,7 +93,7 @@
             this.UpdateBandboxRectangle();
         }
 
-        public void CommitBandbox()
+        public void CommitBandbox(ActiveTab activeTab)
         {
             try
             {
@@ -89,11 +105,22 @@
                     return;
                 }
 
-                this.model.LiftAndSelectArea(
-                    this.BandboxRectangle.X / 32,
-                    this.BandboxRectangle.Y / 32,
-                    this.BandboxRectangle.Width / 32,
-                    this.bandboxRectangle.Height / 32);
+                if (activeTab == ActiveTab.Sections)
+                {
+                    this.model.LiftAndSelectSectionArea(
+                        this.BandboxRectangle.X / 32,
+                        this.BandboxRectangle.Y / 32,
+                        this.BandboxRectangle.Width / 32,
+                        this.bandboxRectangle.Height / 32);
+                }
+                else if (activeTab == ActiveTab.Features)
+                {
+                    this.model.LiftAndSelectFeatureArea(
+                        this.BandboxRectangle.X / 32,
+                        this.BandboxRectangle.Y / 32,
+                        this.BandboxRectangle.Width / 32,
+                        this.bandboxRectangle.Height / 32);
+                }
             }
             finally
             {

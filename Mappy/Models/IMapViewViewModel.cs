@@ -20,7 +20,13 @@
 
         IObservable<Point> ViewportLocation { get; }
 
-        void MouseDown(Point location);
+        void HandleMouseDownLeft(Point location, Keys modifierKeys);
+
+        void MouseDownLeft(Point location);
+
+        void MouseDownRight(MouseEventArgs e, Point location);
+
+        void MouseDownBandboxEnableFlag(Point location, ref bool flag);
 
         void MouseMove(Point locattion);
 

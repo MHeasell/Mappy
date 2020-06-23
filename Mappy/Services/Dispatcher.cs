@@ -13,6 +13,8 @@
     using Mappy.Data;
     using Mappy.IO;
     using Mappy.Models;
+    using Mappy.UI.Controls;
+    using Mappy.UI.Forms;
     using Mappy.Util;
     using Mappy.Util.ImageSampling;
 
@@ -41,6 +43,14 @@
 
         private readonly Random rng = new Random();
 
+        private readonly SectionView sectionView;
+
+        private readonly FeatureView featureView;
+
+        private readonly MainForm mainForm;
+
+        private readonly AccessibleFeatures accessibleFeatures;
+
         public Dispatcher(
             CoreModel model,
             IDialogService dialogService,
@@ -49,7 +59,8 @@
             FeatureService featureService,
             MapLoadingService mapLoadingService,
             ImageImportService imageImportingService,
-            BitmapCache tileCache)
+            BitmapCache tileCache,
+            MainForm mainForm)
         {
             this.model = model;
             this.dialogService = dialogService;
@@ -59,7 +70,14 @@
             this.mapLoadingService = mapLoadingService;
             this.imageImportingService = imageImportingService;
             this.tileCache = tileCache;
+            this.mainForm = mainForm;
+            this.sectionView = mainForm.SectionView;
+            this.featureView = mainForm.FeatureView;
+            this.accessibleFeatures = new AccessibleFeatures();
         }
+
+        // I feel that this is almost completely the wrong place to put this, but have no better ideas.
+        public static IMapTile FillTile { get; set; }
 
         public void Initialize()
         {
@@ -336,6 +354,65 @@
                             if (record != null)
                             {
                                 map.DragDropFeature(record.FeatureName, loc.X, loc.Y);
+                                return;
+                            }
+
+                            var featureList = data as List<FeatureClipboardRecord>;
+                            if (featureList != null)
+                            {
+                                map.Deselect();
+                                var placedFeatures = new List<DrawableItem>();
+                                foreach (var feature in featureList)
+                                {
+                                    // Split these up so they can be debugged better
+                                    int xLocUnsafe = map.ViewportLocation.X + feature.VPOffsetX;
+                                    int xLoc = Math.Min(map.MapWidth * 32, Math.Max(0, xLocUnsafe));    // force between 0 and MapWidth
+
+                                    int yLocUnsafe = map.ViewportLocation.Y + feature.VPOffsetY;
+                                    int yLoc = Math.Min(map.MapHeight * 32, Math.Max(0, yLocUnsafe));   // force between 0 and MapHeight
+
+                                    map.DragDropFeatureWithoutDeselect(feature.FeatureName, xLoc, yLoc);
+                                }
+                            }
+                        }
+                    });
+        }
+
+        public void FillSelection()
+        {
+            this.model.Map.IfSome(
+                map =>
+                    {
+                        if (TryCopyForFill(map))
+                        {
+                            var data = FillTile;
+                            if (data == null)
+                            {
+                                return;
+                            }
+
+                            // Should never be anything but a tile section (no features etc.)
+                            var tile = data as IMapTile;
+                            if (tile != null)
+                            {
+                                // Do some quick maffs, figure out how many iterations are needs for the current tile to fill the entire map.
+                                int xIterations = (int)Math.Ceiling((double)map.MapWidth / (double)tile.TileGrid.Width);
+                                int yIterations = (int)Math.Ceiling((double)map.MapHeight / (double)tile.TileGrid.Height);
+
+                                this.DeduplicateTiles(tile.TileGrid); // Is this needed within the loops? TODO: investigate
+
+                                // Maybe should start at 1? But can't assume the current selected tile is in top left (0,0)
+                                for (int x = 0; x < xIterations; x++)
+                                {
+                                    for (int y = 0; y < yIterations; y++)
+                                    {
+                                        int testLocX = (x * tile.TileGrid.Width * 32) + (tile.TileGrid.Width * 16);
+                                        int testLocY = (y * tile.TileGrid.Height * 32) + (tile.TileGrid.Height * 16);
+                                        map.PasteMapTile(tile, testLocX, testLocY);
+                                    }
+                                }
+
+                                this.DeduplicateTiles(tile.TileGrid); // For good measure
                             }
                         }
                     });
@@ -467,9 +544,38 @@
             this.model.Map.IfSome(map => map.DragDropStartPosition(positionNumber, x, y));
         }
 
-        public void DragDropFeature(string featureName, int x, int y)
+        public Maybe<FeatureInstance> DragDropFeature(string featureName, int x, int y)
         {
-            this.model.Map.IfSome(map => map.DragDropFeature(featureName, x, y));
+            List<Maybe<FeatureInstance>> featsAdded = new List<Maybe<FeatureInstance>>();
+            this.model.Map.IfSome(map => featsAdded.Add(map.DragDropFeature(featureName, x, y)));
+            return featsAdded.FirstOrDefault();
+        }
+
+        public void PlaceFeature(int x, int y)
+        {
+            // Cheeky null check
+            if (this.featureView != null)
+            {
+                string featName = this.featureView.GetCurrentSelectedItem().Text;
+                this.model.Map.IfSome(map => map.DragDropFeature(featName, x, y));
+            }
+        }
+
+        public Maybe<Feature> FetchCurrentFeatureListSelection()
+        {
+            try
+            {
+                return this.featureService.TryGetFeature(this.featureView.GetCurrentSelectedItem().Text);
+            }
+            catch (NullReferenceException)
+            {
+                return this.featureService.TryGetFeature(string.Empty);
+            }
+        }
+
+        public void SubscribeToFeatures(IObservable<ILayer> source)
+        {
+            source.Subscribe(this.accessibleFeatures);
         }
 
         public void DeleteSelection()
@@ -504,7 +610,37 @@
 
         public void CommitBandbox()
         {
-            this.model.Map.IfSome(x => x.CommitBandbox());
+            this.model.Map.IfSome(x => x.CommitBandbox(this.mainForm.ActiveTab));
+        }
+
+        public Rectangle FetchBandbox()
+        {
+            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxRectangle : new Rectangle(); // default value type constructor throws a warning, but "default" cannot be used in PR
+        }
+
+        public Point FetchBandboxStartLoc()
+        {
+            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxStart : new Point(-1, -1); // default value type constructor throws a warning, but "default" cannot be used in PR
+        }
+
+        public Point FetchBandboxFinishLoc()
+        {
+            return this.model.Map.HasValue ? this.model.Map.UnsafeValue.BandboxFinish : new Point(-1, -1); // default value type constructor throws a warning, but "default" cannot be used in PR
+        }
+
+        public ActiveTab FetchActiveTab()
+        {
+            return this.mainForm.ActiveTab;
+        }
+
+        public FeaturePlacementMode FetchCurrentFeaturePlacementMode()
+        {
+            return this.featureView.ActiveFeaturePlacementMode;
+        }
+
+        public int FetchMagnitude()
+        {
+            return this.featureView.Magnitude;
         }
 
         public void TranslateSelection(int x, int y)
@@ -525,6 +661,14 @@
         public void SelectFeature(Guid id)
         {
             this.model.Map.IfSome(x => x.SelectFeature(id));
+        }
+
+        public void SelectFeatures(List<FeatureInstance> features)
+        {
+            foreach (var f in features)
+            {
+                this.model.Map.IfSome(x => x.SelectFeatureWithoutDeselect(f.Id));
+            }
         }
 
         public void SelectStartPosition(int index)
@@ -575,10 +719,26 @@
         {
             if (map.SelectedFeatures.Count > 0)
             {
-                var id = map.SelectedFeatures.First();
-                var inst = map.GetFeatureInstance(id);
-                var rec = new FeatureClipboardRecord(inst.FeatureName);
-                Clipboard.SetData(DataFormats.Serializable, rec);
+                if (map.SelectedFeatures.Count == 1)
+                {
+                    var id = map.SelectedFeatures.First();
+                    var inst = map.GetFeatureInstance(id);
+                    var rec = new FeatureClipboardRecord(inst.FeatureName);
+                    Clipboard.SetData(DataFormats.Serializable, rec);
+                    return true;
+                }
+
+                var loc = map.ViewportLocation;
+                var ids = map.SelectedFeatures.ToArray();
+                var features = new List<FeatureClipboardRecord>();
+
+                for (int i = 0; i < ids.Length; i++)
+                {
+                    var ins = map.GetFeatureInstance(ids[i]);
+                    features.Add(new FeatureClipboardRecord(ins.FeatureName, (ins.X * 16) - loc.X, (ins.Y * 16) - loc.Y));
+                }
+
+                Clipboard.SetData(DataFormats.Serializable, features);
                 return true;
             }
 
@@ -586,6 +746,17 @@
             {
                 var tile = map.FloatingTiles[map.SelectedTile.Value].Item;
                 Clipboard.SetData(DataFormats.Serializable, tile);
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool TryCopyForFill(UndoableMapModel map)
+        {
+            if (map.SelectedTile.HasValue)
+            {
+                FillTile = map.FloatingTiles[map.SelectedTile.Value].Item;
                 return true;
             }
 
@@ -677,17 +848,19 @@
                     case ".GPF":
                     case ".GP3":
                         this.OpenFromHapi(filename);
-                        return;
+                        break;
                     case ".TNT":
                         this.OpenTnt(filename);
-                        return;
+                        break;
                     case ".SCT":
                         this.OpenSct(filename);
-                        return;
+                        break;
                     default:
                         this.dialogService.ShowError($"Mappy doesn't know how to open {ext} files");
                         return;
                 }
+
+                this.SetAccessibleFeatures();
             }
             catch (IOException e)
             {
@@ -769,6 +942,7 @@
         private void New(int width, int height)
         {
             this.model.Map = Maybe.Some(MapLoadingService.CreateMap(width, height));
+            this.SetAccessibleFeatures();
         }
 
         private void OpenSct(string filename)
@@ -1050,6 +1224,14 @@
             bg.RunWorkerAsync();
 
             dlg.Display();
+        }
+
+        private void SetAccessibleFeatures()
+        {
+            if (this.model.Map.IsSome)
+            {
+                this.model.Map.UnsafeValue.SetAccessibleFeatures(this.accessibleFeatures);
+            }
         }
     }
 }

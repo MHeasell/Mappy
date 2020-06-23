@@ -28,30 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.control = new Mappy.UI.Controls.DoubleComboListView();
-            this.SuspendLayout();
-            // 
-            // control
-            // 
-            this.control.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.control.Location = new System.Drawing.Point(0, 0);
-            this.control.Name = "control";
-            this.control.Size = new System.Drawing.Size(202, 482);
-            this.control.TabIndex = 0;
-            // 
-            // SectionView
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.control);
-            this.Name = "SectionView";
-            this.Size = new System.Drawing.Size(202, 482);
-            this.ResumeLayout(false);
+			this.control = new Mappy.UI.Controls.DoubleComboListView();
+			this.SuspendLayout();
+			// 
+			// control
+			// 
+			this.control.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.control.Location = new System.Drawing.Point(0, 0);
+			this.control.Name = "control";
+			this.control.Size = new System.Drawing.Size(202, 482);
+			this.control.TabIndex = 0;
+			// 
+			// SectionView
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.control);
+			this.Name = "SectionView";
+			this.Size = new System.Drawing.Size(202, 482);
+			this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private DoubleComboListView control;
+        protected DoubleComboListView control;
     }
 }

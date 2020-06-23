@@ -13,6 +13,8 @@
     using Mappy.Models.BandboxBehaviours;
     using Mappy.Operations;
     using Mappy.Operations.SelectionModel;
+    using Mappy.Services;
+    using Mappy.UI.Tags;
     using Mappy.Util;
 
     public sealed class UndoableMapModel : Notifier, IMainModel, IBandboxModel, IReadOnlyMapModel
@@ -40,6 +42,8 @@
         private bool canCut;
 
         private bool canCopy;
+
+        private bool canFill;
 
         public UndoableMapModel(ISelectionModel model, string path, bool readOnly)
         {
@@ -94,6 +98,21 @@
             private set => this.SetField(ref this.canCut, value, nameof(this.CanCopy));
         }
 
+        public bool CanFill
+        {
+            get
+            {
+                return this.canFill;
+            }
+
+            private set
+            {
+                this.SetField(ref this.canFill, value, "CanFill");
+            }
+        }
+
+        public AccessibleFeatures AccessibleFeatures { get; private set; }
+
         public string FilePath
         {
             get => this.openFilePath;
@@ -117,6 +136,10 @@
         public int SeaLevel => this.model.SeaLevel;
 
         public Rectangle BandboxRectangle => this.bandboxBehaviour.BandboxRectangle;
+
+        public Point BandboxStart => this.bandboxBehaviour.BandboxStart;
+
+        public Point BandboxFinish => this.bandboxBehaviour.BandboxFinish;
 
         public IMapTile BaseTile => this.model.Tile;
 
@@ -204,11 +227,23 @@
                     new SelectFeatureOperation(this.model, id)));
         }
 
+        public void SelectFeatureWithoutDeselect(Guid id)
+        {
+            this.undoManager.Execute(
+                new CompositeOperation(new SelectFeatureOperation(this.model, id)));
+        }
+
         public void SelectStartPosition(int index)
         {
             this.undoManager.Execute(new CompositeOperation(
                 OperationFactory.CreateDeselectAndMergeOperation(this.model),
                 new SelectStartPositionOperation(this.model, index)));
+        }
+
+        public void Deselect()
+        {
+            this.undoManager.Execute(new CompositeOperation(
+                OperationFactory.CreateDeselectAndMergeOperation(this.model)));
         }
 
         public void DragDropStartPosition(int index, int x, int y)
@@ -271,7 +306,7 @@
             return this.model.EnumerateFeatureInstances();
         }
 
-        public void DragDropFeature(string name, int x, int y)
+        public Maybe<FeatureInstance> DragDropFeature(string name, int x, int y)
         {
             var featurePos = this.ScreenToHeightIndex(x, y);
             if (featurePos.HasValue && !this.HasFeatureInstanceAt(featurePos.Value.X, featurePos.Value.Y))
@@ -281,6 +316,23 @@
                 var selectOp = new SelectFeatureOperation(this.model, inst.Id);
                 var op = new CompositeOperation(
                     OperationFactory.CreateDeselectAndMergeOperation(this.model),
+                    addOp,
+                    selectOp);
+                this.undoManager.Execute(op);
+                return new Maybe<FeatureInstance>(inst);
+            }
+            return new Maybe<FeatureInstance>(null);
+        }
+
+        public void DragDropFeatureWithoutDeselect(string name, int x, int y)
+        {
+            Point? featurePos = this.ScreenToHeightIndex(x, y);
+            if (featurePos.HasValue && !this.HasFeatureInstanceAt(featurePos.Value.X, featurePos.Value.Y))
+            {
+                var inst = new FeatureInstance(Guid.NewGuid(), name, featurePos.Value.X, featurePos.Value.Y);
+                var addOp = new AddFeatureOperation(this.model, inst);
+                var selectOp = new SelectFeatureOperation(this.model, inst.Id);
+                var op = new CompositeOperation(
                     addOp,
                     selectOp);
                 this.undoManager.Execute(op);
@@ -368,6 +420,8 @@
         {
             if (this.SelectedFeatures.Count > 0)
             {
+                // var curSel = this.SelectedFeatures.ToList();
+                // var curSelFeat = curSel.Select(x => this.GetFeatureInstance(x)).ToList();
                 var ops = new List<IReplayableOperation>();
                 ops.Add(new DeselectOperation(this.model));
                 ops.AddRange(this.SelectedFeatures.Select(x => new RemoveFeatureOperation(this.model, x)));
@@ -394,12 +448,32 @@
             return this.model.Attributes.GetStartPosition(index);
         }
 
-        public void LiftAndSelectArea(int x, int y, int width, int height)
+        public void LiftAndSelectSectionArea(int x, int y, int width, int height)
         {
             var liftOp = OperationFactory.CreateClippedLiftAreaOperation(this.model, x, y, width, height);
             var index = this.FloatingTiles.Count;
             var selectOp = new SelectTileOperation(this.model, index);
             this.undoManager.Execute(new CompositeOperation(liftOp, selectOp));
+        }
+
+        public void LiftAndSelectFeatureArea(int x, int y, int width, int height)
+        {
+            var loc1 = new Point(x * 32, y * 32);
+            var loc2 = new Point((x + width) * 32, (y + height) * 32);
+
+            var validItems = this.AccessibleFeatures.Items.Where(i =>
+                                        (i.Tag is FeatureTag) &&
+                                        (i.GetMidPoint().X >= loc1.X && i.GetMidPoint().Y >= loc1.Y) &&
+                                        (i.GetMidPoint().X <= loc2.X && i.GetMidPoint().Y <= loc2.Y)).ToList();
+
+            List<IReplayableOperation> selections = new List<IReplayableOperation>();
+            for (int i = 0; i < validItems.Count(); i++)
+            {
+                FeatureTag tag = (FeatureTag)validItems.ElementAt(i).Tag;
+                selections.Add(new SelectFeatureOperation(this.model, tag.FeatureId));
+            }
+
+            this.undoManager.Execute(new CompositeOperation(selections));
         }
 
         public void StartBandbox(int x, int y)
@@ -412,9 +486,9 @@
             this.bandboxBehaviour.GrowBandbox(x, y);
         }
 
-        public void CommitBandbox()
+        public void CommitBandbox(ActiveTab activeTab)
         {
-            this.bandboxBehaviour.CommitBandbox();
+            this.bandboxBehaviour.CommitBandbox(activeTab);
         }
 
         public void ReplaceHeightmap(Grid<int> heightmap)
@@ -473,6 +547,11 @@
         public void PasteMapTile(IMapTile tile, int x, int y)
         {
             this.PasteMapTileNoDeduplicate(tile, x, y);
+        }
+
+        public void SetAccessibleFeatures(AccessibleFeatures ac)
+        {
+            this.AccessibleFeatures = ac;
         }
 
         private void PasteMapTileNoDeduplicate(IMapTile tile, int x, int y)
@@ -716,6 +795,11 @@
             this.CanCut = this.SelectedTile.HasValue || this.SelectedFeatures.Count > 0;
         }
 
+        private void UpdateCanFill()
+        {
+            this.CanFill = this.SelectedTile.HasValue;
+        }
+
         private void UndoManagerOnIsMarkedChanged(object sender, EventArgs eventArgs)
         {
             this.OnPropertyChanged("IsMarked");
@@ -740,6 +824,7 @@
                 case "SelectedTile":
                     this.UpdateCanCut();
                     this.UpdateCanCopy();
+                    this.UpdateCanFill();
                     break;
             }
         }

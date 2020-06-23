@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
+    using System.Linq;
     using System.Reactive.Linq;
     using System.Reactive.Subjects;
     using System.Windows.Forms;
@@ -62,6 +63,12 @@
         private Point lastMousePos;
 
         private bool bandboxMode;
+
+        private bool fillBandbox;
+
+        private bool sporadicFillBandbox;
+
+        private bool lineBandbox;
 
         private DrawableItem bandboxMapping;
 
@@ -127,6 +134,7 @@
 
             this.model = model;
             this.dispatcher = dispatcher;
+            this.dispatcher.SubscribeToFeatures(this.ItemsLayer);
             this.featureService = featureService;
         }
 
@@ -184,7 +192,41 @@
             this.dispatcher.SetViewportLocation(position);
         }
 
-        public void MouseDown(Point location)
+        public void HandleMouseDownLeft(Point location, Keys modifierKeys)
+        {
+            var mode = this.dispatcher.FetchCurrentFeaturePlacementMode();
+
+            if (modifierKeys == Keys.None && mode == FeaturePlacementMode.Selection)
+            {
+                this.MouseDownLeft(location);
+            }
+            else if (mode != FeaturePlacementMode.Selection)
+            {
+                switch (mode)
+                {
+                    case FeaturePlacementMode.Line:
+                        this.MouseDownBandboxEnableFlag(location, ref this.lineBandbox);
+                        break;
+
+                    case FeaturePlacementMode.Fill:
+                        this.MouseDownBandboxEnableFlag(location, ref this.fillBandbox);
+                        break;
+
+                    case FeaturePlacementMode.Sporadic:
+                        this.MouseDownBandboxEnableFlag(location, ref this.sporadicFillBandbox);
+                        break;
+                }
+            }
+            else if (modifierKeys != Keys.None)
+            {
+                if (modifierKeys == Keys.Shift)
+                {
+                    this.MouseDownBandboxEnableFlag(location, ref this.fillBandbox);
+                }
+            }
+        }
+
+        public void MouseDownLeft(Point location)
         {
             this.mouseDown = true;
             this.lastMousePos = location;
@@ -202,6 +244,37 @@
                     this.dispatcher.StartBandbox(location.X, location.Y);
                     this.bandboxMode = true;
                 }
+            }
+        }
+
+        public void MouseDownRight(MouseEventArgs e, Point location)
+        {
+            if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
+            {
+                this.mouseDown = true;
+                this.lastMousePos = location;
+
+                if (!this.itemsLayer.Value.IsInSelection(location.X, location.Y))
+                {
+                    this.dispatcher.PlaceFeature(location.X, location.Y);
+                }
+            }
+        }
+
+        public void MouseDownBandboxEnableFlag(Point location, ref bool flag)
+        {
+            if (this.dispatcher.FetchActiveTab() == ActiveTab.Features)
+            {
+                this.mouseDown = true;
+                this.lastMousePos = location;
+                this.dispatcher.ClearSelection();
+                this.dispatcher.StartBandbox(location.X, location.Y);
+                this.bandboxMode = true;
+                flag = true;
+            }
+            else
+            {
+                this.MouseDownLeft(location);
             }
         }
 
@@ -239,8 +312,40 @@
 
             if (this.bandboxMode)
             {
-                this.dispatcher.CommitBandbox();
-                this.bandboxMode = false;
+                // More likely to happen -- so it comes first
+                if (!this.fillBandbox && !this.lineBandbox && !this.sporadicFillBandbox)
+                {
+                    this.dispatcher.CommitBandbox();
+                    this.bandboxMode = false;
+                }
+                else if (this.sporadicFillBandbox)
+                {
+                    var placedFeats = this.SporadicFillFeatureInBandbox(this.dispatcher.FetchMagnitude());
+                    this.dispatcher.CommitBandbox();
+                    this.dispatcher.ClearSelection();
+                    this.bandboxMode = false;
+                    this.sporadicFillBandbox = false;
+                    this.dispatcher.SelectFeatures(placedFeats.Where(x => x.HasValue).Select(x => x.UnsafeValue).ToList());
+                }
+                else if (this.fillBandbox)
+                {
+                    var placedFeats = this.SporadicFillFeatureInBandbox(100);
+                    this.dispatcher.CommitBandbox();
+                    this.dispatcher.ClearSelection();
+                    this.bandboxMode = false;
+                    this.fillBandbox = false;
+                    this.dispatcher.SelectFeatures(placedFeats.Where(x => x.HasValue).Select(x => x.UnsafeValue).ToList());
+                }
+                else if (this.lineBandbox)
+                {
+                    var bb = this.dispatcher.FetchBandbox();
+                    this.dispatcher.CommitBandbox();
+                    var placedFeats = this.PlaceAlongLine(bb);
+                    this.bandboxMode = false;
+                    this.lineBandbox = false;
+                    this.dispatcher.ClearSelection();
+                    this.dispatcher.SelectFeatures(placedFeats.Where(x => x.HasValue).Select(x => x.UnsafeValue).ToList());
+                }
             }
             else
             {
@@ -690,6 +795,87 @@
                 this.itemsLayer.Value.RemoveFromSelection(item);
                 this.featureMapping.Remove(id);
             }
+        }
+
+        private List<Maybe<FeatureInstance>> SporadicFillFeatureInBandbox(int magnitude)
+        {
+            Maybe<Feature> unsafeFeat = this.dispatcher.FetchCurrentFeatureListSelection();
+            if (unsafeFeat.HasValue)
+            {
+                Feature feature = unsafeFeat.UnsafeValue;
+                int fWidth = feature.Image.Width;     // feature.Footprint.Width * 8;
+                int fHeight = feature.Image.Height;   // feature.Footprint.Height * 8;
+                Rectangle bandbox = this.dispatcher.FetchBandbox();
+
+                int wPlaceCount = (bandbox.Width / fWidth) + 1;
+                int hPlaceCount = (bandbox.Height / fHeight) + 1;
+
+                // Keep a track of all of the added features so they can be selected later.
+                List<Maybe<FeatureInstance>> placedFeats = new List<Maybe<FeatureInstance>>();
+
+                Random random = new Random();
+
+                for (int w = 0; w < wPlaceCount; w++)
+                {
+                    for (int h = 0; h < hPlaceCount; h++)
+                    {
+                        if ((random.NextDouble() * 100) <= magnitude)
+                        {
+                            placedFeats.Add(this.dispatcher.DragDropFeature(feature.Name, bandbox.X + (w * fWidth), bandbox.Y + (h * fHeight)));
+                        }
+                    }
+                }
+
+                return placedFeats;
+            }
+
+            return new List<Maybe<FeatureInstance>>();
+        }
+
+        private List<Maybe<FeatureInstance>> PlaceAlongLine(Rectangle rect)
+        {
+            Maybe<Feature> unsafeFeat = this.dispatcher.FetchCurrentFeatureListSelection();
+            if (unsafeFeat.HasValue)
+            {
+                Feature feat = unsafeFeat.UnsafeValue;
+                Point xPoints = this.dispatcher.FetchBandboxStartLoc();
+                Point yPoints = this.dispatcher.FetchBandboxFinishLoc();
+
+                int points = this.CalculatePointsNeeded(feat, rect.Width, rect.Height);
+
+                // Keep a track of all of the added features so they can be selected later.
+                List<Maybe<FeatureInstance>> placedFeats = new List<Maybe<FeatureInstance>>();
+
+                for (int i = 0; i < points; i++)
+                {
+                    float dist = i * (1.0f / ((float)points));
+                    PointF loc = this.Lerp2(xPoints, yPoints, dist);
+                    placedFeats.Add(this.dispatcher.DragDropFeature(feat.Name, (int)loc.X, (int)loc.Y));
+                }
+
+                return placedFeats;
+            }
+
+            return new List<Maybe<FeatureInstance>>();
+        }
+
+        private int CalculatePointsNeeded(Feature feat, int width, int height)
+        {
+            int fWidth = feat.Image.Width;
+            int fHeight = feat.Image.Height;
+            return Math.Max(width / fWidth, height / fHeight);
+        }
+
+        private float Lerp(float first, float second, float by)
+        {
+            return first + ((second - first) * by);
+        }
+
+        private PointF Lerp2(Point first, Point second, float by)
+        {
+            float retX = this.Lerp(first.X, second.X, by);
+            float retY = this.Lerp(first.Y, second.Y, by);
+            return new PointF(retX, retY);
         }
 
         private void SelectFromTag(object tag)

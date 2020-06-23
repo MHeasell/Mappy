@@ -26,9 +26,10 @@
             this.CanCut = map.ObservePropertyOrDefault(x => x.CanCut, nameof(UndoableMapModel.CanCut), false);
             this.CanCopy = map.ObservePropertyOrDefault(x => x.CanCopy, nameof(UndoableMapModel.CanCopy), false);
             this.CanPaste = map.Select(x => x.IsSome);
-            this.GridVisible = model.PropertyAsObservable(x => x.GridVisible, nameof(model.GridVisible));
-            this.GridSize = model.PropertyAsObservable(x => x.GridSize, nameof(model.GridSize));
-            this.HeightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, nameof(model.HeightmapVisible));
+            this.CanFill = map.ObservePropertyOrDefault(x => x.CanCopy, nameof(UndoableMapModel.CanFill), false);
+            this.GridVisible = model.PropertyAsObservable(x => x.GridVisible, "GridVisible");
+            this.GridSize = model.PropertyAsObservable(x => x.GridSize, "GridSize");
+            this.HeightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, "HeightmapVisible");
             this.VoidsVisible = model.PropertyAsObservable(x => x.VoidsVisible, nameof(model.VoidsVisible));
             this.FeaturesVisible = model.PropertyAsObservable(x => x.FeaturesVisible, nameof(model.FeaturesVisible));
             this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, nameof(model.MinimapVisible));
@@ -120,6 +121,8 @@
         public IObservable<bool> CanCopy { get; }
 
         public IObservable<bool> CanPaste { get; }
+
+        public IObservable<bool> CanFill { get; }
 
         public IObservable<bool> GridVisible { get; }
 
@@ -268,6 +271,11 @@
         public void PasteMenuItemClick()
         {
             this.dispatcher.PasteFromClipboard();
+        }
+
+        public void FillMenuItemClick()
+        {
+            this.dispatcher.FillSelection();
         }
 
         public void ImportMinimapMenuItemClick()

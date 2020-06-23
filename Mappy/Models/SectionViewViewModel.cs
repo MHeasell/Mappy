@@ -44,6 +44,8 @@
                     });
 
             this.sectionService = sectionService;
+
+            this.SectionType = SectionType.Section;
         }
 
         public IObservable<ComboBoxViewModel> ComboBox1Model => this.worlds;
@@ -51,6 +53,8 @@
         public IObservable<ComboBoxViewModel> ComboBox2Model => this.categories;
 
         public IObservable<IEnumerable<ListViewItem>> ListViewItems => this.sections;
+
+        public SectionType SectionType { get; set; }
 
         public void SelectComboBox1Item(int index)
         {

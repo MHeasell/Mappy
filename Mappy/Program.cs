@@ -56,6 +56,11 @@
             var mapLoadingService = new MapLoadingService(sectionFactory, mapModelFactory);
             var imageImportingService = new ImageImportService(tileCache);
             var model = new CoreModel();
+
+            // Unsure if I should get the SectionViews to register themselves, or pass the dispatcher the SectionViews as params
+            mainForm.SectionView.SetModel(new SectionViewViewModel(sectionsService));
+            mainForm.FeatureView.SetModel(new FeatureViewViewModel(featureService));
+
             var dispatcher = new Dispatcher(
                 model,
                 dialogService,
@@ -64,11 +69,9 @@
                 featureService,
                 mapLoadingService,
                 imageImportingService,
-                tileCache);
+                tileCache,
+                mainForm);
             mainForm.SetModel(new MainFormViewModel(model, dispatcher));
-
-            mainForm.SectionView.SetModel(new SectionViewViewModel(sectionsService));
-            mainForm.FeatureView.SetModel(new FeatureViewViewModel(featureService));
 
             mainForm.MapViewPanel.SetModel(new MapViewViewModel(model, dispatcher, featureService));
 

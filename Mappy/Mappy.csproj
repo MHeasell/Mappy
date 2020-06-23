@@ -151,9 +151,9 @@
     <Compile Include="Models\BandboxBehaviours\IBandboxBehaviour.cs" />
     <Compile Include="Models\BandboxBehaviours\IBandboxModel.cs" />
     <Compile Include="Models\BandboxBehaviours\TileBandboxBehaviour.cs" />
-    <Compile Include="Models\BandboxMode.cs" />
     <Compile Include="Models\ComboBoxViewModel.cs" />
     <Compile Include="Models\CoreModel.cs" />
+    <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\FeatureClipboardRecord.cs" />
     <Compile Include="Models\FeatureInstance.cs" />
     <Compile Include="Models\FeatureInstanceEventArgs.cs" />
@@ -194,6 +194,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\AccessibleFeatures.cs" />
     <Compile Include="Services\BitmapCache.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\Dispatcher.cs" />
@@ -230,6 +231,12 @@
     </Compile>
     <Compile Include="UI\Controls\MinimapControl.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\FeatureView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UI\Controls\FeatureView.Designer.cs">
+      <DependentUpon>FeatureView.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\Controls\SectionView.cs">
       <SubType>UserControl</SubType>
@@ -346,6 +353,9 @@
     <EmbeddedResource Include="UI\Controls\MapViewPanel.resx">
       <DependentUpon>MapViewPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\Controls\FeatureView.resx">
+      <DependentUpon>FeatureView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\Controls\StartPositionsView.resx">
       <DependentUpon>StartPositionsView.cs</DependentUpon>
     </EmbeddedResource>
@@ -438,7 +448,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>python "$(ProjectDir)..\GenerateAssemblyInfo.py" "$(ProjectDir)\"</PreBuildEvent>
+    <PreBuildEvent>python "$(ProjectDir)..\GenerateAssemblyInfo.py" "$(ProjectDir)"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

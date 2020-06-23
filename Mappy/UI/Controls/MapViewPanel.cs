@@ -22,6 +22,11 @@
             this.mapView.Layers.Add(new DummyLayer());
         }
 
+        public IMapViewViewModel Model
+        {
+            get { return this.model; }
+        }
+
         public void SetModel(IMapViewViewModel model)
         {
             model.CanvasSize.Subscribe(x => this.mapView.CanvasSize = x);
@@ -44,7 +49,14 @@
         private void MapViewMouseDown(object sender, MouseEventArgs e)
         {
             var loc = this.mapView.ToVirtualPoint(e.Location);
-            this.model.MouseDown(loc);
+            if (e.Button == MouseButtons.Left)
+            {
+                this.model.HandleMouseDownLeft(loc, ModifierKeys);
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                this.model.MouseDownRight(e, loc);
+            }
         }
 
         private void MapViewMouseMove(object sender, MouseEventArgs e)

@@ -16,13 +16,16 @@
         public MainForm()
         {
             this.InitializeComponent();
+            this.sidebarTabs.SelectedIndexChanged += this.SidebarTabs_SelectedIndexChanged;
         }
 
         public MapViewPanel MapViewPanel => this.mapViewPanel;
 
         public SectionView SectionView => this.sectionsView;
 
-        public SectionView FeatureView => this.featureView;
+        public FeatureView FeatureView => this.featureView;
+
+        public ActiveTab ActiveTab { get; set; }
 
         public void SetModel(IMainFormViewModel model)
         {
@@ -59,6 +62,7 @@
             model.CanCopy.Subscribe(x => this.copyMenuItem.Enabled = x);
             model.CanCut.Subscribe(x => this.cutMenuItem.Enabled = x);
             model.CanPaste.Subscribe(x => this.pasteMenuItem.Enabled = x);
+            model.CanFill.Subscribe(x => this.fillMenuItem.Enabled = x);
 
             model.CanGenerateMinimap.Subscribe(x => this.generateMinimapMenuItem.Enabled = x);
             model.CanGenerateMinimapHighQuality.Subscribe(x => this.generateMinimapHighQualityMenuItem.Enabled = x);
@@ -85,6 +89,11 @@
             model.TitleText.Subscribe(x => this.Text = x);
 
             this.model = model;
+        }
+
+        private void SidebarTabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            this.ActiveTab = (ActiveTab)(sender as TabControl).SelectedIndex;
         }
 
         private void OpenMenuItemClick(object sender, EventArgs e)
@@ -218,6 +227,11 @@
         private void CutMenuItemClick(object sender, EventArgs e)
         {
             this.model.CutMenuItemClick();
+        }
+
+        private void FillMenuItemClick(object sender, EventArgs e)
+        {
+            this.model.FillMenuItemClick();
         }
 
         private void MainFormLoad(object sender, EventArgs e)

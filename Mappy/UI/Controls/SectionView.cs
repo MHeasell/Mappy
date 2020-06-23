@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Reactive.Linq;
     using System.Windows.Forms;
-
     using Mappy.Models;
 
     using ListViewItem = System.Windows.Forms.ListViewItem;
@@ -15,9 +14,6 @@
     {
         private ISectionViewViewModel model;
 
-        private bool suppressCombo1SelectedItemEvents;
-        private bool suppressCombo2SelectedItemEvents;
-
         public SectionView()
         {
             this.InitializeComponent();
@@ -25,9 +21,17 @@
             this.control.ComboBox1.SelectedIndexChanged += this.ComboBox1SelectedIndexChanged;
             this.control.ComboBox2.SelectedIndexChanged += this.ComboBox2SelectedIndexChanged;
             this.control.ListView.ItemDrag += this.ListViewItemDrag;
+            this.control.ListView.SelectedIndexChanged += this.ListViewItemSelectionChanged;
+            this.control.ListView.Leave += this.ListViewLeave;
         }
 
         public Size ImageSize { get; set; } = new Size(128, 128);
+
+        protected bool SuppressCombo1SelectedItemEvents { get; set; }
+
+        protected bool SuppressCombo2SelectedItemEvents { get; set; }
+
+        protected ListViewItem PreviousSelection { get; set; }
 
         public void SetModel(ISectionViewViewModel model)
         {
@@ -40,7 +44,12 @@
             this.model = model;
         }
 
-        private static void UpdateComboBox(ComboBox c, ComboBoxViewModel oldModel, ComboBoxViewModel newModel)
+        public ListViewItem GetCurrentSelectedItem()
+        {
+            return this.PreviousSelection;
+        }
+
+        protected static void UpdateComboBox(ComboBox c, ComboBoxViewModel oldModel, ComboBoxViewModel newModel)
         {
             c.BeginUpdate();
 
@@ -59,21 +68,21 @@
             c.EndUpdate();
         }
 
-        private void UpdateComboBox1(ComboBoxViewModel oldModel, ComboBoxViewModel newModel)
+        protected void UpdateComboBox1(ComboBoxViewModel oldModel, ComboBoxViewModel newModel)
         {
-            this.suppressCombo1SelectedItemEvents = true;
+            this.SuppressCombo1SelectedItemEvents = true;
             UpdateComboBox(this.control.ComboBox1, oldModel, newModel);
-            this.suppressCombo1SelectedItemEvents = false;
+            this.SuppressCombo1SelectedItemEvents = false;
         }
 
-        private void UpdateComboBox2(ComboBoxViewModel oldModel, ComboBoxViewModel newModel)
+        protected void UpdateComboBox2(ComboBoxViewModel oldModel, ComboBoxViewModel newModel)
         {
-            this.suppressCombo2SelectedItemEvents = true;
+            this.SuppressCombo2SelectedItemEvents = true;
             UpdateComboBox(this.control.ComboBox2, oldModel, newModel);
-            this.suppressCombo2SelectedItemEvents = false;
+            this.SuppressCombo2SelectedItemEvents = false;
         }
 
-        private void UpdateListView(IEnumerable<Models.ListViewItem> xs)
+        protected void UpdateListView(IEnumerable<Models.ListViewItem> xs)
         {
             var sections = xs.ToList();
 
@@ -102,9 +111,9 @@
             lv.EndUpdate();
         }
 
-        private void ComboBox1SelectedIndexChanged(object sender, EventArgs e)
+        protected void ComboBox1SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.suppressCombo1SelectedItemEvents)
+            if (this.SuppressCombo1SelectedItemEvents)
             {
                 return;
             }
@@ -112,9 +121,9 @@
             this.model.SelectComboBox1Item(this.control.ComboBox1.SelectedIndex);
         }
 
-        private void ComboBox2SelectedIndexChanged(object sender, EventArgs e)
+        protected void ComboBox2SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.suppressCombo2SelectedItemEvents)
+            if (this.SuppressCombo2SelectedItemEvents)
             {
                 return;
             }
@@ -122,7 +131,7 @@
             this.model.SelectComboBox2Item(this.control.ComboBox2.SelectedIndex);
         }
 
-        private void ListViewItemDrag(object sender, ItemDragEventArgs e)
+        protected void ListViewItemDrag(object sender, ItemDragEventArgs e)
         {
             var view = (ListView)sender;
 
@@ -133,6 +142,44 @@
 
             var data = view.SelectedItems[0].Tag;
             view.DoDragDrop(data, DragDropEffects.Copy);
+        }
+
+        protected void ListViewItemSelectionChanged(object sender, EventArgs e)
+        {
+            var view = (ListView)sender;
+            if (this.model.SectionType != SectionType.Feature || view.SelectedItems.Count == 0)
+            {
+                return;
+            }
+
+            view.ItemSelectionChanged -= this.ListViewItemSelectionChanged;
+            var selItem = view.SelectedItems[0];
+
+            if (this.PreviousSelection == null || this.PreviousSelection.Index == -1 || view.Items[this.PreviousSelection.Index] == null)
+            {
+                this.PreviousSelection = selItem;
+            }
+
+            if (selItem != this.PreviousSelection)
+            {
+                view.Items[this.PreviousSelection.Index].Selected = false;
+                view.Items[this.PreviousSelection.Index].BackColor = Color.White;
+                view.Items[selItem.Index].Selected = true;
+                this.PreviousSelection = selItem;
+            }
+
+            view.ItemSelectionChanged += this.ListViewItemSelectionChanged;
+        }
+
+        // Show visual cue to user about which feature will be placed when RightClicking
+        protected void ListViewLeave(object sender, EventArgs e)
+        {
+            // Cheeky null check
+            if (this.model?.SectionType == SectionType.Feature && this.PreviousSelection != null)
+            {
+                this.PreviousSelection.BackColor = Color.Orange;
+                this.PreviousSelection.ForeColor = Color.Black;
+            }
         }
     }
 }

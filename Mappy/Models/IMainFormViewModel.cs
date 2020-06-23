@@ -33,6 +33,8 @@
 
         IObservable<bool> CanPaste { get; }
 
+        IObservable<bool> CanFill { get; }
+
         IObservable<bool> CanGenerateMinimap { get; }
 
         IObservable<bool> CanGenerateMinimapHighQuality { get; }
@@ -108,6 +110,8 @@
         void CopyMenuItemClick();
 
         void CutMenuItemClick();
+
+        void FillMenuItemClick();
 
         void PasteMenuItemClick();
 

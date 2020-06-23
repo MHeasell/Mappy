@@ -5,8 +5,11 @@ import sys
 import os.path
 
 projectdir = sys.argv[1]
-inpath = os.path.join(projectdir, "Properties/AssemblyInfo.cs.tmpl")
-outpath = os.path.join(projectdir, "Properties/AssemblyInfo.cs")
+if projectdir.endswith('"'):
+    projectdir = projectdir[:-1]
+    print(projectdir)
+inpath = os.path.join(projectdir, "Properties\\AssemblyInfo.cs.tmpl")
+outpath = os.path.join(projectdir, "Properties\\AssemblyInfo.cs")
 
 # get the tag
 tag = check_output(["git", "describe", "--dirty=-d"], cwd=projectdir, universal_newlines=True)
