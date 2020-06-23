@@ -31,15 +31,8 @@
 
         public Rectangle BandboxRectangle
         {
-            get
-            {
-                return this.bandboxRectangle;
-            }
-
-            private set
-            {
-                this.SetField(ref this.bandboxRectangle, value, "BandboxRectangle");
-            }
+            get => this.bandboxRectangle;
+            private set => this.SetField(ref this.bandboxRectangle, value, nameof(this.BandboxRectangle));
         }
 
         public Point BandboxStart
@@ -104,8 +97,8 @@
         {
             try
             {
-                int width = this.BandboxRectangle.Width / 32;
-                int height = this.BandboxRectangle.Height / 32;
+                var width = this.BandboxRectangle.Width / 32;
+                var height = this.BandboxRectangle.Height / 32;
 
                 if (width == 0 || height == 0)
                 {
@@ -137,14 +130,14 @@
 
         private void UpdateBandboxRectangle()
         {
-            int minX = Math.Min(this.startPoint.X, this.finishPoint.X);
-            int minY = Math.Min(this.startPoint.Y, this.finishPoint.Y);
+            var minX = Math.Min(this.startPoint.X, this.finishPoint.X);
+            var minY = Math.Min(this.startPoint.Y, this.finishPoint.Y);
 
-            int maxX = Math.Max(this.startPoint.X, this.finishPoint.X);
-            int maxY = Math.Max(this.startPoint.Y, this.finishPoint.Y);
+            var maxX = Math.Max(this.startPoint.X, this.finishPoint.X);
+            var maxY = Math.Max(this.startPoint.Y, this.finishPoint.Y);
 
-            int width = maxX - minX;
-            int height = maxY - minY;
+            var width = maxX - minX;
+            var height = maxY - minY;
 
             this.BandboxRectangle = new Rectangle(minX * 32, minY * 32, width * 32, height * 32);
         }

@@ -22,10 +22,7 @@
 
         public ILayer this[int index]
         {
-            get
-            {
-                return this.items[index];
-            }
+            get => this.items[index];
 
             set
             {

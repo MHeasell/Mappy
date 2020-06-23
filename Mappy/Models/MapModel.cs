@@ -70,54 +70,26 @@
 
         public event EventHandler<GridEventArgs> TileGridChanged
         {
-            add
-            {
-                this.tile.TileGridChanged += value;
-            }
-
-            remove
-            {
-                this.tile.TileGridChanged -= value;
-            }
+            add => this.tile.TileGridChanged += value;
+            remove => this.tile.TileGridChanged -= value;
         }
 
         public event EventHandler<GridEventArgs> HeightGridChanged
         {
-            add
-            {
-                this.tile.HeightGridChanged += value;
-            }
-
-            remove
-            {
-                this.tile.HeightGridChanged -= value;
-            }
+            add => this.tile.HeightGridChanged += value;
+            remove => this.tile.HeightGridChanged -= value;
         }
 
         public event ListChangedEventHandler FloatingTilesChanged
         {
-            add
-            {
-                this.floatingTiles.ListChanged += value;
-            }
-
-            remove
-            {
-                this.floatingTiles.ListChanged -= value;
-            }
+            add => this.floatingTiles.ListChanged += value;
+            remove => this.floatingTiles.ListChanged -= value;
         }
 
         public event EventHandler<SparseGridEventArgs> VoidsChanged
         {
-            add
-            {
-                this.voids.EntriesChanged += value;
-            }
-
-            remove
-            {
-                this.voids.EntriesChanged -= value;
-            }
+            add => this.voids.EntriesChanged += value;
+            remove => this.voids.EntriesChanged -= value;
         }
 
         public MapAttributes Attributes { get; }
@@ -130,28 +102,14 @@
 
         public int SeaLevel
         {
-            get
-            {
-                return this.seaLevel;
-            }
-
-            set
-            {
-                this.SetField(ref this.seaLevel, value, "SeaLevel");
-            }
+            get => this.seaLevel;
+            set => this.SetField(ref this.seaLevel, value, nameof(this.SeaLevel));
         }
 
         public Bitmap Minimap
         {
-            get
-            {
-                return this.minimap;
-            }
-
-            set
-            {
-                this.SetField(ref this.minimap, value, "Minimap");
-            }
+            get => this.minimap;
+            set => this.SetField(ref this.minimap, value, nameof(this.Minimap));
         }
 
         public int FeatureGridWidth => this.Tile.HeightGrid.Width;
@@ -160,28 +118,14 @@
 
         public int? SelectedStartPosition
         {
-            get
-            {
-                return this.selectedStartPosition;
-            }
-
-            private set
-            {
-                this.SetField(ref this.selectedStartPosition, value, "SelectedStartPosition");
-            }
+            get => this.selectedStartPosition;
+            private set => this.SetField(ref this.selectedStartPosition, value, nameof(this.SelectedStartPosition));
         }
 
         public int? SelectedTile
         {
-            get
-            {
-                return this.selectedTile;
-            }
-
-            private set
-            {
-                this.SetField(ref this.selectedTile, value, "SelectedTile");
-            }
+            get => this.selectedTile;
+            private set => this.SetField(ref this.selectedTile, value, nameof(this.SelectedTile));
         }
 
         public ObservableCollection<Guid> SelectedFeatures => this.selectedFeatures;
@@ -498,13 +442,13 @@
             var dst = this.Tile;
 
             // construct the destination target
-            Rectangle rect = new Rectangle(x, y, src.TileGrid.Width, src.TileGrid.Height);
+            var rect = new Rectangle(x, y, src.TileGrid.Width, src.TileGrid.Height);
 
             // clip to boundaries
             rect.Intersect(new Rectangle(0, 0, dst.TileGrid.Width, dst.TileGrid.Height));
 
-            int srcX = rect.X - x;
-            int srcY = rect.Y - y;
+            var srcX = rect.X - x;
+            var srcY = rect.Y - y;
 
             GridMethods.Copy(src.TileGrid, dst.TileGrid, srcX, srcY, rect.X, rect.Y, rect.Width, rect.Height);
             GridMethods.Copy(src.HeightGrid, dst.HeightGrid, srcX * 2, srcY * 2, rect.X * 2, rect.Y * 2, rect.Width * 2, rect.Height * 2);

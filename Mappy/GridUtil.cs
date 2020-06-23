@@ -8,12 +8,12 @@
     {
         public static Rectangle GetCoveringRect(Rectangle rect, Size tileSize, Size gridSize)
         {
-            int startTileX = Math.Max(0, rect.Left / tileSize.Width);
-            int startTileY = Math.Max(0, rect.Top / tileSize.Height);
-            int endTileX = Math.Min(
+            var startTileX = Math.Max(0, rect.Left / tileSize.Width);
+            var startTileY = Math.Max(0, rect.Top / tileSize.Height);
+            var endTileX = Math.Min(
                 gridSize.Width - 1,
                 (rect.Right / tileSize.Width) + 1);
-            int endTileY = Math.Min(
+            var endTileY = Math.Min(
                 gridSize.Height - 1,
                 (rect.Bottom / tileSize.Height) + 1);
 
@@ -22,11 +22,11 @@
 
         public static IEnumerable<Point> EnumerateCoveringIndices(Rectangle rect, Size tileSize, Size gridSize)
         {
-            Rectangle coveringRect = GetCoveringRect(rect, tileSize, gridSize);
+            var coveringRect = GetCoveringRect(rect, tileSize, gridSize);
 
-            for (int y = coveringRect.Top; y <= coveringRect.Bottom; y++)
+            for (var y = coveringRect.Top; y <= coveringRect.Bottom; y++)
             {
-                for (int x = coveringRect.Left; x <= coveringRect.Right; x++)
+                for (var x = coveringRect.Left; x <= coveringRect.Right; x++)
                 {
                     yield return new Point(x, y);
                 }

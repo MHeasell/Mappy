@@ -101,7 +101,7 @@
             lv.LargeImageList = images;
 
             // update the items list
-            int i = 0;
+            var i = 0;
             foreach (var x in sections)
             {
                 var item = new ListViewItem(x.Name, i++) { Tag = x.Tag };

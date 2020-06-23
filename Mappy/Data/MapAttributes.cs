@@ -78,137 +78,137 @@
 
         public string Name
         {
-            get { return this.name; }
-            set { this.SetField(ref this.name, value, "Name"); }
+            get => this.name;
+            set => this.SetField(ref this.name, value, nameof(this.Name));
         }
 
         public string Description
         {
-            get { return this.description; }
-            set { this.SetField(ref this.description, value, "Description"); }
+            get => this.description;
+            set => this.SetField(ref this.description, value, nameof(this.Description));
         }
 
         public string Planet
         {
-            get { return this.planet; }
-            set { this.SetField(ref this.planet, value, "Planet"); }
+            get => this.planet;
+            set => this.SetField(ref this.planet, value, nameof(this.Planet));
         }
 
         public int Gravity
         {
-            get { return this.gravity; }
-            set { this.SetField(ref this.gravity, value, "Gravity"); }
+            get => this.gravity;
+            set => this.SetField(ref this.gravity, value, nameof(this.Gravity));
         }
 
         public string Memory
         {
-            get { return this.memory; }
-            set { this.SetField(ref this.memory, value, "Memory"); }
+            get => this.memory;
+            set => this.SetField(ref this.memory, value, nameof(this.Memory));
         }
 
         public string NumPlayers
         {
-            get { return this.numPlayers; }
-            set { this.SetField(ref this.numPlayers, value, "NumPlayers"); }
+            get => this.numPlayers;
+            set => this.SetField(ref this.numPlayers, value, nameof(this.NumPlayers));
         }
 
         public string AiProfile
         {
-            get { return this.aiProfile; }
-            set { this.SetField(ref this.aiProfile, value, "AiProfile"); }
+            get => this.aiProfile;
+            set => this.SetField(ref this.aiProfile, value, nameof(this.AiProfile));
         }
 
         public int SurfaceMetal
         {
-            get { return this.surfaceMetal; }
-            set { this.SetField(ref this.surfaceMetal, value, "SurfaceMetal"); }
+            get => this.surfaceMetal;
+            set => this.SetField(ref this.surfaceMetal, value, nameof(this.SurfaceMetal));
         }
 
         public int MohoMetal
         {
-            get { return this.mohoMetal; }
-            set { this.SetField(ref this.mohoMetal, value, "MohoMetal"); }
+            get => this.mohoMetal;
+            set => this.SetField(ref this.mohoMetal, value, nameof(this.MohoMetal));
         }
 
         public int TidalStrength
         {
-            get { return this.tidalStrength; }
-            set { this.SetField(ref this.tidalStrength, value, "TidalStrength"); }
+            get => this.tidalStrength;
+            set => this.SetField(ref this.tidalStrength, value, nameof(this.TidalStrength));
         }
 
         public int SolarStrength
         {
-            get { return this.solarStrength; }
-            set { this.SetField(ref this.solarStrength, value, "SolarStrength"); }
+            get => this.solarStrength;
+            set => this.SetField(ref this.solarStrength, value, nameof(this.SolarStrength));
         }
 
         public int MinWindSpeed
         {
-            get { return this.minWindSpeed; }
-            set { this.SetField(ref this.minWindSpeed, value, "MinWindSpeed"); }
+            get => this.minWindSpeed;
+            set => this.SetField(ref this.minWindSpeed, value, nameof(this.MinWindSpeed));
         }
 
         public bool LavaWorld
         {
-            get { return this.lavaWorld; }
-            set { this.SetField(ref this.lavaWorld, value, "LavaWorld"); }
+            get => this.lavaWorld;
+            set => this.SetField(ref this.lavaWorld, value, nameof(this.LavaWorld));
         }
 
         public bool WaterDoesDamage
         {
-            get { return this.waterDoesDamage; }
-            set { this.SetField(ref this.waterDoesDamage, value, "WaterDoesDamage"); }
+            get => this.waterDoesDamage;
+            set => this.SetField(ref this.waterDoesDamage, value, nameof(this.WaterDoesDamage));
         }
 
         public int MaxWindSpeed
         {
-            get { return this.maxWindSpeed; }
-            set { this.SetField(ref this.maxWindSpeed, value, "MaxWindSpeed"); }
+            get => this.maxWindSpeed;
+            set => this.SetField(ref this.maxWindSpeed, value, nameof(this.MaxWindSpeed));
         }
 
         public int WaterDamage
         {
-            get { return this.waterDamage; }
-            set { this.SetField(ref this.waterDamage, value, "WaterDamage"); }
+            get => this.waterDamage;
+            set => this.SetField(ref this.waterDamage, value, nameof(this.WaterDamage));
         }
 
         public string MeteorWeapon
         {
-            get { return this.meteorWeapon; }
-            set { this.SetField(ref this.meteorWeapon, value, "MeteorWeapon"); }
+            get => this.meteorWeapon;
+            set => this.SetField(ref this.meteorWeapon, value, nameof(this.MeteorWeapon));
         }
 
         public int MeteorRadius
         {
-            get { return this.meteorRadius; }
-            set { this.SetField(ref this.meteorRadius, value, "MeteorRadius"); }
+            get => this.meteorRadius;
+            set => this.SetField(ref this.meteorRadius, value, nameof(this.MeteorRadius));
         }
 
         public int MeteorDuration
         {
-            get { return this.meteorDuration; }
-            set { this.SetField(ref this.meteorDuration, value, "MeteorDuration"); }
+            get => this.meteorDuration;
+            set => this.SetField(ref this.meteorDuration, value, nameof(this.MeteorDuration));
         }
 
         public double MeteorDensity
         {
-            get { return this.meteorDensity; }
-            set { this.SetField(ref this.meteorDensity, value, "MeteorDensity"); }
+            get => this.meteorDensity;
+            set => this.SetField(ref this.meteorDensity, value, nameof(this.MeteorDensity));
         }
 
         public int MeteorInterval
         {
-            get { return this.meteorInterval; }
-            set { this.SetField(ref this.meteorInterval, value, "MeteorInterval"); }
+            get => this.meteorInterval;
+            set => this.SetField(ref this.meteorInterval, value, nameof(this.MeteorInterval));
         }
 
         public static MapAttributes Load(TdfNode n)
         {
-            TdfNode r = n.Keys["GlobalHeader"];
+            var r = n.Keys["GlobalHeader"];
 
-            TdfNode schema = r.Keys["Schema 0"];
+            var schema = r.Keys["Schema 0"];
 
-            MapAttributes m = new MapAttributes();
+            var m = new MapAttributes();
 
             m.Name = r.Entries.GetOrDefault("missionname", string.Empty);
             m.Description = r.Entries.GetOrDefault("missiondescription", string.Empty);
@@ -219,6 +219,8 @@
             m.MinWindSpeed = TdfConvert.ToInt32(r.Entries.GetOrDefault("minwindspeed", "0"));
             m.MaxWindSpeed = TdfConvert.ToInt32(r.Entries.GetOrDefault("maxwindspeed", "0"));
             m.Gravity = TdfConvert.ToInt32(r.Entries.GetOrDefault("gravity", "0"));
+            m.WaterDoesDamage = TdfConvert.ToBool(r.Entries.GetOrDefault("waterdoesdamage", "0"));
+            m.WaterDamage = TdfConvert.ToInt32(r.Entries.GetOrDefault("waterdamage", "0"));
             m.NumPlayers = r.Entries.GetOrDefault("numplayers", string.Empty);
             m.Memory = r.Entries.GetOrDefault("memory", string.Empty);
             m.AiProfile = schema.Entries.GetOrDefault("aiprofile", string.Empty);
@@ -232,7 +234,7 @@
 
             if (schema.Keys.ContainsKey("specials"))
             {
-                TdfNode specials = schema.Keys["specials"];
+                var specials = schema.Keys["specials"];
 
                 foreach (var special in specials.Keys.Values)
                 {
@@ -242,9 +244,9 @@
                         continue;
                     }
 
-                    int id = TdfConvert.ToInt32(type.Substring(8));
-                    int x = TdfConvert.ToInt32(special.Entries.GetOrDefault("XPos", "0"));
-                    int y = TdfConvert.ToInt32(special.Entries.GetOrDefault("ZPos", "0"));
+                    var id = TdfConvert.ToInt32(type.Substring(8));
+                    var x = TdfConvert.ToInt32(special.Entries.GetOrDefault("XPos", "0"));
+                    var y = TdfConvert.ToInt32(special.Entries.GetOrDefault("ZPos", "0"));
                     m.SetStartPosition(id - 1, new Point(x, y));
                 }
             }
@@ -268,9 +270,9 @@
 
         public void WriteOta(Stream st)
         {
-            TdfNode r = new TdfNode("GlobalHeader");
+            var r = new TdfNode("GlobalHeader");
 
-            TdfNode s = new TdfNode("Schema 0");
+            var s = new TdfNode("Schema 0");
             r.Keys["Schema 0"] = s;
 
             r.Entries["missionname"] = this.Name;
@@ -290,6 +292,8 @@
             r.Entries["minwindspeed"] = TdfConvert.ToString(this.MinWindSpeed);
             r.Entries["maxwindspeed"] = TdfConvert.ToString(this.MaxWindSpeed);
             r.Entries["gravity"] = TdfConvert.ToString(this.Gravity);
+            r.Entries["waterdoesdamage"] = TdfConvert.ToString(this.WaterDoesDamage);
+            r.Entries["waterdamage"] = TdfConvert.ToString(this.WaterDamage);
             r.Entries["numplayers"] = this.numPlayers;
             r.Entries["size"] = string.Empty; // TODO
             r.Entries["memory"] = this.memory;
@@ -310,19 +314,19 @@
             s.Entries["MeteorDuration"] = TdfConvert.ToString(this.MeteorDuration);
             s.Entries["MeteorInterval"] = TdfConvert.ToString(this.MeteorInterval);
 
-            TdfNode specials = new TdfNode("specials");
+            var specials = new TdfNode("specials");
             s.Keys["specials"] = specials;
 
-            int count = 0;
-            for (int i = 0; i < 10; i++)
+            var count = 0;
+            for (var i = 0; i < 10; i++)
             {
-                Point? p = this.GetStartPosition(i);
+                var p = this.GetStartPosition(i);
                 if (!p.HasValue)
                 {
                     continue;
                 }
 
-                TdfNode spec = new TdfNode("special" + count);
+                var spec = new TdfNode("special" + count);
                 spec.Entries["specialwhat"] = "StartPos" + (i + 1);
                 spec.Entries["XPos"] = TdfConvert.ToString(p.Value.X);
                 spec.Entries["ZPos"] = TdfConvert.ToString(p.Value.Y);

@@ -34,8 +34,8 @@
 
         public void Paint(Graphics g, Rectangle clipRectangle)
         {
-            int startX = clipRectangle.X / this.tileSize;
-            int startY = clipRectangle.Y / this.tileSize;
+            var startX = clipRectangle.X / this.tileSize;
+            var startY = clipRectangle.Y / this.tileSize;
 
             // start a tile before to account for bleed in
             startX -= 1;
@@ -45,8 +45,8 @@
             startX = Math.Max(0, startX);
             startY = Math.Max(0, startY);
 
-            int widthTiles = clipRectangle.Width / this.tileSize;
-            int heightTiles = clipRectangle.Height / this.tileSize;
+            var widthTiles = clipRectangle.Width / this.tileSize;
+            var heightTiles = clipRectangle.Height / this.tileSize;
 
             // overdraw to account for integer division
             widthTiles += 3;
@@ -66,9 +66,9 @@
 
         private void PaintTileRange(Graphics g, Rectangle tileRange)
         {
-            for (int y = tileRange.Y; y < tileRange.Y + tileRange.Height; y++)
+            for (var y = tileRange.Y; y < tileRange.Y + tileRange.Height; y++)
             {
-                for (int x = tileRange.X; x < tileRange.X + tileRange.Width; x++)
+                for (var x = tileRange.X; x < tileRange.X + tileRange.Width; x++)
                 {
                     var p = new Point(x, y);
                     this.PaintHeightContours(g, p);
@@ -94,19 +94,19 @@
                 this.heights.Get(p.X, p.Y + 1),
                 this.heights.Get(p.X + 1, p.Y + 1)
             };
-            float minHeight = (float)heights.Min();
-            float maxHeight = (float)heights.Max();
+            var minHeight = (float)heights.Min();
+            var maxHeight = (float)heights.Max();
 
             // offset by the base height
             minHeight -= StartHeight;
             maxHeight -= StartHeight;
 
             // find the range of heights that span us
-            int baseVal = (int)Math.Ceiling(minHeight / Interval);
-            int endVal = (int)Math.Floor(maxHeight / Interval);
+            var baseVal = (int)Math.Ceiling(minHeight / Interval);
+            var endVal = (int)Math.Floor(maxHeight / Interval);
 
             // draw them
-            for (int i = baseVal; i <= endVal; i++)
+            for (var i = baseVal; i <= endVal; i++)
             {
                 this.PaintHeight(g, p, StartHeight + (i * Interval));
             }
@@ -114,7 +114,7 @@
 
         private void PaintHeight(Graphics g, Point p, float contourHeight)
         {
-            foreach (Triangle3D t in this.GenerateTriangles(p))
+            foreach (var t in this.GenerateTriangles(p))
             {
                 this.PaintTriangle(g, t, contourHeight);
             }
@@ -122,7 +122,7 @@
 
         private void PaintHeight(Graphics g, Point p, float contourHeight, Pen pen)
         {
-            foreach (Triangle3D t in this.GenerateTriangles(p))
+            foreach (var t in this.GenerateTriangles(p))
             {
                 this.PaintTriangle(g, t, contourHeight, pen);
             }
@@ -130,12 +130,12 @@
 
         private IEnumerable<Triangle3D> GenerateTriangles(Point p)
         {
-            Vector3D a = new Vector3D(p.X, p.Y, this.heights.Get(p.X, p.Y));
-            Vector3D b = new Vector3D(p.X + 1, p.Y, this.heights.Get(p.X + 1, p.Y));
-            Vector3D c = new Vector3D(p.X, p.Y + 1, this.heights.Get(p.X, p.Y + 1));
-            Vector3D d = new Vector3D(p.X + 1, p.Y + 1, this.heights.Get(p.X + 1, p.Y + 1));
+            var a = new Vector3D(p.X, p.Y, this.heights.Get(p.X, p.Y));
+            var b = new Vector3D(p.X + 1, p.Y, this.heights.Get(p.X + 1, p.Y));
+            var c = new Vector3D(p.X, p.Y + 1, this.heights.Get(p.X, p.Y + 1));
+            var d = new Vector3D(p.X + 1, p.Y + 1, this.heights.Get(p.X + 1, p.Y + 1));
 
-            Vector3D avg = new Vector3D(p.X + 0.5f, p.Y + 0.5f, (a.Z + b.Z + c.Z + d.Z) / 4.0f);
+            var avg = new Vector3D(p.X + 0.5f, p.Y + 0.5f, (a.Z + b.Z + c.Z + d.Z) / 4.0f);
 
             yield return new Triangle3D(a, b, avg);
             yield return new Triangle3D(b, d, avg);
@@ -145,8 +145,8 @@
 
         private void PaintTriangle(Graphics g, Triangle3D tri, float contourHeight)
         {
-            int col = (int)Math.Round(Math.Pow(contourHeight / 255.0f, 1.0f / 1.5f) * 255.0f);
-            using (Pen p = new Pen(Color.FromArgb(col, col, col)))
+            var col = (int)Math.Round(Math.Pow(contourHeight / 255.0f, 1.0f / 1.5f) * 255.0f);
+            using (var p = new Pen(Color.FromArgb(col, col, col)))
             {
                 this.PaintTriangle(g, tri, contourHeight, p);
             }
@@ -154,7 +154,7 @@
 
         private void PaintTriangle(Graphics g, Triangle3D tri, float contourHeight, Pen pen)
         {
-            Plane3D clipPlane = new Plane3D(new Vector3D(0, 0, contourHeight), Vector3D.ZAxis);
+            var clipPlane = new Plane3D(new Vector3D(0, 0, contourHeight), Vector3D.ZAxis);
 
             Line3D line;
             if (!Intersect.TrianglePlane(tri, clipPlane, out line))

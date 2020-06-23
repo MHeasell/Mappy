@@ -32,9 +32,9 @@ namespace Mappy.Util
 
             unsafe
             {
-                int* pointer = (int*)data.Scan0;
-                int i = 0;
-                foreach (int h in heights)
+                var pointer = (int*)data.Scan0;
+                var i = 0;
+                foreach (var h in heights)
                 {
                     pointer[i++] = Color.FromArgb(h, h, h).ToArgb();
                 }
@@ -47,8 +47,8 @@ namespace Mappy.Util
 
         public static HashSet<Bitmap> GetUsedTiles(IMapTile tile)
         {
-            HashSet<Bitmap> set = new HashSet<Bitmap>();
-            foreach (Bitmap b in tile.TileGrid)
+            var set = new HashSet<Bitmap>();
+            foreach (var b in tile.TileGrid)
             {
                 set.Add(b);
             }
@@ -58,19 +58,19 @@ namespace Mappy.Util
 
         public static Point? ScreenToHeightIndex(IGrid<int> heightmap, Point p)
         {
-            int col = p.X / 16;
+            var col = p.X / 16;
 
             if (col < 0 || col >= heightmap.Width)
             {
                 return null;
             }
 
-            Ray3D ray = new Ray3D(new Vector3D(p.X, p.Y + 128, 255.0), new Vector3D(0.0, -0.5, -1.0));
+            var ray = new Ray3D(new Vector3D(p.X, p.Y + 128, 255.0), new Vector3D(0.0, -0.5, -1.0));
 
-            for (int row = heightmap.Height - 1; row >= 0; row--)
+            for (var row = heightmap.Height - 1; row >= 0; row--)
             {
-                int height = heightmap.Get(col, row);
-                AxisRectangle3D rect = new AxisRectangle3D(
+                var height = heightmap.Get(col, row);
+                var rect = new AxisRectangle3D(
                     new Vector3D((col * 16) + 0.5, (row * 16) + 0.5, height),
                     16.0,
                     16.0);
@@ -140,8 +140,8 @@ namespace Mappy.Util
 
         public static IDictionary<T, int> ReverseMapping<T>(T[] array)
         {
-            Dictionary<T, int> mapping = new Dictionary<T, int>();
-            for (int i = 0; i < array.Length; i++)
+            var mapping = new Dictionary<T, int>();
+            for (var i = 0; i < array.Length; i++)
             {
                 mapping[array[i]] = i;
             }
@@ -178,13 +178,13 @@ namespace Mappy.Util
                             new BilinearWrapper(map, width, height),
                             PaletteFactory.TAPalette);
 
-                        Bitmap b = new Bitmap(wrapper.Width, wrapper.Height);
+                        var b = new Bitmap(wrapper.Width, wrapper.Height);
                         using (var g = Graphics.FromImage(b))
                         {
                             g.FillRectangle(Brushes.Black, new Rectangle(0, 0, b.Width, b.Height));
                         }
 
-                        for (int y = 0; y < wrapper.Height; y++)
+                        for (var y = 0; y < wrapper.Height; y++)
                         {
                             if (w.CancellationPending)
                             {
@@ -192,12 +192,12 @@ namespace Mappy.Util
                                 return;
                             }
 
-                            for (int x = 0; x < wrapper.Width; x++)
+                            for (var x = 0; x < wrapper.Width; x++)
                             {
                                 b.SetPixel(x, y, wrapper.GetPixel(x, y));
                             }
 
-                            int percentComplete = ((y + 1) * 100) / wrapper.Height;
+                            var percentComplete = ((y + 1) * 100) / wrapper.Height;
 
                             w.ReportProgress(percentComplete);
                         }
@@ -210,11 +210,11 @@ namespace Mappy.Util
 
         public static Bitmap ToBitmap(IPixelImage map)
         {
-            Bitmap b = new Bitmap(map.Width, map.Height);
+            var b = new Bitmap(map.Width, map.Height);
 
-            for (int y = 0; y < map.Height; y++)
+            for (var y = 0; y < map.Height; y++)
             {
-                for (int x = 0; x < map.Width; x++)
+                for (var x = 0; x < map.Width; x++)
                 {
                     b.SetPixel(x, y, map.GetPixel(x, y));
                 }
@@ -277,7 +277,7 @@ namespace Mappy.Util
 
             var writer = new PngWriter(s, imgInfo);
 
-            for (int y = 0; y < img.Height; y++)
+            for (var y = 0; y < img.Height; y++)
             {
                 if (shouldCancel())
                 {
@@ -285,7 +285,7 @@ namespace Mappy.Util
                 }
 
                 var line = new ImageLine(imgInfo);
-                for (int x = 0; x < img.Width; x++)
+                for (var x = 0; x < img.Width; x++)
                 {
                     var c = img.GetPixel(x, y);
                     var offset = x * 4;
@@ -331,10 +331,10 @@ namespace Mappy.Util
             var projectedLines = edges.Select(ProjectLine).ToList();
             var boundingBox = ComputeBoundingBox(projectedLines);
 
-            int w = (int)Math.Ceiling(boundingBox.Width) + 1;
-            int h = (int)Math.Ceiling(boundingBox.Height) + 1;
+            var w = (int)Math.Ceiling(boundingBox.Width) + 1;
+            var h = (int)Math.Ceiling(boundingBox.Height) + 1;
 
-            Bitmap b = new Bitmap(w, h);
+            var b = new Bitmap(w, h);
 
             var offset = boundingBox.MinXY;
 
@@ -370,8 +370,8 @@ namespace Mappy.Util
 
             unsafe
             {
-                int* ptr = (int*)data.Scan0;
-                for (int i = 0; i < len; i++)
+                var ptr = (int*)data.Scan0;
+                for (var i = 0; i < len; i++)
                 {
                     var c = Color.FromArgb(ptr[i]);
                     grid[i] = c.R;
@@ -385,10 +385,10 @@ namespace Mappy.Util
 
         public static int ComputeMidpointHeight(IGrid<int> grid, int x, int y)
         {
-            int topLeft = grid.Get(x, y);
-            int topRight = grid.Get(x + 1, y);
-            int bottomLeft = grid.Get(x, y + 1);
-            int bottomRight = grid.Get(x + 1, y + 1);
+            var topLeft = grid.Get(x, y);
+            var topRight = grid.Get(x + 1, y);
+            var bottomLeft = grid.Get(x, y + 1);
+            var bottomRight = grid.Get(x + 1, y + 1);
 
             return (topLeft + topRight + bottomLeft + bottomRight) / 4;
         }
@@ -409,10 +409,10 @@ namespace Mappy.Util
 
         private static Rectangle2D ComputeBoundingBox(IEnumerable<Vector2D> points)
         {
-            double minX = double.PositiveInfinity;
-            double maxX = double.NegativeInfinity;
-            double minY = double.PositiveInfinity;
-            double maxY = double.NegativeInfinity;
+            var minX = double.PositiveInfinity;
+            var maxX = double.NegativeInfinity;
+            var minY = double.PositiveInfinity;
+            var maxY = double.NegativeInfinity;
 
             foreach (var p in points)
             {

@@ -82,7 +82,7 @@
 
             using (var hpi = new HpiArchive(hpipath))
             {
-                string otaPath = HpiPath.ChangeExtension(mappath, ".ota");
+                var otaPath = HpiPath.ChangeExtension(mappath, ".ota");
 
                 TdfNode n;
 

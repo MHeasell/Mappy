@@ -18,69 +18,35 @@
 
         public string Title
         {
-            get
-            {
-                return this.Text;
-            }
-
-            set
-            {
-                this.Text = value;
-            }
+            get => this.Text;
+            set => this.Text = value;
         }
 
         public string MessageText
         {
-            get
-            {
-                return this.label1.Text;
-            }
-
-            set
-            {
-                this.label1.Text = value;
-            }
+            get => this.label1.Text;
+            set => this.label1.Text = value;
         }
 
         public int Progress
         {
-            get
-            {
-                return this.progressBar1.Value;
-            }
-
-            set
-            {
-                this.progressBar1.Value = value;
-            }
+            get => this.progressBar1.Value;
+            set => this.progressBar1.Value = value;
         }
 
         public bool ShowProgress
         {
-            get
-            {
-                return this.progressBar1.Style != ProgressBarStyle.Marquee;
-            }
-
-            set
-            {
+            get => this.progressBar1.Style != ProgressBarStyle.Marquee;
+            set =>
                 this.progressBar1.Style = value
                     ? ProgressBarStyle.Blocks
                     : ProgressBarStyle.Marquee;
-            }
         }
 
         public bool CancelEnabled
         {
-            get
-            {
-                return this.button1.Enabled;
-            }
-
-            set
-            {
-                this.button1.Enabled = value;
-            }
+            get => this.button1.Enabled;
+            set => this.button1.Enabled = value;
         }
 
         public void Display()

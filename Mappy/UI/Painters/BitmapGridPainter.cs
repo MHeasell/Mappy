@@ -21,14 +21,14 @@
 
         public void Paint(Graphics g, Rectangle clipRectangle)
         {
-            IEnumerable<Point> enumer = GridUtil.EnumerateCoveringIndices(
+            var enumer = GridUtil.EnumerateCoveringIndices(
                 clipRectangle,
                 new Size(this.tileSize, this.tileSize),
                 new Size(this.map.Width, this.map.Height));
 
             using (Brush backgroundBrush = new SolidBrush(this.BackgroundColor))
             {
-                foreach (Point p in enumer)
+                foreach (var p in enumer)
                 {
                     var img = this.map.Get(p.X, p.Y);
                     if (img != null)

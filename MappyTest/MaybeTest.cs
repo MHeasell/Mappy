@@ -28,7 +28,7 @@
 
             i.IfSome(_ => Assert.Fail());
 
-            bool passed = false;
+            var passed = false;
             i.IfNone(() => passed = true);
             Assert.IsTrue(passed);
         }
@@ -75,7 +75,7 @@
             var i = Maybe.None<int>();
             var j = i.Map(x => x.ToString());
 
-            bool passed = false;
+            var passed = false;
             j.Do(
                 some: x => Assert.Fail(),
                 none: () => passed = true);

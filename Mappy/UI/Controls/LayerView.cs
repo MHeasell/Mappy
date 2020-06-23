@@ -23,10 +23,7 @@
 
         public Size CanvasSize
         {
-            get
-            {
-                return this.canvasSize;
-            }
+            get => this.canvasSize;
 
             set
             {
@@ -47,14 +44,14 @@
 
         public Rectangle ToClientRect(Rectangle rect)
         {
-            Rectangle outRect = rect;
+            var outRect = rect;
             outRect.Offset(this.AutoScrollPosition.X, this.AutoScrollPosition.Y);
             return outRect;
         }
 
         public Rectangle ToVirtualRect(Rectangle clientRect)
         {
-            Rectangle outRect = clientRect;
+            var outRect = clientRect;
             outRect.Offset(-this.AutoScrollPosition.X, -this.AutoScrollPosition.Y);
             return outRect;
         }

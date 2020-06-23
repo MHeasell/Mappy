@@ -81,41 +81,21 @@
 
         public event EventHandler<FeatureInstanceEventArgs> FeatureInstanceChanged
         {
-            add
-            {
-                this.model.FeatureInstanceChanged += value;
-            }
+            add => this.model.FeatureInstanceChanged += value;
 
-            remove
-            {
-                this.model.FeatureInstanceChanged -= value;
-            }
+            remove => this.model.FeatureInstanceChanged -= value;
         }
 
         public bool CanCopy
         {
-            get
-            {
-                return this.canCopy;
-            }
-
-            private set
-            {
-                this.SetField(ref this.canCopy, value, "CanCopy");
-            }
+            get => this.canCopy;
+            private set => this.SetField(ref this.canCopy, value, nameof(this.CanCopy));
         }
 
         public bool CanCut
         {
-            get
-            {
-                return this.canCut;
-            }
-
-            private set
-            {
-                this.SetField(ref this.canCut, value, "CanCopy");
-            }
+            get => this.canCut;
+            private set => this.SetField(ref this.canCut, value, nameof(this.CanCopy));
         }
 
         public bool CanFill
@@ -135,14 +115,14 @@
 
         public string FilePath
         {
-            get { return this.openFilePath; }
-            private set { this.SetField(ref this.openFilePath, value, "FilePath"); }
+            get => this.openFilePath;
+            private set => this.SetField(ref this.openFilePath, value, nameof(this.FilePath));
         }
 
         public bool IsFileReadOnly
         {
-            get { return this.isFileReadOnly; }
-            private set { this.SetField(ref this.isFileReadOnly, value, "IsFileReadOnly"); }
+            get => this.isFileReadOnly;
+            private set => this.SetField(ref this.isFileReadOnly, value, nameof(this.IsFileReadOnly));
         }
 
         public bool CanUndo => this.undoManager.CanUndo;
@@ -183,15 +163,8 @@
 
         public Point ViewportLocation
         {
-            get
-            {
-                return this.viewportLocation;
-            }
-
-            set
-            {
-                this.SetField(ref this.viewportLocation, value, "ViewportLocation");
-            }
+            get => this.viewportLocation;
+            set => this.SetField(ref this.viewportLocation, value, nameof(this.ViewportLocation));
         }
 
         public ObservableCollection<Guid> SelectedFeatures => this.model.SelectedFeatures;
@@ -288,8 +261,8 @@
 
         public void DragDropTile(IMapTile tile, int x, int y)
         {
-            int quantX = x / 32;
-            int quantY = y / 32;
+            var quantX = x / 32;
+            var quantY = y / 32;
 
             this.AddAndSelectTile(tile, quantX, quantY);
         }
@@ -335,7 +308,7 @@
 
         public Maybe<FeatureInstance> DragDropFeature(string name, int x, int y)
         {
-            Point? featurePos = this.ScreenToHeightIndex(x, y);
+            var featurePos = this.ScreenToHeightIndex(x, y);
             if (featurePos.HasValue && !this.HasFeatureInstanceAt(featurePos.Value.X, featurePos.Value.Y))
             {
                 var inst = new FeatureInstance(Guid.NewGuid(), name, featurePos.Value.X, featurePos.Value.Y);
@@ -395,10 +368,10 @@
                 this.deltaX += x;
                 this.deltaY += y;
 
-                int quantX = this.deltaX / 16;
-                int quantY = this.deltaY / 16;
+                var quantX = this.deltaX / 16;
+                var quantY = this.deltaY / 16;
 
-                bool success = this.TranslateFeatureBatch(
+                var success = this.TranslateFeatureBatch(
                     this.SelectedFeatures,
                     quantX,
                     quantY);
@@ -548,8 +521,8 @@
 
         public void PasteMapTileNoDeduplicateTopLeft(IMapTile tile)
         {
-            int x = this.ViewportLocation.X / 32;
-            int y = this.ViewportLocation.Y / 32;
+            var x = this.ViewportLocation.X / 32;
+            var y = this.ViewportLocation.Y / 32;
 
             this.AddAndSelectTile(tile, x, y);
         }
@@ -583,8 +556,8 @@
 
         private void PasteMapTileNoDeduplicate(IMapTile tile, int x, int y)
         {
-            int normX = x / 32;
-            int normY = y / 32;
+            var normX = x / 32;
+            var normY = y / 32;
 
             normX -= tile.TileGrid.Width / 2;
             normY -= tile.TileGrid.Height / 2;
@@ -677,7 +650,7 @@
                     return false;
                 }
 
-                bool isBlocked = !coordSet.Contains(translatedPoint)
+                var isBlocked = !coordSet.Contains(translatedPoint)
                     && this.HasFeatureInstanceAt(translatedPoint.X, translatedPoint.Y);
                 if (isBlocked)
                 {
@@ -740,7 +713,7 @@
                 return;
             }
 
-            MoveTileOperation newOp = new MoveTileOperation(tile, x, y);
+            var newOp = new MoveTileOperation(tile, x, y);
 
             MoveTileOperation lastOp = null;
             if (this.undoManager.CanUndo)

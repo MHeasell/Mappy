@@ -25,10 +25,7 @@ namespace Mappy.Data
 
         public Point Location
         {
-            get
-            {
-                return this.location;
-            }
+            get => this.location;
 
             set
             {

@@ -32,9 +32,9 @@
 
         public MapTile TileFromSct(ISctSource sct)
         {
-            MapTile tile = new MapTile(sct.DataWidth, sct.DataHeight);
+            var tile = new MapTile(sct.DataWidth, sct.DataHeight);
 
-            List<Bitmap> tiles = new List<Bitmap>(sct.TileCount);
+            var tiles = new List<Bitmap>(sct.TileCount);
             tiles.AddRange(sct.EnumerateTiles().Select(this.TileToBitmap));
 
             ReadData(sct, tile, tiles);
@@ -47,9 +47,9 @@
         private static void ReadHeights(ISctSource sct, MapTile tile)
         {
             var enumer = sct.EnumerateAttrs().GetEnumerator();
-            for (int y = 0; y < sct.DataHeight * 2; y++)
+            for (var y = 0; y < sct.DataHeight * 2; y++)
             {
-                for (int x = 0; x < sct.DataWidth * 2; x++)
+                for (var x = 0; x < sct.DataWidth * 2; x++)
                 {
                     enumer.MoveNext();
                     tile.HeightGrid.Set(x, y, enumer.Current.Height);
@@ -60,9 +60,9 @@
         private static void ReadData(ISctSource sct, MapTile tile, List<Bitmap> tiles)
         {
             var enumer = sct.EnumerateData().GetEnumerator();
-            for (int y = 0; y < sct.DataHeight; y++)
+            for (var y = 0; y < sct.DataHeight; y++)
             {
-                for (int x = 0; x < sct.DataWidth; x++)
+                for (var x = 0; x < sct.DataWidth; x++)
                 {
                     enumer.MoveNext();
                     tile.TileGrid.Set(x, y, tiles[enumer.Current]);
@@ -80,7 +80,7 @@
 
         private Bitmap TileToBitmap(byte[] tile)
         {
-            Bitmap bmp = BitmapConvert.ToBitmap(
+            var bmp = BitmapConvert.ToBitmap(
                 tile,
                 MapConstants.TileWidth,
                 MapConstants.TileHeight);

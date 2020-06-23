@@ -182,7 +182,7 @@
 
         public void ChooseColor()
         {
-            Color? c = this.dialogService.AskUserGridColor(this.model.GridColor);
+            var c = this.dialogService.AskUserGridColor(this.model.GridColor);
             if (c.HasValue)
             {
                 this.model.GridColor = c.Value;
@@ -211,7 +211,7 @@
                 return;
             }
 
-            Size size = this.dialogService.AskUserNewMapSize();
+            var size = this.dialogService.AskUserNewMapSize();
             if (size.Width == 0 || size.Height == 0)
             {
                 return;
@@ -227,7 +227,7 @@
                 return;
             }
 
-            string filename = this.dialogService.AskUserToOpenFile();
+            var filename = this.dialogService.AskUserToOpenFile();
             if (string.IsNullOrEmpty(filename))
             {
                 return;
@@ -266,7 +266,7 @@
             return this.model.Map.Match(
                 some: map =>
                     {
-                        string path = this.dialogService.AskUserToSaveFile();
+                        var path = this.dialogService.AskUserToSaveFile();
 
                         if (path == null)
                         {
@@ -506,7 +506,7 @@
             this.model.Map.IfSome(
                 map =>
                     {
-                        MapAttributesResult r = this.dialogService.AskUserForMapAttributes(map.GetAttributes());
+                        var r = this.dialogService.AskUserForMapAttributes(map.GetAttributes());
                         if (r != null)
                         {
                             map.UpdateAttributes(r);
@@ -691,8 +691,8 @@
             var tntName = filename;
             var otaName = Path.ChangeExtension(filename, ".ota");
 
-            string tmpTntName = tntName + ".mappytemp";
-            string tmpOtaName = otaName + ".mappytemp";
+            var tmpTntName = tntName + ".mappytemp";
+            var tmpOtaName = otaName + ".mappytemp";
 
             try
             {
@@ -792,7 +792,7 @@
         private void DeduplicateTiles(IGrid<Bitmap> tiles)
         {
             var len = tiles.Width * tiles.Height;
-            for (int i = 0; i < len; i++)
+            for (var i = 0; i < len; i++)
             {
                 tiles[i] = this.tileCache.GetOrAddBitmap(tiles[i]);
             }
@@ -805,7 +805,7 @@
                 throw new ArgumentNullException(nameof(filename));
             }
 
-            string extension = Path.GetExtension(filename).ToUpperInvariant();
+            var extension = Path.GetExtension(filename).ToUpperInvariant();
 
             try
             {
@@ -835,7 +835,7 @@
 
         private void OpenMap(string filename)
         {
-            string ext = Path.GetExtension(filename) ?? string.Empty;
+            var ext = Path.GetExtension(filename) ?? string.Empty;
             ext = ext.ToUpperInvariant();
 
             try
@@ -923,7 +923,7 @@
                             return true;
                         }
 
-                        DialogResult r = this.dialogService.AskUserToDiscardChanges();
+                        var r = this.dialogService.AskUserToDiscardChanges();
                         switch (r)
                         {
                             case DialogResult.Yes:

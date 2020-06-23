@@ -11,10 +11,7 @@
 
         public bool Enabled
         {
-            get
-            {
-                return this.enabled;
-            }
+            get => this.enabled;
 
             set
             {

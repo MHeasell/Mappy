@@ -36,13 +36,13 @@
                 throw new ObjectDisposedException(null);
             }
 
-            int tileX = x / 32;
-            int tileY = y / 32;
+            var tileX = x / 32;
+            var tileY = y / 32;
 
-            int tilePixelX = x % 32;
-            int tilePixelY = y % 32;
+            var tilePixelX = x % 32;
+            var tilePixelY = y % 32;
 
-            Bitmap bitmap = this.map.Get(tileX, tileY);
+            var bitmap = this.map.Get(tileX, tileY);
             var data = this.GetOrLockData(bitmap);
 
             unsafe

@@ -22,10 +22,7 @@
 
         public bool IsMarked
         {
-            get
-            {
-                return this.isMarked;
-            }
+            get => this.isMarked;
 
             private set
             {
@@ -39,14 +36,11 @@
 
         public bool CanUndo
         {
-            get
-            {
-                return this.canUndo;
-            }
+            get => this.canUndo;
 
             private set
             {
-                bool old = this.CanUndo;
+                var old = this.CanUndo;
                 this.canUndo = value;
                 if (value != old)
                 {
@@ -57,14 +51,11 @@
 
         public bool CanRedo
         {
-            get
-            {
-                return this.canRedo;
-            }
+            get => this.canRedo;
 
             private set
             {
-                bool old = this.CanRedo;
+                var old = this.CanRedo;
                 this.canRedo = value;
                 if (value != old)
                 {
@@ -75,10 +66,7 @@
 
         private int MarkCounter
         {
-            get
-            {
-                return this.markCounter;
-            }
+            get => this.markCounter;
 
             set
             {
@@ -110,7 +98,7 @@
 
         public void Undo()
         {
-            IReplayableOperation op = this.undoStack.Pop();
+            var op = this.undoStack.Pop();
             op.Undo();
             this.redoStack.Push(op);
 
@@ -121,7 +109,7 @@
 
         public void Redo()
         {
-            IReplayableOperation op = this.redoStack.Pop();
+            var op = this.redoStack.Pop();
             op.Execute();
             this.undoStack.Push(op);
 

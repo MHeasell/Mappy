@@ -36,13 +36,13 @@ namespace Mappy.Services
 
         public string AskUserToChooseMap(IList<string> maps)
         {
-            MapSelectionForm f = new MapSelectionForm();
-            foreach (string n in maps)
+            var f = new MapSelectionForm();
+            foreach (var n in maps)
             {
                 f.Items.Add(n);
             }
 
-            DialogResult r = f.ShowDialog(this.owner);
+            var r = f.ShowDialog(this.owner);
             if (r == DialogResult.OK)
             {
                 return (string)f.SelectedItem;
@@ -53,7 +53,7 @@ namespace Mappy.Services
 
         public string AskUserToOpenFile()
         {
-            OpenFileDialog d = new OpenFileDialog();
+            var d = new OpenFileDialog();
             d.Filter = "TA Map Files|*.hpi;*.ufo;*.ccx;*.gpf;*.gp3;*.tnt|All files|*.*";
             if (d.ShowDialog(this.owner) == DialogResult.OK)
             {
@@ -65,7 +65,7 @@ namespace Mappy.Services
 
         public string AskUserToChooseMinimap()
         {
-            OpenFileDialog d = new OpenFileDialog();
+            var d = new OpenFileDialog();
             d.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.gif;*.bmp|All files|*.*";
             if (d.ShowDialog(this.owner) == DialogResult.OK)
             {
@@ -77,10 +77,10 @@ namespace Mappy.Services
 
         public string AskUserToSaveFile()
         {
-            SaveFileDialog d = new SaveFileDialog();
+            var d = new SaveFileDialog();
             d.Filter = "HPI files|*.hpi;*.ufo;*.ccx;*.gpf;*.gp3|TNT files|*.tnt|All files|*.*";
             d.AddExtension = true;
-            DialogResult result = d.ShowDialog(this.owner);
+            var result = d.ShowDialog(this.owner);
             if (result == DialogResult.OK)
             {
                 return d.FileName;
@@ -91,11 +91,11 @@ namespace Mappy.Services
 
         public string AskUserToSaveMinimap()
         {
-            SaveFileDialog d = new SaveFileDialog();
+            var d = new SaveFileDialog();
             d.Title = "Export Minimap";
             d.Filter = "PNG files|*.png|All files|*.*";
             d.AddExtension = true;
-            DialogResult result = d.ShowDialog(this.owner);
+            var result = d.ShowDialog(this.owner);
             if (result == DialogResult.OK)
             {
                 return d.FileName;
@@ -106,11 +106,11 @@ namespace Mappy.Services
 
         public string AskUserToSaveHeightmap()
         {
-            SaveFileDialog d = new SaveFileDialog();
+            var d = new SaveFileDialog();
             d.Title = "Export Heightmap";
             d.Filter = "PNG files|*.png|All files|*.*";
             d.AddExtension = true;
-            DialogResult result = d.ShowDialog(this.owner);
+            var result = d.ShowDialog(this.owner);
             if (result == DialogResult.OK)
             {
                 return d.FileName;
@@ -136,7 +136,7 @@ namespace Mappy.Services
 
         public string AskUserToChooseHeightmap(int width, int height)
         {
-            OpenFileDialog d = new OpenFileDialog();
+            var d = new OpenFileDialog();
             d.Title = $"Import Heightmap ({width}x{height} image)";
             d.Filter = "Image Files|*.png;*.jpg;*.jpeg;*.gif;*.bmp|All files|*.*";
             if (d.ShowDialog(this.owner) == DialogResult.OK)
@@ -154,8 +154,8 @@ namespace Mappy.Services
 
         public Size AskUserNewMapSize()
         {
-            NewMapForm dialog = new NewMapForm();
-            DialogResult result = dialog.ShowDialog(this.owner);
+            var dialog = new NewMapForm();
+            var result = dialog.ShowDialog(this.owner);
 
             switch (result)
             {
@@ -170,9 +170,9 @@ namespace Mappy.Services
 
         public Color? AskUserGridColor(Color previousColor)
         {
-            ColorDialog colorDialog = new ColorDialog();
+            var colorDialog = new ColorDialog();
             colorDialog.Color = previousColor;
-            DialogResult result = colorDialog.ShowDialog(this.owner);
+            var result = colorDialog.ShowDialog(this.owner);
 
             if (result == DialogResult.OK)
             {
@@ -184,11 +184,11 @@ namespace Mappy.Services
 
         public MapAttributesResult AskUserForMapAttributes(MapAttributesResult r)
         {
-            MapAttributesForm f = new MapAttributesForm();
+            var f = new MapAttributesForm();
 
             f.mapAttributesResultBindingSource.Add(r);
 
-            DialogResult result = f.ShowDialog(this.owner);
+            var result = f.ShowDialog(this.owner);
             if (result == DialogResult.OK)
             {
                 return r;
@@ -211,13 +211,13 @@ namespace Mappy.Services
 
         public void CapturePreferences()
         {
-            PreferencesForm f = new PreferencesForm();
+            var f = new PreferencesForm();
             f.ShowDialog();
         }
 
         public void ShowAbout()
         {
-            AboutForm f = new AboutForm();
+            var f = new AboutForm();
             f.ShowDialog(this.owner);
         }
     }

@@ -164,7 +164,7 @@
             }
             else if (data.GetDataPresent(typeof(StartPositionDragData)))
             {
-                StartPositionDragData posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
+                var posData = (StartPositionDragData)data.GetData(typeof(StartPositionDragData));
                 this.dispatcher.SetStartPosition(posData.PositionNumber, location.X, location.Y);
             }
             else if (data.GetDataPresent(DataFormats.Text))
@@ -369,7 +369,7 @@
         private static IDrawable[] LoadStartPositionImages()
         {
             var arr = new IDrawable[10];
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
                 var image = new DrawableBitmap(Mappy.Util.Util.GetStartImage(i + 1));
                 arr[i] = image;
@@ -415,7 +415,7 @@
 
         private void UpdateStartPositions()
         {
-            for (int i = 0; i < 10; i++)
+            for (var i = 0; i < 10; i++)
             {
                 this.UpdateStartPosition(i);
             }
@@ -602,8 +602,8 @@
 
         private void TileLocationChanged(object sender, EventArgs e)
         {
-            Positioned<IMapTile> item = (Positioned<IMapTile>)sender;
-            int index = this.mapModel.FloatingTiles.IndexOf(item);
+            var item = (Positioned<IMapTile>)sender;
+            var index = this.mapModel.FloatingTiles.IndexOf(item);
 
             this.RemoveTile(index);
             this.InsertTile(item, index);
@@ -629,19 +629,19 @@
                 return;
             }
 
-            Point? p = this.mapModel.GetStartPosition(index);
+            var p = this.mapModel.GetStartPosition(index);
             if (p.HasValue)
             {
-                int heightX = p.Value.X / 16;
-                int heightY = p.Value.Y / 16;
-                int heightValue = 0;
+                var heightX = p.Value.X / 16;
+                var heightY = p.Value.Y / 16;
+                var heightValue = 0;
                 if (heightX >= 0 && heightX < this.mapModel.BaseTile.HeightGrid.Width
                     && heightY >= 0 && heightY < this.mapModel.BaseTile.HeightGrid.Height)
                 {
                     heightValue = this.mapModel.BaseTile.HeightGrid.Get(heightX, heightY);
                 }
 
-                IDrawable img = StartPositionImages[index];
+                var img = StartPositionImages[index];
                 var i = new DrawableItem(
                     p.Value.X - (img.Width / 2),
                     p.Value.Y - 58 - (heightValue / 2),
@@ -711,7 +711,7 @@
                 return;
             }
 
-            int count = 0;
+            var count = 0;
             foreach (var t in this.mapModel.FloatingTiles)
             {
                 this.InsertTile(t, count++);
@@ -722,7 +722,7 @@
         {
             var drawable = new DrawableTile(t.Item);
             drawable.BackgroundColor = Color.CornflowerBlue;
-            DrawableItem i = new DrawableItem(
+            var i = new DrawableItem(
                     t.Location.X * 32,
                     t.Location.Y * 32,
                     index,
@@ -739,7 +739,7 @@
 
         private void RemoveTile(int index)
         {
-            DrawableItem item = this.tileMapping[index];
+            var item = this.tileMapping[index];
             this.itemsLayer.Value.Items.Remove(item);
             this.itemsLayer.Value.RemoveFromSelection(item);
             this.tileMapping.RemoveAt(index);
@@ -759,12 +759,12 @@
         {
             var f = this.mapModel.GetFeatureInstance(id);
             var coords = f.Location;
-            int index = this.ToFeatureIndex(coords);
+            var index = this.ToFeatureIndex(coords);
 
             var featureRecord = this.featureService.TryGetFeature(f.FeatureName).Or(DefaultFeatureRecord);
 
-            Rectangle r = featureRecord.GetDrawBounds(this.mapModel.BaseTile.HeightGrid, coords.X, coords.Y);
-            DrawableItem i = new DrawableItem(
+            var r = featureRecord.GetDrawBounds(this.mapModel.BaseTile.HeightGrid, coords.X, coords.Y);
+            var i = new DrawableItem(
                     r.X,
                     r.Y,
                     index + 1000, // magic number to separate from tiles
@@ -790,7 +790,7 @@
         {
             if (this.featureMapping.ContainsKey(id))
             {
-                DrawableItem item = this.featureMapping[id];
+                var item = this.featureMapping[id];
                 this.itemsLayer.Value.Items.Remove(item);
                 this.itemsLayer.Value.RemoveFromSelection(item);
                 this.featureMapping.Remove(id);
@@ -880,7 +880,7 @@
 
         private void SelectFromTag(object tag)
         {
-            IMapItemTag t = (IMapItemTag)tag;
+            var t = (IMapItemTag)tag;
             t.SelectItem(this.dispatcher);
         }
     }

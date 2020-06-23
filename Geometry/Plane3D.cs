@@ -14,8 +14,8 @@ namespace Geometry
 
         public double Intersect(Ray3D ray)
         {
-            double a = Vector3D.Dot(this.Point - ray.Origin, this.Normal);
-            double b = Vector3D.Dot(ray.Direction, this.Normal);
+            var a = Vector3D.Dot(this.Point - ray.Origin, this.Normal);
+            var b = Vector3D.Dot(ray.Direction, this.Normal);
             return a / b;
         }
 

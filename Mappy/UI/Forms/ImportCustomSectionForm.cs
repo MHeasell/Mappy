@@ -11,28 +11,14 @@
 
         public string GraphicPath
         {
-            get
-            {
-                return this.textBox1.Text;
-            }
-
-            set
-            {
-                this.textBox1.Text = value;
-            }
+            get => this.textBox1.Text;
+            set => this.textBox1.Text = value;
         }
 
         public string HeightmapPath
         {
-            get
-            {
-                return this.textBox2.Text;
-            }
-
-            set
-            {
-                this.textBox2.Text = value;
-            }
+            get => this.textBox2.Text;
+            set => this.textBox2.Text = value;
         }
 
         private void Button3Click(object sender, System.EventArgs e)

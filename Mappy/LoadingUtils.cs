@@ -13,9 +13,9 @@
                 yield break;
             }
 
-            foreach (string ext in exts)
+            foreach (var ext in exts)
             {
-                foreach (string dir in MappySettings.Settings.SearchPaths)
+                foreach (var dir in MappySettings.Settings.SearchPaths)
                 {
                     if (!Directory.Exists(dir))
                     {
@@ -23,7 +23,7 @@
                         continue;
                     }
 
-                    foreach (string file in Directory.EnumerateFiles(dir, "*." + ext))
+                    foreach (var file in Directory.EnumerateFiles(dir, "*." + ext))
                     {
                         yield return file;
                     }

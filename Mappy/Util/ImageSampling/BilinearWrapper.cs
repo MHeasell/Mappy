@@ -27,14 +27,14 @@
 
         private Rectangle GetRect(int x, int y)
         {
-            float cellWidth = this.source.Width / (float)this.Width;
-            float cellHeight = this.source.Height / (float)this.Height;
+            var cellWidth = this.source.Width / (float)this.Width;
+            var cellHeight = this.source.Height / (float)this.Height;
 
-            int startX = (int)(x * cellWidth);
-            int startY = (int)(y * cellHeight);
+            var startX = (int)(x * cellWidth);
+            var startY = (int)(y * cellHeight);
 
-            int remX = this.source.Width % this.Width;
-            int remY = this.source.Height % this.Height;
+            var remX = this.source.Width % this.Width;
+            var remY = this.source.Height % this.Height;
 
             if (remX > x)
             {
@@ -55,25 +55,25 @@
 
         private Color SampleArea(int x, int y, int width, int height)
         {
-            int startX = x;
-            int startY = y;
+            var startX = x;
+            var startY = y;
 
-            int r = 0;
-            int g = 0;
-            int b = 0;
+            var r = 0;
+            var g = 0;
+            var b = 0;
 
-            for (int dy = 0; dy < height; dy++)
+            for (var dy = 0; dy < height; dy++)
             {
-                for (int dx = 0; dx < width; dx++)
+                for (var dx = 0; dx < width; dx++)
                 {
-                    Color c = this.source.GetPixel(startX + dx, startY + dy);
+                    var c = this.source.GetPixel(startX + dx, startY + dy);
                     r += c.R;
                     g += c.G;
                     b += c.B;
                 }
             }
 
-            int factor = width * height;
+            var factor = width * height;
 
             r /= factor;
             g /= factor;

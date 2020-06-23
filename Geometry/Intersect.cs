@@ -6,24 +6,20 @@
     {
         public static bool TrianglePlane(Triangle3D t, Plane3D plane, out Line3D intersect)
         {
-            Line3D abLine = new Line3D(t.A, t.B);
-            Line3D acLine = new Line3D(t.A, t.C);
-            Line3D bcLine = new Line3D(t.B, t.C);
+            var abLine = new Line3D(t.A, t.B);
+            var acLine = new Line3D(t.A, t.C);
+            var bcLine = new Line3D(t.B, t.C);
 
-            double abIntersect;
-            double acIntersect;
-            double bcIntersect;
-
-            if (plane.IntersectLine(abLine, out abIntersect))
+            if (plane.IntersectLine(abLine, out var abIntersect))
             {
-                if (plane.IntersectLine(acLine, out acIntersect))
+                if (plane.IntersectLine(acLine, out var acIntersect))
                 {
                     intersect = new Line3D(
                         abLine.PointAt(abIntersect),
                         acLine.PointAt(acIntersect));
                     return true;
                 }
-                else if (plane.IntersectLine(bcLine, out bcIntersect))
+                else if (plane.IntersectLine(bcLine, out var bcIntersect))
                 {
                     intersect = new Line3D(
                         abLine.PointAt(abIntersect),
@@ -36,9 +32,9 @@
                     return false;
                 }
             }
-            else if (plane.IntersectLine(bcLine, out bcIntersect))
+            else if (plane.IntersectLine(bcLine, out var bcIntersect))
             {
-                if (plane.IntersectLine(acLine, out acIntersect))
+                if (plane.IntersectLine(acLine, out var acIntersect))
                 {
                     intersect = new Line3D(
                         bcLine.PointAt(bcIntersect),
@@ -59,12 +55,12 @@
 
         public static double CompareToPlane(AxisRectangle3D rect, Plane3D plane)
         {
-            int behind = 0;
-            int infront = 0;
+            var behind = 0;
+            var infront = 0;
 
-            foreach (Vector3D v in new[] { rect.TopLeft, rect.TopRight, rect.BottomLeft, rect.BottomRight })
+            foreach (var v in new[] { rect.TopLeft, rect.TopRight, rect.BottomLeft, rect.BottomRight })
             {
-                double cmp = plane.TestSide(v);
+                var cmp = plane.TestSide(v);
                 if (cmp < 0)
                 {
                     behind++;

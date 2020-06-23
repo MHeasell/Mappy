@@ -7,16 +7,6 @@
     {
         Maybe<UndoableMapModel> Map { get; }
 
-        bool CanUndo { get; }
-
-        bool CanRedo { get; }
-
-        bool CanCopy { get; }
-
-        bool CanPaste { get; }
-
-        bool CanCut { get; }
-
         bool HeightmapVisible { get; }
 
         bool VoidsVisible { get; }

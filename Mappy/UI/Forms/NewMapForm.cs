@@ -25,8 +25,8 @@
         {
             try
             {
-                int w = Convert.ToInt32(this.widthTextBox.Text);
-                int h = Convert.ToInt32(this.heightTextBox.Text);
+                var w = Convert.ToInt32(this.widthTextBox.Text);
+                var h = Convert.ToInt32(this.heightTextBox.Text);
 
                 if (w < 1 || h < 1)
                 {
@@ -48,8 +48,8 @@
         {
             try
             {
-                int w = Convert.ToInt32(this.widthTextBox.Text);
-                int h = Convert.ToInt32(this.heightTextBox.Text);
+                var w = Convert.ToInt32(this.widthTextBox.Text);
+                var h = Convert.ToInt32(this.heightTextBox.Text);
 
                 if (w < 1 || h < 1)
                 {
@@ -86,7 +86,7 @@
                 return;
             }
 
-            float convertedX = (valX * 32) / 512.0f;
+            var convertedX = (valX * 32) / 512.0f;
 
             this.convertedWidthLabel.Text = $"({convertedX})";
         }
@@ -100,7 +100,7 @@
                 return;
             }
 
-            float convertedY = (valY * 32) / 512.0f;
+            var convertedY = (valY * 32) / 512.0f;
 
             this.convertedHeightLabel.Text = $"({convertedY})";
         }

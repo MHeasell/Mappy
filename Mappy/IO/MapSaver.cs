@@ -32,10 +32,10 @@
 
         public static void SaveHpi(IReadOnlyMapModel map, string filename)
         {
-            string namePart = Path.GetFileNameWithoutExtension(filename);
+            var namePart = Path.GetFileNameWithoutExtension(filename);
 
-            string tmpTntName = Path.GetTempFileName();
-            string tmpOtaName = Path.GetTempFileName();
+            var tmpTntName = Path.GetTempFileName();
+            var tmpOtaName = Path.GetTempFileName();
 
             try
             {
@@ -49,9 +49,9 @@
                     map.Attributes.WriteOta(s);
                 }
 
-                string fname = "maps\\" + namePart;
+                var fname = "maps\\" + namePart;
 
-                using (HpiWriter wr = new HpiWriter(filename, HpiWriter.CompressionMethod.ZLib))
+                using (var wr = new HpiWriter(filename, HpiWriter.CompressionMethod.ZLib))
                 {
                     wr.AddFile(fname + ".tnt", tmpTntName);
                     wr.AddFile(fname + ".ota", tmpOtaName);

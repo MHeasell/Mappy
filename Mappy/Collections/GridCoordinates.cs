@@ -33,7 +33,7 @@ namespace Mappy.Collections
                 return false;
             }
 
-            GridCoordinates g = (GridCoordinates)obj;
+            var g = (GridCoordinates)obj;
 
             return this == g;
         }

@@ -27,18 +27,18 @@
 
         public Vector3D ToBarycentric(Vector3D point)
         {
-            Vector3D v0 = this.C - this.A;
-            Vector3D v1 = this.B - this.A;
-            Vector3D v2 = point - this.A;
+            var v0 = this.C - this.A;
+            var v1 = this.B - this.A;
+            var v2 = point - this.A;
 
-            double u = (
+            var u = (
                 (Vector3D.Dot(v1, v1) * Vector3D.Dot(v2, v0))
                 - (Vector3D.Dot(v1, v0) * Vector3D.Dot(v2, v1)))
                 /
                 ((Vector3D.Dot(v0, v0) * Vector3D.Dot(v1, v1))
                 - (Vector3D.Dot(v0, v1) * Vector3D.Dot(v1, v0)));
 
-            double v = (
+            var v = (
                 (Vector3D.Dot(v0, v0) * Vector3D.Dot(v2, v1))
                 - (Vector3D.Dot(v0, v1) * Vector3D.Dot(v2, v0)))
                 /
@@ -50,8 +50,8 @@
 
         public double Intersect(Ray3D ray)
         {
-            double d = this.Plane().Intersect(ray);
-            Vector3D bary = this.ToBarycentric(ray.PointAt(d));
+            var d = this.Plane().Intersect(ray);
+            var bary = this.ToBarycentric(ray.PointAt(d));
 
             if (bary.X < 0.0 || bary.Y < 0.0 || bary.Z < 0.0)
             {

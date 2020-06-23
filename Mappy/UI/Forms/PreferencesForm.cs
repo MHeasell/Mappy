@@ -16,9 +16,9 @@
         {
             if (MappySettings.Settings.SearchPaths != null)
             {
-                foreach (string dir in MappySettings.Settings.SearchPaths)
+                foreach (var dir in MappySettings.Settings.SearchPaths)
                 {
-                    ListViewItem i = new ListViewItem(dir);
+                    var i = new ListViewItem(dir);
                     this.searchPathsListView.Items.Add(i);
                 }
             }
@@ -27,10 +27,10 @@
         private void AddButtonClick(object sender, EventArgs e)
         {
             var d = new VistaFolderBrowserDialog();
-            DialogResult r = d.ShowDialog(this);
+            var r = d.ShowDialog(this);
             if (r == DialogResult.OK)
             {
-                ListViewItem i = new ListViewItem(d.SelectedPath);
+                var i = new ListViewItem(d.SelectedPath);
                 this.searchPathsListView.Items.Add(i);
                 i.Selected = true;
             }
@@ -66,7 +66,7 @@
                     continue;
                 }
 
-                ListViewItem tmp = this.searchPathsListView.Items[i];
+                var tmp = this.searchPathsListView.Items[i];
                 this.searchPathsListView.Items.RemoveAt(i);
                 this.searchPathsListView.Items.Insert(i - 1, tmp);
 
@@ -85,7 +85,7 @@
                     continue;
                 }
 
-                ListViewItem tmp = this.searchPathsListView.Items[i];
+                var tmp = this.searchPathsListView.Items[i];
                 this.searchPathsListView.Items.RemoveAt(i);
                 this.searchPathsListView.Items.Insert(i + 1, tmp);
 
@@ -96,7 +96,7 @@
 
         private void OkButtonClick(object sender, EventArgs e)
         {
-            System.Collections.Specialized.StringCollection s = new System.Collections.Specialized.StringCollection();
+            var s = new System.Collections.Specialized.StringCollection();
             foreach (ListViewItem i in this.searchPathsListView.Items)
             {
                 s.Add(i.Text);

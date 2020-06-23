@@ -22,7 +22,7 @@
 
         public void Execute()
         {
-            Point p = this.Tile.Location;
+            var p = this.Tile.Location;
             p.X += this.X;
             p.Y += this.Y;
             this.Tile.Location = p;
@@ -30,7 +30,7 @@
 
         public void Undo()
         {
-            Point p = this.Tile.Location;
+            var p = this.Tile.Location;
             p.X -= this.X;
             p.Y -= this.Y;
             this.Tile.Location = p;
