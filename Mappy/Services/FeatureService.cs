@@ -48,7 +48,7 @@
         public IEnumerable<string> EnumerateCategories(string world) =>
             this.records
                 .Select(x => x.Value)
-                .Where(x => x.World == world)
+                .Where(x => string.Equals(x.World, world, StringComparison.InvariantCultureIgnoreCase))
                 .Select(x => x.Category)
                 .Distinct(StringComparer.InvariantCultureIgnoreCase)
                 .OrderBy(x => x, StringComparer.InvariantCultureIgnoreCase);
