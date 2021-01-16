@@ -242,27 +242,6 @@ namespace Mappy.Util
             return ToBitmap(wrapper);
         }
 
-        public static Bitmap GenerateMinimapLinear(IPixelImage map)
-        {
-            int width, height;
-
-            if (map.Width > map.Height)
-            {
-                width = 252;
-                height = (int)(252 * (map.Height / (float)map.Width));
-            }
-            else
-            {
-                height = 252;
-                width = (int)(252 * (map.Width / (float)map.Height));
-            }
-
-            var wrapper = new NearestNeighbourPaletteWrapper(
-                new BilinearWrapper(map, width, height),
-                PaletteFactory.TAPalette);
-            return ToBitmap(wrapper);
-        }
-
         public static bool WriteMapImage(Stream s, IGrid<Bitmap> map, Action<int> reportProgress, Func<bool> shouldCancel)
         {
             using (var adapter = new NonTrimmedMapPixelImageAdapter(map))
