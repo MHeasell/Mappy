@@ -414,6 +414,11 @@
             this.model.HeightmapVisible = !this.model.HeightmapVisible;
         }
 
+        public void ToggleHeightGrid()
+        {
+            this.model.HeightGridVisible = !this.model.HeightGridVisible;
+        }
+
         public void ToggleVoids()
         {
             this.model.VoidsVisible = !this.model.VoidsVisible;

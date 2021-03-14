@@ -68,6 +68,7 @@
             // view menu bindings
             model.MinimapVisible.Subscribe(x => this.toggleMinimapMenuItem.Checked = x);
             model.HeightmapVisible.Subscribe(x => this.toggleHeightmapMenuItem.Checked = x);
+            model.HeightGridVisible.Subscribe(x => this.toggleHeightGridMenuItem.Checked = x);
             model.VoidsVisible.Subscribe(x => this.toggleVoidsMenuItem.Checked = x);
             model.FeaturesVisible.Subscribe(x => this.toggleFeaturesMenuItem.Checked = x);
 
@@ -284,6 +285,11 @@
         private void ToggleVoidsMenuItemClick(object sender, EventArgs e)
         {
             this.model.ToggleVoidsMenuItemClick();
+        }
+
+        private void ToggleHeightGridMenuItemClick(object sender, EventArgs e)
+        {
+            this.model.ToggleHeightGridMenuItemClick();
         }
     }
 }

@@ -10,8 +10,10 @@ namespace Mappy.UI.Drawables
         private readonly IMapTile tile;
         private readonly BitmapGridPainter painter;
         private readonly ContourHeightPainter heightPainter;
+        private readonly HeightGridPainter heightGridPainter;
 
         private bool drawHeightmap;
+        private bool drawHeightGrid;
 
         public DrawableTile(IMapTile tile)
         {
@@ -19,6 +21,8 @@ namespace Mappy.UI.Drawables
             this.painter = new BitmapGridPainter(tile.TileGrid, 32);
             this.heightPainter = new ContourHeightPainter(tile.HeightGrid, 16);
             this.heightPainter.ShowSeaLevel = true;
+
+            this.heightGridPainter = new HeightGridPainter(tile.HeightGrid, 16);
         }
 
         public override Size Size => new Size(this.Width, this.Height);
@@ -47,6 +51,20 @@ namespace Mappy.UI.Drawables
             }
         }
 
+        public bool DrawHeightGrid
+        {
+            get => this.drawHeightGrid;
+
+            set
+            {
+                if (this.drawHeightGrid != value)
+                {
+                    this.drawHeightGrid = value;
+                    this.OnAreaChanged();
+                }
+            }
+        }
+
         public int SeaLevel
         {
             get => this.heightPainter.SeaLevel;
@@ -56,7 +74,7 @@ namespace Mappy.UI.Drawables
                 if (this.heightPainter.SeaLevel != value)
                 {
                     this.heightPainter.SeaLevel = value;
-                    if (this.drawHeightmap && this.heightPainter.ShowSeaLevel)
+                    if ((this.drawHeightmap && this.heightPainter.ShowSeaLevel) || this.drawHeightGrid)
                     {
                         this.OnAreaChanged();
                     }
@@ -67,9 +85,15 @@ namespace Mappy.UI.Drawables
         public override void Draw(Graphics graphics, Rectangle clipRectangle)
         {
             this.painter.Paint(graphics, clipRectangle);
-            if (this.DrawHeightMap)
+
+            if (this.drawHeightmap)
             {
                 this.heightPainter.Paint(graphics, clipRectangle);
+            }
+
+            if (this.drawHeightGrid)
+            {
+                this.heightGridPainter.Paint(graphics, clipRectangle);
             }
         }
     }

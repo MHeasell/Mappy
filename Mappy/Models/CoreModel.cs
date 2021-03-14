@@ -10,6 +10,7 @@
         private Maybe<UndoableMapModel> map;
 
         private bool heightmapVisible;
+        private bool heightGridVisible;
         private bool voidsVisible;
         private bool featuresVisible = true;
 
@@ -32,6 +33,12 @@
         {
             get => this.heightmapVisible;
             set => this.SetField(ref this.heightmapVisible, value, nameof(this.HeightmapVisible));
+        }
+
+        public bool HeightGridVisible
+        {
+            get => this.heightGridVisible;
+            set => this.SetField(ref this.heightGridVisible, value, nameof(this.HeightGridVisible));
         }
 
         public bool VoidsVisible

@@ -9,6 +9,8 @@
 
         bool HeightmapVisible { get; }
 
+        bool HeightGridVisible { get; }
+
         bool VoidsVisible { get; }
 
         bool FeaturesVisible { get; }

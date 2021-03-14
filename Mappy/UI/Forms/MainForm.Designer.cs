@@ -68,8 +68,8 @@
             this.preferencesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleHeightmapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toggleVoidsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleMinimapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleVoidsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridOffMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grid16MenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,6 +95,7 @@
             this.seaLevelLabel = new System.Windows.Forms.Label();
             this.seaLevelTrackbar = new System.Windows.Forms.TrackBar();
             this.mapViewPanel = new Mappy.UI.Controls.MapViewPanel();
+            this.toggleHeightGridMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -406,6 +407,7 @@
             // 
             this.viewMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toggleHeightmapMenuItem,
+            this.toggleHeightGridMenuItem,
             this.toggleMinimapMenuItem,
             this.toggleVoidsMenuItem,
             this.gridMenuItem,
@@ -418,24 +420,24 @@
             // 
             this.toggleHeightmapMenuItem.Name = "toggleHeightmapMenuItem";
             this.toggleHeightmapMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.toggleHeightmapMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.toggleHeightmapMenuItem.Size = new System.Drawing.Size(180, 22);
             this.toggleHeightmapMenuItem.Text = "&Heightmap";
             this.toggleHeightmapMenuItem.Click += new System.EventHandler(this.ToggleHeightmapMenuItemClick);
-            // 
-            // toggleVoidsMenuItem
-            // 
-            this.toggleVoidsMenuItem.Name = "toggleVoidsMenuItem";
-            this.toggleVoidsMenuItem.Size = new System.Drawing.Size(177, 22);
-            this.toggleVoidsMenuItem.Text = "Voids";
-            this.toggleVoidsMenuItem.Click += new System.EventHandler(this.ToggleVoidsMenuItemClick);
             // 
             // toggleMinimapMenuItem
             // 
             this.toggleMinimapMenuItem.Name = "toggleMinimapMenuItem";
             this.toggleMinimapMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.toggleMinimapMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.toggleMinimapMenuItem.Size = new System.Drawing.Size(180, 22);
             this.toggleMinimapMenuItem.Text = "&Minimap";
             this.toggleMinimapMenuItem.Click += new System.EventHandler(this.ToggleMinimapMenuItemClick);
+            // 
+            // toggleVoidsMenuItem
+            // 
+            this.toggleVoidsMenuItem.Name = "toggleVoidsMenuItem";
+            this.toggleVoidsMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toggleVoidsMenuItem.Text = "Voids";
+            this.toggleVoidsMenuItem.Click += new System.EventHandler(this.ToggleVoidsMenuItemClick);
             // 
             // gridMenuItem
             // 
@@ -452,7 +454,7 @@
             toolStripSeparator6,
             this.gridColorMenuItem});
             this.gridMenuItem.Name = "gridMenuItem";
-            this.gridMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.gridMenuItem.Size = new System.Drawing.Size(180, 22);
             this.gridMenuItem.Text = "Grid";
             // 
             // gridOffMenuItem
@@ -533,7 +535,7 @@
             this.toggleFeaturesMenuItem.Checked = true;
             this.toggleFeaturesMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toggleFeaturesMenuItem.Name = "toggleFeaturesMenuItem";
-            this.toggleFeaturesMenuItem.Size = new System.Drawing.Size(177, 22);
+            this.toggleFeaturesMenuItem.Size = new System.Drawing.Size(180, 22);
             this.toggleFeaturesMenuItem.Text = "Features";
             this.toggleFeaturesMenuItem.Click += new System.EventHandler(this.ToggleFeaturesMenuItemClick);
             // 
@@ -687,6 +689,13 @@
             this.mapViewPanel.Size = new System.Drawing.Size(569, 538);
             this.mapViewPanel.TabIndex = 5;
             // 
+            // toolStripMenuItem1
+            // 
+            this.toggleHeightGridMenuItem.Name = "toggleHeightGridMenuItem";
+            this.toggleHeightGridMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toggleHeightGridMenuItem.Text = "Height Grid";
+            this.toggleHeightGridMenuItem.Click += new System.EventHandler(this.ToggleHeightGridMenuItemClick);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -773,6 +782,7 @@
         private System.Windows.Forms.ToolStripMenuItem importCustomSectionMenuItem;
         private MapViewPanel mapViewPanel;
         private System.Windows.Forms.ToolStripMenuItem toggleVoidsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toggleHeightGridMenuItem;
     }
 }
 

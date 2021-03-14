@@ -29,6 +29,7 @@
             this.GridVisible = model.PropertyAsObservable(x => x.GridVisible, nameof(model.GridVisible));
             this.GridSize = model.PropertyAsObservable(x => x.GridSize, nameof(model.GridSize));
             this.HeightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, nameof(model.HeightmapVisible));
+            this.HeightGridVisible = model.PropertyAsObservable(x => x.HeightGridVisible, nameof(model.HeightGridVisible));
             this.VoidsVisible = model.PropertyAsObservable(x => x.VoidsVisible, nameof(model.VoidsVisible));
             this.FeaturesVisible = model.PropertyAsObservable(x => x.FeaturesVisible, nameof(model.FeaturesVisible));
             this.MinimapVisible = model.PropertyAsObservable(x => x.MinimapVisible, nameof(model.MinimapVisible));
@@ -127,6 +128,8 @@
 
         public IObservable<bool> HeightmapVisible { get; }
 
+        public IObservable<bool> HeightGridVisible { get; }
+
         public IObservable<bool> VoidsVisible { get; }
 
         public IObservable<bool> FeaturesVisible { get; }
@@ -138,6 +141,11 @@
         public void ToggleHeightMapMenuItemClick()
         {
             this.dispatcher.ToggleHeightmap();
+        }
+
+        public void ToggleHeightGridMenuItemClick()
+        {
+            this.dispatcher.ToggleHeightGrid();
         }
 
         public void ToggleVoidsMenuItemClick()

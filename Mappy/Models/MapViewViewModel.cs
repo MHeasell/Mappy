@@ -74,6 +74,7 @@
         public MapViewViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher, FeatureService featureService)
         {
             var heightmapVisible = model.PropertyAsObservable(x => x.HeightmapVisible, nameof(model.HeightmapVisible));
+            var heightGridVisible = model.PropertyAsObservable(x => x.HeightGridVisible, nameof(model.HeightGridVisible));
             var voidsVisible = model.PropertyAsObservable(x => x.VoidsVisible, nameof(model.VoidsVisible));
             var gridVisible = model.PropertyAsObservable(x => x.GridVisible, nameof(model.GridVisible));
             var gridColor = model.PropertyAsObservable(x => x.GridColor, nameof(model.GridColor));
@@ -96,6 +97,7 @@
             // FIXME: this should not ignore height
             gridSize.Subscribe(x => this.grid.CellSize = x.Width);
             heightmapVisible.Subscribe(this.RefreshHeightmapVisibility);
+            heightGridVisible.Subscribe(this.RefreshHeightGridVisibility);
             voidsVisible.Subscribe(x => this.voidLayer.Value.Enabled = x);
             featuresVisible.Subscribe(x => this.featuresVisible = x);
 
@@ -353,6 +355,7 @@
             this.baseTile = new DrawableTile(this.mapModel.BaseTile);
             this.baseTile.BackgroundColor = Color.CornflowerBlue;
             this.baseTile.DrawHeightMap = this.model.HeightmapVisible;
+            this.baseTile.DrawHeightGrid = this.model.HeightGridVisible;
             this.baseTile.SeaLevel = this.mapModel.SeaLevel;
             this.baseItem = new DrawableItem(
                 0,
@@ -373,6 +376,16 @@
             }
 
             this.baseTile.DrawHeightMap = visible;
+        }
+
+        private void RefreshHeightGridVisibility(bool visible)
+        {
+            if (this.baseTile == null)
+            {
+                return;
+            }
+
+            this.baseTile.DrawHeightGrid = visible;
         }
 
         private void RefreshSeaLevel()

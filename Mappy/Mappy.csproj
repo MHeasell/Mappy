@@ -298,6 +298,7 @@
     <Compile Include="UI\Forms\ProgressForm.Designer.cs">
       <DependentUpon>ProgressForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="UI\Painters\HeightGridPainter.cs" />
     <Compile Include="UI\Painters\GridPainter.cs" />
     <Compile Include="UI\Painters\VoidPainter.cs" />
     <Compile Include="UI\Tags\FeatureTag.cs" />

@@ -45,6 +45,8 @@
 
         IObservable<bool> HeightmapVisible { get; }
 
+        IObservable<bool> HeightGridVisible { get; }
+
         IObservable<bool> VoidsVisible { get; }
 
         IObservable<bool> FeaturesVisible { get; }
@@ -58,6 +60,8 @@
         IObservable<string> TitleText { get; }
 
         void ToggleHeightMapMenuItemClick();
+
+        void ToggleHeightGridMenuItemClick();
 
         void ToggleVoidsMenuItemClick();
 
