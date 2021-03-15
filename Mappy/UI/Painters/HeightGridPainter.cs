@@ -1,12 +1,49 @@
 ﻿
 namespace Mappy.UI.Painters
 {
+    using System;
     using System.Drawing;
     using Mappy.Collections;
     using Mappy.Util;
 
     public class HeightGridPainter : IPainter
     {
+        private static (float, float, float) HslToRgb(float hue, float saturation, float lightness)
+        {
+            var c = (1.0f - Math.Abs((2.0f * lightness) - 1.0f)) * saturation;
+            var x = c * (1.0f - Math.Abs(((hue * 6.0f) % 2.0f) - 1.0f));
+            var m = lightness - (c / 2.0f);
+
+            float rPrime, gPrime, bPrime;
+
+            if (hue < 1.0f / 6.0f)
+            {
+                (rPrime, gPrime, bPrime) = (c, x, 0.0f);
+            }
+            else if (hue < 2.0f / 6.0f)
+            {
+                (rPrime, gPrime, bPrime) = (c, x, 0.0f);
+            }
+            else if (hue < 3.0f / 6.0f)
+            {
+                (rPrime, gPrime, bPrime) = (0.0f, c, x);
+            }
+            else if (hue < 4.0f / 6.0f)
+            {
+                (rPrime, gPrime, bPrime) = (0.0f, x, c);
+            }
+            else if (hue < 5.0f / 6.0f)
+            {
+                (rPrime, gPrime, bPrime) = (x, 0.0f, c);
+            }
+            else
+            {
+                (rPrime, gPrime, bPrime) = (c, 0.0f, x);
+            }
+
+            return (rPrime + m, gPrime + m, bPrime + m);
+        }
+
         private IGrid<int> heightGrid;
         private int tileSize;
 
@@ -16,7 +53,9 @@ namespace Mappy.UI.Painters
             this.tileSize = v;
         }
 
-        public void Paint(Graphics g, Rectangle clipRectangle)
+        public int SeaLevel { get; set; }
+
+        public void Paint(Graphics graphics, Rectangle clipRectangle)
         {
             var startX = Util.Clamp(clipRectangle.Left / this.tileSize, 0, this.heightGrid.Width - 2);
             var startY = Util.Clamp(clipRectangle.Top / this.tileSize, 0, this.heightGrid.Height - 2);
@@ -39,10 +78,20 @@ namespace Mappy.UI.Painters
 
                     var h = this.heightGrid.Get(x, y);
 
-                    using (var pen = new Pen(Color.FromArgb(h, h, h)))
+                    var landHue = 30.0f / 360.0f;
+                    var seaHue = 210.0f / 360.0f;
+
+                    var lightness = ((float)h) / 255.0f;
+
+                    var (r, g, b) = HslToRgb(h < this.SeaLevel ? seaHue : landHue, 1.0f, lightness);
+
+                    using (var pen = new Pen(Color.FromArgb(
+                        Util.Clamp((int)(r * 255.0f), 0, 255),
+                        Util.Clamp((int)(g * 255.0f), 0, 255),
+                        Util.Clamp((int)(b * 255.0f), 0, 255))))
                     {
-                        g.DrawLine(pen, posX, posY, posX2, posY2);
-                        g.DrawLine(pen, posX, posY, posX3, posY3);
+                        graphics.DrawLine(pen, posX, posY, posX2, posY2);
+                        graphics.DrawLine(pen, posX, posY, posX3, posY3);
                     }
                 }
             }

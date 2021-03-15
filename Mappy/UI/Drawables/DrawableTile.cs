@@ -71,13 +71,28 @@ namespace Mappy.UI.Drawables
 
             set
             {
+                bool changed = false;
                 if (this.heightPainter.SeaLevel != value)
                 {
                     this.heightPainter.SeaLevel = value;
-                    if ((this.drawHeightmap && this.heightPainter.ShowSeaLevel) || this.drawHeightGrid)
+                    if (this.drawHeightmap && this.heightPainter.ShowSeaLevel)
                     {
-                        this.OnAreaChanged();
+                        changed = true;
                     }
+                }
+
+                if (this.heightGridPainter.SeaLevel != value)
+                {
+                    this.heightGridPainter.SeaLevel = value;
+                    if (this.drawHeightGrid)
+                    {
+                        changed = true;
+                    }
+                }
+
+                if (changed)
+                {
+                    this.OnAreaChanged();
                 }
             }
         }
