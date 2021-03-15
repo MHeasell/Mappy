@@ -68,6 +68,7 @@
             this.preferencesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleHeightmapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toggleHeightGridMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleMinimapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toggleVoidsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -95,7 +96,6 @@
             this.seaLevelLabel = new System.Windows.Forms.Label();
             this.seaLevelTrackbar = new System.Windows.Forms.TrackBar();
             this.mapViewPanel = new Mappy.UI.Controls.MapViewPanel();
-            this.toggleHeightGridMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -164,12 +164,12 @@
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new System.Drawing.Size(152, 6);
+            toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // toolStripSeparator6
             // 
             toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new System.Drawing.Size(152, 6);
+            toolStripSeparator6.Size = new System.Drawing.Size(177, 6);
             // 
             // topMenu
             // 
@@ -420,22 +420,29 @@
             // 
             this.toggleHeightmapMenuItem.Name = "toggleHeightmapMenuItem";
             this.toggleHeightmapMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.toggleHeightmapMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.toggleHeightmapMenuItem.Text = "&Heightmap";
+            this.toggleHeightmapMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.toggleHeightmapMenuItem.Text = "&Heightmap Contours";
             this.toggleHeightmapMenuItem.Click += new System.EventHandler(this.ToggleHeightmapMenuItemClick);
+            // 
+            // toggleHeightGridMenuItem
+            // 
+            this.toggleHeightGridMenuItem.Name = "toggleHeightGridMenuItem";
+            this.toggleHeightGridMenuItem.Size = new System.Drawing.Size(229, 22);
+            this.toggleHeightGridMenuItem.Text = "Heightmap &Grid";
+            this.toggleHeightGridMenuItem.Click += new System.EventHandler(this.ToggleHeightGridMenuItemClick);
             // 
             // toggleMinimapMenuItem
             // 
             this.toggleMinimapMenuItem.Name = "toggleMinimapMenuItem";
             this.toggleMinimapMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
-            this.toggleMinimapMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toggleMinimapMenuItem.Size = new System.Drawing.Size(229, 22);
             this.toggleMinimapMenuItem.Text = "&Minimap";
             this.toggleMinimapMenuItem.Click += new System.EventHandler(this.ToggleMinimapMenuItemClick);
             // 
             // toggleVoidsMenuItem
             // 
             this.toggleVoidsMenuItem.Name = "toggleVoidsMenuItem";
-            this.toggleVoidsMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toggleVoidsMenuItem.Size = new System.Drawing.Size(229, 22);
             this.toggleVoidsMenuItem.Text = "Voids";
             this.toggleVoidsMenuItem.Click += new System.EventHandler(this.ToggleVoidsMenuItemClick);
             // 
@@ -454,7 +461,7 @@
             toolStripSeparator6,
             this.gridColorMenuItem});
             this.gridMenuItem.Name = "gridMenuItem";
-            this.gridMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gridMenuItem.Size = new System.Drawing.Size(229, 22);
             this.gridMenuItem.Text = "Grid";
             // 
             // gridOffMenuItem
@@ -462,7 +469,7 @@
             this.gridOffMenuItem.Checked = true;
             this.gridOffMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.gridOffMenuItem.Name = "gridOffMenuItem";
-            this.gridOffMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.gridOffMenuItem.Size = new System.Drawing.Size(180, 22);
             this.gridOffMenuItem.Tag = "0";
             this.gridOffMenuItem.Text = "Off";
             this.gridOffMenuItem.Click += new System.EventHandler(this.GridOffMenuItemClick);
@@ -470,7 +477,7 @@
             // grid16MenuItem
             // 
             this.grid16MenuItem.Name = "grid16MenuItem";
-            this.grid16MenuItem.Size = new System.Drawing.Size(155, 22);
+            this.grid16MenuItem.Size = new System.Drawing.Size(180, 22);
             this.grid16MenuItem.Tag = "16";
             this.grid16MenuItem.Text = "16x16";
             this.grid16MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -478,7 +485,7 @@
             // grid32MenuItem
             // 
             this.grid32MenuItem.Name = "grid32MenuItem";
-            this.grid32MenuItem.Size = new System.Drawing.Size(155, 22);
+            this.grid32MenuItem.Size = new System.Drawing.Size(180, 22);
             this.grid32MenuItem.Tag = "32";
             this.grid32MenuItem.Text = "32x32";
             this.grid32MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -486,7 +493,7 @@
             // grid64MenuItem
             // 
             this.grid64MenuItem.Name = "grid64MenuItem";
-            this.grid64MenuItem.Size = new System.Drawing.Size(155, 22);
+            this.grid64MenuItem.Size = new System.Drawing.Size(180, 22);
             this.grid64MenuItem.Tag = "64";
             this.grid64MenuItem.Text = "64x64";
             this.grid64MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -494,7 +501,7 @@
             // grid128MenuItem
             // 
             this.grid128MenuItem.Name = "grid128MenuItem";
-            this.grid128MenuItem.Size = new System.Drawing.Size(155, 22);
+            this.grid128MenuItem.Size = new System.Drawing.Size(180, 22);
             this.grid128MenuItem.Tag = "128";
             this.grid128MenuItem.Text = "128x128";
             this.grid128MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -502,7 +509,7 @@
             // grid256MenuItem
             // 
             this.grid256MenuItem.Name = "grid256MenuItem";
-            this.grid256MenuItem.Size = new System.Drawing.Size(155, 22);
+            this.grid256MenuItem.Size = new System.Drawing.Size(180, 22);
             this.grid256MenuItem.Tag = "256";
             this.grid256MenuItem.Text = "256x256";
             this.grid256MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -510,7 +517,7 @@
             // grid512MenuItem
             // 
             this.grid512MenuItem.Name = "grid512MenuItem";
-            this.grid512MenuItem.Size = new System.Drawing.Size(155, 22);
+            this.grid512MenuItem.Size = new System.Drawing.Size(180, 22);
             this.grid512MenuItem.Tag = "512";
             this.grid512MenuItem.Text = "512x512";
             this.grid512MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -518,7 +525,7 @@
             // grid1024MenuItem
             // 
             this.grid1024MenuItem.Name = "grid1024MenuItem";
-            this.grid1024MenuItem.Size = new System.Drawing.Size(155, 22);
+            this.grid1024MenuItem.Size = new System.Drawing.Size(180, 22);
             this.grid1024MenuItem.Tag = "1024";
             this.grid1024MenuItem.Text = "1024x1024";
             this.grid1024MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -526,7 +533,7 @@
             // gridColorMenuItem
             // 
             this.gridColorMenuItem.Name = "gridColorMenuItem";
-            this.gridColorMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.gridColorMenuItem.Size = new System.Drawing.Size(180, 22);
             this.gridColorMenuItem.Text = "Choose Color...";
             this.gridColorMenuItem.Click += new System.EventHandler(this.GridColorMenuItemClick);
             // 
@@ -535,7 +542,7 @@
             this.toggleFeaturesMenuItem.Checked = true;
             this.toggleFeaturesMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toggleFeaturesMenuItem.Name = "toggleFeaturesMenuItem";
-            this.toggleFeaturesMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.toggleFeaturesMenuItem.Size = new System.Drawing.Size(229, 22);
             this.toggleFeaturesMenuItem.Text = "Features";
             this.toggleFeaturesMenuItem.Click += new System.EventHandler(this.ToggleFeaturesMenuItemClick);
             // 
@@ -688,13 +695,6 @@
             this.mapViewPanel.Name = "mapViewPanel";
             this.mapViewPanel.Size = new System.Drawing.Size(569, 538);
             this.mapViewPanel.TabIndex = 5;
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toggleHeightGridMenuItem.Name = "toggleHeightGridMenuItem";
-            this.toggleHeightGridMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.toggleHeightGridMenuItem.Text = "Height Grid";
-            this.toggleHeightGridMenuItem.Click += new System.EventHandler(this.ToggleHeightGridMenuItemClick);
             // 
             // MainForm
             // 
