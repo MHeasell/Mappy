@@ -37,8 +37,13 @@ namespace Mappy.UI.Painters
                     var posX3 = x * this.tileSize;
                     var posY3 = ((y + 1) * this.tileSize) - (this.heightGrid.Get(x, y + 1) / 2);
 
-                    g.DrawLine(Pens.Black, posX, posY, posX2, posY2);
-                    g.DrawLine(Pens.Black, posX, posY, posX3, posY3);
+                    var h = this.heightGrid.Get(x, y);
+
+                    using (var pen = new Pen(Color.FromArgb(h, h, h)))
+                    {
+                        g.DrawLine(pen, posX, posY, posX2, posY2);
+                        g.DrawLine(pen, posX, posY, posX3, posY3);
+                    }
                 }
             }
         }
