@@ -91,7 +91,7 @@
         public bool CanCut
         {
             get => this.canCut;
-            private set => this.SetField(ref this.canCut, value, nameof(this.CanCopy));
+            private set => this.SetField(ref this.canCut, value, nameof(this.CanCut));
         }
 
         public string FilePath
