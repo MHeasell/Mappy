@@ -30,6 +30,8 @@ dist_files = [
         join(bindir, "Geometry.pdb"),
         join(bindir, "HPIUtil.dll"),
         join(bindir, "ICSharpCode.SharpZipLib.dll"),
+        join(bindir, "Magick.NET.Core.dll"),
+        join(bindir, "Magick.NET-Q8-AnyCPU.dll"),
         join(bindir, "Mappy.exe"),
         join(bindir, "Mappy.exe.config"),
         join(bindir, "Mappy.pdb"),
@@ -51,6 +53,7 @@ dist_files = [
         join(slndir, "LICENSE.txt"),
         join(slndir, "Ookii.Dialogs/LICENSE.Ookii.Dialogs.txt"),
         join(slndir, "Pngcs/LICENSE.Pngcs.txt"),
+        join(slndir, "Magick.NET/LICENSE.Magick.NET.txt"),
         join(slndir, "README.md"),
     ]
 
