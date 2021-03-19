@@ -115,6 +115,13 @@
                     image = Mappy.Properties.Resources.nofeature;
                 }
 
+                var reclaimInfo = record.Reclaimable ?
+                    Maybe.Return(new Feature.ReclaimInfoStruct
+                    {
+                        EnergyValue = record.Energy,
+                        MetalValue = record.Metal
+                    }) : Maybe.None<Feature.ReclaimInfoStruct>();
+
                 yield return new Feature
                     {
                         Name = record.Name,
@@ -122,7 +129,8 @@
                         Offset = new Point(offsetX, offsetY),
                         Footprint = new Size(record.FootprintX, record.FootprintY),
                         World = record.World,
-                        Category = record.Category
+                        Category = record.Category,
+                        ReclaimInfo = reclaimInfo,
                     };
             }
         }

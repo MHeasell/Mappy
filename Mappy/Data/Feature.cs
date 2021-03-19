@@ -12,6 +12,13 @@ namespace Mappy.Data
     /// </summary>
     public class Feature
     {
+        public struct ReclaimInfoStruct
+        {
+            public int MetalValue { get; set; }
+
+            public int EnergyValue { get; set; }
+        }
+
         public string Name { get; set; }
 
         public string World { get; set; }
@@ -23,6 +30,8 @@ namespace Mappy.Data
         public Point Offset { get; set; }
 
         public Bitmap Image { get; set; }
+
+        public Maybe<ReclaimInfoStruct> ReclaimInfo { get; set; }
 
         public Rectangle GetDrawBounds(IGrid<int> heightmap, int posX, int posY)
         {

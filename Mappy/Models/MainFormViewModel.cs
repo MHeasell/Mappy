@@ -84,13 +84,29 @@
             this.MousePositionText = map.ObservePropertyOrDefault(m => m.MousePosition, "MousePosition", Maybe.None<Point>())
                 .Select(p => p.Match(pos => $"X: {pos.X}, Y: {pos.Y}", () => "X: -, Y: -"));
 
-            this.HoveredFeatureText = map.ObservePropertyOrDefault(m => m.HoveredFeature, "HoveredFeature", Maybe.None<Guid>()).Select(id =>
-            {
-                return id.SelectMany(idd => featureService.TryGetFeature(model.Map.UnsafeValue.GetFeatureInstance(idd).FeatureName))
-                .Match(record => record.Name, () => "---");
-            });
+            this.HoveredFeatureText = map.ObservePropertyOrDefault(m => m.HoveredFeature, "HoveredFeature", Maybe.None<Guid>())
+                .Select(id => id.Select(idd =>
+                {
+                    var featureName = model.Map.UnsafeValue.GetFeatureInstance(idd).FeatureName;
+                    return featureService.TryGetFeature(featureName).Select(feature =>
+                    {
+                        var reclaimInfo = feature.ReclaimInfo.Match(rec => $" E: {rec.EnergyValue}, M: {rec.MetalValue}", () => string.Empty);
+                        return $"{featureName}{reclaimInfo}";
+                    }).Or(featureName);
+                }).Or("---"));
 
             this.dispatcher = dispatcher;
+        }
+
+        private static Data.Feature MakeDefaultFeatureRecord(string name)
+        {
+            return new Data.Feature
+            {
+                Name = name,
+                Offset = new Point(0, 0),
+                Footprint = new Size(1, 1),
+                Image = Mappy.Properties.Resources.nofeature
+            };
         }
 
         public IObservable<bool> CanCloseMap { get; }

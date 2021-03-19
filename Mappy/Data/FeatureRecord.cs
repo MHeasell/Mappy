@@ -1,7 +1,5 @@
 ﻿namespace Mappy.Data
 {
-    using System;
-
     using Mappy.Util;
 
     using TAUtil.Tdf;
@@ -24,6 +22,12 @@
 
         public string ObjectName { get; set; }
 
+        public bool Reclaimable { get; set; }
+
+        public int Energy { get; set; }
+
+        public int Metal { get; set; }
+
         public static FeatureRecord FromTdfNode(TdfNode n)
         {
             // At least one Cavedog feature has a bad footprintz
@@ -39,6 +43,9 @@
                 footprintZ = 1;
             }
 
+            TdfConvert.TryToInt32(n.Entries.GetOrDefault("energy", "0"), out var energy);
+            TdfConvert.TryToInt32(n.Entries.GetOrDefault("metal", "0"), out var metal);
+
             return new FeatureRecord
                 {
                     Name = n.Name,
@@ -48,7 +55,10 @@
                     FootprintY = footprintZ,
                     AnimFileName = n.Entries.GetOrDefault("filename", string.Empty),
                     SequenceName = n.Entries.GetOrDefault("seqname", string.Empty),
-                    ObjectName = n.Entries.GetOrDefault("object", string.Empty)
+                    ObjectName = n.Entries.GetOrDefault("object", string.Empty),
+                    Reclaimable = TdfConvert.ToBool(n.Entries.GetOrDefault("reclaimable", "0")),
+                    Energy = energy,
+                    Metal = metal,
                 };
         }
     }
