@@ -98,6 +98,7 @@
             this.sectionsView = new Mappy.UI.Controls.SectionView();
             this.featureView = new Mappy.UI.Controls.SectionView();
             this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
+            this.hoveredFeatureLabel = new System.Windows.Forms.ToolStripStatusLabel();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -665,7 +666,8 @@
             // statusStrip
             // 
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mousePositionLabel});
+            this.mousePositionLabel,
+            this.hoveredFeatureLabel});
             this.statusStrip.Location = new System.Drawing.Point(215, 540);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(569, 22);
@@ -714,6 +716,12 @@
             this.startPositionsView1.Name = "startPositionsView1";
             this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
             this.startPositionsView1.TabIndex = 0;
+            // 
+            // hoveredFeatureLabel
+            // 
+            this.hoveredFeatureLabel.Name = "hoveredFeatureLabel";
+            this.hoveredFeatureLabel.Size = new System.Drawing.Size(22, 17);
+            this.hoveredFeatureLabel.Text = "---";
             // 
             // MainForm
             // 
@@ -807,6 +815,7 @@
         private System.Windows.Forms.ToolStripMenuItem toggleHeightGridMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel mousePositionLabel;
+        private System.Windows.Forms.ToolStripStatusLabel hoveredFeatureLabel;
     }
 }
 

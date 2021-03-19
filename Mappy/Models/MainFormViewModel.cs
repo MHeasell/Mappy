@@ -13,7 +13,7 @@
 
         private readonly Dispatcher dispatcher;
 
-        public MainFormViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher)
+        public MainFormViewModel(IReadOnlyApplicationModel model, Dispatcher dispatcher, FeatureService featureService)
         {
             var map = model.PropertyAsObservable(x => x.Map, nameof(model.Map));
             var mapOpen = map.Select(x => x.IsSome);
@@ -84,6 +84,12 @@
             this.MousePositionText = map.ObservePropertyOrDefault(m => m.MousePosition, "MousePosition", Maybe.None<Point>())
                 .Select(p => p.Match(pos => $"X: {pos.X}, Y: {pos.Y}", () => "X: -, Y: -"));
 
+            this.HoveredFeatureText = map.ObservePropertyOrDefault(m => m.HoveredFeature, "HoveredFeature", Maybe.None<Guid>()).Select(id =>
+            {
+                return id.SelectMany(idd => featureService.TryGetFeature(model.Map.UnsafeValue.GetFeatureInstance(idd).FeatureName))
+                .Match(record => record.Name, () => "---");
+            });
+
             this.dispatcher = dispatcher;
         }
 
@@ -142,6 +148,8 @@
         public IObservable<int> SeaLevel { get; }
 
         public IObservable<string> MousePositionText { get; }
+
+        public IObservable<string> HoveredFeatureText { get; }
 
         public void ToggleHeightMapMenuItemClick()
         {

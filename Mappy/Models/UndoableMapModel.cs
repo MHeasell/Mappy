@@ -43,6 +43,8 @@
 
         private Maybe<Point> mousePosition;
 
+        private Maybe<Guid> hoveredFeature;
+
         public UndoableMapModel(ISelectionModel model, string path, bool readOnly)
         {
             this.FilePath = path;
@@ -154,6 +156,12 @@
         {
             get => this.mousePosition;
             set => this.SetField(ref this.mousePosition, value, nameof(this.MousePosition));
+        }
+
+        public Maybe<Guid> HoveredFeature
+        {
+            get => this.hoveredFeature;
+            set => this.SetField(ref this.hoveredFeature, value, nameof(this.HoveredFeature));
         }
 
         public void Undo()

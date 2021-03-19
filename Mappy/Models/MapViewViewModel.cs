@@ -210,6 +210,10 @@
         public void MouseMove(Point location)
         {
             this.dispatcher.UpdateMousePosition(Maybe.Return(location));
+
+            var hit = this.itemsLayer.Value.HitTest(location.X, location.Y);
+            this.dispatcher.SetHoveredFeature(hit != null && hit.Tag is FeatureTag featureTag ? Maybe.Return(featureTag.FeatureId) : Maybe.None<Guid>());
+
             try
             {
                 if (!this.mouseDown)

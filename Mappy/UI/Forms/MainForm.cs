@@ -86,6 +86,7 @@
             model.TitleText.Subscribe(x => this.Text = x);
 
             model.MousePositionText.Subscribe(x => this.mousePositionLabel.Text = x);
+            model.HoveredFeatureText.Subscribe(x => this.hoveredFeatureLabel.Text = x);
 
             this.model = model;
         }

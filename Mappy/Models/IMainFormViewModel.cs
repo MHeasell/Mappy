@@ -61,6 +61,8 @@
 
         IObservable<string> MousePositionText { get; }
 
+        IObservable<string> HoveredFeatureText { get; }
+
         void ToggleHeightMapMenuItemClick();
 
         void ToggleHeightGridMenuItemClick();

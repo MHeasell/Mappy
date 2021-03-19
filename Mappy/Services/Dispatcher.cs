@@ -156,6 +156,11 @@
             this.model.Map.IfSome(map => map.MousePosition = mousePosition);
         }
 
+        public void SetHoveredFeature(Maybe<Guid> featureId)
+        {
+            this.model.Map.IfSome(map => map.HoveredFeature = featureId);
+        }
+
         public void HideGrid()
         {
             this.model.GridVisible = false;
