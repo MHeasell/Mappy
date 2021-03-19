@@ -81,6 +81,9 @@
 
             this.TitleText = titleText;
 
+            this.MousePositionText = map.ObservePropertyOrDefault(m => m.MousePosition, "MousePosition", Maybe.None<Point>())
+                .Select(p => p.Match(pos => $"X: {pos.X}, Y: {pos.Y}", () => "X: -, Y: -"));
+
             this.dispatcher = dispatcher;
         }
 
@@ -137,6 +140,8 @@
         public IObservable<bool> MinimapVisible { get; }
 
         public IObservable<int> SeaLevel { get; }
+
+        public IObservable<string> MousePositionText { get; }
 
         public void ToggleHeightMapMenuItemClick()
         {

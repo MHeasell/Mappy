@@ -59,6 +59,8 @@
 
         IObservable<string> TitleText { get; }
 
+        IObservable<string> MousePositionText { get; }
+
         void ToggleHeightMapMenuItemClick();
 
         void ToggleHeightGridMenuItemClick();

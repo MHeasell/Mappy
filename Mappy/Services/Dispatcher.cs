@@ -151,6 +151,11 @@
             dlg.Display();
         }
 
+        public void UpdateMousePosition(Maybe<Point> mousePosition)
+        {
+            this.model.Map.IfSome(map => map.MousePosition = mousePosition);
+        }
+
         public void HideGrid()
         {
             this.model.GridVisible = false;

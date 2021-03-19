@@ -86,16 +86,18 @@
             this.aboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sidebarTabs = new System.Windows.Forms.TabControl();
             this.sectionsTab = new System.Windows.Forms.TabPage();
-            this.sectionsView = new Mappy.UI.Controls.SectionView();
             this.featuresTab = new System.Windows.Forms.TabPage();
-            this.featureView = new Mappy.UI.Controls.SectionView();
             this.startPositionsTab = new System.Windows.Forms.TabPage();
-            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             this.attributesTab = new System.Windows.Forms.TabPage();
             this.seaLevelValueLabel = new System.Windows.Forms.Label();
             this.seaLevelLabel = new System.Windows.Forms.Label();
             this.seaLevelTrackbar = new System.Windows.Forms.TrackBar();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.mousePositionLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.mapViewPanel = new Mappy.UI.Controls.MapViewPanel();
+            this.sectionsView = new Mappy.UI.Controls.SectionView();
+            this.featureView = new Mappy.UI.Controls.SectionView();
+            this.startPositionsView1 = new Mappy.UI.Controls.StartPositionsView();
             toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -114,6 +116,7 @@
             this.startPositionsTab.SuspendLayout();
             this.attributesTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.seaLevelTrackbar)).BeginInit();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripSeparator1
@@ -164,12 +167,12 @@
             // toolStripSeparator5
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
-            toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            toolStripSeparator5.Size = new System.Drawing.Size(152, 6);
             // 
             // toolStripSeparator6
             // 
             toolStripSeparator6.Name = "toolStripSeparator6";
-            toolStripSeparator6.Size = new System.Drawing.Size(177, 6);
+            toolStripSeparator6.Size = new System.Drawing.Size(152, 6);
             // 
             // topMenu
             // 
@@ -469,7 +472,7 @@
             this.gridOffMenuItem.Checked = true;
             this.gridOffMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.gridOffMenuItem.Name = "gridOffMenuItem";
-            this.gridOffMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gridOffMenuItem.Size = new System.Drawing.Size(155, 22);
             this.gridOffMenuItem.Tag = "0";
             this.gridOffMenuItem.Text = "Off";
             this.gridOffMenuItem.Click += new System.EventHandler(this.GridOffMenuItemClick);
@@ -477,7 +480,7 @@
             // grid16MenuItem
             // 
             this.grid16MenuItem.Name = "grid16MenuItem";
-            this.grid16MenuItem.Size = new System.Drawing.Size(180, 22);
+            this.grid16MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid16MenuItem.Tag = "16";
             this.grid16MenuItem.Text = "16x16";
             this.grid16MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -485,7 +488,7 @@
             // grid32MenuItem
             // 
             this.grid32MenuItem.Name = "grid32MenuItem";
-            this.grid32MenuItem.Size = new System.Drawing.Size(180, 22);
+            this.grid32MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid32MenuItem.Tag = "32";
             this.grid32MenuItem.Text = "32x32";
             this.grid32MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -493,7 +496,7 @@
             // grid64MenuItem
             // 
             this.grid64MenuItem.Name = "grid64MenuItem";
-            this.grid64MenuItem.Size = new System.Drawing.Size(180, 22);
+            this.grid64MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid64MenuItem.Tag = "64";
             this.grid64MenuItem.Text = "64x64";
             this.grid64MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -501,7 +504,7 @@
             // grid128MenuItem
             // 
             this.grid128MenuItem.Name = "grid128MenuItem";
-            this.grid128MenuItem.Size = new System.Drawing.Size(180, 22);
+            this.grid128MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid128MenuItem.Tag = "128";
             this.grid128MenuItem.Text = "128x128";
             this.grid128MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -509,7 +512,7 @@
             // grid256MenuItem
             // 
             this.grid256MenuItem.Name = "grid256MenuItem";
-            this.grid256MenuItem.Size = new System.Drawing.Size(180, 22);
+            this.grid256MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid256MenuItem.Tag = "256";
             this.grid256MenuItem.Text = "256x256";
             this.grid256MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -517,7 +520,7 @@
             // grid512MenuItem
             // 
             this.grid512MenuItem.Name = "grid512MenuItem";
-            this.grid512MenuItem.Size = new System.Drawing.Size(180, 22);
+            this.grid512MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid512MenuItem.Tag = "512";
             this.grid512MenuItem.Text = "512x512";
             this.grid512MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -525,7 +528,7 @@
             // grid1024MenuItem
             // 
             this.grid1024MenuItem.Name = "grid1024MenuItem";
-            this.grid1024MenuItem.Size = new System.Drawing.Size(180, 22);
+            this.grid1024MenuItem.Size = new System.Drawing.Size(155, 22);
             this.grid1024MenuItem.Tag = "1024";
             this.grid1024MenuItem.Text = "1024x1024";
             this.grid1024MenuItem.Click += new System.EventHandler(this.GridMenuItemClick);
@@ -533,7 +536,7 @@
             // gridColorMenuItem
             // 
             this.gridColorMenuItem.Name = "gridColorMenuItem";
-            this.gridColorMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.gridColorMenuItem.Size = new System.Drawing.Size(155, 22);
             this.gridColorMenuItem.Text = "Choose Color...";
             this.gridColorMenuItem.Click += new System.EventHandler(this.GridColorMenuItemClick);
             // 
@@ -585,16 +588,6 @@
             this.sectionsTab.Text = "Sections";
             this.sectionsTab.UseVisualStyleBackColor = true;
             // 
-            // sectionsView
-            // 
-            this.sectionsView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.sectionsView.ImageSize = new System.Drawing.Size(128, 128);
-            this.sectionsView.Location = new System.Drawing.Point(3, 3);
-            this.sectionsView.Margin = new System.Windows.Forms.Padding(4);
-            this.sectionsView.Name = "sectionsView";
-            this.sectionsView.Size = new System.Drawing.Size(201, 506);
-            this.sectionsView.TabIndex = 3;
-            // 
             // featuresTab
             // 
             this.featuresTab.Controls.Add(this.featureView);
@@ -606,16 +599,6 @@
             this.featuresTab.Text = "Features";
             this.featuresTab.UseVisualStyleBackColor = true;
             // 
-            // featureView
-            // 
-            this.featureView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.featureView.ImageSize = new System.Drawing.Size(64, 64);
-            this.featureView.Location = new System.Drawing.Point(3, 3);
-            this.featureView.Margin = new System.Windows.Forms.Padding(4);
-            this.featureView.Name = "featureView";
-            this.featureView.Size = new System.Drawing.Size(201, 506);
-            this.featureView.TabIndex = 0;
-            // 
             // startPositionsTab
             // 
             this.startPositionsTab.Controls.Add(this.startPositionsView1);
@@ -626,15 +609,6 @@
             this.startPositionsTab.TabIndex = 2;
             this.startPositionsTab.Text = "Starts";
             this.startPositionsTab.UseVisualStyleBackColor = true;
-            // 
-            // startPositionsView1
-            // 
-            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
-            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
-            this.startPositionsView1.Name = "startPositionsView1";
-            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
-            this.startPositionsView1.TabIndex = 0;
             // 
             // attributesTab
             // 
@@ -688,13 +662,58 @@
             this.seaLevelTrackbar.ValueChanged += new System.EventHandler(this.SeaLevelTrackBarValueChanged);
             this.seaLevelTrackbar.MouseUp += new System.Windows.Forms.MouseEventHandler(this.SeaLevelTrackBarMouseUp);
             // 
+            // statusStrip
+            // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mousePositionLabel});
+            this.statusStrip.Location = new System.Drawing.Point(215, 540);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(569, 22);
+            this.statusStrip.TabIndex = 6;
+            this.statusStrip.Text = "statusStrip1";
+            // 
+            // mousePositionLabel
+            // 
+            this.mousePositionLabel.Name = "mousePositionLabel";
+            this.mousePositionLabel.Size = new System.Drawing.Size(49, 17);
+            this.mousePositionLabel.Text = "X: -, Y: -";
+            // 
             // mapViewPanel
             // 
             this.mapViewPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mapViewPanel.Location = new System.Drawing.Point(215, 24);
             this.mapViewPanel.Name = "mapViewPanel";
-            this.mapViewPanel.Size = new System.Drawing.Size(569, 538);
+            this.mapViewPanel.Size = new System.Drawing.Size(569, 516);
             this.mapViewPanel.TabIndex = 5;
+            // 
+            // sectionsView
+            // 
+            this.sectionsView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.sectionsView.ImageSize = new System.Drawing.Size(128, 128);
+            this.sectionsView.Location = new System.Drawing.Point(3, 3);
+            this.sectionsView.Margin = new System.Windows.Forms.Padding(4);
+            this.sectionsView.Name = "sectionsView";
+            this.sectionsView.Size = new System.Drawing.Size(201, 506);
+            this.sectionsView.TabIndex = 3;
+            // 
+            // featureView
+            // 
+            this.featureView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.featureView.ImageSize = new System.Drawing.Size(64, 64);
+            this.featureView.Location = new System.Drawing.Point(3, 3);
+            this.featureView.Margin = new System.Windows.Forms.Padding(4);
+            this.featureView.Name = "featureView";
+            this.featureView.Size = new System.Drawing.Size(201, 506);
+            this.featureView.TabIndex = 0;
+            // 
+            // startPositionsView1
+            // 
+            this.startPositionsView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.startPositionsView1.Location = new System.Drawing.Point(3, 3);
+            this.startPositionsView1.Margin = new System.Windows.Forms.Padding(4);
+            this.startPositionsView1.Name = "startPositionsView1";
+            this.startPositionsView1.Size = new System.Drawing.Size(201, 506);
+            this.startPositionsView1.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -703,6 +722,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 562);
             this.Controls.Add(this.mapViewPanel);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.sidebarTabs);
             this.Controls.Add(this.topMenu);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -722,6 +742,8 @@
             this.attributesTab.ResumeLayout(false);
             this.attributesTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.seaLevelTrackbar)).EndInit();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -783,6 +805,8 @@
         private MapViewPanel mapViewPanel;
         private System.Windows.Forms.ToolStripMenuItem toggleVoidsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toggleHeightGridMenuItem;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel mousePositionLabel;
     }
 }
 

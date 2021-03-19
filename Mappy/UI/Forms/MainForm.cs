@@ -85,6 +85,8 @@
             // title text bindings
             model.TitleText.Subscribe(x => this.Text = x);
 
+            model.MousePositionText.Subscribe(x => this.mousePositionLabel.Text = x);
+
             this.model = model;
         }
 

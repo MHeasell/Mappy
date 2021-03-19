@@ -41,6 +41,8 @@
 
         private bool canCopy;
 
+        private Maybe<Point> mousePosition;
+
         public UndoableMapModel(ISelectionModel model, string path, bool readOnly)
         {
             this.FilePath = path;
@@ -147,6 +149,12 @@
         public ObservableCollection<Guid> SelectedFeatures => this.model.SelectedFeatures;
 
         public int? SelectedTile => this.model.SelectedTile;
+
+        public Maybe<Point> MousePosition
+        {
+            get => this.mousePosition;
+            set => this.SetField(ref this.mousePosition, value, nameof(this.MousePosition));
+        }
 
         public void Undo()
         {

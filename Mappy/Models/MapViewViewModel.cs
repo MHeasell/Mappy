@@ -209,6 +209,7 @@
 
         public void MouseMove(Point location)
         {
+            this.dispatcher.UpdateMousePosition(Maybe.Return(location));
             try
             {
                 if (!this.mouseDown)
