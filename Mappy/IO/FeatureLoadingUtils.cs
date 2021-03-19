@@ -131,6 +131,7 @@
                         World = record.World,
                         Category = record.Category,
                         ReclaimInfo = reclaimInfo,
+                        Permanent = record.Permanent,
                     };
             }
         }

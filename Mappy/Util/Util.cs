@@ -4,6 +4,7 @@ namespace Mappy.Util
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
+    using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
@@ -16,6 +17,7 @@ namespace Mappy.Util
     using Mappy.Data;
     using Mappy.Models;
     using Mappy.Properties;
+    using Mappy.Services;
     using Mappy.Util.ImageSampling;
 
     using TAUtil.Gdi.Palette;
@@ -149,6 +151,13 @@ namespace Mappy.Util
             return mapping;
         }
 
+        public struct RenderMinimapArgs
+        {
+            public IReadOnlyMapModel MapModel { get; set; }
+
+            public FeatureService FeatureService { get; set; }
+        }
+
         public static BackgroundWorker RenderMinimapWorker()
         {
             var worker = new BackgroundWorker();
@@ -157,55 +166,78 @@ namespace Mappy.Util
             worker.DoWork += (sender, args) =>
                 {
                     var w = (BackgroundWorker)sender;
-                    var m = (IReadOnlyMapModel)args.Argument;
-
-                    using (var map = new MapPixelImageAdapter(m.Tile.TileGrid))
-                    {
-                        int width, height;
-
-                        if (map.Width > map.Height)
-                        {
-                            width = 252;
-                            height = (int)(252 * (map.Height / (float)map.Width));
-                        }
-                        else
-                        {
-                            height = 252;
-                            width = (int)(252 * (map.Width / (float)map.Height));
-                        }
-
-                        var wrapper = new NearestNeighbourPaletteWrapper(
-                            new BilinearWrapper(map, width, height),
-                            PaletteFactory.TAPalette);
-
-                        var b = new Bitmap(wrapper.Width, wrapper.Height);
-                        using (var g = Graphics.FromImage(b))
-                        {
-                            g.FillRectangle(Brushes.Black, new Rectangle(0, 0, b.Width, b.Height));
-                        }
-
-                        for (var y = 0; y < wrapper.Height; y++)
-                        {
-                            if (w.CancellationPending)
-                            {
-                                args.Cancel = true;
-                                return;
-                            }
-
-                            for (var x = 0; x < wrapper.Width; x++)
-                            {
-                                b.SetPixel(x, y, wrapper.GetPixel(x, y));
-                            }
-
-                            var percentComplete = ((y + 1) * 100) / wrapper.Height;
-
-                            w.ReportProgress(percentComplete);
-                        }
-
-                        args.Result = b;
-                    }
+                    RenderMinimapExperimental(w, args);
+                    return;
                 };
             return worker;
+        }
+
+        public static void RenderMinimapExperimental(BackgroundWorker worker, DoWorkEventArgs workArgs)
+        {
+            var args = (RenderMinimapArgs)workArgs.Argument;
+
+            var tileGrid = args.MapModel.Tile.TileGrid;
+            var mapWidth = (tileGrid.Width * 32) - 32;
+            var mapHeight = (tileGrid.Height * 32) - 128;
+
+            int width, height;
+            if (mapWidth > mapHeight)
+            {
+                width = 252;
+                height = (int)(252 * (mapHeight / (float)mapWidth));
+            }
+            else
+            {
+                height = 252;
+                width = (int)(252 * (mapWidth / (float)mapHeight));
+            }
+
+            var destImage = new Bitmap(width, height);
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.ScaleTransform(
+                    ((float)width) / ((float)mapWidth),
+                    ((float)height) / ((float)mapHeight));
+
+                graphics.CompositingMode = CompositingMode.SourceOver;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    for (var y = 0; y < tileGrid.Height; ++y)
+                    {
+                        worker.ReportProgress((y * 100) / tileGrid.Height);
+
+                        for (var x = 0; x < tileGrid.Width; ++x)
+                        {
+                            var tile = tileGrid.Get(x, y);
+                            var destX = x * 32;
+                            var destY = y * 32;
+                            graphics.DrawImage(tile, new Rectangle(destX, destY, 32, 32), 0, 0, 32, 32, GraphicsUnit.Pixel, wrapMode);
+                        }
+                    }
+
+                    foreach (var featureInstance in args.MapModel.EnumerateFeatureInstances())
+                    {
+                        var feature = args.FeatureService.TryGetFeature(featureInstance.FeatureName);
+                        feature
+                            .Where(f => f.Permanent)
+                            .IfSome(f =>
+                        {
+                            var bounds = f.GetDrawBounds(args.MapModel.Tile.HeightGrid, featureInstance.X, featureInstance.Y);
+                            graphics.DrawImage(f.Image, bounds, 0, 0, f.Image.Width, f.Image.Height, GraphicsUnit.Pixel, wrapMode);
+                        });
+                    }
+                }
+            }
+
+            Quantization.ToTAPalette(destImage);
+
+            workArgs.Result = destImage;
         }
 
         public static Bitmap ToBitmap(IPixelImage map)

@@ -28,6 +28,8 @@
 
         public int Metal { get; set; }
 
+        public bool Permanent { get; set; }
+
         public static FeatureRecord FromTdfNode(TdfNode n)
         {
             // At least one Cavedog feature has a bad footprintz
@@ -59,6 +61,7 @@
                     Reclaimable = TdfConvert.ToBool(n.Entries.GetOrDefault("reclaimable", "0")),
                     Energy = energy,
                     Metal = metal,
+                    Permanent = TdfConvert.ToBool(n.Entries.GetOrDefault("permanent", "0")),
                 };
         }
     }

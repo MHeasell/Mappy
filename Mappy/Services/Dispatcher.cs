@@ -892,7 +892,7 @@
                     dlg.Close();
                 };
 
-            worker.RunWorkerAsync(map);
+            worker.RunWorkerAsync(new Util.RenderMinimapArgs { MapModel = map, FeatureService = this.featureService });
             dlg.Display();
         }
 

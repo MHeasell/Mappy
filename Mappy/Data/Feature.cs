@@ -33,6 +33,8 @@ namespace Mappy.Data
 
         public Maybe<ReclaimInfoStruct> ReclaimInfo { get; set; }
 
+        public bool Permanent { get; set; }
+
         public Rectangle GetDrawBounds(IGrid<int> heightmap, int posX, int posY)
         {
             var height = 0;
