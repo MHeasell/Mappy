@@ -4,7 +4,6 @@ namespace Mappy.Util
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Drawing;
-    using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
@@ -12,7 +11,7 @@ namespace Mappy.Util
     using Geometry;
 
     using Hjg.Pngcs;
-
+    using ImageMagick;
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.Models;
@@ -166,78 +165,199 @@ namespace Mappy.Util
             worker.DoWork += (sender, args) =>
                 {
                     var w = (BackgroundWorker)sender;
-                    RenderMinimapExperimental(w, args);
-                    return;
+                    RenderHighQualityMinimap(w, args);
                 };
             return worker;
         }
 
-        public static void RenderMinimapExperimental(BackgroundWorker worker, DoWorkEventArgs workArgs)
+        public struct FeatureInfo
+        {
+            public Bitmap Image { get; set; }
+            public Point Location { get; set; }
+        }
+
+        public static IEnumerable<U> Choose<T, U>(this IEnumerable<T> coll, Func<T, Maybe<U>> f)
+        {
+            return coll.SelectMany(item => f(item).Match(x => new[] { x }, () => new U[] { }));
+        }
+
+        public static void RenderHighQualityMinimap(BackgroundWorker w, DoWorkEventArgs workArgs)
         {
             var args = (RenderMinimapArgs)workArgs.Argument;
+
+            var featuresList = args.MapModel.EnumerateFeatureInstances()
+                .Choose(f =>
+                    args.FeatureService.TryGetFeature(f.FeatureName)
+                        .Where(rec => rec.Permanent)
+                        .Select(rec => new FeatureInfo
+                            {
+                                Image = rec.Image,
+                                Location = rec.GetDrawBounds(args.MapModel.Tile.HeightGrid, f.X, f.Y).Location
+                            }))
+                .ToList();
+            featuresList.Sort((a, b) =>
+            {
+                if (a.Location.Y - b.Location.Y != 0)
+                {
+                    return a.Location.Y - b.Location.Y;
+                }
+
+                return a.Location.X - b.Location.X;
+            });
 
             var tileGrid = args.MapModel.Tile.TileGrid;
             var mapWidth = (tileGrid.Width * 32) - 32;
             var mapHeight = (tileGrid.Height * 32) - 128;
 
-            int width, height;
-            if (mapWidth > mapHeight)
-            {
-                width = 252;
-                height = (int)(252 * (mapHeight / (float)mapWidth));
-            }
-            else
-            {
-                height = 252;
-                width = (int)(252 * (mapWidth / (float)mapHeight));
-            }
+            var tileCache = new Dictionary<Bitmap, BitmapData>();
 
-            var destImage = new Bitmap(width, height);
-            using (var graphics = Graphics.FromImage(destImage))
+            var tempPath = Path.GetTempFileName();
+            var resizedPath = Path.GetTempFileName();
+            var imgInfo = new ImageInfo(mapWidth, mapHeight, 8, true);
+            try
             {
-                graphics.ScaleTransform(
-                    ((float)width) / ((float)mapWidth),
-                    ((float)height) / ((float)mapHeight));
-
-                graphics.CompositingMode = CompositingMode.SourceOver;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode = SmoothingMode.HighQuality;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-                using (var wrapMode = new ImageAttributes())
+                using (var tempFileStream = File.OpenWrite(tempPath))
                 {
-                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                    for (var y = 0; y < tileGrid.Height; ++y)
-                    {
-                        worker.ReportProgress((y * 100) / tileGrid.Height);
+                    var writer = new PngWriter(tempFileStream, imgInfo);
 
-                        for (var x = 0; x < tileGrid.Width; ++x)
+                    var inProgressFeatures = new List<FeatureInfo>();
+                    var currentFeatureIndex = 0;
+
+                    for (var sourcePixelY = 0; sourcePixelY < mapHeight; ++sourcePixelY)
+                    {
+                        w.ReportProgress(sourcePixelY * 100 / mapHeight);
+                        if (w.CancellationPending)
                         {
-                            var tile = tileGrid.Get(x, y);
-                            var destX = x * 32;
-                            var destY = y * 32;
-                            graphics.DrawImage(tile, new Rectangle(destX, destY, 32, 32), 0, 0, 32, 32, GraphicsUnit.Pixel, wrapMode);
+                            workArgs.Cancel = true;
+                            return;
                         }
+
+                        var tileY = sourcePixelY / 32;
+                        var line = new ImageLine(imgInfo);
+                        for (var tileX = 0; tileX < tileGrid.Width - 1; ++tileX)
+                        {
+                            var tile = tileGrid.Get(tileX, tileY);
+                            if (!tileCache.TryGetValue(tile, out var tileData))
+                            {
+                                tileData = tile.LockBits(new Rectangle(0, 0, tile.Width, tile.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                                tileCache[tile] = tileData;
+                            }
+
+                            var inTileY = sourcePixelY % 32;
+
+                            for (var inTileX = 0; inTileX < 32; ++inTileX)
+                            {
+                                var sourcePixelX = (tileX * 32) + inTileX;
+                                var pngOffset = sourcePixelX * 4;
+                                unsafe
+                                {
+                                    var ptr = (int*)tileData.Scan0;
+                                    var color = Color.FromArgb(ptr[(inTileY * 32) + inTileX]);
+                                    line.Scanline[pngOffset] = color.R;
+                                    line.Scanline[pngOffset + 1] = color.G;
+                                    line.Scanline[pngOffset + 2] = color.B;
+                                    line.Scanline[pngOffset + 3] = color.A;
+                                }
+                            }
+                        }
+
+                        var nextInProgressFeaturesList = new List<FeatureInfo>();
+
+                        // Add feature bitmap data to the row
+                        var inProgressFeatureIndex = 0;
+                        while (true)
+                        {
+                            // Find the next feature
+                            FeatureInfo nextFeature;
+                            if (currentFeatureIndex < featuresList.Count && inProgressFeatureIndex < inProgressFeatures.Count && featuresList[currentFeatureIndex].Location.Y <= sourcePixelY)
+                            {
+                                nextFeature = featuresList[currentFeatureIndex].Location.X < inProgressFeatures[inProgressFeatureIndex].Location.X
+                                    ? featuresList[currentFeatureIndex++]
+                                    : inProgressFeatures[inProgressFeatureIndex++];
+                            }
+                            else if (currentFeatureIndex < featuresList.Count && featuresList[currentFeatureIndex].Location.Y <= sourcePixelY)
+                            {
+                                nextFeature = featuresList[currentFeatureIndex++];
+                            }
+                            else if (inProgressFeatureIndex < inProgressFeatures.Count)
+                            {
+                                nextFeature = inProgressFeatures[inProgressFeatureIndex++];
+                            }
+                            else
+                            {
+                                break;
+                            }
+
+                            if (!tileCache.TryGetValue(nextFeature.Image, out var featureImageData))
+                            {
+                                featureImageData = nextFeature.Image.LockBits(new Rectangle(0, 0, nextFeature.Image.Width, nextFeature.Image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                                tileCache[nextFeature.Image] = featureImageData;
+                            }
+
+                            var imageRect = new Rectangle(nextFeature.Location, nextFeature.Image.Size);
+
+                            var coveringRect = new Rectangle(0, 0, mapWidth, mapHeight);
+                            coveringRect.Intersect(imageRect);
+
+                            var featureBitmapY = sourcePixelY - imageRect.Y;
+                            for (var dx = 0; dx < coveringRect.Width; ++dx)
+                            {
+                                var featureBitmapX = (coveringRect.X - imageRect.X) + dx;
+                                var sourcePixelX = coveringRect.X + dx;
+                                var pngOffset = sourcePixelX * 4;
+                                unsafe
+                                {
+                                    var ptr = (int*)featureImageData.Scan0;
+                                    var color = Color.FromArgb(ptr[(featureBitmapY * imageRect.Width) + featureBitmapX]);
+                                    if (color.A > 0)
+                                    {
+                                        line.Scanline[pngOffset] = color.R;
+                                        line.Scanline[pngOffset + 1] = color.G;
+                                        line.Scanline[pngOffset + 2] = color.B;
+                                        line.Scanline[pngOffset + 3] = color.A;
+                                    }
+                                }
+                            }
+
+                            // read it again next row
+                            if (sourcePixelY + 1 < imageRect.Y + imageRect.Height)
+                            {
+                                nextInProgressFeaturesList.Add(nextFeature);
+                            }
+                        }
+
+                        inProgressFeatures = nextInProgressFeaturesList;
+
+                        writer.WriteRow(line, sourcePixelY);
                     }
 
-                    foreach (var featureInstance in args.MapModel.EnumerateFeatureInstances())
-                    {
-                        var feature = args.FeatureService.TryGetFeature(featureInstance.FeatureName);
-                        feature
-                            .Where(f => f.Permanent)
-                            .IfSome(f =>
-                        {
-                            var bounds = f.GetDrawBounds(args.MapModel.Tile.HeightGrid, featureInstance.X, featureInstance.Y);
-                            graphics.DrawImage(f.Image, bounds, 0, 0, f.Image.Width, f.Image.Height, GraphicsUnit.Pixel, wrapMode);
-                        });
-                    }
+                    writer.End();
+                }
+
+                using (var image = new MagickImage(tempPath))
+                {
+                    image.GammaCorrect(1.0 / 2.2);
+                    image.Resize(252, 252);
+                    image.GammaCorrect(2.2);
+                    image.Map(PaletteFactory.TAPalette.Select(c => new MagickColor(c.R, c.G, c.B, c.A)), new QuantizeSettings { DitherMethod = DitherMethod.No });
+                    image.Write(resizedPath);
+                }
+
+                using (var outputTemp = new Bitmap(resizedPath))
+                {
+                    workArgs.Result = new Bitmap(outputTemp);
                 }
             }
+            finally
+            {
+                foreach (var entry in tileCache)
+                {
+                    entry.Key.UnlockBits(entry.Value);
+                }
 
-            Quantization.ToTAPalette(destImage);
-
-            workArgs.Result = destImage;
+                File.Delete(tempPath);
+                File.Delete(resizedPath);
+            }
         }
 
         public static Bitmap ToBitmap(IPixelImage map)
