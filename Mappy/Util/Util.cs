@@ -382,12 +382,12 @@ namespace Mappy.Util
             if (map.Width > map.Height)
             {
                 width = 252;
-                height = (int)(252 * (map.Height / (float)map.Width));
+                height = (int)Math.Round(252 * (map.Height / (float)map.Width));
             }
             else
             {
                 height = 252;
-                width = (int)(252 * (map.Width / (float)map.Height));
+                width = (int)Math.Round(252 * (map.Width / (float)map.Height));
             }
 
             var wrapper = new NearestNeighbourWrapper(map, width, height);
