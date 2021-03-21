@@ -40,6 +40,7 @@ dist_files = [
         join(bindir, "System.Reactive.Linq.dll"),
         join(bindir, "System.Reactive.PlatformServices.dll"),
         join(bindir, "System.Reactive.Windows.Forms.dll"),
+        join(bindir, "System.ValueTuple.dll"),
         join(bindir, "TAUtil.dll"),
         join(bindir, "TAUtil.Gdi.dll"),
         join(bindir, "TAUtil.Gdi.pdb"),
