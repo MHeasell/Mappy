@@ -801,11 +801,7 @@
 
             try
             {
-                Bitmap bmp;
-                using (var s = File.OpenRead(loc))
-                {
-                    bmp = (Bitmap)Image.FromStream(s);
-                }
+                var bmp = Util.BitmapFromFile(loc);
 
                 if (bmp.Width != width || bmp.Height != height)
                 {
@@ -836,11 +832,7 @@
 
             try
             {
-                Bitmap bmp;
-                using (var s = File.OpenRead(loc))
-                {
-                    bmp = (Bitmap)Image.FromStream(s);
-                }
+                var bmp = Util.BitmapFromFile(loc);
 
                 if (bmp.Width > TntConstants.MaxMinimapWidth
                     || bmp.Height > TntConstants.MaxMinimapHeight)

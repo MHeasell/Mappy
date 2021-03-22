@@ -343,10 +343,7 @@ namespace Mappy.Util
                     image.Write(resizedPath);
                 }
 
-                using (var outputTemp = new Bitmap(resizedPath))
-                {
-                    workArgs.Result = new Bitmap(outputTemp);
-                }
+                workArgs.Result = Util.BitmapFromFile(resizedPath);
             }
             finally
             {
@@ -587,6 +584,27 @@ namespace Mappy.Util
             return new Line2D(
                 ProjectPoint(line.Start),
                 ProjectPoint(line.End));
+        }
+
+        public static Bitmap BitmapFromFile(string filename)
+        {
+            // It was discovered that when loading 8bpp PNG images
+            // via Image.FromStream, we crash with an OOM exception
+            // when trying to display them.
+            // Further to that, when we try to quantize Bitmap instances
+            // that use the 8bpp format internally, using say Quantization.ToTAPalette,
+            // these images can end up being made darker even if our code
+            // does not actually change the pixel values.
+            //
+            // These appear to be .NET Framework or GDI+ bugs.
+            //
+            // Passing the Bitmap straight into another Bitmap constructor
+            // causes it to get converted to the 32 bit ARGB format
+            // which does not have these issues.
+            using (var bmp = new Bitmap(filename))
+            {
+                return new Bitmap(bmp);
+            }
         }
     }
 }

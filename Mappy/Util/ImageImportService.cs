@@ -28,11 +28,7 @@
 
         public IMapTile ImportSection(string pngFile, string heightFile, Action<int> progress, Func<bool> shouldCancel)
         {
-            Bitmap heightBitmap;
-            using (var s = File.OpenRead(heightFile))
-            {
-                heightBitmap = new Bitmap(s);
-            }
+            var heightBitmap = Util.BitmapFromFile(heightFile);
 
             Grid<Bitmap> grid;
             using (var s = File.OpenRead(pngFile))
