@@ -11,7 +11,6 @@ namespace Mappy.Util
     using Geometry;
 
     using Hjg.Pngcs;
-    using ImageMagick;
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.Models;
@@ -181,10 +180,8 @@ namespace Mappy.Util
             return coll.SelectMany(item => f(item).Match(x => new[] { x }, () => new U[] { }));
         }
 
-        public static void RenderHighQualityMinimap(BackgroundWorker w, DoWorkEventArgs workArgs)
+        public static IEnumerable<Color> EnumerateBigMinimapImage(RenderMinimapArgs args)
         {
-            var args = (RenderMinimapArgs)workArgs.Argument;
-
             var featuresList = args.MapModel.EnumerateFeatureInstances()
                 .Choose(f =>
                     args.FeatureService.TryGetFeature(f.FeatureName)
@@ -210,140 +207,85 @@ namespace Mappy.Util
             var mapHeight = (tileGrid.Height * 32) - 128;
 
             var tileCache = new Dictionary<Bitmap, BitmapData>();
-
-            var tempPath = Path.GetTempFileName();
-            var resizedPath = Path.GetTempFileName();
-            var imgInfo = new ImageInfo(mapWidth, mapHeight, 8, true);
             try
             {
-                using (var tempFileStream = File.OpenWrite(tempPath))
+                var inProgressFeatures = new List<FeatureInfo>();
+                var currentFeatureIndex = 0;
+
+                for (var sourcePixelY = 0; sourcePixelY < mapHeight; ++sourcePixelY)
                 {
-                    var writer = new PngWriter(tempFileStream, imgInfo);
+                    var rowBuffer = new Color[mapWidth];
 
-                    var inProgressFeatures = new List<FeatureInfo>();
-                    var currentFeatureIndex = 0;
-
-                    for (var sourcePixelY = 0; sourcePixelY < mapHeight; ++sourcePixelY)
+                    var tileY = sourcePixelY / 32;
+                    for (var tileX = 0; tileX < tileGrid.Width - 1; ++tileX)
                     {
-                        w.ReportProgress(sourcePixelY * 100 / mapHeight);
-                        if (w.CancellationPending)
+                        var tile = tileGrid.Get(tileX, tileY);
+                        if (!tileCache.TryGetValue(tile, out var tileData))
                         {
-                            workArgs.Cancel = true;
-                            return;
+                            tileData = tile.LockBits(new Rectangle(0, 0, tile.Width, tile.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                            tileCache[tile] = tileData;
                         }
 
-                        var tileY = sourcePixelY / 32;
-                        var line = new ImageLine(imgInfo);
-                        for (var tileX = 0; tileX < tileGrid.Width - 1; ++tileX)
-                        {
-                            var tile = tileGrid.Get(tileX, tileY);
-                            if (!tileCache.TryGetValue(tile, out var tileData))
-                            {
-                                tileData = tile.LockBits(new Rectangle(0, 0, tile.Width, tile.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-                                tileCache[tile] = tileData;
-                            }
+                        var inTileY = sourcePixelY % 32;
 
-                            var inTileY = sourcePixelY % 32;
-
-                            for (var inTileX = 0; inTileX < 32; ++inTileX)
-                            {
-                                var sourcePixelX = (tileX * 32) + inTileX;
-                                var pngOffset = sourcePixelX * 4;
-                                unsafe
-                                {
-                                    var ptr = (int*)tileData.Scan0;
-                                    var color = Color.FromArgb(ptr[(inTileY * 32) + inTileX]);
-                                    line.Scanline[pngOffset] = color.R;
-                                    line.Scanline[pngOffset + 1] = color.G;
-                                    line.Scanline[pngOffset + 2] = color.B;
-                                    line.Scanline[pngOffset + 3] = color.A;
-                                }
-                            }
-                        }
-
-                        var nextInProgressFeaturesList = new List<FeatureInfo>();
-
-                        // Add feature bitmap data to the row
-                        var inProgressFeatureIndex = 0;
-                        while (true)
-                        {
-                            // Find the next feature
-                            FeatureInfo nextFeature;
-                            if (currentFeatureIndex < featuresList.Count && inProgressFeatureIndex < inProgressFeatures.Count && featuresList[currentFeatureIndex].Location.Y <= sourcePixelY)
-                            {
-                                nextFeature = featuresList[currentFeatureIndex].Location.X < inProgressFeatures[inProgressFeatureIndex].Location.X
-                                    ? featuresList[currentFeatureIndex++]
-                                    : inProgressFeatures[inProgressFeatureIndex++];
-                            }
-                            else if (currentFeatureIndex < featuresList.Count && featuresList[currentFeatureIndex].Location.Y <= sourcePixelY)
-                            {
-                                nextFeature = featuresList[currentFeatureIndex++];
-                            }
-                            else if (inProgressFeatureIndex < inProgressFeatures.Count)
-                            {
-                                nextFeature = inProgressFeatures[inProgressFeatureIndex++];
-                            }
-                            else
-                            {
-                                break;
-                            }
-
-                            if (!tileCache.TryGetValue(nextFeature.Image, out var featureImageData))
-                            {
-                                featureImageData = nextFeature.Image.LockBits(new Rectangle(0, 0, nextFeature.Image.Width, nextFeature.Image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-                                tileCache[nextFeature.Image] = featureImageData;
-                            }
-
-                            var imageRect = new Rectangle(nextFeature.Location, nextFeature.Image.Size);
-
-                            var coveringRect = new Rectangle(0, 0, mapWidth, mapHeight);
-                            coveringRect.Intersect(imageRect);
-
-                            var featureBitmapY = sourcePixelY - imageRect.Y;
-                            for (var dx = 0; dx < coveringRect.Width; ++dx)
-                            {
-                                var featureBitmapX = (coveringRect.X - imageRect.X) + dx;
-                                var sourcePixelX = coveringRect.X + dx;
-                                var pngOffset = sourcePixelX * 4;
-                                unsafe
-                                {
-                                    var ptr = (int*)featureImageData.Scan0;
-                                    var color = Color.FromArgb(ptr[(featureBitmapY * imageRect.Width) + featureBitmapX]);
-                                    if (color.A > 0)
-                                    {
-                                        line.Scanline[pngOffset] = color.R;
-                                        line.Scanline[pngOffset + 1] = color.G;
-                                        line.Scanline[pngOffset + 2] = color.B;
-                                        line.Scanline[pngOffset + 3] = color.A;
-                                    }
-                                }
-                            }
-
-                            // read it again next row
-                            if (sourcePixelY + 1 < imageRect.Y + imageRect.Height)
-                            {
-                                nextInProgressFeaturesList.Add(nextFeature);
-                            }
-                        }
-
-                        inProgressFeatures = nextInProgressFeaturesList;
-
-                        writer.WriteRow(line, sourcePixelY);
+                        CopyRow(tileData, inTileY, rowBuffer, tileX * 32);
                     }
 
-                    writer.End();
-                }
+                    var nextInProgressFeaturesList = new List<FeatureInfo>();
 
-                using (var image = new MagickImage(tempPath))
-                {
-                    image.GammaCorrect(1.0 / 2.2);
-                    image.Resize(252, 252);
-                    image.GammaCorrect(2.2);
-                    image.Map(PaletteFactory.TAPalette.Select(c => new MagickColor(c.R, c.G, c.B, c.A)), new QuantizeSettings { DitherMethod = DitherMethod.No });
-                    image.Write(resizedPath);
-                }
+                    // Add feature bitmap data to the row
+                    var inProgressFeatureIndex = 0;
+                    while (true)
+                    {
+                        // Find the next feature
+                        FeatureInfo nextFeature;
+                        if (currentFeatureIndex < featuresList.Count && inProgressFeatureIndex < inProgressFeatures.Count && featuresList[currentFeatureIndex].Location.Y <= sourcePixelY)
+                        {
+                            nextFeature = featuresList[currentFeatureIndex].Location.X < inProgressFeatures[inProgressFeatureIndex].Location.X
+                                ? featuresList[currentFeatureIndex++]
+                                : inProgressFeatures[inProgressFeatureIndex++];
+                        }
+                        else if (currentFeatureIndex < featuresList.Count && featuresList[currentFeatureIndex].Location.Y <= sourcePixelY)
+                        {
+                            nextFeature = featuresList[currentFeatureIndex++];
+                        }
+                        else if (inProgressFeatureIndex < inProgressFeatures.Count)
+                        {
+                            nextFeature = inProgressFeatures[inProgressFeatureIndex++];
+                        }
+                        else
+                        {
+                            break;
+                        }
 
-                workArgs.Result = Util.BitmapFromFile(resizedPath);
+                        if (!tileCache.TryGetValue(nextFeature.Image, out var featureImageData))
+                        {
+                            featureImageData = nextFeature.Image.LockBits(new Rectangle(0, 0, nextFeature.Image.Width, nextFeature.Image.Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+                            tileCache[nextFeature.Image] = featureImageData;
+                        }
+
+                        var imageRect = new Rectangle(nextFeature.Location, nextFeature.Image.Size);
+
+                        var coveringRect = new Rectangle(0, 0, mapWidth, mapHeight);
+                        coveringRect.Intersect(imageRect);
+
+                        var featureBitmapY = sourcePixelY - imageRect.Y;
+                        CopyRow(featureImageData, featureBitmapY, coveringRect.X - imageRect.X, coveringRect.Width, rowBuffer, coveringRect.X);
+
+                        // read it again next row
+                        if (sourcePixelY + 1 < imageRect.Y + imageRect.Height)
+                        {
+                            nextInProgressFeaturesList.Add(nextFeature);
+                        }
+                    }
+
+                    inProgressFeatures = nextInProgressFeaturesList;
+
+                    foreach (var c in rowBuffer)
+                    {
+                        yield return c;
+                    }
+                }
             }
             finally
             {
@@ -351,10 +293,114 @@ namespace Mappy.Util
                 {
                     entry.Key.UnlockBits(entry.Value);
                 }
-
-                File.Delete(tempPath);
-                File.Delete(resizedPath);
             }
+        }
+
+        private static Color3f Color3fFromColor(Color c)
+        {
+            return new Color3f
+            {
+                R = c.R / 255.0f,
+                G = c.G / 255.0f,
+                B = c.B / 255.0f,
+            };
+        }
+
+        private static Color ColorFromColor3f(Color3f c)
+        {
+            return Color.FromArgb((int)(c.R * 255.0f), (int)(c.G * 255.0f), (int)(c.B * 255.0f));
+        }
+
+        private static Maybe<Bitmap> BitmapFromColorEnumerable(IEnumerable<Color> input, int width, int height, Func<bool> shouldCancel, Action<int> reportProgress)
+        {
+            var bitmap = new Bitmap(width, height);
+            var data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
+            try
+            {
+                unsafe
+                {
+                    var ptr = (int*)data.Scan0;
+                    var i = 0;
+                    foreach (var c in input)
+                    {
+                        if (shouldCancel())
+                        {
+                            return Maybe.None<Bitmap>();
+                        }
+
+                        ptr[i++] = c.ToArgb();
+                        reportProgress((i * 100) / (width * height));
+                    }
+                }
+            }
+            finally
+            {
+                bitmap.UnlockBits(data);
+            }
+
+            return Maybe.Some(bitmap);
+        }
+
+        private static void CopyColorRange(BitmapData data, int dataStartIndex, Color[] output, int outputStartIndex, int length)
+        {
+            for (var i = 0; i < length; ++i)
+            {
+                unsafe
+                {
+                    var ptr = (int*)data.Scan0;
+                    var color = Color.FromArgb(ptr[dataStartIndex + i]);
+                    if (color.A > 0)
+                    {
+                        output[outputStartIndex + i] = color;
+                    }
+                }
+            }
+        }
+
+        private static void CopyRow(BitmapData data, int rowNumber, int startX, int length, Color[] output, int startIndex)
+        {
+            CopyColorRange(data, (rowNumber * data.Width) + startX, output, startIndex, length);
+        }
+
+        private static void CopyRow(BitmapData data, int rowNumber, Color[] output, int startIndex)
+        {
+            CopyRow(data, rowNumber, 0, data.Width, output, startIndex);
+        }
+
+        public static void RenderHighQualityMinimap(BackgroundWorker w, DoWorkEventArgs workArgs)
+        {
+            var args = (RenderMinimapArgs)workArgs.Argument;
+
+            var tileGrid = args.MapModel.Tile.TileGrid;
+            var mapWidth = (tileGrid.Width * 32) - 32;
+            var mapHeight = (tileGrid.Height * 32) - 128;
+
+            int width, height;
+
+            if (mapWidth > mapHeight)
+            {
+                width = 252;
+                height = (int)Math.Round(252 * (mapHeight / (float)mapWidth));
+            }
+            else
+            {
+                height = 252;
+                width = (int)Math.Round(252 * (mapWidth / (float)mapHeight));
+            }
+
+            var mapPixels = EnumerateBigMinimapImage(args).Select(Color3fFromColor);
+            var minimapPixels = Resize(mapPixels, mapWidth, mapHeight, width, height);
+            var minimapBitmapResult = BitmapFromColorEnumerable(minimapPixels.Select(ColorFromColor3f), width, height, () => w.CancellationPending, x => w.ReportProgress(x));
+            minimapBitmapResult.Do(
+                minimapBitmap =>
+                {
+                    Quantization.ToTAPalette(minimapBitmap);
+                    workArgs.Result = minimapBitmap;
+                },
+                () =>
+                {
+                    workArgs.Cancel = true;
+                });
         }
 
         public static Bitmap ToBitmap(IPixelImage map)
@@ -604,6 +650,69 @@ namespace Mappy.Util
             using (var bmp = new Bitmap(filename))
             {
                 return new Bitmap(bmp);
+            }
+        }
+
+        public struct Color3f
+        {
+            public static Color3f Zero = new Color3f { R = 0.0f, G = 0.0f, B = 0.0f };
+
+            public float R { get; set; }
+
+            public float G { get; set; }
+
+            public float B { get; set; }
+        }
+
+        private static Color3f CombineAverage(Color3f acc, Color3f val, int n)
+        {
+            return new Color3f
+            {
+                R = acc.R + ((val.R - acc.R) / n),
+                G = acc.G + ((val.G - acc.G) / n),
+                B = acc.B + ((val.B - acc.B) / n),
+            };
+        }
+
+        public static IEnumerable<Color3f> Resize(IEnumerable<Color3f> input, int width, int height, int newWidth, int newHeight)
+        {
+            using (var enumerator = input.GetEnumerator())
+            {
+                var nBuffer = new int[newWidth];
+                var rowBuffer = new Color3f[newWidth];
+                var currentResizedY = 0;
+
+                for (var y = 0; y < height; ++y)
+                {
+                    var resizedY = (int)(y * (newHeight / (float)height));
+                    if (resizedY != currentResizedY)
+                    {
+                        foreach (var c in rowBuffer)
+                        {
+                            yield return c;
+                        }
+
+                        Array.Clear(rowBuffer, 0, nBuffer.Length);
+                        Array.Clear(nBuffer, 0, nBuffer.Length);
+                        currentResizedY = resizedY;
+                    }
+
+                    for (var x = 0; x < width; ++x)
+                    {
+                        var resizedX = (int)(x * (newWidth / (float)width));
+                        if (!enumerator.MoveNext())
+                        {
+                            throw new Exception("Enumerator contained too few elements");
+                        }
+
+                        rowBuffer[resizedX] = CombineAverage(rowBuffer[resizedX], enumerator.Current, ++nBuffer[resizedX]);
+                    }
+                }
+
+                foreach (var c in rowBuffer)
+                {
+                    yield return c;
+                }
             }
         }
     }
