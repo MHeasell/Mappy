@@ -199,7 +199,7 @@
                                 Category = item.Value.Category,
                                 Footprint = item.Value.Footprint,
                                 Image = bitmap.Bitmap,
-                                Offset = new Point(bitmap.OffsetX, bitmap.OffsetY)
+                                Offset = new Point(-bitmap.OffsetX, -bitmap.OffsetY)
                             };
                         this.featureCache.Add(item.Key, f);
                         yield return f;
@@ -224,7 +224,7 @@
                             Category = entry.Value.Category,
                             Footprint = entry.Value.Footprint,
                             Image = bitmap.Bitmap,
-                            Offset = new Point(bitmap.OffsetX, bitmap.OffsetY)
+                            Offset = new Point(-bitmap.OffsetX, -bitmap.OffsetY)
                         };
                     this.featureCache.Add(entry.Key, f);
                     yield return f;
