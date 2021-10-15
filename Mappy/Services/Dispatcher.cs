@@ -566,7 +566,7 @@
             try
             {
                 MapSaver.SaveTnt(map, tmpTntName);
-                MapSaver.SaveOta(map.Attributes, tmpOtaName);
+                MapSaver.SaveOta(map, tmpOtaName);
                 File.Delete(tntName);
                 File.Delete(otaName);
                 File.Move(tmpTntName, tntName);

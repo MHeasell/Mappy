@@ -1,8 +1,8 @@
 ﻿namespace Mappy.IO
 {
+    using System;
     using System.IO;
 
-    using Mappy.Data;
     using Mappy.Models;
 
     using TAUtil.HpiUtil;
@@ -22,11 +22,12 @@
             }
         }
 
-        public static void SaveOta(MapAttributes attrs, string filename)
+        public static void SaveOta(IReadOnlyMapModel map, string filename)
         {
+            var mapDimensions = ComputeMapDimensions512(map);
             using (Stream s = File.Create(filename))
             {
-                attrs.WriteOta(s);
+                map.Attributes.WriteOta(s, mapDimensions.Item1, mapDimensions.Item2);
             }
         }
 
@@ -44,9 +45,11 @@
                     s.WriteTnt(new MapModelTntAdapter(map));
                 }
 
+                var mapDimensions = ComputeMapDimensions512(map);
+
                 using (Stream s = File.Create(tmpOtaName))
                 {
-                    map.Attributes.WriteOta(s);
+                    map.Attributes.WriteOta(s, mapDimensions.Item1, mapDimensions.Item2);
                 }
 
                 var fname = "maps\\" + namePart;
@@ -69,6 +72,13 @@
                     File.Delete(tmpOtaName);
                 }
             }
+        }
+
+        private static (int, int) ComputeMapDimensions512(IReadOnlyMapModel map)
+        {
+            var w = (map.FeatureGridWidth / 32) + ((map.FeatureGridWidth % 32 == 0) ? 0 : 1);
+            var h = (map.FeatureGridHeight / 32) + ((map.FeatureGridHeight % 32 == 0) ? 0 : 1);
+            return (w, h);
         }
     }
 }

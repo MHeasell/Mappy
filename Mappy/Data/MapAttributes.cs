@@ -268,7 +268,7 @@
             }
         }
 
-        public void WriteOta(Stream st)
+        public void WriteOta(Stream st, int mapWidthIn512Tiles, int mapHeightIn512Tiles)
         {
             var r = new TdfNode("GlobalHeader");
 
@@ -295,7 +295,7 @@
             r.Entries["waterdoesdamage"] = TdfConvert.ToString(this.WaterDoesDamage);
             r.Entries["waterdamage"] = TdfConvert.ToString(this.WaterDamage);
             r.Entries["numplayers"] = this.numPlayers;
-            r.Entries["size"] = string.Empty; // TODO
+            r.Entries["size"] = $"{mapWidthIn512Tiles} x {mapHeightIn512Tiles}";
             r.Entries["memory"] = this.memory;
             r.Entries["useonlyunits"] = string.Empty;
             r.Entries["SCHEMACOUNT"] = "1";
