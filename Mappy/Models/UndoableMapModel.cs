@@ -41,6 +41,8 @@
 
         private bool canCopy;
 
+        private bool canFill;
+
         private Maybe<Point> mousePosition;
 
         private Maybe<Guid> hoveredFeature;
@@ -96,6 +98,12 @@
         {
             get => this.canCut;
             private set => this.SetField(ref this.canCut, value, nameof(this.CanCut));
+        }
+
+        public bool CanFill
+        {
+            get => this.canFill;
+            private set => this.SetField(ref this.canFill, value, nameof(this.CanFill));
         }
 
         public string FilePath

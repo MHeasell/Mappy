@@ -307,6 +307,11 @@
             this.dispatcher.PasteFromClipboard();
         }
 
+        public void FillMenuItemClick()
+        {
+            this.dispatcher.FillSelection();
+        }
+
         public void ImportMinimapMenuItemClick()
         {
             this.dispatcher.ImportMinimap();
