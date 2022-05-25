@@ -227,7 +227,7 @@
 
         private void FillMenuItemClick(object sender, EventArgs e)
         {
-            //this.model.FillMenuItemClick();
+            this.model.FillMenuItemClick();
         }
 
         private void MainFormLoad(object sender, EventArgs e)

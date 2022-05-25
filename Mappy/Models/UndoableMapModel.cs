@@ -740,6 +740,11 @@
             this.CanCut = this.SelectedTile.HasValue || this.SelectedFeatures.Count > 0;
         }
 
+        private void UpdateCanFill()
+        {
+            this.CanCut = this.SelectedTile.HasValue;
+        }
+
         private void UndoManagerOnIsMarkedChanged(object sender, EventArgs eventArgs)
         {
             this.OnPropertyChanged("IsMarked");
@@ -764,6 +769,7 @@
                 case "SelectedTile":
                     this.UpdateCanCut();
                     this.UpdateCanCopy();
+                    this.UpdateCanFill();
                     break;
             }
         }
