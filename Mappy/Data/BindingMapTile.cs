@@ -19,15 +19,19 @@ namespace Mappy.Data
         {
             this.tileGrid = new BindingGrid<Bitmap>(tile.TileGrid);
             this.heightGrid = new BindingGrid<int>(tile.HeightGrid);
-
-            this.tileGrid.CellsChanged += this.TileGridChanged;
-
-            this.heightGrid.CellsChanged += this.HeightGridChanged;
         }
 
-        public event EventHandler<GridEventArgs> TileGridChanged;
+        public event EventHandler<GridEventArgs> TileGridChanged
+        {
+            add => this.tileGrid.CellsChanged += value;
+            remove => this.tileGrid.CellsChanged -= value;
+        }
 
-        public event EventHandler<GridEventArgs> HeightGridChanged;
+        public event EventHandler<GridEventArgs> HeightGridChanged
+        {
+            add => this.heightGrid.CellsChanged += value;
+            remove => this.heightGrid.CellsChanged -= value;
+        }
 
         public IGrid<Bitmap> TileGrid => this.tileGrid;
 
