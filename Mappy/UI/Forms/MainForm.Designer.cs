@@ -364,7 +364,7 @@
             // 
             this.copyMenuItem.Enabled = false;
             this.copyMenuItem.Name = "copyMenuItem";
-            this.copyMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.copyMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyMenuItem.Size = new System.Drawing.Size(373, 34);
             this.copyMenuItem.Text = "Copy";
             this.copyMenuItem.Click += new System.EventHandler(this.CopyMenuItemClick);
@@ -574,7 +574,7 @@
             // aboutMenuItem
             // 
             this.aboutMenuItem.Name = "aboutMenuItem";
-            this.aboutMenuItem.Size = new System.Drawing.Size(176, 34);
+            this.aboutMenuItem.Size = new System.Drawing.Size(270, 34);
             this.aboutMenuItem.Text = "&About...";
             this.aboutMenuItem.Click += new System.EventHandler(this.AboutMenuItemClick);
             // 
@@ -621,7 +621,7 @@
             this.featuresTab.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.featuresTab.Name = "featuresTab";
             this.featuresTab.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.featuresTab.Size = new System.Drawing.Size(314, 797);
+            this.featuresTab.Size = new System.Drawing.Size(314, 799);
             this.featuresTab.TabIndex = 1;
             this.featuresTab.Text = "Features";
             this.featuresTab.UseVisualStyleBackColor = true;
@@ -633,7 +633,7 @@
             this.featureView.Location = new System.Drawing.Point(4, 5);
             this.featureView.Margin = new System.Windows.Forms.Padding(6);
             this.featureView.Name = "featureView";
-            this.featureView.Size = new System.Drawing.Size(306, 787);
+            this.featureView.Size = new System.Drawing.Size(306, 789);
             this.featureView.TabIndex = 0;
             // 
             // startPositionsTab
@@ -643,7 +643,7 @@
             this.startPositionsTab.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.startPositionsTab.Name = "startPositionsTab";
             this.startPositionsTab.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.startPositionsTab.Size = new System.Drawing.Size(314, 797);
+            this.startPositionsTab.Size = new System.Drawing.Size(314, 799);
             this.startPositionsTab.TabIndex = 2;
             this.startPositionsTab.Text = "Starts";
             this.startPositionsTab.UseVisualStyleBackColor = true;
@@ -654,7 +654,7 @@
             this.startPositionsView1.Location = new System.Drawing.Point(4, 5);
             this.startPositionsView1.Margin = new System.Windows.Forms.Padding(6);
             this.startPositionsView1.Name = "startPositionsView1";
-            this.startPositionsView1.Size = new System.Drawing.Size(306, 787);
+            this.startPositionsView1.Size = new System.Drawing.Size(306, 789);
             this.startPositionsView1.TabIndex = 0;
             // 
             // attributesTab
@@ -665,7 +665,7 @@
             this.attributesTab.Location = new System.Drawing.Point(4, 29);
             this.attributesTab.Name = "attributesTab";
             this.attributesTab.Padding = new System.Windows.Forms.Padding(3);
-            this.attributesTab.Size = new System.Drawing.Size(314, 797);
+            this.attributesTab.Size = new System.Drawing.Size(314, 799);
             this.attributesTab.TabIndex = 3;
             this.attributesTab.Text = "Attributes";
             this.attributesTab.UseVisualStyleBackColor = true;
