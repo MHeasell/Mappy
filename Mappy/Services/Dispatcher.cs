@@ -365,8 +365,6 @@
                         int xIterations = (int)Math.Ceiling((double)map.MapWidth / (double)fillTile.TileGrid.Width);
                         int yIterations = (int)Math.Ceiling((double)map.MapHeight / (double)fillTile.TileGrid.Height);
 
-                        this.DeduplicateTiles(fillTile.TileGrid); // Is this needed within the loops? TODO: investigate
-
                         for (int x = 0; x < xIterations; x++)
                         {
                             for (int y = 0; y < yIterations; y++)
