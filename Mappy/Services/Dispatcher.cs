@@ -349,7 +349,7 @@
                     });
         }
 
-        public void FillSelection()
+        public void FillMap()
         {
             this.model.Map.IfSome(
                 map =>
@@ -380,6 +380,8 @@
                         this.DeduplicateTiles(fillTile.TileGrid); // For good measure
                     }
                 });
+
+            this.ClearSelection();
         }
 
         public void RefreshMinimap()

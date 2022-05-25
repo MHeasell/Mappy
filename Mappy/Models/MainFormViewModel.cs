@@ -312,7 +312,7 @@
 
         public void FillMenuItemClick()
         {
-            this.dispatcher.FillSelection();
+            this.dispatcher.FillMap();
         }
 
         public void ImportMinimapMenuItemClick()

@@ -742,7 +742,7 @@
 
         private void UpdateCanFill()
         {
-            this.CanCut = this.SelectedTile.HasValue;
+            this.CanFill = this.SelectedTile.HasValue;
         }
 
         private void UndoManagerOnIsMarkedChanged(object sender, EventArgs eventArgs)
