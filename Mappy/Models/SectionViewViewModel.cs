@@ -22,7 +22,9 @@
 
         private readonly SectionService sectionService;
 
-        public SectionViewViewModel(SectionService sectionService)
+        private readonly Dispatcher dispatcher;
+
+        public SectionViewViewModel(SectionService sectionService, Dispatcher dispatcher)
         {
             sectionService.SectionsChanged += this.OnSectionsChanged;
 
@@ -44,6 +46,7 @@
                     });
 
             this.sectionService = sectionService;
+            this.dispatcher = dispatcher;
         }
 
         public IObservable<ComboBoxViewModel> ComboBox1Model => this.worlds;
@@ -106,6 +109,11 @@
             this.UpdateWorlds();
             this.UpdateCategories();
             this.UpdateSections();
+        }
+
+        public void SetSelectedFeature(string featureName)
+        {
+            this.dispatcher.SetSelectedFeature(featureName);
         }
     }
 }

@@ -545,6 +545,15 @@
             this.model.Map.IfSome(x => x.SelectStartPosition(index));
         }
 
+        public void SetSelectedFeature(string featureName)
+        {
+            var featureFromTag = this.featureService.TryGetFeature(featureName);
+            if (featureFromTag.HasValue)
+            {
+                this.featureService.SelectedFeature = featureFromTag.UnsafeValue;
+            }
+        }
+
         private static IEnumerable<string> GetMapNames(HpiArchive hpi)
         {
             return hpi.GetFiles("maps")
