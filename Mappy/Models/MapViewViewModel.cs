@@ -186,7 +186,7 @@
             this.dispatcher.SetViewportLocation(position);
         }
 
-        public void MouseDown(Point location)
+        public void MouseLeftDown(Point location)
         {
             this.mouseDown = true;
             this.lastMousePos = location;
@@ -204,6 +204,22 @@
                     this.dispatcher.StartBandbox(location.X, location.Y);
                     this.bandboxMode = true;
                 }
+            }
+        }
+
+        public void MouseRightDown(Point location)
+        {
+            this.mouseDown = true;
+            this.lastMousePos = location;
+
+            if (!this.itemsLayer.Value.IsInSelection(location.X, location.Y) &&
+                this.featureService.SelectedFeature != null)
+            {
+                this.dispatcher.DragDropFeature(
+                    this.featureService.SelectedFeature.Name,
+                    location.X,
+                    location.Y
+                );
             }
         }
 
