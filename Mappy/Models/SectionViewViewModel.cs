@@ -65,6 +65,11 @@
             this.selectCategoryEvent.OnNext(index);
         }
 
+        public void SetSelectedFeature(string featureName)
+        {
+            this.dispatcher.SetSelectedFeature(featureName);
+        }
+
         public void Dispose()
         {
             this.worlds.Dispose();
@@ -109,11 +114,6 @@
             this.UpdateWorlds();
             this.UpdateCategories();
             this.UpdateSections();
-        }
-
-        public void SetSelectedFeature(string featureName)
-        {
-            this.dispatcher.SetSelectedFeature(featureName);
         }
     }
 }
