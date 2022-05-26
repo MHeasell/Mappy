@@ -65,9 +65,9 @@
             this.selectCategoryEvent.OnNext(index);
         }
 
-        public void SetSelectedFeature(string featureName)
+        public void SetSelectedItem(string sectionName)
         {
-            this.dispatcher.SetSelectedFeature(featureName);
+            // this.dispatcher.SetSelectedSection(sectionName);
         }
 
         public void Dispose()

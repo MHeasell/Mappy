@@ -79,7 +79,7 @@
             this.selectCategoryEvent.OnNext(index);
         }
 
-        public void SetSelectedFeature(string featureName)
+        public void SetSelectedItem(string featureName)
         {
             this.dispatcher.SetSelectedFeature(featureName);
         }

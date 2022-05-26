@@ -15,6 +15,6 @@
 
         void SelectComboBox2Item(int index);
 
-        void SetSelectedFeature(string featureName);
+        void SetSelectedItem(string selectedItemName);
     }
 }

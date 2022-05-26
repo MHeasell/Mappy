@@ -161,7 +161,7 @@
                 this.UpdateItemDeselected(view.Items[this.previousSelection.Index]);
                 this.UpdateItemSelected(view.Items[selItem.Index]);
                 this.previousSelection = selItem;
-                this.model.SetSelectedFeature(selItem.Text);
+                this.model.SetSelectedItem(selItem.Text);
             }
 
             view.ItemSelectionChanged += this.ListViewItemSelectionChanged;
