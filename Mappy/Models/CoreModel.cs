@@ -1,8 +1,7 @@
 ﻿namespace Mappy.Models
 {
-    using System.ComponentModel;
     using System.Drawing;
-
+    using Mappy.Models.Enums;
     using Mappy.Util;
 
     public class CoreModel : Notifier, IReadOnlyApplicationModel
@@ -19,6 +18,8 @@
         private bool gridVisible;
         private Size gridSize = new Size(16, 16);
         private Color gridColor = MappySettings.Settings.GridColor;
+
+        private GUITab guiTab = GUITab.Sections;
 
         private int viewportWidth;
         private int viewportHeight;
@@ -91,6 +92,15 @@
                 MappySettings.Settings.GridColor = value;
                 MappySettings.SaveSettings();
                 this.SetField(ref this.gridColor, value, nameof(this.GridColor));
+            }
+        }
+
+        public GUITab SelectedGUITab
+        {
+            get => this.guiTab;
+            set
+            {
+                this.SetField(ref this.guiTab, value, nameof(this.SelectedGUITab));
             }
         }
 

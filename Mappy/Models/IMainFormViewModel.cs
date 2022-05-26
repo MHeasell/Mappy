@@ -132,5 +132,7 @@
         void ImportCustomSectionMenuItemClick();
 
         void Load();
+
+        void ChangeSelectedTab();
     }
 }

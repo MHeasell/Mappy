@@ -294,5 +294,15 @@
         {
             this.model.ToggleHeightGridMenuItemClick();
         }
+
+        private void GUITabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.sidebarTabs.SelectedTab == null)
+            {
+                return;
+            }
+
+            //this.model.ChangeSelectedTab(this.sidebarTabs);
+        }
     }
 }
