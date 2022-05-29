@@ -28,6 +28,6 @@
 
         Color GridColor { get; }
 
-        GUITab GUITab { get; }
+        GUITab SelectedGUITab { get; }
     }
 }

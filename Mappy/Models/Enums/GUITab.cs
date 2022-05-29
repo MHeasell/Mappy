@@ -5,6 +5,7 @@
         Sections,
         Features,
         Starts,
-        Attributes
+        Attributes,
+        Other
     }
 }
