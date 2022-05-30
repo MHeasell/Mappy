@@ -7,8 +7,8 @@
     using System.Windows.Forms;
 
     using Mappy.Models;
-    using Mappy.Models.Enums;
     using Mappy.UI.Controls;
+    using Mappy.Util;
 
     public partial class MainForm : Form
     {
@@ -303,24 +303,7 @@
                 return;
             }
 
-            this.model.ChangeSelectedTabType(this.MapTabNameToGUIType(this.sidebarTabs.SelectedTab.Name));
-        }
-
-        private GUITab MapTabNameToGUIType(string tabName)
-        {
-            switch (tabName)
-            {
-                case "sectionsTab":
-                    return GUITab.Sections;
-                case "featuresTab":
-                    return GUITab.Features;
-                case "attributesTab":
-                    return GUITab.Attributes;
-                case "startPositionsTab":
-                    return GUITab.Starts;
-                default:
-                    return GUITab.Other;
-            }
+            this.model.ChangeSelectedTabType(Util.MapTabNameToGUIType(this.sidebarTabs.SelectedTab.Name));
         }
     }
 }

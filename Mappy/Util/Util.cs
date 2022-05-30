@@ -14,6 +14,7 @@ namespace Mappy.Util
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.Models;
+    using Mappy.Models.Enums;
     using Mappy.Properties;
     using Mappy.Services;
     using Mappy.Util.ImageSampling;
@@ -172,6 +173,7 @@ namespace Mappy.Util
         public struct FeatureInfo
         {
             public Bitmap Image { get; set; }
+
             public Point Location { get; set; }
         }
 
@@ -187,10 +189,10 @@ namespace Mappy.Util
                     args.FeatureService.TryGetFeature(f.FeatureName)
                         .Where(rec => rec.Permanent)
                         .Select(rec => new FeatureInfo
-                            {
-                                Image = rec.Image,
-                                Location = rec.GetDrawBounds(args.MapModel.Tile.HeightGrid, f.X, f.Y).Location
-                            }))
+                        {
+                            Image = rec.Image,
+                            Location = rec.GetDrawBounds(args.MapModel.Tile.HeightGrid, f.X, f.Y).Location
+                        }))
                 .ToList();
             featuresList.Sort((a, b) =>
             {
@@ -487,6 +489,23 @@ namespace Mappy.Util
         public static GridCoordinates ToGridCoordinates(Point p)
         {
             return new GridCoordinates(p.X, p.Y);
+        }
+
+        public static GUITab MapTabNameToGUIType(string tabName)
+        {
+            switch (tabName)
+            {
+                case "sectionsTab":
+                    return GUITab.Sections;
+                case "featuresTab":
+                    return GUITab.Features;
+                case "attributesTab":
+                    return GUITab.Attributes;
+                case "startPositionsTab":
+                    return GUITab.Starts;
+                default:
+                    return GUITab.Other;
+            }
         }
 
         public static TValue GetOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dict, TKey key, TValue defaultValue)
