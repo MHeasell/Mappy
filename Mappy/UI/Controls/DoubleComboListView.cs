@@ -5,9 +5,16 @@
 
     public partial class DoubleComboListView : UserControl
     {
+        private readonly Pen selectionPen;
+        private readonly Pen defaultPen;
+
+        private ListViewItem previousSelection;
+
         public DoubleComboListView()
         {
             this.InitializeComponent();
+            this.selectionPen = new Pen(Color.Red, 3);
+            this.defaultPen = new Pen(Color.White, 3);
         }
 
         public ComboBox ComboBox1 => this.comboBox1;
@@ -26,7 +33,17 @@
             e.DrawDefault = true;
             if (e.Item.Selected)
             {
-                e.Graphics.DrawRectangle(Pens.Red, e.Bounds);
+                e.Graphics.DrawRectangle(this.selectionPen, e.Bounds);
+                this.previousSelection = e.Item;
+            }
+            else if (sender is ListView && ((ListView)sender).SelectedItems.Count <= 0 &&
+                this.previousSelection != null && this.previousSelection.Index == e.Item.Index)
+            {
+                e.Graphics.DrawRectangle(this.selectionPen, this.previousSelection.Bounds);
+            }
+            else
+            {
+                e.Graphics.DrawRectangle(this.defaultPen, e.Bounds);
             }
         }
     }
