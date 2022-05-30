@@ -154,37 +154,19 @@
                 view.Items[this.previousSelection.Index] == null)
             {
                 this.previousSelection = selItem;
-                this.UpdateItemSelected(view.Items[selItem.Index]);
+                view.Items[selItem.Index].Selected = true;
                 this.model.SetSelectedItem(selItem.Text);
             }
 
             if (selItem != this.previousSelection)
             {
-                this.UpdateItemDeselected(view.Items[this.previousSelection.Index]);
-                this.UpdateItemSelected(view.Items[selItem.Index]);
+                view.Items[this.previousSelection.Index].Selected = false;
+                view.Items[selItem.Index].Selected = true;
                 this.previousSelection = selItem;
                 this.model.SetSelectedItem(selItem.Text);
             }
 
             view.ItemSelectionChanged += this.ListViewItemSelectionChanged;
-        }
-
-        private void UpdateItemSelected(ListViewItem toBeSelected)
-        {
-            // Functionality
-            toBeSelected.Selected = true;
-
-            // Appearance
-            toBeSelected.BackColor = Color.Orange;
-            toBeSelected.ForeColor = Color.Black;
-        }
-
-        private void UpdateItemDeselected(ListViewItem toBeSelected)
-        {
-            toBeSelected.Selected = false;
-
-            toBeSelected.BackColor = Color.White;
-            toBeSelected.ForeColor = Color.Black;
         }
     }
 }
