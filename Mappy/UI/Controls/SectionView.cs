@@ -154,6 +154,8 @@
                 view.Items[this.previousSelection.Index] == null)
             {
                 this.previousSelection = selItem;
+                this.UpdateItemSelected(view.Items[selItem.Index]);
+                this.model.SetSelectedItem(selItem.Text);
             }
 
             if (selItem != this.previousSelection)
