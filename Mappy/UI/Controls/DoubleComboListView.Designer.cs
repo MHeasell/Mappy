@@ -73,6 +73,7 @@
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView1_DrawItem);
             this.listView1.DrawSubItem += new System.Windows.Forms.DrawListViewSubItemEventHandler(this.ListView1_DrawSubItem);
+            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.ListView1_ItemSelectionChanged);
             // 
             // DoubleComboListView
             // 

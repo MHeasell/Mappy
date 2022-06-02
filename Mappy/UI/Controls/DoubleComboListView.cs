@@ -46,5 +46,10 @@
                 e.Graphics.DrawRectangle(this.defaultPen, e.Bounds);
             }
         }
+
+        private void ListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            this.ListView.Refresh();
+        }
     }
 }
