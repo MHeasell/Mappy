@@ -549,6 +549,7 @@
         public void ChangeSelectedTab(GUITab tab)
         {
             this.model.SelectedGUITab = tab;
+            this.model.Map.IfSome(x => x.UpdateSelectedGUITab(tab));
         }
 
         private static IEnumerable<string> GetMapNames(HpiArchive hpi)

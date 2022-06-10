@@ -41,8 +41,8 @@
 
         public void GrowBandbox(int x, int y)
         {
-            this.finishPoint.X = x;
-            this.finishPoint.Y = y;
+            this.finishPoint.X += x;
+            this.finishPoint.Y += y;
 
             this.UpdateBandboxRectangle();
         }
@@ -58,12 +58,12 @@
                 {
                     return;
                 }
-
+                /*
                 this.model.LiftAndSelectArea(
                     this.BandboxRectangle.X,
                     this.BandboxRectangle.Y,
                     this.BandboxRectangle.Width,
-                    this.bandboxRectangle.Height);
+                    this.bandboxRectangle.Height);*/
             }
             finally
             {

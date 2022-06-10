@@ -11,6 +11,7 @@
     using Mappy.Collections;
     using Mappy.Data;
     using Mappy.Models.BandboxBehaviours;
+    using Mappy.Models.Enums;
     using Mappy.Operations;
     using Mappy.Operations.SelectionModel;
     using Mappy.Util;
@@ -19,9 +20,14 @@
     {
         private readonly OperationManager undoManager = new OperationManager();
 
-        private readonly IBandboxBehaviour bandboxBehaviour;
+        private readonly IBandboxBehaviour tileBandboxBehaviour;
+
+        private readonly IBandboxBehaviour freeBandboxBehaviour;
+
 
         private readonly ISelectionModel model;
+
+        private IBandboxBehaviour currentBandboxBehaviour;
 
         private Point viewportLocation;
 
@@ -61,8 +67,13 @@
             model.HeightGridChanged += this.TileOnHeightGridChanged;
             model.Attributes.StartPositionChanged += this.AttributesOnStartPositionChanged;
 
-            this.bandboxBehaviour = new TileBandboxBehaviour(this);
-            this.bandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
+            this.tileBandboxBehaviour = new TileBandboxBehaviour(this);
+            this.tileBandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
+
+            this.freeBandboxBehaviour = new FreeBandboxBehaviour(this);
+            this.freeBandboxBehaviour.PropertyChanged += this.BandboxBehaviourPropertyChanged;
+
+            this.currentBandboxBehaviour = this.tileBandboxBehaviour;
 
             this.undoManager.CanUndoChanged += this.UndoManagerOnCanUndoChanged;
             this.undoManager.CanRedoChanged += this.UndoManagerOnCanRedoChanged;
@@ -120,7 +131,7 @@
 
         public int SeaLevel => this.model.SeaLevel;
 
-        public Rectangle BandboxRectangle => this.bandboxBehaviour.BandboxRectangle;
+        public Rectangle BandboxRectangle => this.currentBandboxBehaviour.BandboxRectangle;
 
         public IMapTile BaseTile => this.model.Tile;
 
@@ -405,6 +416,23 @@
             }
         }
 
+        public void UpdateSelectedGUITab(GUITab newTab)
+        {
+            switch (newTab)
+            {
+                case GUITab.Features:
+                    this.currentBandboxBehaviour = this.freeBandboxBehaviour;
+                    break;
+                case GUITab.Sections:
+                case GUITab.Starts:
+                case GUITab.Attributes:
+                case GUITab.Other:
+                default:
+                    this.currentBandboxBehaviour = this.tileBandboxBehaviour;
+                    return;
+            }
+        }
+
         public Point? GetStartPosition(int index)
         {
             return this.model.Attributes.GetStartPosition(index);
@@ -420,17 +448,17 @@
 
         public void StartBandbox(int x, int y)
         {
-            this.bandboxBehaviour.StartBandbox(x, y);
+            this.currentBandboxBehaviour.StartBandbox(x, y);
         }
 
         public void GrowBandbox(int x, int y)
         {
-            this.bandboxBehaviour.GrowBandbox(x, y);
+            this.currentBandboxBehaviour.GrowBandbox(x, y);
         }
 
         public void CommitBandbox()
         {
-            this.bandboxBehaviour.CommitBandbox();
+            this.currentBandboxBehaviour.CommitBandbox();
         }
 
         public void ReplaceHeightmap(Grid<int> heightmap)
