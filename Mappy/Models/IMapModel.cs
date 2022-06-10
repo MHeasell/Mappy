@@ -1,6 +1,7 @@
 ﻿namespace Mappy.Models
 {
     using System;
+    using System.Collections.Generic;
     using System.Drawing;
 
     public interface IMapModel : IReadOnlyMapModel
@@ -25,6 +26,15 @@
         /// </summary>
         /// <param name="instance">The instance to update.</param>
         void UpdateFeatureInstance(FeatureInstance instance);
+
+        /// <summary>
+        /// Updates the given instance in the collection,
+        /// replacing the existing instance with the same ID.
+        /// If the ID is not present already, an exception is raised.
+        /// </summary>
+        /// <param name="instance">The instance to update.</param>
+        /// <param name="otherUpdatingFeatures">The list of FeatureInstance GUIDs that are being updated</param>
+        void UpdateFeatureInstanceInBatch(FeatureInstance instance, ISet<Guid> otherUpdatingFeatures);
 
         /// <summary>
         /// Removes the feature instance with the given ID.

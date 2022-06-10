@@ -183,6 +183,22 @@
             this.OnFeatureInstanceChanged(arg);
         }
 
+        public void UpdateFeatureInstanceInBatch(FeatureInstance instance, ISet<Guid> otherUpdatingFeatures)
+        {
+            if (!this.featureInstances.ContainsKey(instance.Id))
+            {
+                throw new ArgumentException("No existing FeatureInstance with this ID.");
+            }
+
+            this.RemoveFeatureInstanceInternal(instance.Id);
+            this.AddFeatureInstanceInternal(instance, otherUpdatingFeatures);
+
+            var arg = new FeatureInstanceEventArgs(
+                FeatureInstanceEventArgs.ActionType.Move,
+                instance.Id);
+            this.OnFeatureInstanceChanged(arg);
+        }
+
         /// <summary>
         /// <see cref="IMapModel.RemoveFeatureInstance"/>
         /// </summary>
@@ -340,6 +356,25 @@
             if (this.featureLocationIndex.HasValue(instance.X, instance.Y))
             {
                 throw new ArgumentException("A FeatureInstance is already present at the target location.");
+            }
+
+            this.featureInstances[instance.Id] = instance;
+            this.featureLocationIndex.Set(instance.X, instance.Y, instance);
+        }
+
+        private void AddFeatureInstanceInternal(FeatureInstance instance, ISet<Guid> otherUpdatingFeatures)
+        {
+            if (this.featureInstances.ContainsKey(instance.Id))
+            {
+                throw new ArgumentException("A FeatureInstance with the given ID already exists.");
+            }
+
+            if (this.featureLocationIndex.TryGetValue(instance.X, instance.Y, out FeatureInstance val))
+            {
+                if (!otherUpdatingFeatures.Contains(val.Id))
+                {
+                    throw new ArgumentException("A FeatureInstance is already present at the target location.");
+                }
             }
 
             this.featureInstances[instance.Id] = instance;
