@@ -24,7 +24,6 @@
 
         private readonly IBandboxBehaviour freeBandboxBehaviour;
 
-
         private readonly ISelectionModel model;
 
         private IBandboxBehaviour currentBandboxBehaviour;
@@ -452,9 +451,16 @@
                 var loc1 = new Point(x, y);
                 var loc2 = new Point(x + width, y + height);
 
-                var validItems = this.EnumerateFeatureInstances().Where(i =>
-                                    ((i.X * 16) >= loc1.X && (i.Y * 16) >= loc1.Y) &&
-                                    ((i.X * 16) <= loc2.X && (i.Y * 16) <= loc2.Y)).ToList();
+                var validItems = new List<FeatureInstance>();
+                foreach (var f in this.EnumerateFeatureInstances())
+                {
+                    var bounds = f.BaseFeature.GetDrawBounds(this.BaseTile.HeightGrid, f.X, f.Y);
+                    if ((bounds.X + (bounds.Width * 0.5)) >= loc1.X && (bounds.Y + (bounds.Height * 0.5)) >= loc1.Y &&
+                        (bounds.X + (bounds.Width * 0.5)) <= loc2.X && (bounds.Y + (bounds.Height * 0.5)) <= loc2.Y)
+                    {
+                        validItems.Add(f);
+                    }
+                }
 
                 List<IReplayableOperation> selections = new List<IReplayableOperation>();
                 for (int i = 0; i < validItems.Count(); i++)
