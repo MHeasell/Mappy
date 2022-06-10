@@ -440,10 +440,30 @@
 
         public void LiftAndSelectArea(int x, int y, int width, int height)
         {
-            var liftOp = OperationFactory.CreateClippedLiftAreaOperation(this.model, x, y, width, height);
-            var index = this.FloatingTiles.Count;
-            var selectOp = new SelectTileOperation(this.model, index);
-            this.undoManager.Execute(new CompositeOperation(liftOp, selectOp));
+            if (this.currentBandboxBehaviour == this.tileBandboxBehaviour)
+            {
+                var liftOp = OperationFactory.CreateClippedLiftAreaOperation(this.model, x, y, width, height);
+                var index = this.FloatingTiles.Count;
+                var selectOp = new SelectTileOperation(this.model, index);
+                this.undoManager.Execute(new CompositeOperation(liftOp, selectOp));
+            }
+            else if (this.currentBandboxBehaviour == this.freeBandboxBehaviour)
+            {
+                var loc1 = new Point(x, y);
+                var loc2 = new Point(x + width, y + height);
+
+                var validItems = this.EnumerateFeatureInstances().Where(i =>
+                                    ((i.X * 16) >= loc1.X && (i.Y * 16) >= loc1.Y) &&
+                                    ((i.X * 16) <= loc2.X && (i.Y * 16) <= loc2.Y)).ToList();
+
+                List<IReplayableOperation> selections = new List<IReplayableOperation>();
+                for (int i = 0; i < validItems.Count(); i++)
+                {
+                    selections.Add(new SelectFeatureOperation(this.model, validItems.ElementAt(i).Id));
+                }
+
+                this.undoManager.Execute(new CompositeOperation(selections));
+            }
         }
 
         public void StartBandbox(int x, int y)

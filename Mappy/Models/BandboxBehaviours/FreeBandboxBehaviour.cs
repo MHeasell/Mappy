@@ -58,12 +58,12 @@
                 {
                     return;
                 }
-                /*
+
                 this.model.LiftAndSelectArea(
                     this.BandboxRectangle.X,
                     this.BandboxRectangle.Y,
                     this.BandboxRectangle.Width,
-                    this.bandboxRectangle.Height);*/
+                    this.bandboxRectangle.Height);
             }
             finally
             {
