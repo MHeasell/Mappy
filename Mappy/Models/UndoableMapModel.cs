@@ -641,7 +641,7 @@
                     return false;
                 }
 
-                var isBlocked = // !coordSet.Contains(translatedPoint) &&
+                var isBlocked = !coordSet.Contains(translatedPoint) &&
                     this.HasFeatureInstanceAt(translatedPoint.X, translatedPoint.Y);
                 if (isBlocked)
                 {
