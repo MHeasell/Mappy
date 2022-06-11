@@ -25,16 +25,12 @@
         /// If the ID is not present already, an exception is raised.
         /// </summary>
         /// <param name="instance">The instance to update.</param>
-        void UpdateFeatureInstance(FeatureInstance instance);
-
-        /// <summary>
-        /// Updates the given instance in the collection,
-        /// replacing the existing instance with the same ID.
-        /// If the ID is not present already, an exception is raised.
-        /// </summary>
-        /// <param name="instance">The instance to update.</param>
-        /// <param name="otherUpdatingFeatures">The list of FeatureInstance GUIDs that are being updated</param>
-        void UpdateFeatureInstanceInBatch(FeatureInstance instance, ISet<Guid> otherUpdatingFeatures);
+        /// <param name="otherUpdatingFeatures">
+        ///     The list of FeatureInstance GUIDs that are being updated.
+        ///     The positions of these FeatureInstances will be ignored when
+        ///     calculating if a feature is already at destination coordinates.
+        /// </param>
+        void UpdateFeatureInstance(FeatureInstance instance, ISet<Guid> otherUpdatingFeatures = null);
 
         /// <summary>
         /// Removes the feature instance with the given ID.

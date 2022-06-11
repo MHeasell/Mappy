@@ -32,7 +32,7 @@
             foreach (var id in this.ids)
             {
                 var inst = this.map.GetFeatureInstance(id);
-                this.map.UpdateFeatureInstanceInBatch(inst.Translate(this.x, this.y), this.ids);
+                this.map.UpdateFeatureInstance(inst.Translate(this.x, this.y), this.ids);
             }
         }
 

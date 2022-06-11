@@ -167,7 +167,7 @@
         /// <summary>
         /// <see cref="IMapModel.UpdateFeatureInstance"/>
         /// </summary>
-        public void UpdateFeatureInstance(FeatureInstance instance)
+        public void UpdateFeatureInstance(FeatureInstance instance, ISet<Guid> featureIgnoreList = null)
         {
             if (!this.featureInstances.ContainsKey(instance.Id))
             {
@@ -175,23 +175,7 @@
             }
 
             this.RemoveFeatureInstanceInternal(instance.Id);
-            this.AddFeatureInstanceInternal(instance);
-
-            var arg = new FeatureInstanceEventArgs(
-                FeatureInstanceEventArgs.ActionType.Move,
-                instance.Id);
-            this.OnFeatureInstanceChanged(arg);
-        }
-
-        public void UpdateFeatureInstanceInBatch(FeatureInstance instance, ISet<Guid> otherUpdatingFeatures)
-        {
-            if (!this.featureInstances.ContainsKey(instance.Id))
-            {
-                throw new ArgumentException("No existing FeatureInstance with this ID.");
-            }
-
-            this.RemoveFeatureInstanceInternal(instance.Id);
-            this.AddFeatureInstanceInternal(instance, otherUpdatingFeatures);
+            this.AddFeatureInstanceInternal(instance, featureIgnoreList);
 
             var arg = new FeatureInstanceEventArgs(
                 FeatureInstanceEventArgs.ActionType.Move,
@@ -346,23 +330,7 @@
             this.DeselectTile();
         }
 
-        private void AddFeatureInstanceInternal(FeatureInstance instance)
-        {
-            if (this.featureInstances.ContainsKey(instance.Id))
-            {
-                throw new ArgumentException("A FeatureInstance with the given ID already exists.");
-            }
-
-            if (this.featureLocationIndex.HasValue(instance.X, instance.Y))
-            {
-                throw new ArgumentException("A FeatureInstance is already present at the target location.");
-            }
-
-            this.featureInstances[instance.Id] = instance;
-            this.featureLocationIndex.Set(instance.X, instance.Y, instance);
-        }
-
-        private void AddFeatureInstanceInternal(FeatureInstance instance, ISet<Guid> otherUpdatingFeatures)
+        private void AddFeatureInstanceInternal(FeatureInstance instance, ISet<Guid> featureIgnoreList = null)
         {
             if (this.featureInstances.ContainsKey(instance.Id))
             {
@@ -371,7 +339,7 @@
 
             if (this.featureLocationIndex.TryGetValue(instance.X, instance.Y, out FeatureInstance val))
             {
-                if (!otherUpdatingFeatures.Contains(val.Id))
+                if (featureIgnoreList != null && !featureIgnoreList.Contains(val.Id))
                 {
                     throw new ArgumentException("A FeatureInstance is already present at the target location.");
                 }
