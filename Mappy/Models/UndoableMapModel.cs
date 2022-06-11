@@ -297,7 +297,7 @@
             return this.model.EnumerateFeatureInstances();
         }
 
-        public void DragDropFeature(string name, int x, int y)
+        public void DragDropFeature(string name, int x, int y, bool deselect = true)
         {
             var featurePos = this.ScreenToHeightIndex(x, y);
             if (featurePos.HasValue && !this.HasFeatureInstanceAt(featurePos.Value.X, featurePos.Value.Y))
@@ -305,11 +305,21 @@
                 var inst = new FeatureInstance(Guid.NewGuid(), name, featurePos.Value.X, featurePos.Value.Y);
                 var addOp = new AddFeatureOperation(this.model, inst);
                 var selectOp = new SelectFeatureOperation(this.model, inst.Id);
-                var op = new CompositeOperation(
-                    OperationFactory.CreateDeselectAndMergeOperation(this.model),
-                    addOp,
-                    selectOp);
-                this.undoManager.Execute(op);
+                if (deselect)
+                {
+                    var op = new CompositeOperation(
+                        OperationFactory.CreateDeselectAndMergeOperation(this.model),
+                        addOp,
+                        selectOp);
+                    this.undoManager.Execute(op);
+                }
+                else
+                {
+                    var op = new CompositeOperation(
+                        addOp,
+                        selectOp);
+                    this.undoManager.Execute(op);
+                }
             }
         }
 
