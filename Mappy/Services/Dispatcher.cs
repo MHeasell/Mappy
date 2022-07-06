@@ -349,6 +349,11 @@
                     });
         }
 
+        public void FillMap()
+        {
+            this.model.Map.IfSome(map => map.FillWithSelectedTile());
+        }
+
         public void RefreshMinimap()
         {
             this.model.Map.IfSome(

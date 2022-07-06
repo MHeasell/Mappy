@@ -41,6 +41,8 @@
 
         private bool canCopy;
 
+        private bool canFill;
+
         private Maybe<Point> mousePosition;
 
         private Maybe<Guid> hoveredFeature;
@@ -96,6 +98,12 @@
         {
             get => this.canCut;
             private set => this.SetField(ref this.canCut, value, nameof(this.CanCut));
+        }
+
+        public bool CanFill
+        {
+            get => this.canFill;
+            private set => this.SetField(ref this.canFill, value, nameof(this.CanFill));
         }
 
         public string FilePath
@@ -346,6 +354,20 @@
                     this.deltaY %= 16;
                 }
             }
+        }
+
+        public void FillWithSelectedTile()
+        {
+            if (this.SelectedTile == null)
+            {
+                return;
+            }
+
+            var fillOp = OperationFactory.CreateTileAreaOperation(this.FloatingTiles[this.SelectedTile.Value].Item, this.BaseTile);
+            var deselectOp = new DeselectOperation(this.model);
+            var removeOp = new RemoveTileOperation(this.FloatingTiles, this.SelectedTile.Value);
+
+            this.undoManager.Execute(new CompositeOperation(fillOp, deselectOp, removeOp));
         }
 
         public void FlushTranslation()
@@ -732,6 +754,11 @@
             this.CanCut = this.SelectedTile.HasValue || this.SelectedFeatures.Count > 0;
         }
 
+        private void UpdateCanFill()
+        {
+            this.CanFill = this.SelectedTile.HasValue;
+        }
+
         private void UndoManagerOnIsMarkedChanged(object sender, EventArgs eventArgs)
         {
             this.OnPropertyChanged("IsMarked");
@@ -756,6 +783,7 @@
                 case "SelectedTile":
                     this.UpdateCanCut();
                     this.UpdateCanCopy();
+                    this.UpdateCanFill();
                     break;
             }
         }

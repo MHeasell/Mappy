@@ -10,6 +10,13 @@
 
     public static class OperationFactory
     {
+        public static IReplayableOperation CreateTileAreaOperation(IMapTile src, IMapTile dst)
+        {
+            return new CompositeOperation(
+                new TileAreaOperation<Bitmap>(src.TileGrid, dst.TileGrid, 0, 0, dst.TileGrid.Width, dst.TileGrid.Height),
+                new TileAreaOperation<int>(src.HeightGrid, dst.HeightGrid, 0, 0, dst.HeightGrid.Width, dst.HeightGrid.Height));
+        }
+
         public static IReplayableOperation CreateDeselectAndMergeOperation(ISelectionModel model)
         {
             var deselectOp = new DeselectOperation(model);

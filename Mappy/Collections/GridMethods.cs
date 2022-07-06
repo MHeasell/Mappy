@@ -140,5 +140,18 @@
         {
             Fill(grid, 0, 0, grid.Width, grid.Height, value);
         }
+
+        public static void FillRepeat<T>(IGrid<T> target, int x, int y, int width, int height, IGrid<T> source)
+        {
+            for (var startX = x; startX < x + width; startX += source.Width)
+            {
+                for (var startY = y; startY < y + height; startY += source.Height)
+                {
+                    var fillWidth = Math.Min(source.Width, target.Width - startX);
+                    var fillHeight = Math.Min(source.Height, target.Height - startY);
+                    Copy(source, target, 0, 0, startX, startY, fillWidth, fillHeight);
+                }
+            }
+        }
     }
 }

@@ -194,6 +194,7 @@
     <Compile Include="Operations\SelectionModel\SelectStartPositionOperation.cs" />
     <Compile Include="Operations\SelectionModel\SelectTileOperation.cs" />
     <Compile Include="Operations\SetSealevelOperation.cs" />
+    <Compile Include="Operations\TileAreaOperation.cs" />
     <Compile Include="Operations\UpdateMinimapOperation.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

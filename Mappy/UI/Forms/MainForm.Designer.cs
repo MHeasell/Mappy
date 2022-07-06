@@ -62,6 +62,7 @@
             this.cutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.fillMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mapAttributesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateMinimapMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generateMinimapHighQualityMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -318,6 +319,7 @@
             this.cutMenuItem,
             this.copyMenuItem,
             this.pasteMenuItem,
+            this.fillMenuItem,
             toolStripSeparator9,
             this.mapAttributesMenuItem,
             toolStripSeparator3,
@@ -373,6 +375,15 @@
             this.pasteMenuItem.Size = new System.Drawing.Size(250, 22);
             this.pasteMenuItem.Text = "Paste";
             this.pasteMenuItem.Click += new System.EventHandler(this.PasteMenuItemClick);
+            // 
+            // fillMenuItem
+            // 
+            this.fillMenuItem.Enabled = false;
+            this.fillMenuItem.Name = "fillMenuItem";
+            this.fillMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.fillMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.fillMenuItem.Text = "Fill Map";
+            this.fillMenuItem.Click += new System.EventHandler(this.FillMenuItemClick);
             // 
             // mapAttributesMenuItem
             // 
@@ -816,6 +827,7 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel mousePositionLabel;
         private System.Windows.Forms.ToolStripStatusLabel hoveredFeatureLabel;
+        private System.Windows.Forms.ToolStripMenuItem fillMenuItem;
     }
 }
 
