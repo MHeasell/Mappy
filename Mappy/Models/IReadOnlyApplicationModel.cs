@@ -2,6 +2,7 @@
 {
     using System.ComponentModel;
     using System.Drawing;
+    using Mappy.Models.Enums;
 
     public interface IReadOnlyApplicationModel : INotifyPropertyChanged
     {
@@ -26,5 +27,7 @@
         Size GridSize { get; }
 
         Color GridColor { get; }
+
+        GUITab SelectedGUITab { get; }
     }
 }

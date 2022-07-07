@@ -29,13 +29,10 @@
 
         public void Execute()
         {
-            // BUG: this assumes that the destination of any feature
-            //      does not contain another feature
-            //      that is also about to be moved.
             foreach (var id in this.ids)
             {
                 var inst = this.map.GetFeatureInstance(id);
-                this.map.UpdateFeatureInstance(inst.Translate(this.x, this.y));
+                this.map.UpdateFeatureInstance(inst.Translate(this.x, this.y), this.ids);
             }
         }
 

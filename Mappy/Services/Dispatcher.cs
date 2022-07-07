@@ -13,6 +13,7 @@
     using Mappy.Data;
     using Mappy.IO;
     using Mappy.Models;
+    using Mappy.Models.Enums;
     using Mappy.Util;
     using Mappy.Util.ImageSampling;
 
@@ -550,6 +551,12 @@
             this.model.Map.IfSome(x => x.SelectStartPosition(index));
         }
 
+        public void ChangeSelectedTab(GUITab tab)
+        {
+            this.model.SelectedGUITab = tab;
+            this.SetSelectedGUITabForMap();
+        }
+
         private static IEnumerable<string> GetMapNames(HpiArchive hpi)
         {
             return hpi.GetFiles("maps")
@@ -608,6 +615,11 @@
             }
 
             return false;
+        }
+
+        private void SetSelectedGUITabForMap()
+        {
+            this.model.Map.IfSome(x => x.UpdateSelectedGUITab(this.model.SelectedGUITab));
         }
 
         private void SaveHpi(UndoableMapModel map, string filename)
@@ -751,11 +763,13 @@
 
             var tntPath = HpiPath.Combine("maps", mapName + ".tnt");
             this.model.Map = Maybe.Some(this.mapLoadingService.CreateFromHpi(filename, tntPath, readOnly));
+            this.SetSelectedGUITabForMap();
         }
 
         private void OpenTnt(string filename)
         {
             this.model.Map = Maybe.Some(this.mapLoadingService.CreateFromTnt(filename));
+            this.SetSelectedGUITabForMap();
         }
 
         private bool CheckOkayDiscard()
@@ -787,6 +801,7 @@
         private void New(int width, int height)
         {
             this.model.Map = Maybe.Some(MapLoadingService.CreateMap(width, height));
+            this.SetSelectedGUITabForMap();
         }
 
         private void OpenSct(string filename)

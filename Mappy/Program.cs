@@ -49,6 +49,8 @@
             var tileCache = new BitmapCache();
             var dialogService = new DialogService(mainForm);
             var featureService = new FeatureService();
+            FeatureInstance.FeatureService = featureService;
+
             var sectionsService = new SectionService();
             var sectionFactory = new SectionFactory(tileCache);
             var sectionBitmapService = new SectionBitmapService(sectionFactory);
