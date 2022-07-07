@@ -67,8 +67,8 @@
                 tileCache);
             mainForm.SetModel(new MainFormViewModel(model, dispatcher, featureService));
 
-            mainForm.SectionView.SetModel(new SectionViewViewModel(sectionsService));
-            mainForm.FeatureView.SetModel(new FeatureViewViewModel(featureService));
+            mainForm.SectionView.SetModel(new SectionViewViewModel(sectionsService, dispatcher));
+            mainForm.FeatureView.SetModel(new FeatureViewViewModel(featureService, dispatcher));
 
             mainForm.MapViewPanel.SetModel(new MapViewViewModel(model, dispatcher, featureService));
 

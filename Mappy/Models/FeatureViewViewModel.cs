@@ -27,7 +27,9 @@
 
         private readonly FeatureService featureService;
 
-        public FeatureViewViewModel(FeatureService featureService)
+        private readonly Dispatcher dispatcher;
+
+        public FeatureViewViewModel(FeatureService featureService, Dispatcher dispatcher)
         {
             featureService.FeaturesChanged += this.OnFeaturesChanged;
 
@@ -58,6 +60,7 @@
                 .Subscribe(_ => this.UpdateFeatures());
 
             this.featureService = featureService;
+            this.dispatcher = dispatcher;
         }
 
         public IObservable<ComboBoxViewModel> ComboBox1Model => this.worlds;
@@ -74,6 +77,11 @@
         public void SelectComboBox2Item(int index)
         {
             this.selectCategoryEvent.OnNext(index);
+        }
+
+        public void SetSelectedItem(string featureName)
+        {
+            this.dispatcher.SetSelectedFeature(featureName);
         }
 
         public void Dispose()

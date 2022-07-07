@@ -30,6 +30,8 @@
 
         public event EventHandler FeaturesChanged;
 
+        public Feature SelectedFeature { get; set; }
+
         public void AddFeatures(IEnumerable<FeatureInfo> features)
         {
             foreach (var f in features)
@@ -88,31 +90,31 @@
 
         private static OffsetBitmap LoadBitmap(GafEntry[] gaf, string sequenceName)
         {
-                var entry = gaf.FirstOrDefault(
-                    x => string.Equals(x.Name, sequenceName, StringComparison.OrdinalIgnoreCase));
-                if (entry == null)
-                {
-                    // skip if the sequence is not in this gaf file
-                    return null;
-                }
+            var entry = gaf.FirstOrDefault(
+                x => string.Equals(x.Name, sequenceName, StringComparison.OrdinalIgnoreCase));
+            if (entry == null)
+            {
+                // skip if the sequence is not in this gaf file
+                return null;
+            }
 
-                var frame = entry.Frames[0];
+            var frame = entry.Frames[0];
 
-                Bitmap bmp;
-                if (frame.Data == null || frame.Width == 0 || frame.Height == 0)
-                {
-                    bmp = new Bitmap(50, 50);
-                }
-                else
-                {
-                    bmp = BitmapConvert.ToBitmap(
-                        frame.Data,
-                        frame.Width,
-                        frame.Height,
-                        frame.TransparencyIndex);
-                }
+            Bitmap bmp;
+            if (frame.Data == null || frame.Width == 0 || frame.Height == 0)
+            {
+                bmp = new Bitmap(50, 50);
+            }
+            else
+            {
+                bmp = BitmapConvert.ToBitmap(
+                    frame.Data,
+                    frame.Width,
+                    frame.Height,
+                    frame.TransparencyIndex);
+            }
 
-                return new OffsetBitmap(-frame.OffsetX, -frame.OffsetY, bmp);
+            return new OffsetBitmap(-frame.OffsetX, -frame.OffsetY, bmp);
         }
 
         private static GafEntry[] LoadGafEntries(HpiArchive.FileInfo fileInfo, HpiArchive archive)
@@ -193,16 +195,16 @@
                         }
 
                         var f = new Feature
-                            {
-                                Name = item.Value.Name,
-                                World = item.Value.World,
-                                Category = item.Value.Category,
-                                Footprint = item.Value.Footprint,
-                                Image = bitmap.Bitmap,
-                                Offset = new Point(-bitmap.OffsetX, -bitmap.OffsetY),
-                                ReclaimInfo = item.Value.ReclaimInfo,
-                                Permanent = item.Value.Permanent,
-                            };
+                        {
+                            Name = item.Value.Name,
+                            World = item.Value.World,
+                            Category = item.Value.Category,
+                            Footprint = item.Value.Footprint,
+                            Image = bitmap.Bitmap,
+                            Offset = new Point(-bitmap.OffsetX, -bitmap.OffsetY),
+                            ReclaimInfo = item.Value.ReclaimInfo,
+                            Permanent = item.Value.Permanent,
+                        };
                         this.featureCache.Add(item.Key, f);
                         yield return f;
                     }
@@ -220,16 +222,16 @@
                     var bitmap = LoadRenderFile(archive, objectFile);
 
                     var f = new Feature
-                        {
-                            Name = entry.Value.Name,
-                            World = entry.Value.World,
-                            Category = entry.Value.Category,
-                            Footprint = entry.Value.Footprint,
-                            Image = bitmap.Bitmap,
-                            Offset = new Point(-bitmap.OffsetX, -bitmap.OffsetY),
-                            ReclaimInfo = entry.Value.ReclaimInfo,
-                            Permanent = entry.Value.Permanent,
-                        };
+                    {
+                        Name = entry.Value.Name,
+                        World = entry.Value.World,
+                        Category = entry.Value.Category,
+                        Footprint = entry.Value.Footprint,
+                        Image = bitmap.Bitmap,
+                        Offset = new Point(-bitmap.OffsetX, -bitmap.OffsetY),
+                        ReclaimInfo = entry.Value.ReclaimInfo,
+                        Permanent = entry.Value.Permanent,
+                    };
                     this.featureCache.Add(entry.Key, f);
                     yield return f;
                 }
