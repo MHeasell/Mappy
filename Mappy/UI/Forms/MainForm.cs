@@ -8,6 +8,7 @@
 
     using Mappy.Models;
     using Mappy.UI.Controls;
+    using Mappy.Util;
 
     public partial class MainForm : Form
     {
@@ -299,6 +300,16 @@
         private void ToggleHeightGridMenuItemClick(object sender, EventArgs e)
         {
             this.model.ToggleHeightGridMenuItemClick();
+        }
+
+        private void GUITabs_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (this.sidebarTabs.SelectedTab == null)
+            {
+                return;
+            }
+
+            this.model.ChangeSelectedTabType(Util.MapTabNameToGUIType(this.sidebarTabs.SelectedTab.Name));
         }
     }
 }

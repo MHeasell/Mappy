@@ -4,7 +4,7 @@
     using System.Drawing;
     using System.Linq;
     using System.Reactive.Linq;
-
+    using Mappy.Models.Enums;
     using Mappy.Services;
 
     public class MainFormViewModel : IMainFormViewModel
@@ -348,6 +348,11 @@
         public void Load()
         {
             this.dispatcher.Initialize();
+        }
+
+        public void ChangeSelectedTabType(GUITab tabType)
+        {
+            this.dispatcher.ChangeSelectedTab(tabType);
         }
     }
 }
