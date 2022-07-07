@@ -13,6 +13,8 @@
     using Mappy.Data;
     using Mappy.IO;
     using Mappy.Models;
+    using Mappy.Models.Enums;
+    using Mappy.UI.Controls;
     using Mappy.Util;
     using Mappy.Util.ImageSampling;
 
@@ -340,10 +342,28 @@
                         }
                         else
                         {
-                            var record = data as FeatureClipboardRecord;
-                            if (record != null)
+                            if (data is FeatureClipboardRecord record)
                             {
                                 map.DragDropFeature(record.FeatureName, loc.X, loc.Y);
+                                return;
+                            }
+
+                            if (data is List<FeatureClipboardRecord> featureList)
+                            {
+                                map.ClearSelection();
+                                var placedFeatures = new List<DrawableItem>();
+                                foreach (var feature in featureList)
+                                {
+                                    // Split these up so they can be debugged better
+                                    // force locs between 0 and MapWidth/Height
+                                    int xLocUnsafe = map.ViewportLocation.X + feature.VPOffsetX;
+                                    int xLoc = Math.Min(map.MapWidth * 32, Math.Max(0, xLocUnsafe));
+
+                                    int yLocUnsafe = map.ViewportLocation.Y + feature.VPOffsetY;
+                                    int yLoc = Math.Min(map.MapHeight * 32, Math.Max(0, yLocUnsafe));
+
+                                    map.DragDropFeature(feature.FeatureName, xLoc, yLoc, false);
+                                }
                             }
                         }
                     });
@@ -550,6 +570,12 @@
             this.model.Map.IfSome(x => x.SelectStartPosition(index));
         }
 
+        public void ChangeSelectedTab(GUITab tab)
+        {
+            this.model.SelectedGUITab = tab;
+            this.SetSelectedGUITabForMap();
+        }
+
         private static IEnumerable<string> GetMapNames(HpiArchive hpi)
         {
             return hpi.GetFiles("maps")
@@ -593,10 +619,26 @@
         {
             if (map.SelectedFeatures.Count > 0)
             {
-                var id = map.SelectedFeatures.First();
-                var inst = map.GetFeatureInstance(id);
-                var rec = new FeatureClipboardRecord(inst.FeatureName);
-                Clipboard.SetData(DataFormats.Serializable, rec);
+                if (map.SelectedFeatures.Count == 1)
+                {
+                    var id = map.SelectedFeatures.First();
+                    var inst = map.GetFeatureInstance(id);
+                    var rec = new FeatureClipboardRecord(inst.FeatureName);
+                    Clipboard.SetData(DataFormats.Serializable, rec);
+                    return true;
+                }
+
+                var loc = map.ViewportLocation;
+                var ids = map.SelectedFeatures.ToArray();
+                var features = new List<FeatureClipboardRecord>();
+
+                for (int i = 0; i < ids.Length; i++)
+                {
+                    var ins = map.GetFeatureInstance(ids[i]);
+                    features.Add(new FeatureClipboardRecord(ins.FeatureName, (ins.X * 16) - loc.X, (ins.Y * 16) - loc.Y));
+                }
+
+                Clipboard.SetData(DataFormats.Serializable, features);
                 return true;
             }
 
@@ -608,6 +650,11 @@
             }
 
             return false;
+        }
+
+        private void SetSelectedGUITabForMap()
+        {
+            this.model.Map.IfSome(x => x.UpdateSelectedGUITab(this.model.SelectedGUITab));
         }
 
         private void SaveHpi(UndoableMapModel map, string filename)
@@ -751,11 +798,13 @@
 
             var tntPath = HpiPath.Combine("maps", mapName + ".tnt");
             this.model.Map = Maybe.Some(this.mapLoadingService.CreateFromHpi(filename, tntPath, readOnly));
+            this.SetSelectedGUITabForMap();
         }
 
         private void OpenTnt(string filename)
         {
             this.model.Map = Maybe.Some(this.mapLoadingService.CreateFromTnt(filename));
+            this.SetSelectedGUITabForMap();
         }
 
         private bool CheckOkayDiscard()
@@ -787,6 +836,7 @@
         private void New(int width, int height)
         {
             this.model.Map = Maybe.Some(MapLoadingService.CreateMap(width, height));
+            this.SetSelectedGUITabForMap();
         }
 
         private void OpenSct(string filename)
